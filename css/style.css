@@ -1,0 +1,103 @@
+#top_container {
+  height: 400px; }
+
+#map {
+  background-color: black;
+  border: thin solid black;
+  height: 440px;
+  overflow: hidden;
+  position: absolute;
+  width: 440px; }
+  #map #blocks {
+    position: absolute; }
+  #map .block {
+    height: 400px;
+    position: absolute;
+    width: 400px; }
+  #map .cell {
+    /*border: thin dashed #555;*/
+    box-sizing: border-box;
+    height: 40px;
+    position: absolute;
+    width: 40px; }
+  #map .cell.white {
+    background-color: white; }
+  #map .cell.black {
+    background-color: black; }
+  #map .unit {
+    height: inherit;
+    position: absolute;
+    width: inherit;
+    z-index: 6; }
+  #map .player_hero {
+    background-image: url("/img/player_hero.png"); }
+  #map .other_player_hero {
+    background-image: url("/img/other_player_hero.png"); }
+  #map .bot_hero {
+    background-image: url("/img/bot_hero.png"); }
+  #map .green_orb {
+    border-radius: 20px;
+    background-color: #FFFFCC; }
+  #map .orb {
+    height: 36px;
+    left: 2px;
+    top: 2px;
+    width: 36px; }
+  #map .orb-md {
+    height: 32px;
+    left: 4px;
+    top: 4px;
+    width: 32px; }
+  #map .orb-sm {
+    height: 28px;
+    left: 6px;
+    top: 6px;
+    width: 28px; }
+  #map .dmg {
+    font-weight: bold;
+    left: 4px;
+    position: absolute;
+    transition: top 1s ease, color 1s ease;
+    z-index: 10; }
+  #map .dmg_start {
+    top: -10px; }
+  #map .dmg_end {
+    top: -30px !important; }
+  #map .def_dmg_start {
+    color: red; }
+  #map .def_dmg_end {
+    color: yellow !important; }
+  #map .att_dmg_start {
+    color: blue; }
+  #map .att_dmg_end {
+    color: aqua !important; }
+
+#controls {
+  opacity: 0.8;
+  position: fixed;
+  right: 0;
+  z-index: 20; }
+  #controls:hover {
+    opacity: 1; }
+  #controls label {
+    color: #ccc;
+    font-weight: bold; }
+  #controls button {
+    float: left; }
+  #controls #controls_arrows button {
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 1px;
+    height: 60px;
+    text-align: center;
+    width: 60px; }
+  #controls #controls_arrows button:nth-child(3n-2) {
+    clear: left; }
+
+#scores {
+  display: none;
+  float: right; }
+  #scores table td:last-child {
+    text-align: right; }
+
+/*# sourceMappingURL=style.css.map */

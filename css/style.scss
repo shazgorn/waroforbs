@@ -1,0 +1,153 @@
+$cell-dimension: 40px;
+$map-dimension: $cell-dimension * 11;
+$block-dimension: $cell-dimension * 10;
+$orb-dimension: 36px;
+$orb-md-dimension: $orb-dimension - 4px;
+$orb-sm-dimension: $orb-md-dimension - 4px;
+$unit_dimension: 40px;
+$orb-margin: ($cell-dimension - $orb-dimension) / 2;
+$orb-md-margin: ($cell-dimension - $orb-md-dimension) / 2;
+$orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
+$button-size: 60px;
+$column-gap: 30px;
+
+#top_container {
+    height: 400px;
+}
+
+#map {
+    background-color: black;
+    border: thin solid black;
+    height: $map-dimension;
+    overflow: hidden;
+    position: absolute;
+    width: $map-dimension;
+
+    #blocks {
+        position: absolute;
+    }
+    .block {
+        height: $block-dimension;
+        position: absolute;
+        width: $block-dimension;
+    }
+    .cell {
+        /*border: thin dashed #555;*/
+        box-sizing: border-box;
+        height: $cell-dimension;
+        position: absolute;
+        width: $cell-dimension;
+    }
+    
+    .cell.white {
+        background-color: white;
+    }
+
+    .cell.black {
+        background-color: black;
+    }
+    
+    .unit {
+        height: inherit;
+        position: absolute;
+        width: inherit;
+        z-index: 6;
+    }
+
+    .player_hero {
+        background-image: url('/img/player_hero.png');
+    }
+    .other_player_hero {
+        background-image: url('/img/other_player_hero.png');
+    }
+    .bot_hero {
+        background-image: url('/img/bot_hero.png');
+    }
+    .green_orb {
+        border-radius: 20px;
+        background-color: #FFFFCC;
+    }
+    .orb {
+        height: $orb-dimension;
+        left: $orb-margin;
+        top: $orb-margin;
+        width: $orb-dimension;
+    }
+    .orb-md {
+        height: $orb-md-dimension;
+        left: $orb-md-margin;
+        top: $orb-md-margin;
+        width: $orb-md-dimension;
+    }
+    .orb-sm {
+        height: $orb-sm-dimension;
+        left: $orb-sm-margin;
+        top: $orb-sm-margin;
+        width: $orb-sm-dimension;
+    }
+    .dmg {
+        font-weight: bold;
+        left: 4px;
+        position: absolute;
+        transition: top 1s ease, color 1s ease;
+        z-index: 10;
+    }
+    .dmg_start {
+        top: -10px;
+    }
+    .dmg_end {
+        top: -30px !important;
+    }
+    .def_dmg_start {
+        color: red;
+    }
+    .def_dmg_end {
+        color: yellow !important;
+    }
+    .att_dmg_start {
+        color: blue;
+    }
+    .att_dmg_end {
+        color: aqua !important;
+    }
+    
+}
+
+#controls {
+    opacity: 0.8;
+    position: fixed;
+    right: 0;
+    z-index: 20;
+    &:hover {
+        opacity: 1;
+    }
+
+    label {
+        color: #ccc;
+        font-weight: bold;
+    }
+    button {
+        float: left;
+    }
+    #controls_arrows button {
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 1px;
+        height: $button-size;
+        text-align: center;
+        width: $button-size;
+    }
+    #controls_arrows button:nth-child(3n-2) {
+        clear: left;
+    }
+}
+
+#scores {
+    display: none;
+    float: right;
+
+    table td:last-child {
+        text-align: right;
+    }
+}
+
