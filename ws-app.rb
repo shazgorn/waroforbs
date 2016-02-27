@@ -1,6 +1,5 @@
 require 'em-websocket'
 require 'json'
-require 'sqlite3'
 require 'rmagick'
 
 require_relative 'app/unit'

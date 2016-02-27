@@ -1,7 +1,6 @@
 require 'cuba'
 require 'mote'
 require 'mote/render'
-require 'sqlite3'
 require 'json'
 
 Cuba.plugin(Mote::Render)
