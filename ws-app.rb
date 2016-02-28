@@ -4,6 +4,7 @@ require 'rmagick'
 
 require_relative 'app/unit'
 require_relative 'app/user'
+require_relative 'app/map'
 require_relative 'app/game'
 
 class OrbError < RuntimeError
@@ -77,15 +78,28 @@ class OrbApp
             when :attack
               params = obj['params']
               damages = @game.attack @game.users[token].hero, params['x'], params['y']
-              ws.send JSON.generate({:data_type => 'dmg',
+              ws.send JSON.generate({
+                                      :data_type => 'dmg',
                                       :x => params['x'],
                                       :y => params['y'],
-                                      :dmg => damages[:dmg],
-                                      :ca_dmg => damages[:ca_dmg]})
+                                      :dmg => damages[:a_data][:dmg],
+                                      :ca_dmg => damages[:a_data][:ca_dmg]
+                                    })
+              if damages.has_key? :d_data
+                @game.users[damages[:d].user].ws.send JSON.generate(damages[:d_data])
+              end
               dispatch_units
               dispatch_scores
             when :spawn_bot
               spawn_bot
+            when :revive
+              @game.revive @game.users[token].hero
+              ws.send JSON.generate({
+                                      :data_type => 'dmg',
+                                      :x => params['x'],
+                                      :y => params['y']
+                                    })
+              dispatch_units
             end #case
           rescue Exception => e
             ex e

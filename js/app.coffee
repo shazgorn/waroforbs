@@ -18,6 +18,9 @@ class Application
   spawn_bot: (id) ->
     @ws.spawn_bot()
 
+  revive: () ->
+    @ws.revive()
+
   init_ul: (ul) ->
     @map.remove_units()
     @units = [];

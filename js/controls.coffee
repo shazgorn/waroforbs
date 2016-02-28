@@ -36,6 +36,13 @@ class Controls
             app.spawn_bot()
         );
 
+    $(document.createElement('button'))
+        .html('Revive')
+        .appendTo('#controls')
+        .click(() ->
+            app.revive()
+        );
+
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
 

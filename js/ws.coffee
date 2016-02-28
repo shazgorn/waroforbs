@@ -61,4 +61,12 @@ class WS
       })
     )
 
+  revive: (token) ->
+    @socket.send(
+      JSON.stringify({
+        token: token,
+        op: 'revive'
+      })
+    )
+
 window.WS = WS
