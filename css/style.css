@@ -100,4 +100,13 @@
   #scores table td:last-child {
     text-align: right; }
 
+#log {
+  background-color: #fffeab;
+  bottom: 0px;
+  height: 100px;
+  opacity: 0.9;
+  position: fixed;
+  width: 100%;
+  z-index: 10; }
+
 /*# sourceMappingURL=style.css.map */

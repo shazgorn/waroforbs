@@ -24,6 +24,8 @@
       </div>
     </div>
   </div>
+  <div id="log">
+  </div>
 </div>
 <div>
   <div id="scores">

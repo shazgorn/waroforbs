@@ -1,1 +1,1 @@
-ruby --verbose -wW2 ws-app.rb
+ruby --verbose -wW2 app/ws-app.rb

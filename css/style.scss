@@ -151,3 +151,13 @@ $column-gap: 30px;
     }
 }
 
+#log {
+    background-color: #fffeab;
+    bottom: 0px;
+    height: 100px;
+    opacity: 0.9;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+
+}
