@@ -49,5 +49,14 @@ Cuba.define do
         res.write f.read
       end
     end
-  end
-end
+
+    on 'img/bg', extension('png') do |file|
+        File.open("./img/bg/#{file}.png", 'rb') do |f|
+          res['Content-Type'] = 'image/png'
+          res.write f.read
+        end
+      end
+
+
+  end #get
+end #define

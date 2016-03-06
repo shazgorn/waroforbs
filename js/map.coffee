@@ -68,7 +68,8 @@ class Map
         $(document.createElement('div'))
           .attr('id', "block_#{block_x}_#{block_y}")
           .addClass('block')
-          .css('background-image', "url(img/bg_#{block_x}_#{block_y}.png)")
+          # see Map::create_canvas_blocks
+          .css('background-image', "url(img/bg/bg_#{block_x}_#{block_y}.png)")
           .css('left', "#{block_x * @block_dim_in_px}px")
           .css('top', "#{block_y * @block_dim_in_px}px")
           .appendTo('#blocks')

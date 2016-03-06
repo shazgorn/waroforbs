@@ -11,7 +11,6 @@ class Map
 
   def initialize
     @ul = Hash.new
-    #create_canvas_blocks
   end
 
   # generate map
@@ -46,7 +45,8 @@ class Map
       end
       canvas_y += cell_dim
     end
-    canvas_path = "./img/bg_#{block_x}_#{block_y}.png"
+    #see map.coffee::addBlocks
+    canvas_path = "./img/bg/bg_#{block_x}_#{block_y}.png"
     canvas.write canvas_path
     puts "write to #{canvas_path}"
   end

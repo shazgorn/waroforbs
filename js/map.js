@@ -90,7 +90,7 @@
           var j, ref1, results1;
           results1 = [];
           for (block_y = j = 0, ref1 = this.map_dim_in_blocks - 1; 0 <= ref1 ? j <= ref1 : j >= ref1; block_y = 0 <= ref1 ? ++j : --j) {
-            results1.push($(document.createElement('div')).attr('id', "block_" + block_x + "_" + block_y).addClass('block').css('background-image', "url(img/bg_" + block_x + "_" + block_y + ".png)").css('left', (block_x * this.block_dim_in_px) + "px").css('top', (block_y * this.block_dim_in_px) + "px").appendTo('#blocks'));
+            results1.push($(document.createElement('div')).attr('id', "block_" + block_x + "_" + block_y).addClass('block').css('background-image', "url(img/bg/bg_" + block_x + "_" + block_y + ".png)").css('left', (block_x * this.block_dim_in_px) + "px").css('top', (block_y * this.block_dim_in_px) + "px").appendTo('#blocks'));
           }
           return results1;
         }).call(this));

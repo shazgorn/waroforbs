@@ -1,6 +1,7 @@
 require 'em-websocket'
 require 'json'
 require 'rmagick'
+require 'fileutils'
 
 require_relative 'unit'
 require_relative 'user'
