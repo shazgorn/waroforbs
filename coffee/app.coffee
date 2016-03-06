@@ -19,7 +19,7 @@ class Application
     @ws.spawn_bot()
 
   revive: () ->
-    @ws.revive()
+    @ws.revive(@user_id)
 
   init_ul: (ul) ->
     @map.remove_units()

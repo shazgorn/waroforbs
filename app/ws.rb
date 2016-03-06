@@ -58,7 +58,7 @@ class OrbApp
                 @game.users[token] = user = User.new(token)
                 user.ws = ws
               end
-              @game.map.place_at_random user.hero
+              @game.place_at_random user.hero
               ws.send JSON.generate({:data_type => 'init_map',
                                      :map_shift => Map::SHIFT,
                                      :cell_dim_in_px => Map::CELL_DIM,
@@ -98,12 +98,7 @@ class OrbApp
             when :spawn_bot
               spawn_bot
             when :revive
-              @game.revive @game.users[token].hero
-              ws.send JSON.generate({
-                                      :data_type => 'dmg',
-                                      :x => params['x'],
-                                      :y => params['y']
-                                    })
+              @game.revive token
               dispatch_units
             end #case
           rescue Exception => e

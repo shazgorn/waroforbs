@@ -3,3 +3,4 @@ Gemfile.lock
 *.sass-cache/
 *.css.map
 img/bg/*
+js/*

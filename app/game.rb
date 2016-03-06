@@ -19,10 +19,15 @@ class Game
     @map.remove unit
   end
 
-  def revive(unit)
-    if unit.user
+  def revive(token)
+    user = @users[token]
+    p token
+    p @users
+    p user
+    unit = user.hero
+    if unit.dead?
       @users[unit.user].hero = hero = Hero.new(unit.user)
-      @map.place_at_random hero
+      place_at_random hero
     end
   end
 
@@ -35,6 +40,12 @@ class Game
       res[:log] = 'Your hero is dead'
     end
     res
+  end
+
+  def place_at_random hero
+    if hero.alive?
+      @map.place_at_random hero
+    end
   end
   
   # a - attacker, {x,y} defender`s coordinates
