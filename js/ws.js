@@ -23,6 +23,7 @@
       ws.onmessage = function(e) {
         var colCount, data, h, i, j, len, len1, ref, ref1, row, rowCount, table, user;
         data = JSON.parse(e.data);
+        console.log(data);
         switch (data.data_type) {
           case 'init_map':
             app.map = new Map(data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks);

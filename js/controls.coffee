@@ -29,19 +29,13 @@ class Controls
             }
         )
     )
-    $(document.createElement('button'))
-        .html('Spawn bot')
-        .appendTo('#controls')
-        .click(() ->
-            app.spawn_bot()
-        );
+    $('#spawn-bot').click(() ->
+        app.spawn_bot()
+    );
 
-    $(document.createElement('button'))
-        .html('Revive')
-        .appendTo('#controls')
-        .click(() ->
-            app.revive()
-        );
+    $('#revive').click(() ->
+        app.revive()
+    );
 
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')

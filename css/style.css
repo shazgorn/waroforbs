@@ -72,26 +72,28 @@
   #map .att_dmg_end {
     color: aqua !important; }
 
-#controls {
+#right-col {
   opacity: 0.8;
   position: fixed;
   right: 0;
   z-index: 20; }
-  #controls:hover {
+  #right-col:hover {
     opacity: 1; }
-  #controls label {
+  #right-col #unit-info {
+    background-color: white; }
+  #right-col label {
     color: #ccc;
     font-weight: bold; }
-  #controls button {
+  #right-col button {
     float: left; }
-  #controls #controls_arrows button {
+  #right-col #controls_arrows button {
     font-size: 30px;
     font-weight: bold;
     line-height: 1px;
     height: 60px;
     text-align: center;
     width: 60px; }
-  #controls #controls_arrows button:nth-child(3n-2) {
+  #right-col #controls_arrows button:nth-child(3n-2) {
     clear: left; }
 
 #scores {

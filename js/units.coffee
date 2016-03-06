@@ -41,7 +41,9 @@ UnitFactory = (unit_hash, user_id) ->
     switch unit_hash.type
       when "PlayerHero"
         if unit_hash['@user']
-          if unit_hash['@user'] == user_id then unit = new PlayerHero unit_hash
+          if unit_hash['@user'] == user_id
+                unit = new PlayerHero unit_hash
+                UnitInfo unit_hash
           else if unit_hash['@user'].search('bot') != -1 then unit = new BotHero unit_hash
           else unit = new OtherPlayerHero unit_hash
       when "GreenOrb" then unit = new GreenOrb unit_hash
@@ -49,3 +51,10 @@ UnitFactory = (unit_hash, user_id) ->
   unit
 
 window.UnitFactory = UnitFactory
+# there will be unit info factory placed in separate file, each unit type will
+# have it`s own fields i think
+UnitInfo = (unit) ->
+        $('#player-name-info').html(unit['@user'])
+        $('#hp-info').html(unit['@hp'])
+        $('#x-info').html(unit['@x'])
+        $('#y-info').html(unit['@y'])

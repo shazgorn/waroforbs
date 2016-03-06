@@ -11,6 +11,7 @@ class WS
     
     ws.onmessage = (e) ->
       data = JSON.parse(e.data)
+      console.log(data)
       switch data.data_type
         when 'init_map'
           app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks

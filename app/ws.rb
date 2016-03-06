@@ -2,10 +2,10 @@ require 'em-websocket'
 require 'json'
 require 'rmagick'
 
-require_relative 'app/unit'
-require_relative 'app/user'
-require_relative 'app/map'
-require_relative 'app/game'
+require_relative 'unit'
+require_relative 'user'
+require_relative 'map'
+require_relative 'game'
 
 class OrbError < RuntimeError
 end
@@ -15,7 +15,7 @@ end
 
 # Class
 class OrbApp
-  MAX_ORBS = 30
+  MAX_ORBS = 10
   MAX_BOTS = 5
   
   def initialize
@@ -85,7 +85,7 @@ class OrbApp
                                       :dmg => damages[:a_data][:dmg],
                                       :ca_dmg => damages[:a_data][:ca_dmg]
                                     })
-              if damages.has_key? :d_data
+              if damages.has_key? :d_data && !damages[:d].nil?
                 @game.users[damages[:d].user].ws.send JSON.generate(damages[:d_data])
               end
               dispatch_units

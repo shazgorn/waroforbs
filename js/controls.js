@@ -71,10 +71,10 @@
           dy: parseInt(this.dataset.dy)
         });
       });
-      $(document.createElement('button')).html('Spawn bot').appendTo('#controls').click(function() {
+      $('#spawn-bot').click(function() {
         return app.spawn_bot();
       });
-      $(document.createElement('button')).html('Revive').appendTo('#controls').click(function() {
+      $('#revive').click(function() {
         return app.revive();
       });
     }

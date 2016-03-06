@@ -28,7 +28,10 @@ class Game
   
   # a - attacker, {x,y} defender`s coordinates
   def attack(a, x, y)
-    res = {}
+    res = {
+      :a_data => {},
+      :d_data => {}
+    }
     if @map.has?(x, y)
       d = @map.at(x, y)
       dmg = nil
@@ -36,6 +39,7 @@ class Game
         dmg = d.take_dmg a.dmg
         if d.dead?
           bury d
+          res[:d_data][:log] = 'Your hero has been killed'
           if a.user
             @users[a.user].inc_score d.score
           end
@@ -44,20 +48,23 @@ class Game
           ca_dmg = a.take_dmg d.dmg
           if a.dead?
             bury a
+            res[:a_data][:log] = 'Your hero has been killed'
           end
         end
         if d.user && @users[d.user] && !@users[d.user].ws.nil?
           xy = @map.h2c a.pos
           res[:d] = d
-          res[:d_data] = {:data_type => 'dmg',
-                     :x => xy[:x],
-                     :y => xy[:y],
-                     :dmg => ca_dmg,
-                     :ca_dmg => dmg}
+          res[:d_data].merge!({
+                                :data_type => 'dmg',
+                                :x => xy[:x],
+                                :y => xy[:y],
+                                :dmg => ca_dmg,
+                                :ca_dmg => dmg
+                              })
         end
       end
     end
-    res[:a_data] = {:dmg => dmg, :ca_dmg => ca_dmg}
+    res[:a_data].merge!({:dmg => dmg, :ca_dmg => ca_dmg})
     res
   end
   

@@ -1,6 +1,6 @@
 class Unit
   attr_reader :id, :type, :user, :score
-  attr_accessor :pos, :x, :y
+  attr_accessor :pos, :x, :y, :hp
 
   @@id = 1
 
@@ -52,7 +52,7 @@ class Hero < Unit
 
   def initialize(user)
     super('PlayerHero', user)
-    @hp = 200
+    @hp = 80
     @dmg = 30
     @pos = 0
     @score = 10

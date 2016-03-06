@@ -113,7 +113,7 @@ $column-gap: 30px;
     
 }
 
-#controls {
+#right-col {
     opacity: 0.8;
     position: fixed;
     right: 0;
@@ -121,7 +121,9 @@ $column-gap: 30px;
     &:hover {
         opacity: 1;
     }
-
+    #unit-info {
+	background-color: white;
+    }
     label {
         color: #ccc;
         font-weight: bold;
@@ -159,5 +161,4 @@ $column-gap: 30px;
     position: fixed;
     width: 100%;
     z-index: 10;
-
 }

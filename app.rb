@@ -3,6 +3,8 @@ require 'mote'
 require 'mote/render'
 require 'json'
 
+include Mote::Helpers
+
 Cuba.plugin(Mote::Render)
 
 Cuba.define do

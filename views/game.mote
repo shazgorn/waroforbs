@@ -3,30 +3,20 @@
     <div id="blocks">
     </div>
   </div>
-  <div id="controls">
+  <div id="right-col">
+    <div id="unit-info">
+    	 {{ app.partial('unit-info') }}
+    </div>
     <div id="controls_arrows"></div>
     <div id="dimensions">
-      <div>
-        <label for="map_height">map height</label>
-        <select id="map_height">
-          % (9..30).step(2) do |i|
-          <option value="{{i}}">{{i}}</option>
-          %   end
-        </select>
-      </div>
-      <div>
-        <label for="map_width">map width</label>
-        <select id="map_width">
-          % (9..50).step(2) do |i|
-          <option value="{{i}}">{{i}}</option>
-          %   end
-        </select>
-      </div>
+    	 {{ app.partial('dimensions') }}
     </div>
-  </div>
+    <button id="spawn-bot">Spawn bot</button>
+    <button id="revive">Revive</button>
+  </div><!-- #right-col -->
   <div id="log">
   </div>
-</div>
+</div><!-- #top-container -->
 <div>
   <div id="scores">
     <h3>Scores</h3>

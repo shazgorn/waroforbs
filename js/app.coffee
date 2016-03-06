@@ -30,14 +30,15 @@ class Application
         @units.push(unit)
         @map.append(unit)
     cell = $('#the_hero').parent()
-    pos = cell.attr('id').replace('cell_', '').split('_')
-    app = this
-    for dx in [-1..1]
-      for dy in [-1..1]
-        if dx || dy
-          x = parseInt(pos[0]) + dx
-          y = parseInt(pos[1]) + dy
-          this.bind_attack_handler(app, x, y)
+    if cell.length == 1
+        pos = cell.attr('id').replace('cell_', '').split('_')
+        app = this
+        for dx in [-1..1]
+          for dy in [-1..1]
+            if dx || dy
+              x = parseInt(pos[0]) + dx
+              y = parseInt(pos[1]) + dy
+              this.bind_attack_handler(app, x, y)
         
   bind_attack_handler: (app, x, y) ->
     adj_cell = $('#cell_' + x + '_' + y)

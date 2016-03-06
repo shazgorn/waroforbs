@@ -1,0 +1,7 @@
+<div style="font-size: 2rem;">H</div>
+<table>
+<tr><td>player name:</td><td id="player-name-info"></td></tr>
+<tr><td>hp:</td><td id="hp-info"></td></tr>
+<tr><td>x:</td><td id="x-info"></td></tr>
+<tr><td>y:</td><td id="y-info"></td></tr>
+</table>
