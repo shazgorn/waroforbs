@@ -74,7 +74,11 @@ class OrbApp
               ws.send JSON.generate({:data_type => 'ul', :ul => @game.map.ul})
             when :move
               params = obj['params']
-              @game.map.move_by @game.users[token].hero, params['dx'], params['dy']
+              res = @game.move_hero_by token, params['dx'], params['dy']
+              ws.send JSON.generate({
+                                      :data_type => 'move',
+                                      :log => res[:log]
+                                    })
               dispatch_units
             when :attack
               params = obj['params']

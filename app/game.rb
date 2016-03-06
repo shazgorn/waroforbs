@@ -25,6 +25,17 @@ class Game
       @map.place_at_random hero
     end
   end
+
+  def move_hero_by token, dx, dy
+    res = {:log => nil}
+    if @users[token].hero.alive?
+      @map.move_by @users[token].hero, dx, dy
+    else
+      puts 'Risen dead'
+      res[:log] = 'Your hero is dead'
+    end
+    res
+  end
   
   # a - attacker, {x,y} defender`s coordinates
   def attack(a, x, y)

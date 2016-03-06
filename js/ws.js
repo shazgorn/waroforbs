@@ -56,6 +56,9 @@
               row.insertCell(colCount++).innerHTML = user.score;
             }
             break;
+          case 'move':
+            $('#log').append($(document.createElement('div')).html(data.log));
+            break;
           case 'error':
             switch (data.error) {
               case 'wrong_token':
