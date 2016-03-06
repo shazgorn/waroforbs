@@ -162,3 +162,9 @@ $column-gap: 30px;
     width: 100%;
     z-index: 10;
 }
+
+.group:after {
+    content: "";
+    display: table;
+    clear: both;
+}

@@ -37,6 +37,9 @@ class Controls
         app.revive()
     );
 
+    $('#new-hero').click(() ->
+        app.new_hero()
+    );
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
 

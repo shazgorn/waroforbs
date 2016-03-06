@@ -100,6 +100,9 @@ class OrbApp
             when :revive
               @game.revive token
               dispatch_units
+            when :new_hero
+              @game.new_hero token
+              dispatch_units
             end #case
           rescue Exception => e
             ex e

@@ -7,12 +7,13 @@
     <div id="unit-info">
     	 {{ app.partial('unit-info') }}
     </div>
-    <div id="controls_arrows"></div>
+    <div id="controls_arrows" class="group"></div>
     <div id="dimensions">
     	 {{ app.partial('dimensions') }}
     </div>
     <button id="spawn-bot">Spawn bot</button>
-    <button id="revive">Revive</button>
+    <button id="revive">Revive</button><br>
+    <button id="new-hero">New hero</button>
   </div><!-- #right-col -->
   <div id="log">
   </div>

@@ -21,6 +21,9 @@ class Application
   revive: () ->
     @ws.revive(@user_id)
 
+  new_hero: () ->
+    @ws.new_hero(@user_id)
+
   init_ul: (ul) ->
     @map.remove_units()
     @units = [];

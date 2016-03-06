@@ -111,4 +111,9 @@
   width: 100%;
   z-index: 10; }
 
+.group:after {
+  content: "";
+  display: table;
+  clear: both; }
+
 /*# sourceMappingURL=style.css.map */

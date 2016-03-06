@@ -21,14 +21,15 @@ class Game
 
   def revive(token)
     user = @users[token]
-    p token
-    p @users
-    p user
     unit = user.hero
     if unit.dead?
       @users[unit.user].hero = hero = Hero.new(unit.user)
       place_at_random hero
     end
+  end
+
+  def new_hero(token)
+    token
   end
 
   def move_hero_by token, dx, dy

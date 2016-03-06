@@ -4,3 +4,4 @@ Gemfile.lock
 *.css.map
 img/bg/*
 js/*
+css/*
