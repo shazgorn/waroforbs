@@ -8,6 +8,7 @@ include Mote::Helpers
 Cuba.plugin(Mote::Render)
 
 Cuba.define do
+
   on root do
     render('index')
   end

@@ -57,7 +57,7 @@
             }
             break;
           case 'move':
-            $('#log').append($(document.createElement('div')).html(data.log));
+            $('#log').prepend($(document.createElement('div')).html(data.log));
             break;
           case 'error':
             switch (data.error) {

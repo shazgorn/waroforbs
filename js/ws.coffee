@@ -33,7 +33,7 @@ class WS
               row.insertCell(colCount++).innerHTML = user.login
               row.insertCell(colCount++).innerHTML = user.score
         when 'move'
-           $('#log').append($(document.createElement('div')).html(data.log))
+           $('#log').prepend($(document.createElement('div')).html(data.log))
         when 'error'
           switch data.error
             when 'wrong_token' then location.pathname = '/'
