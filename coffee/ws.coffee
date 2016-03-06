@@ -1,5 +1,6 @@
 class WS
   constructor: (app) ->
+    a = 123
     ws = new WebSocket 'ws://' + location.hostname + ':9293'
     @socket = ws;
     $(window).on('beforeunload', () ->
