@@ -1,13 +1,14 @@
 class Application
   constructor: () ->
     @user_id = localStorage.getItem('user_id')
+    @active_unit_id = null
     unless @user_id then location.pathname = '/'
     @units = []
     @controls = new Controls this
     @ws = new WS this
 
   move: (params) ->
-    @ws.move(@user_id, params)
+    @ws.move(@user_id, @active_unit_id, params)
 
   lock_controls: () ->
     @controls.lock_controls()
@@ -24,6 +25,9 @@ class Application
   new_hero: () ->
     @ws.new_hero(@user_id)
 
+  set_active_unit: (unit_id) ->
+    @active_unit_id = unit_id
+
   init_ul: (ul) ->
     @map.remove_units()
     @units = [];
@@ -31,7 +35,7 @@ class Application
       unit = UnitFactory(unit, @user_id)
       if unit
         @units.push(unit)
-        @map.append(unit)
+        @map.append(unit, @active_unit_id)
     cell = $('#the_hero').parent()
     if cell.length == 1
         pos = cell.attr('id').replace('cell_', '').split('_')

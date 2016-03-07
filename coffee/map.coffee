@@ -1,5 +1,6 @@
 class Map
-  constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells, @map_dim_in_blocks) ->
+  constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells,
+  @map_dim_in_blocks, active_unit_id) ->
     mhc = parseInt(localStorage.getItem('map_height_cells'))
     mwc = parseInt(localStorage.getItem('map_width_cells'))
     unless mhc?
@@ -12,13 +13,13 @@ class Map
       cells = parseInt($(this).val())
       $('#map').height(cell_px * cells)
       localStorage.setItem('map_height_cells', cells)
-      this_obj.centerOnHero('the_hero')
+      this_obj.centerOnHero('hero_' + @active_unit_id)
     )
     $('#map_width').change((e) ->
       cells = parseInt($(this).val())
       $('#map').width(cell_px * cells)
       localStorage.setItem('map_width_cells', cells)
-      this_obj.centerOnHero('the_hero')
+      this_obj.centerOnHero('hero_' + @active_unit_id)
     )
     unless mwc?
       mwc = 13
@@ -28,10 +29,12 @@ class Map
     this.initTooltip()
     this.initDragHandler()
     this.addBlocks()
+
   initTooltip: () ->
     $('#blocks').mousemove((e) ->
       #console.log(e)
     )
+
   initDragHandler: () ->
     moving = false
     sx = 0
@@ -73,6 +76,7 @@ class Map
           .css('left', "#{block_x * @block_dim_in_px}px")
           .css('top', "#{block_y * @block_dim_in_px}px")
           .appendTo('#blocks')
+
   addCell: (x, y) ->
     block_x = x // @block_dim_in_cells
     block_y = y // @block_dim_in_cells
@@ -106,6 +110,7 @@ class Map
 
   remove_units: () ->
     $('.unit').remove()
+
   centerOnHero: (unit_id) ->
     unit_jq = $("##{unit_id}")
     block_pos = unit_jq.parent().parent().position()
@@ -119,7 +124,7 @@ class Map
       .css('top', -1 * top + 'px')
       .css('left', -1 * left + 'px')
 
-  append: (unit) ->
+  append: (unit, active_unit_id) ->
     cell_sel = "#cell_#{unit.x}_#{unit.y}"
     cell = $(cell_sel)
     if cell.length == 0
@@ -130,8 +135,9 @@ class Map
       .appendTo(cell_sel);
     if unit.id
       o.attr('id', unit.id)
-      if unit.id == 'the_hero'
-        this.centerOnHero('the_hero')
+      # looks stupid, may be this one should be centered when map fully draws
+      if unit.id == 'hero_' + active_unit_id
+        this.centerOnHero('hero_' + active_unit_id)
     if unit.title then o.attr('title', unit.title)
     o
 

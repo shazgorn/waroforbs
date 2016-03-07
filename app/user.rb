@@ -1,6 +1,6 @@
 class User
   attr_reader :score, :login
-  attr_accessor :hero, :ws
+  attr_accessor :ws, :hero, :heroes
 
   @@id = 1
   
@@ -8,13 +8,20 @@ class User
     @id = @@id
     @@id += 1
     @login = login
-    @hero = Hero.new(@login)
     @score = 0
     @ws = nil
+    @heroes = []
+    @hero = add_hero
   end
 
   def inc_score(inc)
     @score += inc
+  end
+
+  def add_hero
+    hero = Hero.new(@login)
+    @heroes.push(hero)
+    hero
   end
 
 end

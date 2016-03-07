@@ -29,10 +29,12 @@ class Game
   end
 
   def new_hero(token)
-    token
+    user = @users[token]
+    hero = user.add_hero
+    place_at_random hero
   end
 
-  def move_hero_by token, dx, dy
+  def move_hero_by token, hero_id, dx, dy
     res = {:log => nil}
     if @users[token].hero.alive?
       @map.move_by @users[token].hero, dx, dy

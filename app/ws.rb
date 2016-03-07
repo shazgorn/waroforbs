@@ -16,7 +16,7 @@ end
 
 # Class
 class OrbApp
-  MAX_ORBS = 10
+  MAX_ORBS = 1
   MAX_BOTS = 5
   
   def initialize
@@ -65,6 +65,7 @@ class OrbApp
                                      :block_dim_in_cells => Map::BLOCK_DIM,
                                      :block_dim_in_px => Map::BLOCK_DIM_PX,
                                      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
+                                     :active_unit => user.hero.id,
                                      :ul => @game.map.ul})
             when :close
               @game.map.remove @game.users[token].hero
@@ -74,7 +75,7 @@ class OrbApp
               ws.send JSON.generate({:data_type => 'ul', :ul => @game.map.ul})
             when :move
               params = obj['params']
-              res = @game.move_hero_by token, params['dx'], params['dy']
+              res = @game.move_hero_by token, params['unit_id'], params['dx'], params['dy']
               ws.send JSON.generate({
                                       :data_type => 'move',
                                       :log => res[:log]

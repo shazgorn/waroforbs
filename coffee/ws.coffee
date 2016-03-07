@@ -18,6 +18,7 @@ class WS
         switch data.data_type
           when 'init_map'
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
+            app.set_active_unit data.active_unit
             app.init_ul data.ul
             @initialized = true
           when 'ul' then app.init_ul(data.ul)
@@ -43,10 +44,11 @@ class WS
               when 'wrong_token' then location.pathname = '/'
       app.unlock_controls()
 
-  move: (token, params) ->
+  move: (token, unit_id, params) ->
     @socket.send(
       JSON.stringify({
           token: token,
+          unit_id: unit_id,
           op: 'move',
           params: params
       })

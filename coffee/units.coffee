@@ -11,7 +11,7 @@ class Hero extends Unit
 class PlayerHero extends Hero
   constructor: (unit) ->
     super unit
-    @id = 'the_hero'
+    @id = 'hero_' + unit['@id']
     @css_class = 'player_hero'
 
 class OtherPlayerHero extends Hero
@@ -51,9 +51,11 @@ UnitFactory = (unit_hash, user_id) ->
   unit
 
 window.UnitFactory = UnitFactory
+
 # there will be unit info factory placed in separate file, each unit type will
 # have it`s own fields i think
 UnitInfo = (unit) ->
+        $('#unit-id-info').html(unit['@id'])
         $('#player-name-info').html(unit['@user'])
         $('#hp-info').html(unit['@hp'])
         $('#x-info').html(unit['@x'])
