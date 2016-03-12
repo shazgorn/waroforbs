@@ -11,6 +11,7 @@ class Unit
     @user = user
     @dead = false
     @score = 0
+    @pos = nil
   end
   
   def dead?
@@ -54,7 +55,7 @@ class Hero < Unit
     super('PlayerHero', user)
     @hp = 40
     @dmg = 30
-    @pos = 0
+    @pos = nil
     @score = 10
   end
 

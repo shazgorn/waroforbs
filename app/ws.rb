@@ -50,37 +50,30 @@ class OrbApp
             puts "Recieved message: #{msg}"
             obj = JSON.parse(msg)
             token = obj['token']
+            if !obj['unit_id'].nil?
+              active_unit_id = obj['unit_id'].to_i
+            end
             case obj['op'].to_sym
             when :init
-              if @game.users.key? token
-                user = @game.users[token]
-              else
-                @game.users[token] = user = User.new(token)
-                user.ws = ws
-              end
-              @game.place_at_random user.hero
+              user = @game.init_user token, ws
               ws.send JSON.generate({:data_type => 'init_map',
                                      :map_shift => Map::SHIFT,
                                      :cell_dim_in_px => Map::CELL_DIM,
                                      :block_dim_in_cells => Map::BLOCK_DIM,
                                      :block_dim_in_px => Map::BLOCK_DIM_PX,
                                      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
-                                     :active_unit => user.hero.id,
+                                     :active_unit => user.active_hero_id,
                                      :ul => @game.map.ul})
             when :close
-              @game.map.remove @game.users[token].hero
-              @game.users.delete token
+              #@game.map.remove @game.users[token].hero
+              #@game.users.delete token
               dispatch_units
             when :ul
               ws.send JSON.generate({:data_type => 'ul', :ul => @game.map.ul})
             when :move
               params = obj['params']
-              res = @game.move_hero_by token, params['unit_id'], params['dx'], params['dy']
-              ws.send JSON.generate({
-                                      :data_type => 'move',
-                                      :log => res[:log]
-                                    })
-              dispatch_units
+              @game.move_hero_by token, active_unit_id, params['dx'].to_i, params['dy'].to_i
+              dispatch_units @game.users[token], :move
             when :attack
               params = obj['params']
               damages = @game.attack @game.users[token].hero, params['x'], params['y']
@@ -172,14 +165,19 @@ class OrbApp
     dispatch_changes({:data_type => 'scores', :scores => @game.collect_scores})
   end
 
-  def dispatch_units
-    dispatch_changes({:data_type => 'ul', :ul => @game.map.ul})
+  def dispatch_units(user = nil, action = nil)
+    dispatch_changes({:data_type => 'ul', :ul => @game.map.ul}, user, action)
   end
 
-  def dispatch_changes(changes)
+  def dispatch_changes(changes, user = nil, action = nil)
     @ws_pool.each do |ws|
       unless ws.nil?
-        ws.send JSON.generate(changes)
+        if !user.nil? && !action.nil? && user.ws == ws
+          puts '1234'
+          ws.send JSON.generate(changes.merge({:action => action}))
+        else
+          ws.send JSON.generate(changes)
+        end
       end
     end
   end

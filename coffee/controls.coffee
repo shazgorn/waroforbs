@@ -12,13 +12,13 @@ class Controls
       3: {arr: '&#8600;', x:  1, y:  1},
     controls_order = [7, 8, 9, 4, 5, 6, 1, 2, 3]
     for bn in controls_order
-        control = controls[bn];
-        control_button = document.createElement('button');
-        $(control_button).html(control.arr);
-        $(control_button).attr('id', 'control_' + bn);
-        control_button.dataset.dx = control.x;
-        control_button.dataset.dy = control.y;
-        $('#controls_arrows').append(control_button);
+      control = controls[bn];
+      control_button = document.createElement('button');
+      $(control_button).html(control.arr);
+      $(control_button).attr('id', 'control_' + bn);
+      control_button.dataset.dx = control.x;
+      control_button.dataset.dy = control.y;
+      $('#controls_arrows').append(control_button);
     this.lock_controls();
     $('#controls_arrows button').click(() ->
         app.lock_controls()
@@ -40,10 +40,28 @@ class Controls
     $('#new-hero').click(() ->
         app.new_hero()
     );
+
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
 
   unlock_controls: () ->
     $('#controls_arrows button:not(#control_5)').prop('disabled', '')
+
+  unit_info: (unit) ->
+    if $('#unit-info-' + unit['@id']).length == 0
+      $('#unit-info-template').clone().attr('id', 'unit-info-' +
+      unit['@id']).insertAfter('#unit-info-template')
+
+    id = '#unit-info-' + unit['@id']
+    $(id).data('unit-id', unit['@id'])
+    $(id).click(() ->
+      App.set_active_unit(unit['@id'])
+      App.map.centerOnHero('hero_' + unit['@id'])
+    )
+    $(id + ' .unit-id-info').html(unit['@id'])
+    $(id + ' .player-name-info').html(unit['@user'])
+    $(id + ' .hp-info').html(unit['@hp'])
+    $(id + ' .x-info').html(unit['@x'])
+    $(id + ' .y-info').html(unit['@y'])
 
 window.Controls = Controls

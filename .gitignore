@@ -1,7 +1,9 @@
 *~
 Gemfile.lock
 *.sass-cache/
+*.css
 *.css.map
 img/bg/*
 js/*
 css/*
+

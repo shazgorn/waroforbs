@@ -27,25 +27,31 @@ class Application
 
   set_active_unit: (unit_id) ->
     @active_unit_id = unit_id
+    @map.centerOnHero('hero_' + unit_id)
+
+  center_on_active: () ->
+    @map.centerOnHero('hero_' + @active_unit_id)
 
   init_ul: (ul) ->
     @map.remove_units()
     @units = [];
-    for pos, unit of ul
-      unit = UnitFactory(unit, @user_id)
-      if unit
-        @units.push(unit)
-        @map.append(unit, @active_unit_id)
+    for pos, unit_hash of ul
+      unit_obj = UnitFactory(unit_hash, @user_id)
+      if unit_obj
+        @units.push(unit_obj)
+        @map.append(unit_obj)
+        if unit_hash['@user'] == @user_id
+          @controls.unit_info(unit_hash)
     cell = $('#the_hero').parent()
     if cell.length == 1
-        pos = cell.attr('id').replace('cell_', '').split('_')
-        app = this
-        for dx in [-1..1]
-          for dy in [-1..1]
-            if dx || dy
-              x = parseInt(pos[0]) + dx
-              y = parseInt(pos[1]) + dy
-              this.bind_attack_handler(app, x, y)
+      pos = cell.attr('id').replace('cell_', '').split('_')
+      app = this
+      for dx in [-1..1]
+        for dy in [-1..1]
+          if dx || dy
+            x = parseInt(pos[0]) + dx
+            y = parseInt(pos[1]) + dy
+            this.bind_attack_handler(app, x, y)
         
   bind_attack_handler: (app, x, y) ->
     adj_cell = $('#cell_' + x + '_' + y)
@@ -55,4 +61,4 @@ class Application
           app.ws.attack(app.user_id, {x: x, y: y})
       )
 
-new Application
+window.App = new Application

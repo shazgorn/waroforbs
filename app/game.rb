@@ -9,6 +9,21 @@ class Game
     @map = Map.new
   end
 
+  def init_user token, ws
+    if @users.key? token
+      user = @users[token]
+      user.ws = ws
+    else
+      @users[token] = user = User.new(token)
+      user.ws = ws
+    end
+    # find active unit from @active_unit_id or iterate over user.heroes to find !nil & !dead
+    if user.heroes.length == 1 && user.hero.pos.nil?
+      place_at_random user.hero
+    end
+    user
+  end
+
   def collect_scores
     @users.values.collect{|user| {
                             :login => user.login,
@@ -36,8 +51,10 @@ class Game
 
   def move_hero_by token, hero_id, dx, dy
     res = {:log => nil}
-    if @users[token].hero.alive?
-      @map.move_by @users[token].hero, dx, dy
+    user = @users[token]
+    hero = user.heroes[hero_id]
+    if hero.alive?
+      @map.move_by hero, dx, dy
     else
       puts 'Risen dead'
       res[:log] = 'Your hero is dead'

@@ -1,5 +1,5 @@
 class User
-  attr_reader :score, :login
+  attr_reader :score, :login, :active_hero_id
   attr_accessor :ws, :hero, :heroes
 
   @@id = 1
@@ -10,8 +10,9 @@ class User
     @login = login
     @score = 0
     @ws = nil
-    @heroes = []
+    @heroes = {}
     @hero = add_hero
+    @active_hero_id = @hero.id
   end
 
   def inc_score(inc)
@@ -20,8 +21,16 @@ class User
 
   def add_hero
     hero = Hero.new(@login)
-    @heroes.push(hero)
+    @heroes[hero.id] = hero
     hero
+  end
+
+  def first_alive_hero
+    @heroes
+  end
+
+  def active_hero
+    @heroes[@active_hero_id]
   end
 
 end

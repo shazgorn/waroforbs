@@ -121,8 +121,15 @@ $column-gap: 30px;
     &:hover {
         opacity: 1;
     }
-    #unit-info {
+    #unit-info-template {
+	display: none;
+    }
+    .unit-info {
 	background-color: white;
+        &:hover {
+            background-color: gray;
+            cursor: pointer;
+        }
     }
     label {
         color: #ccc;

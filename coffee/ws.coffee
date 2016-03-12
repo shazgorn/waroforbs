@@ -18,10 +18,13 @@ class WS
         switch data.data_type
           when 'init_map'
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
-            app.set_active_unit data.active_unit
             app.init_ul data.ul
+            app.set_active_unit data.active_unit
             @initialized = true
-          when 'ul' then app.init_ul(data.ul)
+          when 'ul'
+            app.init_ul(data.ul)
+            if data.action == 'move'
+              app.center_on_active()
           when 'dmg' then app.map.dmg(data.x, data.y, data.dmg, data.ca_dmg)
           when 'scores'
             table = $('#scores table').get(0)
