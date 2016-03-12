@@ -16,7 +16,7 @@ end
 
 # Class
 class OrbApp
-  MAX_ORBS = 1
+  MAX_ORBS = 20
   MAX_BOTS = 5
   
   def initialize
@@ -72,11 +72,15 @@ class OrbApp
               ws.send JSON.generate({:data_type => 'ul', :ul => @game.map.ul})
             when :move
               params = obj['params']
-              @game.move_hero_by token, active_unit_id, params['dx'].to_i, params['dy'].to_i
-              dispatch_units @game.users[token], :move
+              res = @game.move_hero_by token, active_unit_id, params['dx'].to_i, params['dy'].to_i
+              if res[:moved]
+                dispatch_units @game.users[token], :move
+              else
+                dispatch_units
+              end
             when :attack
               params = obj['params']
-              damages = @game.attack @game.users[token].hero, params['x'], params['y']
+              damages = @game.attack token, active_unit_id, params['x'].to_i, params['y'].to_i
               ws.send JSON.generate({
                                       :data_type => 'dmg',
                                       :x => params['x'],
@@ -173,7 +177,6 @@ class OrbApp
     @ws_pool.each do |ws|
       unless ws.nil?
         if !user.nil? && !action.nil? && user.ws == ws
-          puts '1234'
           ws.send JSON.generate(changes.merge({:action => action}))
         else
           ws.send JSON.generate(changes)

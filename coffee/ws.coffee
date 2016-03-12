@@ -64,10 +64,11 @@ class WS
       })
     )
 
-  attack: (token, params) ->
+  attack: (token, unit_id, params) ->
     @socket.send(
       JSON.stringify({
           token: token,
+          unit_id: unit_id,
           op: 'attack',
           params: params
       })

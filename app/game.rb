@@ -1,5 +1,6 @@
 # this class gotta contain some logic about units interactions
 # and all other non-map things
+# dead heroes are dead if they never exists
 class Game
   attr_reader :map
   attr_accessor :users
@@ -50,11 +51,11 @@ class Game
   end
 
   def move_hero_by token, hero_id, dx, dy
-    res = {:log => nil}
+    res = {:log => nil, :moved => false}
     user = @users[token]
     hero = user.heroes[hero_id]
     if hero.alive?
-      @map.move_by hero, dx, dy
+      res[:moved] = @map.move_by hero, dx, dy
     else
       puts 'Risen dead'
       res[:log] = 'Your hero is dead'
@@ -69,7 +70,9 @@ class Game
   end
   
   # a - attacker, {x,y} defender`s coordinates
-  def attack(a, x, y)
+  def attack token, active_unit_id, x, y
+    user = @users[token]
+    a = user.heroes[active_unit_id]
     res = {
       :a_data => {},
       :d_data => {}

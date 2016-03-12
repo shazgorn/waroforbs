@@ -34,7 +34,7 @@ class Application
 
   init_ul: (ul) ->
     @map.remove_units()
-    @units = [];
+    @units = []
     for pos, unit_hash of ul
       unit_obj = UnitFactory(unit_hash, @user_id)
       if unit_obj
@@ -42,7 +42,7 @@ class Application
         @map.append(unit_obj)
         if unit_hash['@user'] == @user_id
           @controls.unit_info(unit_hash)
-    cell = $('#the_hero').parent()
+    cell = $('#hero_' + @active_unit_id).parent()
     if cell.length == 1
       pos = cell.attr('id').replace('cell_', '').split('_')
       app = this
@@ -58,7 +58,7 @@ class Application
     unit = adj_cell.children('div').get(0)
     if unit
       $(unit).css('cursor', 'crosshair').click(() ->
-          app.ws.attack(app.user_id, {x: x, y: y})
+          app.ws.attack(app.user_id, app.active_unit_id, {x: x, y: y})
       )
 
 window.App = new Application

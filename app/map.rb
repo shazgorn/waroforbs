@@ -88,6 +88,7 @@ class Map
   end
 
   def move_by(unit, dx, dy)
+    res = false
     new_x = unit.x + dx
     new_y = unit.y + dy
     new_pos = c2h(new_x, new_y)
@@ -97,7 +98,9 @@ class Map
       @ul.delete unit.pos
       unit.pos = new_pos
       @ul[new_pos] = unit
+      res = true
     end
+    res
   end
 
   def remove(unit)
