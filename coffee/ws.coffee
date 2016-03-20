@@ -14,13 +14,13 @@ class WS
     ws.onmessage = (e) ->
       data = JSON.parse(e.data)
       console.log(data)
-      if @initialized || data.data_type == 'init_map'
+      if app.initialized || data.data_type == 'init_map'
         switch data.data_type
           when 'init_map'
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
             app.init_ul data.ul
             app.set_active_unit data.active_unit
-            @initialized = true
+            app.initialized = true
           when 'ul'
             app.init_ul(data.ul)
             if data.action == 'move'
@@ -45,7 +45,7 @@ class WS
           when 'error'
             switch data.error
               when 'wrong_token' then location.pathname = '/'
-      app.unlock_controls()
+        app.unlock_controls()
 
   move: (token, unit_id, params) ->
     @socket.send(

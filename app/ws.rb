@@ -88,11 +88,10 @@ class OrbApp
                                       :dmg => damages[:a_data][:dmg],
                                       :ca_dmg => damages[:a_data][:ca_dmg]
                                     })
-              if damages.has_key? :d_data && !damages[:d].nil?
-                @game.users[damages[:d].user].ws.send JSON.generate(damages[:d_data])
+              if damages.has_key? :d_data && !damages[:d_user].nil?
+                @game.users[damages[:d_user]].ws.send JSON.generate(damages[:d_data])
               end
               dispatch_units
-              dispatch_scores
             when :spawn_bot
               spawn_bot
             when :revive
@@ -148,7 +147,6 @@ class OrbApp
                 dmg = res[:dmg] unless res[:dmg].nil?
               end
             end
-            dispatch_scores
             sleep(2)
             if dmg.nil?
               dx = Random.rand(3) - 1

@@ -114,15 +114,18 @@ class Map
   centerOnHero: (unit_id) ->
     unit_jq = $("##{unit_id}")
     block_pos = unit_jq.parent().parent().position()
-    cell_pos = unit_jq.parent().position()
-    map = $("#map")
-    bias_top = (map.height() - @cell_dim_in_px) / 2
-    bias_left = (map.width() - @cell_dim_in_px) / 2
-    top = block_pos.top + cell_pos.top - bias_top
-    left = block_pos.left + cell_pos.left - bias_left
-    $('#blocks')
-      .css('top', -1 * top + 'px')
-      .css('left', -1 * left + 'px')
+    if block_pos
+      cell_pos = unit_jq.parent().position()
+      map = $("#map")
+      bias_top = (map.height() - @cell_dim_in_px) / 2
+      bias_left = (map.width() - @cell_dim_in_px) / 2
+      top = block_pos.top + cell_pos.top - bias_top
+      left = block_pos.left + cell_pos.left - bias_left
+      $('#blocks')
+        .css('top', -1 * top + 'px')
+        .css('left', -1 * left + 'px')
+    else
+      console.log('No position or no unit')
 
   append: (unit) ->
     cell_sel = "#cell_#{unit.x}_#{unit.y}"

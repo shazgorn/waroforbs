@@ -4,6 +4,7 @@ class Unit
 
   @@id = 1
 
+  # @user login string
   def initialize(type, user=nil)
     @id = @@id
     @@id += 1
