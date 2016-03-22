@@ -99,7 +99,8 @@ class OrbApp
               dispatch_units
             when :new_hero
               @game.new_hero token
-              dispatch_units
+              user = @game.users[token]
+              dispatch_units user, :new_hero, {:active_unit => user.active_hero_id}
             end #case
           rescue Exception => e
             ex e
@@ -167,15 +168,15 @@ class OrbApp
     dispatch_changes({:data_type => 'scores', :scores => @game.collect_scores})
   end
 
-  def dispatch_units(user = nil, action = nil)
-    dispatch_changes({:data_type => 'ul', :ul => @game.map.ul}, user, action)
+  def dispatch_units(user = nil, action = nil, data = {})
+    dispatch_changes({:data_type => 'ul', :ul => @game.map.ul}, user, action, data)
   end
 
-  def dispatch_changes(changes, user = nil, action = nil)
+  def dispatch_changes(changes, user = nil, action = nil, data = {})
     @ws_pool.each do |ws|
       unless ws.nil?
         if !user.nil? && !action.nil? && user.ws == ws
-          ws.send JSON.generate(changes.merge({:action => action}))
+          ws.send JSON.generate(changes.merge({:action => action}).merge(data))
         else
           ws.send JSON.generate(changes)
         end

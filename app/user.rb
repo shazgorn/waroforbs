@@ -12,7 +12,6 @@ class User
     @ws = nil
     @heroes = {}
     @hero = add_hero
-    @active_hero_id = @hero.id
   end
 
   def inc_score(inc)
@@ -21,6 +20,9 @@ class User
 
   def add_hero
     hero = Hero.new(@login)
+    if @heroes.length == 0
+      @active_hero_id = hero.id
+    end
     @heroes[hero.id] = hero
     hero
   end

@@ -12,6 +12,7 @@ class PlayerHero extends Hero
   constructor: (unit) ->
     super unit
     @id = 'hero_' + unit['@id']
+    @object_id = unit['@id']
     @css_class = 'player_hero'
 
 class OtherPlayerHero extends Hero

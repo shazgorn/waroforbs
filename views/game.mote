@@ -4,7 +4,7 @@
     </div>
   </div>
   <div id="right-col">
-    <div id="unit-info-template" class="unit-info">
+    <div class="unit-info unit-info-template">
     	 {{ app.partial('unit-info') }}
     </div>
     <div id="controls_arrows" class="group"></div>

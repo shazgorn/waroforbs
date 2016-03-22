@@ -48,15 +48,21 @@ class Controls
     $('#controls_arrows button:not(#control_5)').prop('disabled', '')
 
   unit_info: (unit) ->
-    if $('#unit-info-' + unit['@id']).length == 0
-      $('#unit-info-template').clone().attr('id', 'unit-info-' +
-      unit['@id']).insertAfter('#unit-info-template')
-
     id = '#unit-info-' + unit['@id']
-    $(id).data('unit-id', unit['@id'])
+    # console.log(id)
+    # console.log($(id).length, $(id).parent().length)
+    if $(id).length == 0
+      $('.unit-info-template')
+        .clone()
+        .prependTo('#right-col')
+        .attr('id', 'unit-info-' + unit['@id'])
+        .data('id', unit['@id'])
+        .removeClass('unit-info-template')
+    
+    $(id).data('unit-id', unit['@id']).data('id', unit['@id'])
     $(id).click(() ->
       App.set_active_unit(unit['@id'])
-      App.map.centerOnHero('hero_' + unit['@id'])
+      App.center_on_active()
     )
     $(id + ' .unit-id-info').html(unit['@id'])
     $(id + ' .player-name-info').html(unit['@user'])

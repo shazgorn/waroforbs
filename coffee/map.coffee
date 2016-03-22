@@ -13,13 +13,13 @@ class Map
       cells = parseInt($(this).val())
       $('#map').height(cell_px * cells)
       localStorage.setItem('map_height_cells', cells)
-      # this_obj.centerOnHero('hero_' + @active_unit_id)
+      # this_obj.center_on_hero('hero_' + @active_unit_id)
     )
     $('#map_width').change((e) ->
       cells = parseInt($(this).val())
       $('#map').width(cell_px * cells)
       localStorage.setItem('map_width_cells', cells)
-      # this_obj.centerOnHero('hero_' + @active_unit_id)
+      # this_obj.center_on_hero('hero_' + @active_unit_id)
     )
     unless mwc?
       mwc = 13
@@ -111,7 +111,7 @@ class Map
   remove_units: () ->
     $('.unit').remove()
 
-  centerOnHero: (unit_id) ->
+  center_on_hero: (unit_id) ->
     unit_jq = $("##{unit_id}")
     block_pos = unit_jq.parent().parent().position()
     if block_pos

@@ -22,8 +22,12 @@ class WS
             app.set_active_unit data.active_unit
             app.initialized = true
           when 'ul'
-            app.init_ul(data.ul)
-            if data.action == 'move'
+            app.init_ul data.ul
+            if data.action == 'new_hero'
+              console.log(data.active_unit)
+            if data.active_unit
+              app.set_active_unit data.active_unit
+            else if data.action == 'move'
               app.center_on_active()
           when 'dmg' then app.map.dmg(data.x, data.y, data.dmg, data.ca_dmg)
           when 'scores'

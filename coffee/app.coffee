@@ -30,10 +30,10 @@ class Application
 
   set_active_unit: (unit_id) ->
     @active_unit_id = unit_id
-    @map.centerOnHero('hero_' + unit_id)
+    @map.center_on_hero('hero_' + unit_id)
 
   center_on_active: () ->
-    @map.centerOnHero('hero_' + @active_unit_id)
+    @map.center_on_hero('hero_' + @active_unit_id)
 
   init_ul: (ul) ->
     @map.remove_units()
@@ -44,6 +44,7 @@ class Application
       if unit_obj
         @units.push(unit_obj)
         @map.append(unit_obj)
+        # console.log(unit_hash, @user_id)
         if unit_hash['@user'] == @user_id
           @my_units.push(unit_obj)
           @controls.unit_info(unit_hash)
@@ -56,13 +57,24 @@ class Application
           if dx || dy
             x = parseInt(pos[0]) + dx
             y = parseInt(pos[1]) + dy
-            this.bind_attack_handler(app, x, y)
+            @bind_attack_handler(app, x, y)
     # delete dead units
-    console.log('my units:', @my_units)
+    # console.log('my units:', @my_units)
     if @my_units.length == 0
-      console.log('no units')
-    $('unit-info').each((el) ->
-      console.log($(el).data('unit-id'))
+      # console.log('no units')
+      @lock_controls()
+    my_units_ids = $.map(@my_units, (unit) ->
+      unit.object_id
+    )
+    # console.log(my_units_ids)
+    # console.log($('.unit-info'))
+    # console.log($('.unit-info:not(.unit-info-template)'))
+    # return
+    $('.unit-info:not(.unit-info-template)').each((i, el) ->
+      # console.log(el, $(el).data('id'), my_units_ids)
+      if $.inArray($(el).data('id'), my_units_ids) == -1
+        # console.log('not in array')
+        $(el).remove()
     )
     null
         
