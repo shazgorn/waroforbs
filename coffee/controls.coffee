@@ -49,8 +49,6 @@ class Controls
 
   unit_info: (unit) ->
     id = '#unit-info-' + unit['@id']
-    # console.log(id)
-    # console.log($(id).length, $(id).parent().length)
     if $(id).length == 0
       $('.unit-info-template')
         .clone()
@@ -63,6 +61,7 @@ class Controls
     $(id).click(() ->
       App.set_active_unit(unit['@id'])
       App.center_on_active()
+      App.unlock_controls()
     )
     $(id + ' .unit-id-info').html(unit['@id'])
     $(id + ' .player-name-info').html(unit['@user'])

@@ -29,11 +29,13 @@ class Application
     @ws.new_hero(@user_id)
 
   set_active_unit: (unit_id) ->
-    @active_unit_id = unit_id
-    @map.center_on_hero('hero_' + unit_id)
+    if unit_id != @active_unit_id
+      @active_unit_id = unit_id
+      @center_on_active()
 
   center_on_active: () ->
     @map.center_on_hero('hero_' + @active_unit_id)
+    @bind_attack_handlers()
 
   init_ul: (ul) ->
     @map.remove_units()
@@ -44,46 +46,42 @@ class Application
       if unit_obj
         @units.push(unit_obj)
         @map.append(unit_obj)
-        # console.log(unit_hash, @user_id)
         if unit_hash['@user'] == @user_id
           @my_units.push(unit_obj)
           @controls.unit_info(unit_hash)
+    @bind_attack_handlers()
+    # delete dead units
+    if @my_units.length == 0
+      @lock_controls()
+    my_units_ids = $.map(@my_units, (unit) ->
+      unit.object_id
+    )
+    $('.unit-info:not(.unit-info-template)').each((i, el) =>
+      id = $(el).data('id')
+      if $.inArray(id, my_units_ids) == -1
+        $(el).remove()
+        if id == @active_unit_id
+          @lock_controls()
+    )
+    null
+
+  bind_attack_handlers: () ->
     cell = $('#hero_' + @active_unit_id).parent()
     if cell.length == 1
       pos = cell.attr('id').replace('cell_', '').split('_')
-      app = this
       for dx in [-1..1]
         for dy in [-1..1]
           if dx || dy
             x = parseInt(pos[0]) + dx
             y = parseInt(pos[1]) + dy
-            @bind_attack_handler(app, x, y)
-    # delete dead units
-    # console.log('my units:', @my_units)
-    if @my_units.length == 0
-      # console.log('no units')
-      @lock_controls()
-    my_units_ids = $.map(@my_units, (unit) ->
-      unit.object_id
-    )
-    # console.log(my_units_ids)
-    # console.log($('.unit-info'))
-    # console.log($('.unit-info:not(.unit-info-template)'))
-    # return
-    $('.unit-info:not(.unit-info-template)').each((i, el) ->
-      # console.log(el, $(el).data('id'), my_units_ids)
-      if $.inArray($(el).data('id'), my_units_ids) == -1
-        # console.log('not in array')
-        $(el).remove()
-    )
-    null
+            @bind_attack_handler(x, y)
         
-  bind_attack_handler: (app, x, y) ->
+  bind_attack_handler: (x, y) ->
     adj_cell = $('#cell_' + x + '_' + y)
     unit = adj_cell.children('div').get(0)
     if unit
       $(unit).css('cursor', 'crosshair').click(() ->
-          app.ws.attack(app.user_id, app.active_unit_id, {x: x, y: y})
+          App.ws.attack(App.user_id, App.active_unit_id, {x: x, y: y})
       )
 
 window.App = new Application

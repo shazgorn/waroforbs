@@ -23,8 +23,6 @@ class WS
             app.initialized = true
           when 'ul'
             app.init_ul data.ul
-            if data.action == 'new_hero'
-              console.log(data.active_unit)
             if data.active_unit
               app.set_active_unit data.active_unit
             else if data.action == 'move'

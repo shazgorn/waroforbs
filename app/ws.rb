@@ -91,7 +91,8 @@ class OrbApp
               if damages.has_key? :d_data && !damages[:d_user].nil?
                 @game.users[damages[:d_user]].ws.send JSON.generate(damages[:d_data])
               end
-              dispatch_units
+              user = @game.users[token]
+              dispatch_units user, :attack, {:active_unit => user.active_hero_id}
             when :spawn_bot
               spawn_bot
             when :revive

@@ -33,7 +33,7 @@ class Game
   
   def bury(unit)
     @map.remove unit
-    @users[unit.user].heroes.delete(unit.id)
+    @users[unit.user].bury_hero unit.id
   end
 
   def revive(token)
@@ -55,7 +55,7 @@ class Game
     res = {:log => nil, :moved => false}
     user = @users[token]
     hero = user.heroes[hero_id]
-    if hero.alive?
+    if hero && hero.alive?
       res[:moved] = @map.move_by hero, dx, dy
     else
       puts 'Risen dead'
@@ -72,13 +72,17 @@ class Game
   
   # a - attacker, {x,y} defender`s coordinates
   def attack token, active_unit_id, x, y
-    a_user = @users[token]
-    a = a_user.heroes[active_unit_id]
-    a_pos = a.pos
     res = {
       :a_data => {},
       :d_data => {}
     }
+    a_user = @users[token]
+    a = a_user.heroes[active_unit_id]
+    if a.nil?
+      res[:d_data][:log] = 'Your hero is dead'
+      return res
+    end
+    a_pos = a.pos
     if @map.has?(x, y)
       d = @map.at(x, y)
       d_user = d.user

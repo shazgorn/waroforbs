@@ -35,6 +35,16 @@ class User
     @heroes[@active_hero_id]
   end
 
+  def bury_hero unit_id
+    @heroes.delete unit_id
+    first = @heroes.values.first
+    if first.nil?
+      @active_hero_id = nil
+    else
+      @active_hero_id = first.id
+    end
+  end
+
 end
 
 class Bot < User
