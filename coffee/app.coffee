@@ -8,6 +8,7 @@ class Application
     @controls = new Controls this
     @ws = new WS this
     @initialized = false
+    @attacking = false
 
   move: (params) ->
     @ws.move(@user_id, @active_unit_id, params)
@@ -80,8 +81,15 @@ class Application
     adj_cell = $('#cell_' + x + '_' + y)
     unit = adj_cell.children('div').get(0)
     if unit
-      $(unit).css('cursor', 'crosshair').click(() ->
-          App.ws.attack(App.user_id, App.active_unit_id, {x: x, y: y})
+      $(unit).css('cursor', 'crosshair').one('click', () =>
+        if !@attacking
+          @attacking = true
+          @ws.attack(@user_id, @active_unit_id, {x: x, y: y})
       )
+
+  log: (data) ->
+    div = document.createElement('div')
+    div.innerHTML = data
+    $(div).prependTo('#log')
 
 window.App = new Application

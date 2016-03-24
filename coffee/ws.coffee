@@ -27,7 +27,11 @@ class WS
               app.set_active_unit data.active_unit
             else if data.action == 'move'
               app.center_on_active()
-          when 'dmg' then app.map.dmg(data.x, data.y, data.dmg, data.ca_dmg)
+          when 'dmg'
+            app.map.dmg(data.x, data.y, data.dmg, data.ca_dmg)
+            app.log('damage dealt ' + data.dmg)
+            app.log('damage taken ' + data.ca_dmg)
+            app.attacking = false
           when 'scores'
             table = $('#scores table').get(0)
             rowCount = 0

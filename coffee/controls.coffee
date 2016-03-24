@@ -19,7 +19,7 @@ class Controls
       control_button.dataset.dx = control.x;
       control_button.dataset.dy = control.y;
       $('#controls_arrows').append(control_button);
-    this.lock_controls();
+    @lock_controls();
     $('#controls_arrows button').click(() ->
         app.lock_controls()
         app.move(
