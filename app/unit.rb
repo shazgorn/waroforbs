@@ -54,7 +54,7 @@ class Hero < Unit
 
   def initialize(user)
     super('PlayerHero', user)
-    @hp = 40
+    @hp = 150
     @dmg = 30
     @pos = nil
     @score = 10
@@ -76,7 +76,7 @@ class GreenOrb < Unit
   def initialize
     super('GreenOrb')
     @hp = 100
-    @dmg = 100
+    @dmg = 20
     @score = 3
   end
 

@@ -80,16 +80,18 @@ class OrbApp
               end
             when :attack
               params = obj['params']
-              damages = @game.attack token, active_unit_id, params['x'].to_i, params['y'].to_i
+              res = @game.attack token, active_unit_id, params['x'].to_i, params['y'].to_i
               ws.send JSON.generate({
                                       :data_type => 'dmg',
                                       :x => params['x'],
                                       :y => params['y'],
-                                      :dmg => damages[:a_data][:dmg],
-                                      :ca_dmg => damages[:a_data][:ca_dmg]
+                                      :dmg => res[:a_data][:dmg],
+                                      :ca_dmg => res[:a_data][:ca_dmg],
+                                      :a_id => active_unit_id,
+                                      :a_dead => res[:a_data][:dead]
                                     })
-              if damages.has_key? :d_data && !damages[:d_user].nil?
-                @game.users[damages[:d_user]].ws.send JSON.generate(damages[:d_data])
+              if res.has_key? :d_data && !res[:d_user].nil?
+                @game.users[res[:d_user]].ws.send JSON.generate(res[:d_data])
               end
               user = @game.users[token]
               dispatch_units user, :attack, {:active_unit => user.active_hero_id}

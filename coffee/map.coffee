@@ -104,9 +104,9 @@ class Map
         setTimeout((() -> d.remove()), 1234)
     , 123)
 
-  dmg: (x, y, dmg, ca_dmg) ->
+  dmg: (x, y, dmg, ca_dmg, a_id) ->
     this.applyDmgTo($("#cell_#{x}_#{y}"), dmg, 'def')
-    this.applyDmgTo($('#the_hero').parent(), ca_dmg, 'att')
+    this.applyDmgTo($("#hero_#{a_id}").parent(), ca_dmg, 'att')
 
   remove_units: () ->
     $('.unit').remove()

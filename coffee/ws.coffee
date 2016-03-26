@@ -28,9 +28,11 @@ class WS
             else if data.action == 'move'
               app.center_on_active()
           when 'dmg'
-            app.map.dmg(data.x, data.y, data.dmg, data.ca_dmg)
+            app.map.dmg(data.x, data.y, data.dmg, data.ca_dmg, data.a_id)
             app.log('damage dealt ' + data.dmg)
             app.log('damage taken ' + data.ca_dmg)
+            if data.a_dead
+              app.log('Your hero has been killed')
             app.attacking = false
           when 'scores'
             table = $('#scores table').get(0)

@@ -33,7 +33,10 @@ class Game
   
   def bury(unit)
     @map.remove unit
-    @users[unit.user].bury_hero unit.id
+    user = @users[unit.user]
+    if !user.nil?
+      user.bury_hero unit.id
+    end
   end
 
   def revive(token)
@@ -73,8 +76,12 @@ class Game
   # a - attacker, {x,y} defender`s coordinates
   def attack token, active_unit_id, x, y
     res = {
-      :a_data => {},
-      :d_data => {}
+      :a_data => {
+        :dead => false
+      },
+      :d_data => {
+        :dead => false
+      }
     }
     a_user = @users[token]
     a = a_user.heroes[active_unit_id]
@@ -98,6 +105,7 @@ class Game
           if a.dead?
             bury a
             res[:a_data][:log] = 'Your hero has been killed'
+            res[:a_data][:dead] = true
           end
         end
         if d_user && !d.user.ws.nil?
