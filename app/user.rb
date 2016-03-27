@@ -1,6 +1,6 @@
 class User
   attr_reader :score, :login, :active_hero_id
-  attr_accessor :ws, :hero, :heroes
+  attr_accessor :ws, :hero, :heroes, :towns
 
   @@id = 1
   
@@ -12,6 +12,7 @@ class User
     @ws = nil
     @heroes = {}
     @hero = add_hero
+    @towns = {}
   end
 
   def inc_score(inc)
@@ -25,6 +26,12 @@ class User
     end
     @heroes[hero.id] = hero
     hero
+  end
+
+  def add_town
+    town = Town.new(@login)
+    @towns[town.id] = town
+    town
   end
 
   def first_alive_hero

@@ -81,3 +81,9 @@ class GreenOrb < Unit
   end
 
 end
+
+class Town < Unit
+  def initialize(user)
+    super('Town', user)
+  end
+end

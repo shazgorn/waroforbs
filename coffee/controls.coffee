@@ -41,6 +41,10 @@ class Controls
         app.new_hero()
     );
 
+    $('#new-town').click(() ->
+      app.new_town()
+    )
+
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
 
@@ -50,17 +54,29 @@ class Controls
   unit_info: (unit) ->
     id = '#unit-info-' + unit['@id']
     if $(id).length == 0
-      $('.unit-info-template')
+      info = $('.unit-info-template')
         .clone()
         .prependTo('#right-col')
         .attr('id', 'unit-info-' + unit['@id'])
         .data('id', unit['@id'])
         .removeClass('unit-info-template')
+        .hover(
+          () ->
+            $("#hero_#{$(this).data('id')}").addClass('player-hero-hover')
+          ,
+          () ->
+            $("#hero_#{$(this).data('id')}").removeClass('player-hero-hover')
+        )
+      console.log(App, App.active_unit_id, unit['@id'])
+      if App.active_unit_id == unit['@id']
+        info.addClass('active-unit-info')
+        console.log(info)
     
     $(id).data('unit-id', unit['@id']).data('id', unit['@id'])
     $(id).click(() ->
       App.set_active_unit(unit['@id'])
-      App.center_on_active()
+      $('.active-unit-info').removeClass('active-unit-info')
+      $(this).addClass('active-unit-info')
       App.unlock_controls()
     )
     $(id + ' .unit-id-info').html(unit['@id'])

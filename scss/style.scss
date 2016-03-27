@@ -54,18 +54,24 @@ $column-gap: 30px;
         z-index: 6;
     }
 
-    .player_hero {
+    .player-hero {
         background-image: url('/img/player_hero.png');
+        &:hover, &.player-hero-hover {
+            border: thin solid #00CCFF;
+        }
     }
-    .other_player_hero {
+    .other-player-hero {
         background-image: url('/img/other_player_hero.png');
     }
-    .bot_hero {
+    .bot-hero {
         background-image: url('/img/bot_hero.png');
     }
-    .green_orb {
+    .green-orb {
         border-radius: 20px;
         background-color: #FFFFCC;
+    }
+    .town {
+        background-image: url('/img/town.png');
     }
     .orb {
         height: $orb-dimension;
@@ -133,6 +139,9 @@ $column-gap: 30px;
             background-color: gray;
             cursor: pointer;
         }
+        &.active-unit-info {
+            border: thin solid blue;
+        }
     }
     label {
         color: #ccc;
@@ -168,6 +177,7 @@ $column-gap: 30px;
     bottom: 0px;
     height: 100px;
     opacity: 0.9;
+    overflow-y: scroll;
     position: fixed;
     width: 100%;
     z-index: 10;

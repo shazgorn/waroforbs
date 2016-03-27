@@ -18,8 +18,9 @@ class WS
         switch data.data_type
           when 'init_map'
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
+            app.active_unit_id = data.active_unit
             app.init_ul data.ul
-            app.set_active_unit data.active_unit
+            app.center_on_active()
             app.initialized = true
           when 'ul'
             app.init_ul data.ul
@@ -95,6 +96,15 @@ class WS
       JSON.stringify({
         token: token,
         op: 'new_hero'
+      })
+    )
+
+  new_town: (token) ->
+    @socket.send(
+      JSON.stringify({
+        token: token,
+        unit_id: App.active_unit_id,
+        op: 'new_town'
       })
     )
 

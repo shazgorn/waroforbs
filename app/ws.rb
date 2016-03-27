@@ -104,6 +104,9 @@ class OrbApp
               @game.new_hero token
               user = @game.users[token]
               dispatch_units user, :new_hero, {:active_unit => user.active_hero_id}
+            when :new_town
+              @game.new_town token, active_unit_id
+              dispatch_units
             end #case
           rescue Exception => e
             ex e

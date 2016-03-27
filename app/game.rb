@@ -48,6 +48,15 @@ class Game
     end
   end
 
+  def new_town(token, active_unit_id)
+    user = @users[token]
+    if user.towns.length == 0
+      hero = user.heroes[active_unit_id]
+      town = user.add_town
+      @map.place town, hero.x - 1, hero.y - 1
+    end
+  end
+
   def new_hero(token)
     user = @users[token]
     hero = user.add_hero
@@ -65,6 +74,10 @@ class Game
       res[:log] = 'Your hero is dead'
     end
     res
+  end
+
+  def place_town town
+    @map.place town
   end
 
   def place_at_random hero
@@ -92,7 +105,6 @@ class Game
     a_pos = a.pos
     if @map.has?(x, y)
       d = @map.at(x, y)
-      d_user = d.user
       dmg = nil
       if d && a != d
         dmg = d.take_dmg a.dmg
@@ -108,7 +120,8 @@ class Game
             res[:a_data][:dead] = true
           end
         end
-        if d_user && !d.user.ws.nil?
+        d_user = @users[d.user]
+        if d_user && !d_user.ws.nil?
           xy = @map.h2c a_pos
           res[:d_user] = d_user
           res[:d_data].merge!({
