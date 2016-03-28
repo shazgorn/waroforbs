@@ -10,6 +10,8 @@ $orb-md-margin: ($cell-dimension - $orb-md-dimension) / 2;
 $orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
 $button-size: 60px;
 $column-gap: 30px;
+$hover-hero-color: #66a3ff;
+$active-hero-color: #0066ff;
 
 #top_container {
     height: 400px;
@@ -57,7 +59,10 @@ $column-gap: 30px;
     .player-hero {
         background-image: url('/img/player_hero.png');
         &:hover, &.player-hero-hover {
-            border: thin solid #00CCFF;
+            border: thin solid $hover-hero-color;
+        }
+        &.active-player-hero {
+            border: thin dashed $active-hero-color;
         }
     }
     .other-player-hero {
@@ -140,7 +145,7 @@ $column-gap: 30px;
             cursor: pointer;
         }
         &.active-unit-info {
-            border: thin solid blue;
+            border: thin solid $active-hero-color;
         }
     }
     label {

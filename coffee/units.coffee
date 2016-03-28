@@ -1,3 +1,4 @@
+# rename 'css_' to 'attr_'
 class Unit
   constructor: (unit) ->
     @x = unit['@pos'] // 1000
@@ -11,8 +12,8 @@ class Hero extends Unit
 class PlayerHero extends Hero
   constructor: (unit) ->
     super unit
-    @id = 'hero_' + unit['@id']
-    @object_id = unit['@id']
+    @id = unit['@id']
+    @css_id = "hero_#{@id}"
     @css_class = 'player-hero'
 
 class OtherPlayerHero extends Hero

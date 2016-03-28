@@ -58,7 +58,7 @@ class Application
     if @my_units.length == 0
       @lock_controls()
     my_units_ids = $.map(@my_units, (unit) ->
-      unit.object_id
+      unit.id
     )
     $('.unit-info:not(.unit-info-template)').each((i, el) =>
       id = $(el).data('id')
@@ -84,11 +84,16 @@ class Application
     adj_cell = $('#cell_' + x + '_' + y)
     unit = adj_cell.children('div').get(0)
     if unit
-      $(unit).css('cursor', 'crosshair').one('click', () =>
-        if !@attacking
-          @attacking = true
-          @ws.attack(@user_id, @active_unit_id, {x: x, y: y})
-      )
+      if $(unit).hasClass('player-hero')
+        $(unit).css('cursor', 'pointer').one('click', () =>
+          @controls.set_active_unit($(unit).data('id'))
+        )
+      else
+        $(unit).css('cursor', 'crosshair').one('click', () =>
+          if !@attacking
+            @attacking = true
+            @ws.attack(@user_id, @active_unit_id, {x: x, y: y})
+        )
 
   log: (data) ->
     div = document.createElement('div')

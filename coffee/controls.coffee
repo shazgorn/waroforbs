@@ -52,37 +52,43 @@ class Controls
     $('#controls_arrows button:not(#control_5)').prop('disabled', '')
 
   unit_info: (unit) ->
-    id = '#unit-info-' + unit['@id']
-    if $(id).length == 0
+    id = unit['@id']
+    id_attr = 'unit-info-' + id
+    id_sel = '#' + id_attr
+    if $(id_sel).length == 0
       info = $('.unit-info-template')
         .clone()
         .prependTo('#right-col')
-        .attr('id', 'unit-info-' + unit['@id'])
-        .data('id', unit['@id'])
         .removeClass('unit-info-template')
+        .attr('id', id_attr)
+        .data('id', id)
         .hover(
           () ->
-            $("#hero_#{$(this).data('id')}").addClass('player-hero-hover')
+            $("#hero_#{id}").addClass('player-hero-hover')
           ,
           () ->
-            $("#hero_#{$(this).data('id')}").removeClass('player-hero-hover')
+            $("#hero_#{id}").removeClass('player-hero-hover')
         )
-      console.log(App, App.active_unit_id, unit['@id'])
-      if App.active_unit_id == unit['@id']
+      if App.active_unit_id == id
         info.addClass('active-unit-info')
-        console.log(info)
     
-    $(id).data('unit-id', unit['@id']).data('id', unit['@id'])
-    $(id).click(() ->
-      App.set_active_unit(unit['@id'])
-      $('.active-unit-info').removeClass('active-unit-info')
-      $(this).addClass('active-unit-info')
-      App.unlock_controls()
+    $(id_sel).data('id', id)
+    _this = this
+    $(id_sel).click(() ->
+      _this.set_active_unit(id)
     )
-    $(id + ' .unit-id-info').html(unit['@id'])
-    $(id + ' .player-name-info').html(unit['@user'])
-    $(id + ' .hp-info').html(unit['@hp'])
-    $(id + ' .x-info').html(unit['@x'])
-    $(id + ' .y-info').html(unit['@y'])
+    $(id_sel + ' .unit-id-info').html(unit['@id'])
+    $(id_sel + ' .player-name-info').html(unit['@user'])
+    $(id_sel + ' .hp-info').html(unit['@hp'])
+    $(id_sel + ' .x-info').html(unit['@x'])
+    $(id_sel + ' .y-info').html(unit['@y'])
+
+  set_active_unit: (id) ->
+    App.set_active_unit(id)
+    $('.active-unit-info').removeClass('active-unit-info')
+    $("#unit-info-#{id}").addClass('active-unit-info')
+    $(".active-player-hero").removeClass('active-player-hero')
+    $("#hero_#{id}").addClass('active-player-hero')
+    App.unlock_controls()
 
 window.Controls = Controls

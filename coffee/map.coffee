@@ -32,7 +32,7 @@ class Map
 
   initTooltip: () ->
     $('#blocks').mousemove((e) ->
-      #console.log(e)
+
     )
 
   initDragHandler: () ->
@@ -135,9 +135,10 @@ class Map
     o = $(document.createElement('div'))
       .addClass('unit')
       .addClass(unit.css_class)
+      .data('id', unit.id)
       .appendTo(cell_sel);
-    if unit.id
-      o.attr('id', unit.id)
+    if unit.css_id
+      o.attr('id', unit.css_id)
     if unit.title then o.attr('title', unit.title)
     o
 

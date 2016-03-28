@@ -21,6 +21,7 @@ class WS
             app.active_unit_id = data.active_unit
             app.init_ul data.ul
             app.center_on_active()
+            app.controls.set_active_unit(data.active_unit)
             app.initialized = true
           when 'ul'
             app.init_ul data.ul
