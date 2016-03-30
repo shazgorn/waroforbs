@@ -51,7 +51,7 @@ class OrbApp
             obj = JSON.parse(msg)
             token = obj['token']
             if !obj['unit_id'].nil?
-              active_unit_id = obj['unit_id'].to_i
+              @game.users[token].active_hero_id = active_unit_id = obj['unit_id'].to_i
             end
             case obj['op'].to_sym
             when :init
@@ -72,9 +72,10 @@ class OrbApp
               ws.send JSON.generate({:data_type => 'ul', :ul => @game.map.ul})
             when :move
               params = obj['params']
+              user = @game.users[token]
               res = @game.move_hero_by token, active_unit_id, params['dx'].to_i, params['dy'].to_i
               if res[:moved]
-                dispatch_units @game.users[token], :move
+                dispatch_units user, :move, {:active_unit => user.active_hero_id}
               else
                 dispatch_units
               end

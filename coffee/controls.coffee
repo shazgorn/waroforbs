@@ -74,8 +74,8 @@ class Controls
     
     $(id_sel).data('id', id)
     _this = this
-    $(id_sel).click(() ->
-      _this.set_active_unit(id)
+    $(id_sel).off('click').on('click', () ->
+      App.set_active_unit($(this).data('id'))
     )
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     $(id_sel + ' .player-name-info').html(unit['@user'])
@@ -84,11 +84,9 @@ class Controls
     $(id_sel + ' .y-info').html(unit['@y'])
 
   set_active_unit: (id) ->
-    App.set_active_unit(id)
     $('.active-unit-info').removeClass('active-unit-info')
     $("#unit-info-#{id}").addClass('active-unit-info')
     $(".active-player-hero").removeClass('active-player-hero')
     $("#hero_#{id}").addClass('active-player-hero')
-    App.unlock_controls()
 
 window.Controls = Controls

@@ -30,16 +30,17 @@ class Application
     @ws.new_hero(@user_id)
 
   new_town: () ->
-    @ws.new_town(@user_id)
+    @ws.new_town(@user_id, @active_unit_id)
 
   set_active_unit: (unit_id) ->
-    if unit_id != @active_unit_id
-      @active_unit_id = unit_id
-      @center_on_active()
+    #if unit_id != @active_unit_id
+    @active_unit_id = unit_id
+    @controls.set_active_unit(@active_unit_id)
+    @center_on_active()
+    @bind_action_handlers()
 
   center_on_active: () ->
     @map.center_on_hero('hero_' + @active_unit_id)
-    @bind_attack_handlers()
 
   init_ul: (ul) ->
     @map.remove_units()
@@ -49,11 +50,12 @@ class Application
       unit_obj = UnitFactory(unit_hash, @user_id)
       if unit_obj
         @units.push(unit_obj)
-        @map.append(unit_obj)
+        unit_on_map = @map.append(unit_obj)
         if unit_hash['@user'] == @user_id
           @my_units.push(unit_obj)
           @controls.unit_info(unit_hash)
-    @bind_attack_handlers()
+          @bind_select_handler(unit_on_map)
+    @bind_action_handlers()
     # delete dead units
     if @my_units.length == 0
       @lock_controls()
@@ -69,7 +71,7 @@ class Application
     )
     null
 
-  bind_attack_handlers: () ->
+  bind_action_handlers: () ->
     cell = $('#hero_' + @active_unit_id).parent()
     if cell.length == 1
       pos = cell.attr('id').replace('cell_', '').split('_')
@@ -78,22 +80,23 @@ class Application
           if dx || dy
             x = parseInt(pos[0]) + dx
             y = parseInt(pos[1]) + dy
-            @bind_attack_handler(x, y)
-        
-  bind_attack_handler: (x, y) ->
-    adj_cell = $('#cell_' + x + '_' + y)
-    unit = adj_cell.children('div').get(0)
-    if unit
-      if $(unit).hasClass('player-hero')
-        $(unit).css('cursor', 'pointer').one('click', () =>
-          @controls.set_active_unit($(unit).data('id'))
-        )
-      else
-        $(unit).css('cursor', 'crosshair').one('click', () =>
-          if !@attacking
-            @attacking = true
-            @ws.attack(@user_id, @active_unit_id, {x: x, y: y})
-        )
+            adj_cell = $('#cell_' + x + '_' + y)
+            unit = adj_cell.children('div').get(0)
+            if unit
+              if $(unit).hasClass('player-hero')
+                # @bind_select_handler(unit)
+              else
+                $(unit).css('cursor', 'crosshair').off('click').one('click', () =>
+                  if !@attacking
+                    @attacking = true
+                    @ws.attack(@user_id, @active_unit_id, {x: x, y: y})
+                )
+
+  bind_select_handler: (unit) ->
+    $(unit).css('cursor', 'pointer').off('click').on('click', () =>
+      @set_active_unit($(unit).data('id'))
+    )
+    
 
   log: (data) ->
     div = document.createElement('div')

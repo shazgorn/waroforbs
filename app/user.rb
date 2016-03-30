@@ -1,6 +1,6 @@
 class User
-  attr_reader :score, :login, :active_hero_id
-  attr_accessor :ws, :hero, :heroes, :towns
+  attr_reader :score, :login
+  attr_accessor :ws, :hero, :heroes, :towns, :active_hero_id
 
   @@id = 1
   

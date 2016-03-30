@@ -100,11 +100,11 @@ class WS
       })
     )
 
-  new_town: (token) ->
+  new_town: (token, unit_id) ->
     @socket.send(
       JSON.stringify({
         token: token,
-        unit_id: App.active_unit_id,
+        unit_id: unit_id,
         op: 'new_town'
       })
     )
