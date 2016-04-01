@@ -108,6 +108,9 @@ class OrbApp
             when :new_town
               @game.new_town token, active_unit_id
               dispatch_units
+            when :restart
+              @game.restart token
+              dispatch_units
             end #case
           rescue Exception => e
             ex e

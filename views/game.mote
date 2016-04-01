@@ -15,6 +15,7 @@
     <button id="revive">Revive</button><br>
     <button id="new-hero">New hero</button>
     <button id="new-town">New town</button>
+    <button id="restart">Restart</button>
   </div><!-- #right-col -->
   <div id="log">
   </div>

@@ -109,5 +109,13 @@ class WS
       })
     )
 
+  restart: (token) ->
+    @socket.send(
+      JSON.stringify({
+        token: token,
+        op: 'restart'
+      })
+    )
+
 
 window.WS = WS

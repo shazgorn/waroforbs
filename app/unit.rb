@@ -13,6 +13,8 @@ class Unit
     @dead = false
     @score = 0
     @pos = nil
+    @x = nil
+    @y = nil
   end
   
   def dead?

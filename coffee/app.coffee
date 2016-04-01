@@ -32,6 +32,9 @@ class Application
   new_town: () ->
     @ws.new_town(@user_id, @active_unit_id)
 
+  restart: () ->
+    @ws.restart(@user_id)
+
   set_active_unit: (unit_id) ->
     #if unit_id != @active_unit_id
     @active_unit_id = unit_id

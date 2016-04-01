@@ -35,6 +35,11 @@ class Game
     @map.remove unit
     user = @users[unit.user]
     if !user.nil?
+      unit = user.heroes[unit.id]
+      @map.ul[unit.pos] = nil
+      unit.pos = nil
+      unis.x = nil
+      unit.y = nil
       user.bury_hero unit.id
     end
   end
@@ -46,6 +51,11 @@ class Game
       @users[unit.user].hero = hero = Hero.new(unit.user)
       place_at_random hero
     end
+  end
+
+  def restart(token)
+    user = @users[token]
+    user.reset_units
   end
 
   def new_town(token, active_unit_id)

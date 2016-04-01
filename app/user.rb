@@ -10,6 +10,12 @@ class User
     @login = login
     @score = 0
     @ws = nil
+    reset_units
+  end
+
+  def reset_units
+    @heroes.each_value {|unit|
+    }
     @heroes = {}
     @hero = add_hero
     @towns = {}

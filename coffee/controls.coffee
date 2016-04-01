@@ -45,6 +45,10 @@ class Controls
       app.new_town()
     )
 
+    $('#restart').click(() ->
+      app.restart()
+    )
+
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
 
