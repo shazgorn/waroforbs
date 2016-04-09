@@ -91,6 +91,6 @@ class Controls
     $('.active-unit-info').removeClass('active-unit-info')
     $("#unit-info-#{id}").addClass('active-unit-info')
     $(".active-player-hero").removeClass('active-player-hero')
-    $("#hero_#{id}").addClass('active-player-hero')
+    $("#unit-#{id}").addClass('active-player-hero')
 
 window.Controls = Controls

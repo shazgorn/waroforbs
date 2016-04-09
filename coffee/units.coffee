@@ -1,8 +1,10 @@
 # rename 'css_' to 'attr_'
 class Unit
   constructor: (unit) ->
-    @x = unit['@pos'] // 1000
-    @y = unit['@pos'] % 1000
+    @id = unit['@id']
+    @attr_id = "unit-#{@id}"
+    @x = unit['@x']
+    @y = unit['@y']
 
 class Hero extends Unit
   constructor: (unit) ->
@@ -12,8 +14,6 @@ class Hero extends Unit
 class PlayerHero extends Hero
   constructor: (unit) ->
     super unit
-    @id = unit['@id']
-    @css_id = "hero_#{@id}"
     @css_class = 'player-hero'
 
 class OtherPlayerHero extends Hero
@@ -47,9 +47,11 @@ UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
     switch unit_hash.type
       when "PlayerHero"
-        if unit_hash['@user']
-          if unit_hash['@user'] == user_id
+        console.log(unit_hash, user_id)
+        if unit_hash['@user_id']
+          if unit_hash['@user_id'] == user_id
             unit = new PlayerHero unit_hash
+            console.log(unit)
           else if unit_hash['@user'].search('bot') != -1 then unit = new BotHero unit_hash
           else unit = new OtherPlayerHero unit_hash
       when "GreenOrb" then unit = new GreenOrb unit_hash

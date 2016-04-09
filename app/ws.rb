@@ -17,7 +17,7 @@ end
 # Class
 class OrbApp
   MAX_ORBS = 20
-  MAX_BOTS = 5
+  MAX_BOTS = 1
   
   def initialize
     @ws_pool = []
@@ -48,12 +48,13 @@ class OrbApp
         ws.onmessage do |msg|
           begin
             puts "Recieved message: #{msg}"
-            obj = JSON.parse(msg)
-            token = obj['token']
-            if !obj['unit_id'].nil?
-              @game.users[token].active_hero_id = active_unit_id = obj['unit_id'].to_i
+            data = JSON.parse(msg)
+            token = data['token']
+            user = @game.get_user_by_token token
+            if data.has_key?('unit_id')
+              user.active_unit_id = active_unit_id = data['unit_id'].to_i
             end
-            case obj['op'].to_sym
+            case data['op'].to_sym
             when :init
               user = @game.init_user token, ws
               ws.send JSON.generate({:data_type => 'init_map',
@@ -62,40 +63,36 @@ class OrbApp
                                      :block_dim_in_cells => Map::BLOCK_DIM,
                                      :block_dim_in_px => Map::BLOCK_DIM_PX,
                                      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
-                                     :active_unit => user.active_hero_id,
-                                     :ul => @game.map.ul})
+                                     :active_unit_id => user.active_unit_id,
+                                     :user_id => user.id,
+                                     :units => @game.units})
             when :close
-              #@game.map.remove @game.users[token].hero
-              #@game.users.delete token
               dispatch_units
-            when :ul
-              ws.send JSON.generate({:data_type => 'ul', :ul => @game.map.ul})
+            when :units
+              ws.send JSON.generate({:data_type => 'units', :units => @game.units})
             when :move
-              params = obj['params']
-              user = @game.users[token]
-              res = @game.move_hero_by token, active_unit_id, params['dx'].to_i, params['dy'].to_i
+              params = data['params']
+              res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
               if res[:moved]
-                dispatch_units user, :move, {:active_unit => user.active_hero_id}
+                dispatch_units user, :move, {:active_unit_id => user.active_unit_id}
               else
                 dispatch_units
               end
             when :attack
-              params = obj['params']
-              res = @game.attack token, active_unit_id, params['x'].to_i, params['y'].to_i
+              params = data['params']
+              res = @game.attack user, active_unit_id, params['id'].to_i
               ws.send JSON.generate({
                                       :data_type => 'dmg',
-                                      :x => params['x'],
-                                      :y => params['y'],
                                       :dmg => res[:a_data][:dmg],
                                       :ca_dmg => res[:a_data][:ca_dmg],
-                                      :a_id => active_unit_id,
-                                      :a_dead => res[:a_data][:dead]
+                                      :a_id => user.active_unit_id,
+                                      :a_dead => res[:a_data][:dead],
+                                      :d_id => params['id']
                                     })
               if res.has_key? :d_data && !res[:d_user].nil?
                 @game.users[res[:d_user]].ws.send JSON.generate(res[:d_data])
               end
-              user = @game.users[token]
-              dispatch_units user, :attack, {:active_unit => user.active_hero_id}
+              dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
             when :spawn_bot
               spawn_bot
             when :revive
@@ -124,10 +121,9 @@ class OrbApp
     Thread.new do
       while true
         begin
-          count = @game.map.ul.count{|unit| unless unit[1].nil? then unit[1].type == 'GreenOrb' end}
+          count = @game.green_orbs_length
           if count < MAX_ORBS
-            orb = GreenOrb.new
-            @game.map.place_at_random orb
+            @game.new_green_orb
             dispatch_units
           end
         rescue => e
@@ -162,7 +158,7 @@ class OrbApp
             if dmg.nil?
               dx = Random.rand(3) - 1
               dy = Random.rand(3) - 1
-              @game.map.move_by @game.users[bot_name].hero, dx, dy
+              @game.move_hero_by @game.users[bot_name].hero, dx, dy
             end
             dispatch_units
             sleep(1)
@@ -179,7 +175,7 @@ class OrbApp
   end
 
   def dispatch_units(user = nil, action = nil, data = {})
-    dispatch_changes({:data_type => 'ul', :ul => @game.map.ul}, user, action, data)
+    dispatch_changes({:data_type => 'units', :units => @game.units}, user, action, data)
   end
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})

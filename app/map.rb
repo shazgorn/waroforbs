@@ -10,7 +10,7 @@ class Map
   SHIFT = 1000
 
   def initialize
-    @ul = Hash.new
+
   end
 
   # generate map
@@ -63,48 +63,19 @@ class Map
   def h2c(h)
     {:x => (h / SHIFT).to_i, :y => h % SHIFT}
   end
-  
-  def at(x, y)
-    @ul[c2h(x, y)]
-  end
-  
-  def place(unit, x=0, y=0, pos=c2h(x,y))
-    @ul[pos] = unit
-    unit.pos = pos
-    unit.x = x
-    unit.y = y
+
+  def place_is_empty?(units, x, y)
+    units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
   end
 
-  def place_at_random(unit)
-    while true
-      x = Random.rand(MAX_CELL_IDX)
-      y = Random.rand(MAX_CELL_IDX)
-      pos = c2h(x, y)
-      if @ul[pos].nil?
-        place(unit, x, y, pos)
-        break
-      end
-    end
+  def get_rand_coords
+    x = Random.rand(MAX_CELL_IDX)
+    y = Random.rand(MAX_CELL_IDX)
+    {:x => x, :y => y}
   end
 
-  def move_by(unit, dx, dy)
-    res = false
-    new_x = unit.x + dx
-    new_y = unit.y + dy
-    new_pos = c2h(new_x, new_y)
-    if @ul[new_pos].nil? && has?(new_x, new_y) && [dx, dy].count{|c| (-1..1).include? c} == 2
-      unit.x = new_x
-      unit.y = new_y
-      @ul.delete unit.pos
-      unit.pos = new_pos
-      @ul[new_pos] = unit
-      res = true
-    end
-    res
-  end
-
-  def remove(unit)
-    @ul.delete unit.pos
+  def d_include?(dx, dy)
+    [dx, dy].count{|c| (-1..1).include? c} == 2
   end
 
 end

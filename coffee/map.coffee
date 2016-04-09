@@ -13,13 +13,13 @@ class Map
       cells = parseInt($(this).val())
       $('#map').height(cell_px * cells)
       localStorage.setItem('map_height_cells', cells)
-      # this_obj.center_on_hero('hero_' + @active_unit_id)
+      # this_obj.center_on_hero('unit-' + @active_unit_id)
     )
     $('#map_width').change((e) ->
       cells = parseInt($(this).val())
       $('#map').width(cell_px * cells)
       localStorage.setItem('map_width_cells', cells)
-      # this_obj.center_on_hero('hero_' + @active_unit_id)
+      # this_obj.center_on_hero('unit-' + @active_unit_id)
     )
     unless mwc?
       mwc = 13
@@ -104,14 +104,15 @@ class Map
         setTimeout((() -> d.remove()), 1234)
     , 123)
 
-  dmg: (x, y, dmg, ca_dmg, a_id) ->
-    this.applyDmgTo($("#cell_#{x}_#{y}"), dmg, 'def')
-    this.applyDmgTo($("#hero_#{a_id}").parent(), ca_dmg, 'att')
+  dmg: (dmg, ca_dmg, a_id, d_id) ->
+    @applyDmgTo($("#unit-#{d_id}").parent(), dmg,    'def')
+    @applyDmgTo($("#unit-#{a_id}").parent(), ca_dmg, 'att')
 
   remove_units: () ->
     $('.unit').remove()
 
   center_on_hero: (unit_id) ->
+    console.log("center on hero #{unit_id}")
     unit_jq = $("##{unit_id}")
     block_pos = unit_jq.parent().parent().position()
     if block_pos
@@ -128,6 +129,7 @@ class Map
       console.log('No position or no unit')
 
   append: (unit) ->
+    # console.log('map.append', unit)
     cell_sel = "#cell_#{unit.x}_#{unit.y}"
     cell = $(cell_sel)
     if cell.length == 0
@@ -137,8 +139,8 @@ class Map
       .addClass(unit.css_class)
       .data('id', unit.id)
       .appendTo(cell_sel);
-    if unit.css_id
-      o.attr('id', unit.css_id)
+    if unit.attr_id
+      o.attr('id', unit.attr_id)
     if unit.title then o.attr('title', unit.title)
     o
 

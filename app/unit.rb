@@ -1,18 +1,16 @@
 class Unit
-  attr_reader :id, :type, :user, :score
-  attr_accessor :pos, :x, :y, :hp
+  attr_reader :id, :type, :user_id, :score
+  attr_accessor :x, :y, :hp
 
   @@id = 1
 
   # @user login string
-  def initialize(type, user=nil)
+  def initialize(type, user_id = nil)
     @id = @@id
     @@id += 1
     @type = type
-    @user = user
+    @user_id = user_id
     @dead = false
-    @score = 0
-    @pos = nil
     @x = nil
     @y = nil
   end
@@ -46,46 +44,43 @@ class Unit
     self.instance_variables.each do |var|
       hash[var] = self.instance_variable_get var
     end
+    # why separate?
     hash[:type] = @type
     hash.to_json
   end
 
+  def place(x = nil, y = nil)
+    @x = x
+    @y = y
+  end
 end
 
 class Hero < Unit
-
-  def initialize(user)
-    super('PlayerHero', user)
+  def initialize(user_id)
+    super('PlayerHero', user_id)
     @hp = 150
     @dmg = 30
-    @pos = nil
-    @score = 10
   end
-
 end
 
 class BotHero < Hero
-  def initialize(user)
-    super(user)
+  def initialize(user_id)
+    super(user_id)
     @hp = 300
     @dmg = 20
-    @score = 5
   end
 end
 
 class GreenOrb < Unit
-
   def initialize
     super('GreenOrb')
     @hp = 100
     @dmg = 20
-    @score = 3
   end
-
 end
 
 class Town < Unit
-  def initialize(user)
-    super('Town', user)
+  def initialize(user_id)
+    super('Town', user_id)
   end
 end
