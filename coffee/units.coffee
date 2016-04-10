@@ -5,11 +5,12 @@ class Unit
     @attr_id = "unit-#{@id}"
     @x = unit['@x']
     @y = unit['@y']
+    @type = unit['@type']
 
 class Hero extends Unit
   constructor: (unit) ->
     super unit
-    @title = unit['@user'] + '(' + unit['@hp'] + ')'
+    @title = unit['@user_name'] + '(' + unit['@hp'] + ')'
 
 class PlayerHero extends Hero
   constructor: (unit) ->
@@ -45,14 +46,12 @@ class Town extends Unit
 
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
-    switch unit_hash.type
+    switch unit_hash['@type']
       when "PlayerHero"
-        console.log(unit_hash, user_id)
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
             unit = new PlayerHero unit_hash
-            console.log(unit)
-          else if unit_hash['@user'].search('bot') != -1 then unit = new BotHero unit_hash
+          else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotHero unit_hash
           else unit = new OtherPlayerHero unit_hash
       when "GreenOrb" then unit = new GreenOrb unit_hash
       when "Town" then unit = new Town unit_hash

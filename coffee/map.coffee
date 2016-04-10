@@ -111,8 +111,19 @@ class Map
   remove_units: () ->
     $('.unit').remove()
 
+  remove_stale_units: (units) ->
+    all_units_ids =
+    for id, unit of units
+      # keys are strings
+      parseInt(id)
+    $('.unit').each((i, unit) ->
+      id = $(unit).data('id')
+      if $.inArray(id, all_units_ids) == -1
+        console.log("remove unit #{id}")
+        $("#unit-#{id}").remove()
+    )
+
   center_on_hero: (unit_id) ->
-    console.log("center on hero #{unit_id}")
     unit_jq = $("##{unit_id}")
     block_pos = unit_jq.parent().parent().position()
     if block_pos
@@ -128,20 +139,26 @@ class Map
     else
       console.log('No position or no unit')
 
+  # update unit div on map or append a new one
   append: (unit) ->
-    # console.log('map.append', unit)
+    $unit = $("#unit-#{unit.id}")
+    # append to selector not jquery object!
     cell_sel = "#cell_#{unit.x}_#{unit.y}"
-    cell = $(cell_sel)
-    if cell.length == 0
-      this.addCell(unit.x, unit.y)
-    o = $(document.createElement('div'))
-      .addClass('unit')
-      .addClass(unit.css_class)
-      .data('id', unit.id)
-      .appendTo(cell_sel);
-    if unit.attr_id
-      o.attr('id', unit.attr_id)
-    if unit.title then o.attr('title', unit.title)
-    o
+    $cell = $(cell_sel)
+    if $cell.length == 0
+      @addCell(unit.x, unit.y)
+    if $unit.length == 0
+      $unit = $(document.createElement('div'))
+        .addClass('unit')
+        .addClass(unit.css_class)
+        .data('id', unit.id)
+        .appendTo(cell_sel)
+      if unit.attr_id
+        $unit.attr('id', unit.attr_id)
+    else if $unit.length == 1
+      if $unit.parent().data('x') != unit.x || $unit.parent().data('y') != unit.y
+        $unit.appendTo(cell_sel)
+    if unit.title then $unit.attr('title', unit.title)
+    $unit
 
 this.Map = Map

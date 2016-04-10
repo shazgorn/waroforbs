@@ -1,18 +1,44 @@
 class Unit
-  attr_reader :id, :type, :user_id, :score
-  attr_accessor :x, :y, :hp
+  attr_reader :id, :type, :user, :hp, :x, :y
 
   @@id = 1
 
   # @user login string
-  def initialize(type, user_id = nil)
+  # change user_id to user
+  def initialize(type, user = nil)
     @id = @@id
     @@id += 1
     @type = type
-    @user_id = user_id
+    @user = user
     @dead = false
     @x = nil
     @y = nil
+  end
+
+  def to_hash()
+    hash = {}
+    self.instance_variables.each do |var|
+      unless var == :@user
+        hash[var] = self.instance_variable_get var
+      end
+    end
+    if @user
+      hash[:@user_name] = @user.login
+      hash[:@user_id] = @user.id
+    end
+    hash
+  end
+
+  def to_json(generator = JSON.generator)
+    to_hash().to_json
+  end
+
+  def user_id
+    if @user
+      @user.id
+    else
+      nil
+    end
   end
   
   def dead?
@@ -39,32 +65,23 @@ class Unit
     @dmg + Random.rand(@dmg)
   end
 
-  def to_json(generator=JSON.generator)
-    hash = {}
-    self.instance_variables.each do |var|
-      hash[var] = self.instance_variable_get var
-    end
-    # why separate?
-    hash[:type] = @type
-    hash.to_json
-  end
-
   def place(x = nil, y = nil)
     @x = x
     @y = y
   end
+
 end
 
 class Hero < Unit
-  def initialize(user_id)
-    super('PlayerHero', user_id)
+  def initialize(user)
+    super('PlayerHero', user)
     @hp = 150
     @dmg = 30
   end
 end
 
 class BotHero < Hero
-  def initialize(user_id)
+  def initialize(user)
     super(user_id)
     @hp = 300
     @dmg = 20
@@ -80,7 +97,7 @@ class GreenOrb < Unit
 end
 
 class Town < Unit
-  def initialize(user_id)
-    super('Town', user_id)
+  def initialize(user)
+    super('Town', user)
   end
 end

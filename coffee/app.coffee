@@ -42,11 +42,10 @@ class Application
     @bind_action_handlers()
 
   center_on_active: () ->
-    console.log("center_on_active #{@active_unit_id}")
     @map.center_on_hero('unit-' + @active_unit_id)
 
   init_units: (units) ->
-    @map.remove_units()
+    @map.remove_stale_units(units)
     @units = []
     @my_units = []
     for unit_id, unit_hash of units
@@ -93,7 +92,6 @@ class Application
 
   attack: (unit) ->
     if !@attacking
-      console.log(unit, $(unit).data('id'))
       @attacking = true
       @ws.attack(@active_unit_id, {id: $(unit).data('id')})
 

@@ -28,10 +28,16 @@ class Game
     user
   end
 
-  def new_unit user
-    unit = Hero.new(user.id)
+  def new_hero user
+    unit = Hero.new(user)
     @units[unit.id] = unit
     unit
+  end
+
+  def new_random_hero user
+    hero = new_hero user
+    user.active_unit_id = hero.id
+    place_at_random hero
   end
 
   def new_green_orb
@@ -49,7 +55,7 @@ class Game
       user = User.new(token)
       @users[user.id] = user
       @tokens[token] = user.id
-      unit = new_unit user
+      unit = new_hero user
       user.active_unit_id = unit.id
       place_at_random unit
     end
@@ -100,19 +106,13 @@ class Game
     end
   end
 
-  def new_hero(token)
-    user = @users[token]
-    hero = user.add_hero
-    place_at_random hero
-  end
-
   def place_is_empty?(x, y)
     @units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
   end
 
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}
-    unit = units[unit_id]
+    unit = @units[unit_id]
     if unit
       new_x = unit.x + dx
       new_y = unit.y + dy

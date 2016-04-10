@@ -3,7 +3,6 @@ class WS
     # there are some race conditions when 'ul' will came before 'init_map'
     @initialized = false
     @token = localStorage.getItem('token')
-    console.log(@token)
     unless @token then location.pathname = '/'
     @socket = new WebSocket 'ws://' + location.hostname + ':9293'
     $(window).on('beforeunload', () =>
@@ -29,10 +28,11 @@ class WS
             app.initialized = true
           when 'units'
             app.init_units data.units
-            if data.active_unit
+            if data.active_unit_id
               app.set_active_unit data.active_unit_id
-            else if data.action == 'move'
-              app.center_on_active()
+            if data.action == 'move'
+              $('#log').prepend($(document.createElement('div')).html(data.log))
+            app.controls.set_active_unit(app.active_unit_id)
           when 'dmg'
             app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
             app.log('damage dealt ' + data.dmg)
@@ -40,22 +40,6 @@ class WS
             if data.a_dead
               app.log('Your hero has been killed')
             app.attacking = false
-          when 'scores'
-            table = $('#scores table').get(0)
-            rowCount = 0
-            colCount = 0
-            $('#scores table tr').remove()
-            row = table.insertRow(rowCount++)
-            for h in ['#', 'login', 'score']
-              $(row).append($(document.createElement('th')).html(h))
-            for user in data.scores
-                row = table.insertRow(rowCount++)
-                colCount = 0
-                row.insertCell(colCount++).innerHTML = ''
-                row.insertCell(colCount++).innerHTML = user.login
-                row.insertCell(colCount++).innerHTML = user.score
-          when 'move'
-             $('#log').prepend($(document.createElement('div')).html(data.log))
           when 'error'
             switch data.error
               when 'wrong_token' then location.pathname = '/'

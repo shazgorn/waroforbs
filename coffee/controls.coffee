@@ -68,10 +68,10 @@ class Controls
         .data('id', id)
         .hover(
           () ->
-            $("#hero_#{id}").addClass('player-hero-hover')
+            $("#unit-#{id}").addClass('player-hero-hover')
           ,
           () ->
-            $("#hero_#{id}").removeClass('player-hero-hover')
+            $("#unit-#{id}").removeClass('player-hero-hover')
         )
       if App.active_unit_id == id
         info.addClass('active-unit-info')
@@ -82,7 +82,7 @@ class Controls
       App.set_active_unit($(this).data('id'))
     )
     $(id_sel + ' .unit-id-info').html(unit['@id'])
-    $(id_sel + ' .player-name-info').html(unit['@user'])
+    $(id_sel + ' .player-name-info').html(unit['@user_name'])
     $(id_sel + ' .hp-info').html(unit['@hp'])
     $(id_sel + ' .x-info').html(unit['@x'])
     $(id_sel + ' .y-info').html(unit['@y'])
