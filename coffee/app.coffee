@@ -74,6 +74,7 @@ class Application
     null
 
   bind_action_handlers: () ->
+    $('.attack-target').removeClass('attack-target').off('click')
     cell = $('#unit-' + @active_unit_id).parent()
     if cell.length == 1
       xy = cell.attr('id').replace('cell_', '').split('_')
@@ -85,7 +86,6 @@ class Application
             adj_cell = $('#cell_' + x + '_' + y)
             unit = adj_cell.children('div').get(0)
             if unit
-              $('.attack-target').removeClass('attack-target').off('click')
               # do not attack our own
               if !$(unit).hasClass('player-unit')
                 $(unit).addClass('attack-target').off('click').one('click', () ->

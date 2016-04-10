@@ -1,4 +1,4 @@
-<div class="hero-name-info">H</div>
+<div class="unit-name-info"></div>
 <table>
 <tr><td>unit id:</td><td class="unit-id-info"></td></tr>
 <tr><td>player name:</td><td class="player-name-info"></td></tr>

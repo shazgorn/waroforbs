@@ -81,6 +81,9 @@ class Controls
     $(id_sel).off('click').on('click', () ->
       App.set_active_unit($(this).data('id'))
     )
+    switch unit['@type']
+      when 'PlayerHero' then $(id_sel + ' .unit-name-info').html('H')
+      when 'Town' then $(id_sel + ' .unit-name-info').html('T')
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     $(id_sel + ' .player-name-info').html(unit['@user_name'])
     $(id_sel + ' .hp-info').html(unit['@hp'])
