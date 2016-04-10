@@ -97,12 +97,12 @@ class Game
     user.reset_units
   end
 
-  def new_town(token, active_unit_id)
-    user = @users[token]
-    if user.towns.length == 0
-      hero = user.heroes[active_unit_id]
-      town = user.add_town
-      @map.place town, hero.x - 1, hero.y - 1
+  def new_town(user, active_unit_id)
+    if @units.select{|k,unit| unit.type == 'Town' && unit.user_id == user.id}.length == 0
+      town = Town.new(user)
+      @units[town.id] = town
+      hero = @units[active_unit_id]
+      town.place hero.x - 1, hero.y - 1
     end
   end
 

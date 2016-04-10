@@ -3,7 +3,6 @@ require 'json'
 require 'rmagick'
 require 'fileutils'
 
-require_relative 'JSONable'
 require_relative 'unit'
 require_relative 'user'
 require_relative 'map'
@@ -103,7 +102,7 @@ class OrbApp
               @game.new_random_hero user
               dispatch_units user, :new_hero, {:active_unit_id => user.active_unit_id}
             when :new_town
-              @game.new_town token, active_unit_id
+              @game.new_town user, user.active_unit_id
               dispatch_units
             when :restart
               @game.restart token

@@ -11,12 +11,6 @@ class User
     @ws = nil
     @active_unit_id = nil
   end
-
-  def add_town
-    town = Town.new(@login)
-    @towns[town.id] = town
-    town
-  end
 end
 
 class Bot < User

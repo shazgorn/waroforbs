@@ -43,6 +43,7 @@ class Town extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'town'
+    @title = unit['@user_name'] + ' Town'
 
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?

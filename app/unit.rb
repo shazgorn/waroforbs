@@ -100,4 +100,10 @@ class Town < Unit
   def initialize(user)
     super('Town', user)
   end
+
+  def place(x = nil, y = nil)
+    if @x.nil? && @y.nil?
+      super(x, y)
+    end
+  end
 end
