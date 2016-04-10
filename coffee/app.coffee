@@ -76,17 +76,19 @@ class Application
   bind_action_handlers: () ->
     cell = $('#unit-' + @active_unit_id).parent()
     if cell.length == 1
-      pos = cell.attr('id').replace('cell_', '').split('_')
+      xy = cell.attr('id').replace('cell_', '').split('_')
       for dx in [-1..1]
         for dy in [-1..1]
           if dx || dy
-            x = parseInt(pos[0]) + dx
-            y = parseInt(pos[1]) + dy
+            x = parseInt(xy[0]) + dx
+            y = parseInt(xy[1]) + dy
             adj_cell = $('#cell_' + x + '_' + y)
             unit = adj_cell.children('div').get(0)
             if unit
-              unless $(unit).hasClass('player-hero')
-                $(unit).css('cursor', 'crosshair').off('click').one('click', () ->
+              $('.attack-target').removeClass('attack-target').off('click')
+              # do not attack our own
+              if !$(unit).hasClass('player-unit')
+                $(unit).addClass('attack-target').off('click').one('click', () ->
                   App.attack(this)
                 )
 
@@ -96,7 +98,8 @@ class Application
       @ws.attack(@active_unit_id, {id: $(unit).data('id')})
 
   bind_select_handler: (unit) ->
-    $(unit).css('cursor', 'pointer').off('click').on('click', () =>
+    $(unit).addClass('select-target').off('click').on('click', () =>
+      console.log(unit)
       @set_active_unit($(unit).data('id'))
     )
     

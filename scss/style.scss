@@ -54,14 +54,24 @@ $active-hero-color: #0066ff;
         position: absolute;
         width: inherit;
         z-index: 6;
+
+        &.attack-target {
+            border: thin solid red;
+            cursor: crosshair;
+        }
+        &.select-target {
+            cursor: pointer;
+        }
     }
 
     .player-hero {
         background-image: url('/img/player_hero.png');
-        &:hover, &.player-hero-hover {
+    }
+    .player-unit {
+        &:hover, &.player-unit-hover {
             border: thin solid $hover-hero-color;
         }
-        &.active-player-hero {
+        &.active-player-unit {
             border: thin dashed $active-hero-color;
         }
     }
@@ -75,7 +85,7 @@ $active-hero-color: #0066ff;
         border-radius: 20px;
         background-color: #FFFFCC;
     }
-    .town {
+    .town, .player-town {
         background-image: url('/img/town.png');
     }
     .orb {

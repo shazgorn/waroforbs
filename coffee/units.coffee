@@ -15,7 +15,7 @@ class Hero extends Unit
 class PlayerHero extends Hero
   constructor: (unit) ->
     super unit
-    @css_class = 'player-hero'
+    @css_class = 'player-unit player-hero'
 
 class OtherPlayerHero extends Hero
   constructor: (unit) ->
@@ -45,6 +45,11 @@ class Town extends Unit
     @css_class = 'town'
     @title = unit['@user_name'] + ' Town'
 
+class PlayerTown extends Town
+  constructor: (unit) ->
+    super unit
+    @css_class = 'player-unit player-town'
+
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
     switch unit_hash['@type']
@@ -55,7 +60,12 @@ UnitFactory = (unit_hash, user_id) ->
           else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotHero unit_hash
           else unit = new OtherPlayerHero unit_hash
       when "GreenOrb" then unit = new GreenOrb unit_hash
-      when "Town" then unit = new Town unit_hash
+      when "Town"
+        if unit_hash['@user_id']
+          if unit_hash['@user_id'] == user_id
+            unit = new PlayerTown unit_hash
+        else
+          unit = new Town unit_hash
       else throw new Error 'Unit have no type'
   unit
 
