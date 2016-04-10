@@ -50,10 +50,13 @@ class Map
     canvas.write canvas_path
     puts "write to #{canvas_path}"
   end
-  
+
+  # check if coordinates are valid, alias may be
   def has?(x, y)
     [x, y].count{|c| (MAP_CELLS_RANGE).include? c} == 2
   end
+
+  alias valid? has?
 
   # coordinates to hash
   def c2h(x, y)

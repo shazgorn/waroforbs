@@ -102,7 +102,15 @@ class Game
       town = Town.new(user)
       @units[town.id] = town
       hero = @units[active_unit_id]
-      town.place hero.x - 1, hero.y - 1
+      (-1..1).each do |x|
+        (-1..1).each do |y|
+          new_x = hero.x + x
+          new_y = hero.y + y
+          if place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
+            town.place new_x, new_y
+          end
+        end
+      end
     end
   end
 
