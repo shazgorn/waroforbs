@@ -49,6 +49,10 @@ class Controls
       app.restart()
     )
 
+    $('#close-modal').click(() ->
+      $(this).parent().parent().hide()
+    )
+
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
 

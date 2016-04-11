@@ -99,6 +99,8 @@ end
 class Town < Unit
   def initialize(user)
     super('Town', user)
+    @hp = 1000
+    @dmg = 5
   end
 
   def place(x = nil, y = nil)

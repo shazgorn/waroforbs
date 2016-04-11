@@ -203,3 +203,25 @@ $active-hero-color: #0066ff;
     display: table;
     clear: both;
 }
+
+.modal {
+    background-color: white;
+    display: none;
+    height: 50%;
+    left: 2rem;
+    padding: 1rem;
+    position: fixed;
+    top: 3rem;
+    width: 60%;
+    z-index: 7;
+
+    .buildings {
+        height: 50%;
+    }
+
+    .modal-top-bar {
+        a {
+            float: right;
+        }
+    }
+}

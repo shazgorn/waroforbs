@@ -26,7 +26,7 @@
     <table></table>
   </div>
 </div>
-
+{{ app.partial('town') }}
 <script src="js/map.js"></script>
 <script src="js/controls.js"></script>
 <script src="js/units.js"></script>

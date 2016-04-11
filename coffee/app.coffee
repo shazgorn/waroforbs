@@ -101,6 +101,8 @@ class Application
     $(unit).addClass('select-target').off('click').on('click', () =>
       console.log(unit)
       @set_active_unit($(unit).data('id'))
+      if $(unit).hasClass('player-town')
+        $('.modal.town').show()
     )
 
   log: (data) ->
