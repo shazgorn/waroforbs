@@ -102,7 +102,6 @@ class Application
       console.log(unit)
       @set_active_unit($(unit).data('id'))
     )
-    
 
   log: (data) ->
     div = document.createElement('div')
