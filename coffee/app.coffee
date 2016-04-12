@@ -34,6 +34,10 @@ class Application
   restart: () ->
     @ws.restart()
 
+  build: (button) ->
+    id = $(button).data('id')
+    @ws.build(id)
+
   set_active_unit: (unit_id) ->
     #if unit_id != @active_unit_id
     @active_unit_id = unit_id
@@ -99,11 +103,13 @@ class Application
 
   bind_select_handler: (unit) ->
     $(unit).addClass('select-target').off('click').on('click', () =>
-      console.log(unit)
       @set_active_unit($(unit).data('id'))
       if $(unit).hasClass('player-town')
         $('.modal.town').show()
     )
+
+  init_town_buildings: (buildings) ->
+    @controls.init_town_buildings(buildings)
 
   log: (data) ->
     div = document.createElement('div')

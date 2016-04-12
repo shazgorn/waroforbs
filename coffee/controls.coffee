@@ -100,4 +100,26 @@ class Controls
     $(".active-player-unit").removeClass('active-player-unit')
     $("#unit-#{id}").addClass('active-player-unit')
 
+  # add building`s blocks and build buttons
+  init_town_buildings: (buildings) ->
+    for id, building of buildings
+      $b = $("##{id}")
+      if $b.length == 0
+        b = $(document.createElement('div'))
+          .html(building['@name'] + ' (' + building['@status'] + ')')
+          .attr('id', id)
+          .appendTo('.modal.town .buildings')
+      else
+        $b.html(building['@name'] + ' (' + building['@status'] + ')')
+      if building['@status'] == 1
+        $("##{id} button").remove()
+      else if building['@status'] == 0 && $("##{id}").length == 1 && $("##{id} button").length == 0
+        button = $(document.createElement('button'))
+          .html('Build')
+          .data('id', id)
+          .appendTo("##{id}")
+          .click(() ->
+            App.build(this)
+          )
+
 window.Controls = Controls

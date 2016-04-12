@@ -107,6 +107,9 @@ class OrbApp
             when :restart
               @game.restart token
               dispatch_units
+            when :build
+              @game.build user, data['building'].to_sym
+              dispatch_units
             end #case
           rescue Exception => e
             ex e

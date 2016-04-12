@@ -97,6 +97,15 @@ class WS
       })
     )
 
+  build: (id) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        building: id,
+        op: 'build'
+      })
+    )
+
   restart: () ->
     @socket.send(
       JSON.stringify({

@@ -148,8 +148,16 @@ class Game
         unit.place(xy[:x], xy[:y])
         break
       end
-      p unit
     end
+  end
+
+  def get_town user
+    @units.select{|k, unit| unit.user == user && unit.class.name == 'Town'}.to_a.first
+  end
+
+  def build user, building_id
+    town = get_town user
+    town[1].build building_id
   end
   
   # a - attacker, {x,y} defender`s coordinates

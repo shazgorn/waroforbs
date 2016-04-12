@@ -65,6 +65,7 @@ class Map
       .mouseup(() ->
         moving = false
       )
+
   addBlocks: () ->
     for block_x in [0..@map_dim_in_blocks-1]
       for block_y in [0..@map_dim_in_blocks-1]

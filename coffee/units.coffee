@@ -49,6 +49,7 @@ class PlayerTown extends Town
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-town'
+    App.init_town_buildings(unit['@buildings'])
 
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
