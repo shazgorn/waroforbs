@@ -50,6 +50,7 @@ class PlayerTown extends Town
     super unit
     @css_class = 'player-unit player-town'
     App.init_town_buildings(unit['@buildings'])
+    App.controls.init_town_controls(unit['@actions'])
 
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?

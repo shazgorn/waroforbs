@@ -88,6 +88,14 @@ class WS
       })
     )
 
+  new_town_hero: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'new_town_hero'
+      })
+    )
+
   new_town: (unit_id) ->
     @socket.send(
       JSON.stringify({

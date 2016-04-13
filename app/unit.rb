@@ -97,6 +97,8 @@ class GreenOrb < Unit
 end
 
 class Town < Unit
+  attr_reader :buildings, :actions
+
   def initialize(user)
     super('Town', user)
     @hp = 1000
@@ -105,6 +107,7 @@ class Town < Unit
       :tavern => Tavern.new,
       :barracs => Barracs.new
     }
+    @actions = []
   end
 
   def place(x = nil, y = nil)
@@ -114,44 +117,12 @@ class Town < Unit
   end
 
   def build building_id
-    @buildings.fetch(building_id).build
-  end
-end
-
-# status - 0 can be built
-# status - 1 already build
-class Building
-  def initialize
-    @status = 0
+    @buildings[building_id].build
+    update_actions
   end
 
-  def build
-    @status = 1
-  end
-
-  def to_hash()
-    hash = {}
-    self.instance_variables.each do |var|
-      hash[var] = self.instance_variable_get var
-    end
-    hash
-  end
-
-  def to_json(generator = JSON.generator)
-    to_hash().to_json
-  end
-end
-
-class Tavern < Building
-  def initialize
-    super
-    @name = 'Tavern'
-  end
-end
-
-class Barracs < Building
-  def initialize
-    super
-    @name = 'Barracs'
+  # select actions available based on constructed buildings for town menu
+  def update_actions
+    @actions = @buildings.values.map{|b| b.actions}.flatten
   end
 end

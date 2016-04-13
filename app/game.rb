@@ -15,8 +15,21 @@ class Game
     @tokens = {}
   end
 
+  ############ DATA SELECTION METHODS ########################
   def green_orbs_length
     @units.select{|k,unit| unit.type == 'GreenOrb'}.length
+  end
+
+  def select_active_unit user
+    @units.values{|unit| unit.user_id = user.id && unit.class.name == 'Town'}.first
+  end
+
+  def place_is_empty?(x, y)
+    @units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
+  end
+
+  def get_town user
+    @units.values.select{|unit| unit.user == user && unit.class.name == 'Town'}.first
   end
 
   def get_user_by_token token
@@ -28,6 +41,19 @@ class Game
     user
   end
 
+  def get_active_unit user
+    begin
+      active_unit_id = user.active_unit_id
+      unit = @units[active_unit_id]
+    rescue
+      unit = select_active_unit user
+      user.active_unit_id = unit.id
+    end
+    unit
+  end
+  ##################### END DATA SELECTION METHODS #######################
+  
+  ##################### CONSTRUCTORS #####################################
   def new_hero user
     unit = Hero.new(user)
     @units[unit.id] = unit
@@ -40,12 +66,34 @@ class Game
     place_at_random hero
   end
 
+  def new_town_hero user
+    empty_cell = empty_adj_cell(get_town(user))
+    if empty_cell
+      hero = new_hero user
+      user.active_unit_id = hero.id
+      hero.place empty_cell[:x], empty_cell[:y]
+    end
+  end
+
   def new_green_orb
     puts "spawn green orb"
     orb = GreenOrb.new
     @units[orb.id] = orb
     place_at_random orb
   end
+
+  def new_town(user, active_unit_id)
+    if @units.select{|k,unit| unit.type == 'Town' && unit.user_id == user.id}.length == 0
+      hero = @units[active_unit_id]
+      empty_cell = empty_adj_cell hero
+      if empty_cell
+        town = Town.new(user)
+        @units[town.id] = town
+        town.place empty_cell[:x], empty_cell[:y]
+      end
+    end
+  end
+  ##################### END CONSTRUCTORS #################################
 
   # init user
   # If this is a 1st login then new user is created and new hero is placed
@@ -62,60 +110,6 @@ class Game
     # reset ws if connection is dead, user relogged etc
     user.ws = ws
     user
-  end
-
-  def select_active_unit user
-    @units.select{|k,v| v.user_id = user.id}.to_a.first
-  end
-
-  def get_active_unit user
-    begin
-      active_unit_id = user.active_unit_id
-      unit = @units[active_unit_id]
-    rescue
-      unit = select_active_unit user
-      user.active_unit_id = unit.id
-    end
-    unit
-  end
-  
-  def bury(unit)
-    @units.delete unit.id
-  end
-
-  def revive(token)
-    user = @users[token]
-    unit = user.hero
-    if unit.dead?
-      @users[unit.user].hero = hero = Hero.new(unit.user)
-      place_at_random hero
-    end
-  end
-
-  def restart(token)
-    user = @users[token]
-    user.reset_units
-  end
-
-  def new_town(user, active_unit_id)
-    if @units.select{|k,unit| unit.type == 'Town' && unit.user_id == user.id}.length == 0
-      town = Town.new(user)
-      @units[town.id] = town
-      hero = @units[active_unit_id]
-      (-1..1).each do |x|
-        (-1..1).each do |y|
-          new_x = hero.x + x
-          new_y = hero.y + y
-          if place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
-            town.place new_x, new_y
-          end
-        end
-      end
-    end
-  end
-
-  def place_is_empty?(x, y)
-    @units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
   end
 
   def move_hero_by user, unit_id, dx, dy
@@ -137,10 +131,6 @@ class Game
     res
   end
 
-  def place_town town
-    @map.place town
-  end
-
   def place_at_random unit
     while true
       xy = @map.get_rand_coords
@@ -151,15 +141,43 @@ class Game
     end
   end
 
-  def get_town user
-    @units.select{|k, unit| unit.user == user && unit.class.name == 'Town'}.to_a.first
+  def revive(token)
+    user = @users[token]
+    unit = user.hero
+    if unit.dead?
+      @users[unit.user].hero = hero = Hero.new(unit.user)
+      place_at_random hero
+    end
+  end
+
+  def restart(token)
+    user = @users[token]
+    user.reset_units
+  end
+
+  def empty_adj_cell unit
+    (-1..1).each do |x|
+      (-1..1).each do |y|
+        new_x = unit.x + x
+        new_y = unit.y + y
+        if place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
+           return {:x => new_x, :y => new_y}
+        end
+      end
+    end
+    nil
   end
 
   def build user, building_id
     town = get_town user
-    town[1].build building_id
+    town.build building_id
   end
-  
+
+  #################### ATTACK #############################################
+  def bury(unit)
+    @units.delete unit.id
+  end
+
   # a - attacker, {x,y} defender`s coordinates
   # @param [User] a_user attacker
   # @param [Integer] def_id if of the defender unit

@@ -1,5 +1,11 @@
 class Controls
   constructor: (app) ->
+    @town_actions =
+      'new_town_hero': {
+        name: 'New hero',
+        callback: () ->
+          app.new_town_hero()
+      }
     controls = 
       7: {arr: '&#8598;', x: -1, y: -1},
       8: {arr: '&#8593;', x:  0, y: -1},
@@ -121,5 +127,21 @@ class Controls
           .click(() ->
             App.build(this)
           )
+
+  init_town_controls: (actions) ->
+    for action in actions
+      action_val = @town_actions[action]
+      $a = $(".town .actions ##{action}")
+      if $a.length == 0
+        b = $(document.createElement('button'))
+          .html(action_val.name)
+          .attr('id', action)
+          .data('id', action)
+          .appendTo('.town .actions')
+          .click(() ->
+            action_val.callback this
+          )
+    # delete old actions
+
 
 window.Controls = Controls
