@@ -9,7 +9,7 @@ class User
     @@id += 1
     @login = login
     @active_unit_id = nil
-    @actions = []
+    @actions = [:new_hero, :new_town]
   end
 
   def actions

@@ -112,7 +112,6 @@ class Game
       user.active_unit_id = unit.id
       place_at_random unit
     end
-    # reset ws if connection is dead, user relogged etc
     user
   end
 

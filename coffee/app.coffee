@@ -78,7 +78,7 @@ class Application
         if id == @active_unit_id
           @lock_controls()
     )
-    null
+    true
 
   bind_action_handlers: () ->
     $('.attack-target').removeClass('attack-target').off('click')

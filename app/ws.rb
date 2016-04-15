@@ -42,7 +42,6 @@ class OrbApp
       EM::WebSocket.run(:host => ARGV[0] || '0.0.0.0', :port => 9293) do |ws|
         ws.onopen do |hanshake|
           puts "WebSocket connection open"
-          p ws
           @ws_pool[ws.signature] = {:ws => ws}
         end
 
@@ -71,6 +70,7 @@ class OrbApp
                                      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
                                      :active_unit_id => user.active_unit_id,
                                      :user_id => user.id,
+                                     :actions => user.actions,
                                      :units => @game.units})
             when :close
               dispatch_units
