@@ -93,11 +93,16 @@ class Game
       end
     end
   end
+
+  def build user, building_id
+    town = get_town user
+    town.build building_id
+  end
   ##################### END CONSTRUCTORS #################################
 
   # init user
   # If this is a 1st login then new user is created and new hero is placed
-  def init_user token, ws
+  def init_user token
     user = get_user_by_token token
     if user.nil?
       user = User.new(token)
@@ -108,7 +113,6 @@ class Game
       place_at_random unit
     end
     # reset ws if connection is dead, user relogged etc
-    user.ws = ws
     user
   end
 
@@ -168,11 +172,6 @@ class Game
     nil
   end
 
-  def build user, building_id
-    town = get_town user
-    town.build building_id
-  end
-
   #################### ATTACK #############################################
   def bury(unit)
     @units.delete unit.id
@@ -212,7 +211,7 @@ class Game
         end
       end
       d_user = @users[d.user_id]
-      if d_user && !d_user.ws.nil?
+      if d_user
         res[:d_user] = d_user
         res[:d_data].merge!({
                               :data_type => 'dmg',

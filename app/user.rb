@@ -1,6 +1,6 @@
 class User
   attr_reader :login, :id
-  attr_accessor :ws, :active_unit_id
+  attr_accessor :active_unit_id
 
   @@id = 1
   
@@ -8,9 +8,17 @@ class User
     @id = @@id
     @@id += 1
     @login = login
-    @ws = nil
     @active_unit_id = nil
+    @actions = []
   end
+
+  def actions
+    @actions
+  end
+end
+
+class AdminUser < User
+  @actions = [:spawn_bot]
 end
 
 class Bot < User

@@ -32,23 +32,28 @@ class OrbApp
     puts e.backtrace.join("\n")
   end
 
+  def get_ws_by_user user
+    @ws_pool.select{|w| w[:user] == user}.first
+  end
+
   # run me last, infinite loop you know
   def run_ws
     EM.run do
       EM::WebSocket.run(:host => ARGV[0] || '0.0.0.0', :port => 9293) do |ws|
         ws.onopen do |hanshake|
-          puts 'WebSocket connection open'
-          @ws_pool[ws.signature] = ws
+          puts "WebSocket connection open"
+          p ws
+          @ws_pool[ws.signature] = {:ws => ws}
         end
 
         ws.onclose do
           puts 'Connection closed'
-          @ws_pool[ws.signature] = nil
+          @ws_pool.delete ws.signature
         end
 
-        ws.onmessage do |msg|
+        ws.onmessage do |msg, type|
           begin
-            puts "Recieved message: #{msg}"
+            puts "Recieved message: #{msg} #{type}"
             data = JSON.parse(msg)
             token = data['token']
             user = @game.get_user_by_token token
@@ -57,7 +62,7 @@ class OrbApp
             end
             case data['op'].to_sym
             when :init
-              user = @game.init_user token, ws
+              @ws_pool[ws.signature][:user] = user = @game.init_user token
               ws.send JSON.generate({:data_type => 'init_map',
                                      :map_shift => Map::SHIFT,
                                      :cell_dim_in_px => Map::CELL_DIM,
@@ -91,7 +96,8 @@ class OrbApp
                                       :d_id => params['id']
                                     })
               if res.has_key? :d_data && !res[:d_user].nil?
-                @game.users[res[:d_user]].ws.send JSON.generate(res[:d_data])
+                d_ws = get_ws_by_user res[:d_user]
+                d_ws.send JSON.generate(res[:d_data])
               end
               dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
             when :spawn_bot
@@ -185,12 +191,13 @@ class OrbApp
   end
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})
-    @ws_pool.each do |ws|
-      unless ws.nil?
-        if !user.nil? && !action.nil? && user.ws == ws
-          ws.send JSON.generate(changes.merge({:action => action}).merge(data))
+    @ws_pool.each do |w|
+      unless w.nil?
+        changes[:actions] = w[:user].actions
+        if user && action && w[:user] == user
+          w[:ws].send JSON.generate(changes.merge({:action => action}).merge(data))
         else
-          ws.send JSON.generate(changes)
+          w[:ws].send JSON.generate(changes)
         end
       end
     end
