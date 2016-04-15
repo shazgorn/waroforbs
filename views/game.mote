@@ -9,13 +9,15 @@
     </div>
     <div id="controls_arrows" class="group"></div>
     <div id="dimensions">
-    	 {{ app.partial('dimensions') }}
+        {{ app.partial('dimensions') }}
     </div>
-    <button id="spawn-bot">Spawn bot</button>
-    <button id="revive">Revive</button><br>
-    <button id="new-hero">New hero</button>
-    <button id="new-town">New town</button>
-    <button id="restart">Restart</button>
+    <div id="user-controls">
+        <button id="spawn-bot">Spawn bot</button>
+        <button id="revive">Revive</button>
+        <button id="new-hero">New hero</button>
+        <button id="new-town">New town</button>
+        <button id="restart">Restart</button>
+    </div>
   </div><!-- #right-col -->
   <div id="log">
   </div>

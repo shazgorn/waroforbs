@@ -162,19 +162,21 @@ $active-hero-color: #0066ff;
         color: #ccc;
         font-weight: bold;
     }
-    button {
-        float: left;
-    }
     #controls_arrows button {
+        float: left;
         font-size: 30px;
         font-weight: bold;
         line-height: 1px;
         height: $button-size;
         text-align: center;
         width: $button-size;
+        &:nth-child(3n-2) {
+            clear: left;
+        }
     }
-    #controls_arrows button:nth-child(3n-2) {
-        clear: left;
+    #user-controls button {
+        display: block;
+        margin: 0.5rem 0;
     }
 }
 
