@@ -4,11 +4,8 @@
 # dead heroes are dead if they never exists
 class Game
   attr_reader :map
-  attr_accessor :users
 
   def initialize
-    # id -> user
-    @users = {}
     @map = Map.new
     # token -> user_id
     @tokens = {}
@@ -17,7 +14,7 @@ class Game
   ############ DATA SELECTION METHODS ########################
   def get_user_by_token token
     begin
-      user = @users[@tokens[token]]
+      user = User.get @tokens[token]
     rescue
       user = nil
     end
@@ -68,7 +65,6 @@ class Game
     user = get_user_by_token token
     if user.nil?
       user = User.new(token)
-      @users[user.id] = user
       @tokens[token] = user.id
       unit = new_hero user
       user.active_unit_id = unit.id
@@ -107,12 +103,6 @@ class Game
   end
 
   def revive(token)
-    user = @users[token]
-    unit = user.hero
-    if unit.dead?
-      @users[unit.user].hero = hero = Hero.new(unit.user)
-      place_at_random hero
-    end
   end
 
   def restart(token)
@@ -169,7 +159,7 @@ class Game
           res[:a_data][:dead] = true
         end
       end
-      d_user = @users[d.user_id]
+      d_user = User.get d.user_id
       if d_user
         res[:d_user] = d_user
         res[:d_data].merge!({

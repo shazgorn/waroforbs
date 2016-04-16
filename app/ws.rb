@@ -148,22 +148,22 @@ class OrbApp
   end
 
   def spawn_bot
-    if @game.users.values.count{|user| user.login.index('bot') != nil} < MAX_BOTS
+    if User.all.values.count{|user| user.login.index('bot') != nil} < MAX_BOTS
       Thread.new {
         begin
           bot_name = 'bot_' + @bot_id.to_s
           @bot_id += 1
-          @game.users[bot_name] = bot = Bot.new(bot_name)
+          bot = Bot.new(bot_name)
           @game.map.place_at_random bot.hero
           dmg = nil
           while true
             dmg = nil
-            xy = @game.map.h2c @game.users[bot_name].hero.pos
+            xy = @game.map.h2c (User.get bot.id).hero.pos
             (-1..1).each do |adx|
               (-1..1).each do |ady|
                 x = xy[:x] + adx
                 y = xy[:y] + ady
-                res = @game.attack @game.users[bot_name].hero, x, y
+                res = @game.attack User.get(bot.id).hero, x, y
                 dmg = res[:dmg] unless res[:dmg].nil?
               end
             end
@@ -171,7 +171,7 @@ class OrbApp
             if dmg.nil?
               dx = Random.rand(3) - 1
               dy = Random.rand(3) - 1
-              @game.move_hero_by @game.users[bot_name].hero, dx, dy
+              @game.move_hero_by User.get(bot.id).hero, dx, dy
             end
             dispatch_units
             sleep(1)

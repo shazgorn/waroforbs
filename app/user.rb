@@ -2,11 +2,13 @@ class User
   attr_reader :login, :id
   attr_accessor :active_unit_id
 
-  @@id = 1
-  
+  @@id_seq = 1
+  # id -> user
+  @@users = {}
+
   def initialize(login)
-    @id = @@id
-    @@id += 1
+    @id = @@id_seq
+    @@id_seq += 1
     @login = login
     @active_unit_id = nil
     @actions = [:new_hero, :new_town]
@@ -14,6 +16,21 @@ class User
 
   def actions
     @actions
+  end
+
+  class << self
+    def new login
+      user = super login
+      @@users[user.id] = user
+    end
+
+    def get id
+      @@users[id]
+    end
+
+    def all
+      @@users
+    end
   end
 end
 
