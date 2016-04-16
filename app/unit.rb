@@ -1,13 +1,15 @@
 class Unit
   attr_reader :id, :type, :user, :hp, :x, :y
 
-  @@id = 1
+  @@id_seq = 1
+  # id -> unit
+  @@units = {}
 
   # @user login string
   # change user_id to user
   def initialize(type, user = nil)
-    @id = @@id
-    @@id += 1
+    @id = @@id_seq
+    @@id_seq += 1
     @type = type
     @user = user
     @dead = false
@@ -70,6 +72,63 @@ class Unit
     @y = y
   end
 
+
+  class << self
+    def new user = nil
+      unit = super user
+      @@units[unit.id] = unit
+    end
+
+    def all
+      @@units
+    end
+
+    def count
+      @@units.length
+    end
+
+    def get id
+      @@units[id]
+    end
+
+    def delete id
+      @@units.delete id
+    end
+    
+    def green_orbs_length
+      @@units.select{|k,unit| unit.type == 'GreenOrb'}.length
+    end
+
+    def select_active_unit user
+      @@units.values.select{|unit| unit.user_id = user.id && unit.type == 'PlayerHero'}.first
+    end
+
+    def place_is_empty?(x, y)
+      @@units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
+    end
+
+    def get_town user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == 'Town'}.first
+    end
+
+    def user_has_town? user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == 'Town'}.length == 1
+    end
+
+    def get_active_unit user
+      begin
+        active_unit_id = user.active_unit_id
+        unit = @@units[active_unit_id]
+      rescue
+        unit = select_active_unit user
+        user.active_unit_id = unit.id
+      end
+      unit
+    end
+    
+  end
+
+
 end
 
 class Hero < Unit
@@ -82,14 +141,14 @@ end
 
 class BotHero < Hero
   def initialize(user)
-    super(user_id)
+    super(user)
     @hp = 300
     @dmg = 20
   end
 end
 
 class GreenOrb < Unit
-  def initialize
+  def initialize(user)
     super('GreenOrb')
     @hp = 100
     @dmg = 20

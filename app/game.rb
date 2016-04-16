@@ -1,37 +1,20 @@
-# this class gotta contain some logic about units interactions
-# and all other non-map things
+# Game logic, some kind of incubator
+# code from here will be moved to more appropriate places
+# like data storage, attack strategy etc
 # dead heroes are dead if they never exists
 class Game
   attr_reader :map
-  attr_accessor :users, :units
+  attr_accessor :users
 
   def initialize
     # id -> user
     @users = {}
-    # id -> unit
-    @units = {}
     @map = Map.new
     # token -> user_id
     @tokens = {}
   end
 
   ############ DATA SELECTION METHODS ########################
-  def green_orbs_length
-    @units.select{|k,unit| unit.type == 'GreenOrb'}.length
-  end
-
-  def select_active_unit user
-    @units.values{|unit| unit.user_id = user.id && unit.class.name == 'Town'}.first
-  end
-
-  def place_is_empty?(x, y)
-    @units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
-  end
-
-  def get_town user
-    @units.values.select{|unit| unit.user == user && unit.class.name == 'Town'}.first
-  end
-
   def get_user_by_token token
     begin
       user = @users[@tokens[token]]
@@ -40,24 +23,11 @@ class Game
     end
     user
   end
-
-  def get_active_unit user
-    begin
-      active_unit_id = user.active_unit_id
-      unit = @units[active_unit_id]
-    rescue
-      unit = select_active_unit user
-      user.active_unit_id = unit.id
-    end
-    unit
-  end
   ##################### END DATA SELECTION METHODS #######################
   
   ##################### CONSTRUCTORS #####################################
   def new_hero user
-    unit = Hero.new(user)
-    @units[unit.id] = unit
-    unit
+    Hero.new(user)
   end
 
   def new_random_hero user
@@ -75,20 +45,12 @@ class Game
     end
   end
 
-  def new_green_orb
-    puts "spawn green orb"
-    orb = GreenOrb.new
-    @units[orb.id] = orb
-    place_at_random orb
-  end
-
   def new_town(user, active_unit_id)
-    if @units.select{|k,unit| unit.type == 'Town' && unit.user_id == user.id}.length == 0
-      hero = @units[active_unit_id]
+    unless Town.user_has_town? user
+      hero = Hero.get active_unit_id
       empty_cell = empty_adj_cell hero
       if empty_cell
         town = Town.new(user)
-        @units[town.id] = town
         town.place empty_cell[:x], empty_cell[:y]
       end
     end
@@ -117,11 +79,11 @@ class Game
 
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}
-    unit = @units[unit_id]
+    unit = Unit.get unit_id
     if unit
       new_x = unit.x + dx
       new_y = unit.y + dy
-      if place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)
+      if Unit.place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)
         unit.place(new_x, new_y)
         res[:moved] = true
       else
@@ -137,7 +99,7 @@ class Game
   def place_at_random unit
     while true
       xy = @map.get_rand_coords
-      if place_is_empty?(xy[:x], xy[:y])
+      if Unit.place_is_empty?(xy[:x], xy[:y])
         unit.place(xy[:x], xy[:y])
         break
       end
@@ -154,8 +116,6 @@ class Game
   end
 
   def restart(token)
-    user = @users[token]
-    user.reset_units
   end
 
   def empty_adj_cell unit
@@ -163,7 +123,7 @@ class Game
       (-1..1).each do |y|
         new_x = unit.x + x
         new_y = unit.y + y
-        if place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
+        if Unit.place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
            return {:x => new_x, :y => new_y}
         end
       end
@@ -173,7 +133,7 @@ class Game
 
   #################### ATTACK #############################################
   def bury(unit)
-    @units.delete unit.id
+    Unit.delete unit.id
   end
 
   # a - attacker, {x,y} defender`s coordinates
@@ -188,12 +148,12 @@ class Game
         :dead => false
       }
     }
-    a = get_active_unit a_user
+    a = Unit.get_active_unit a_user
     if a.nil?
       res[:a_data][:log] = 'Your hero is dead'
       return res
     end
-    d = @units[def_id]
+    d = Unit.get def_id
     dmg = nil
     if d && a != d
       dmg = d.take_dmg a.dmg

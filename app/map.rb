@@ -67,10 +67,6 @@ class Map
     {:x => (h / SHIFT).to_i, :y => h % SHIFT}
   end
 
-  def place_is_empty?(units, x, y)
-    units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
-  end
-
   def get_rand_coords
     x = Random.rand(MAX_CELL_IDX)
     y = Random.rand(MAX_CELL_IDX)

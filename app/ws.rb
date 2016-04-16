@@ -71,11 +71,11 @@ class OrbApp
                                      :active_unit_id => user.active_unit_id,
                                      :user_id => user.id,
                                      :actions => user.actions,
-                                     :units => @game.units})
+                                     :units => Unit.all})
             when :close
               dispatch_units
             when :units
-              ws.send JSON.generate({:data_type => 'units', :units => @game.units})
+              ws.send JSON.generate({:data_type => 'units', :units => Unit.all})
             when :move
               params = data['params']
               res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
@@ -133,9 +133,10 @@ class OrbApp
     Thread.new do
       while true
         begin
-          count = @game.green_orbs_length
-          if count < MAX_ORBS
-            @game.new_green_orb
+          if Unit.green_orbs_length < MAX_ORBS
+            puts "spawn green orb"
+            orb = GreenOrb.new
+            @game.place_at_random orb
             dispatch_units
           end
         rescue => e
@@ -187,7 +188,7 @@ class OrbApp
   end
 
   def dispatch_units(user = nil, action = nil, data = {})
-    dispatch_changes({:data_type => 'units', :units => @game.units}, user, action, data)
+    dispatch_changes({:data_type => 'units', :units => Unit.all}, user, action, data)
   end
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})
