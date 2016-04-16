@@ -7,6 +7,7 @@ require_relative 'building'
 require_relative 'unit'
 require_relative 'user'
 require_relative 'map'
+require_relative 'attack'
 require_relative 'game'
 
 class OrbError < RuntimeError

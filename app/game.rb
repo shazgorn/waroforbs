@@ -66,9 +66,7 @@ class Game
     if user.nil?
       user = User.new(token)
       @tokens[token] = user.id
-      unit = new_hero user
-      user.active_unit_id = unit.id
-      place_at_random unit
+      new_random_hero user
     end
     user
   end
@@ -102,12 +100,6 @@ class Game
     end
   end
 
-  def revive(token)
-  end
-
-  def restart(token)
-  end
-
   def empty_adj_cell unit
     (-1..1).each do |x|
       (-1..1).each do |y|
@@ -121,57 +113,21 @@ class Game
     nil
   end
 
-  #################### ATTACK #############################################
-  def bury(unit)
-    Unit.delete unit.id
+  def revive(token)
   end
 
+  def restart(token)
+  end
+
+  #################### ATTACK #############################################
   # a - attacker, {x,y} defender`s coordinates
   # @param [User] a_user attacker
   # @param [Integer] def_id if of the defender unit
   def attack a_user, active_unit_id, def_id
-    res = {
-      :a_data => {
-        :dead => false
-      },
-      :d_data => {
-        :dead => false
-      }
-    }
     a = Unit.get_active_unit a_user
-    if a.nil?
-      res[:a_data][:log] = 'Your hero is dead'
-      return res
-    end
     d = Unit.get def_id
-    dmg = nil
-    if d && a != d
-      dmg = d.take_dmg a.dmg
-      if d.dead?
-        bury d
-        res[:d_data][:log] = 'Your hero has been killed'
-        ca_dmg = 0
-      else
-        ca_dmg = a.take_dmg d.dmg
-        if a.dead?
-          bury a
-          res[:a_data][:log] = 'Your hero has been killed'
-          res[:a_data][:dead] = true
-        end
-      end
-      d_user = User.get d.user_id
-      if d_user
-        res[:d_user] = d_user
-        res[:d_data].merge!({
-                              :data_type => 'dmg',
-                              :id => d.id,
-                              :dmg => ca_dmg,
-                              :ca_dmg => dmg
-                            })
-      end
-    end
-    res[:a_data].merge!({:dmg => dmg, :ca_dmg => ca_dmg})
-    res
+    d_user = User.get d.user_id
+    Attack.attack a, d, d_user
   end
   
 end
