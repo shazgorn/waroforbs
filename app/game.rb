@@ -49,6 +49,7 @@ class Game
       if empty_cell
         town = Town.new(user)
         town.place empty_cell[:x], empty_cell[:y]
+        user.actions.delete :new_town
       end
     end
   end

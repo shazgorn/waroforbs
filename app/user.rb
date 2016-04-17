@@ -11,7 +11,7 @@ class User
     @@id_seq += 1
     @login = login
     @active_unit_id = nil
-    @actions = [:new_hero, :new_town]
+    @actions = [:new_town]
   end
 
   def actions

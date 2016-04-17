@@ -25,6 +25,7 @@ class WS
             app.init_units data.units
             app.center_on_active()
             app.controls.set_active_unit(data.active_unit_id)
+            app.controls.init_user_controls(data.actions)
             app.initialized = true
           when 'units'
             app.init_units data.units
@@ -33,6 +34,7 @@ class WS
             if data.action == 'move'
               $('#log').prepend($(document.createElement('div')).html(data.log))
             app.controls.set_active_unit(app.active_unit_id)
+            app.controls.init_user_controls(data.actions)
           when 'dmg'
             app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
             app.log('damage dealt ' + data.dmg)

@@ -1,5 +1,16 @@
 class Controls
   constructor: (app) ->
+    @user_actions =
+      'new_hero': {
+        name: 'New hero',
+        callback: () ->
+          App.new_hero()
+      },
+      'new_town': {
+        name: 'New town',
+        callback: () ->
+          App.new_town()
+      }
     @town_actions =
       'new_town_hero': {
         name: 'New hero',
@@ -34,25 +45,6 @@ class Controls
                 dy: parseInt(this.dataset.dy)
             }
         )
-    )
-    $('#spawn-bot').click(() ->
-        app.spawn_bot()
-    );
-
-    $('#revive').click(() ->
-        app.revive()
-    );
-
-    $('#new-hero').click(() ->
-        app.new_hero()
-    );
-
-    $('#new-town').click(() ->
-      app.new_town()
-    )
-
-    $('#restart').click(() ->
-      app.restart()
     )
 
     $('#close-modal').click(() ->
@@ -144,5 +136,19 @@ class Controls
           )
     # delete old actions
 
+  init_user_controls: (actions) ->
+    for id, val of @user_actions
+      $a = $("#user-controls ##{id}")
+      console.log(id, actions, $a)
+      if $.inArray(id, actions) == -1
+        $a.remove()
+      else
+        if $a.length == 0
+          $(document.createElement('button'))
+          .html(val.name)
+          .attr('id', id)
+          .data('id', id)
+          .appendTo('#user-controls')
+          .click(val.callback)
 
 window.Controls = Controls

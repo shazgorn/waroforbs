@@ -3,22 +3,7 @@
     <div id="blocks">
     </div>
   </div>
-  <div id="right-col">
-    <div class="unit-info unit-info-template">
-    	 {{ app.partial('unit-info') }}
-    </div>
-    <div id="controls_arrows" class="group"></div>
-    <div id="dimensions">
-        {{ app.partial('dimensions') }}
-    </div>
-    <div id="user-controls">
-        <button id="spawn-bot">Spawn bot</button>
-        <button id="revive">Revive</button>
-        <button id="new-hero">New hero</button>
-        <button id="new-town">New town</button>
-        <button id="restart">Restart</button>
-    </div>
-  </div><!-- #right-col -->
+  {{ app.partial('right-col') }}
   <div id="log">
   </div>
 </div><!-- #top-container -->
