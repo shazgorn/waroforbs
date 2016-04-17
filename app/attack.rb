@@ -19,8 +19,9 @@ class Attack
     end
     
     dmg = nil
-    if d && a != d
+    if d && a != d && a.ap >= 1
       dmg = d.take_dmg a.dmg
+      a.ap -= 1
       if d.dead?
         bury d
         res[:d_data][:log] = 'Your hero has been killed'

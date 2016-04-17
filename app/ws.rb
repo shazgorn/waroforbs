@@ -135,14 +135,12 @@ class OrbApp
       while true
         begin
           Unit.all.values.each{|unit|
-            if unit.ap < 10
-              unit.ap += 1
-            end
+            unit.restore_ap
           }
         rescue => e
           ex e
         end
-        sleep(1)
+        sleep(10)
       end
     end
   end

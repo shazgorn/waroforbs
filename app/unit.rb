@@ -80,7 +80,12 @@ class Unit
     @ap -= 1
   end
 
-
+  # restore some amount of @ap per tick
+  def restore_ap
+    if @ap <= @max_ap - 1
+      @ap += 1
+    end
+  end
 
   class << self
     def new user = nil
