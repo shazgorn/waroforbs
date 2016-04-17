@@ -5,4 +5,5 @@
 <tr><td>hp:</td><td class="hp-info"></td></tr>
 <tr><td>x:</td><td class="x-info"></td></tr>
 <tr><td>y:</td><td class="y-info"></td></tr>
+<tr><td>ap:</td><td class="ap-info"></td></tr>
 </table>

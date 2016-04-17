@@ -55,14 +55,14 @@ class PlayerTown extends Town
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
     switch unit_hash['@type']
-      when "PlayerHero"
+      when "player_hero"
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
             unit = new PlayerHero unit_hash
           else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotHero unit_hash
           else unit = new OtherPlayerHero unit_hash
-      when "GreenOrb" then unit = new GreenOrb unit_hash
-      when "Town"
+      when "orb" then unit = new GreenOrb unit_hash
+      when "town"
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
             unit = new PlayerTown unit_hash

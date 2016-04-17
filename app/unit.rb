@@ -1,5 +1,6 @@
 class Unit
   attr_reader :id, :type, :user, :hp, :x, :y
+  attr_accessor :ap
 
   @@id_seq = 1
   # id -> unit
@@ -15,6 +16,8 @@ class Unit
     @dead = false
     @x = nil
     @y = nil
+    @ap = 0
+    @max_ap = 0
   end
 
   def to_hash()
@@ -72,6 +75,12 @@ class Unit
     @y = y
   end
 
+  def move_to(x, y)
+    place(x, y)
+    @ap -= 1
+  end
+
+
 
   class << self
     def new user = nil
@@ -96,23 +105,23 @@ class Unit
     end
     
     def green_orbs_length
-      @@units.select{|k,unit| unit.type == 'GreenOrb'}.length
+      @@units.select{|k,unit| unit.type == :orb}.length
     end
 
     def select_active_unit user
-      @@units.values.select{|unit| unit.user_id = user.id && unit.type == 'PlayerHero'}.first
+      @@units.values.select{|unit| unit.user_id = user.id && unit.type == :player_hero}.first
     end
 
     def place_is_empty?(x, y)
       @@units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
     end
 
-    def get_town user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == 'Town'}.first
+    def get_by_user user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :town}.first
     end
 
     def user_has_town? user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == 'Town'}.length == 1
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :town}.length == 1
     end
 
     def get_active_unit user
@@ -133,9 +142,11 @@ end
 
 class Hero < Unit
   def initialize(user)
-    super('PlayerHero', user)
+    super(:player_hero, user)
     @hp = 150
     @dmg = 30
+    @ap = 10
+    @max_ap = 10
   end
 end
 
@@ -149,7 +160,7 @@ end
 
 class GreenOrb < Unit
   def initialize(user)
-    super('GreenOrb')
+    super(:orb)
     @hp = 100
     @dmg = 20
   end
@@ -159,7 +170,7 @@ class Town < Unit
   attr_reader :buildings, :actions
 
   def initialize(user)
-    super('Town', user)
+    super(:town, user)
     @hp = 1000
     @dmg = 5
     @buildings = {

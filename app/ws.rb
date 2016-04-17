@@ -130,6 +130,23 @@ class OrbApp
     end
   end
 
+  def run_ap_restorer
+    Thread.new do
+      while true
+        begin
+          Unit.all.values.each{|unit|
+            if unit.ap < 10
+              unit.ap += 1
+            end
+          }
+        rescue => e
+          ex e
+        end
+        sleep(1)
+      end
+    end
+  end
+
   def run_green_orbs_spawner
     Thread.new do
       while true
@@ -209,4 +226,5 @@ end
 
 app = OrbApp.new
 app.run_green_orbs_spawner
+app.run_ap_restorer
 app.run_ws

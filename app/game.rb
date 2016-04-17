@@ -34,7 +34,7 @@ class Game
   end
 
   def new_town_hero user
-    empty_cell = empty_adj_cell(get_town(user))
+    empty_cell = empty_adj_cell(Town.get_by_user(user))
     if empty_cell
       hero = new_hero user
       user.active_unit_id = hero.id
@@ -54,7 +54,7 @@ class Game
   end
 
   def build user, building_id
-    town = get_town user
+    town = Town.get_by_user user
     town.build building_id
   end
   ##################### END CONSTRUCTORS #################################
@@ -74,11 +74,11 @@ class Game
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}
     unit = Unit.get unit_id
-    if unit
+    if unit && unit.ap >= 1
       new_x = unit.x + dx
       new_y = unit.y + dy
       if Unit.place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)
-        unit.place(new_x, new_y)
+        unit.move_to(new_x, new_y)
         res[:moved] = true
       else
         res[:moved] = false

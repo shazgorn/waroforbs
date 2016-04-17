@@ -99,6 +99,7 @@ class Controls
     $(id_sel + ' .hp-info').html(unit['@hp'])
     $(id_sel + ' .x-info').html(unit['@x'])
     $(id_sel + ' .y-info').html(unit['@y'])
+    $(id_sel + ' .ap-info').html(unit['@ap'])
 
   set_active_unit: (id) ->
     $('.active-unit-info').removeClass('active-unit-info')
