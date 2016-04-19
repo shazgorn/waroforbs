@@ -55,7 +55,7 @@ class PlayerTown extends Town
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
     switch unit_hash['@type']
-      when "player_hero"
+      when "hero"
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
             unit = new PlayerHero unit_hash

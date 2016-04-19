@@ -139,7 +139,6 @@ class Controls
   init_user_controls: (actions) ->
     for id, val of @user_actions
       $a = $("#user-controls ##{id}")
-      console.log(id, actions, $a)
       if $.inArray(id, actions) == -1
         $a.remove()
       else

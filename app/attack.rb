@@ -1,9 +1,15 @@
 class Attack
   def self.bury(unit)
     Unit.delete unit.id
+    if unit.user
+      unless Unit.has_units? unit.user
+        unit.user.actions[:new_hero] = true
+        unit.user.actions[:new_town] = false
+      end
+    end
   end
 
-  def self.attack a, d, d_user
+  def self.attack a, d
     res = {
       :a_data => {
         :dead => false
@@ -35,8 +41,8 @@ class Attack
         end
       end
 
-      if d_user
-        res[:d_user] = d_user
+      if d.user
+        res[:d_user] = d.user
         res[:d_data].merge!({
                               :data_type => 'dmg',
                               :id => d.id,

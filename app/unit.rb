@@ -16,8 +16,8 @@ class Unit
     @dead = false
     @x = nil
     @y = nil
-    @ap = 0
     @max_ap = 0
+    @ap = @max_ap
   end
 
   def to_hash()
@@ -114,7 +114,7 @@ class Unit
     end
 
     def select_active_unit user
-      @@units.values.select{|unit| unit.user_id = user.id && unit.type == :player_hero}.first
+      @@units.values.select{|unit| unit.user_id = user.id && unit.type == :hero}.first
     end
 
     def place_is_empty?(x, y)
@@ -125,8 +125,20 @@ class Unit
       @@units.values.select{|unit| unit.user_id == user.id && unit.type == :town}.first
     end
 
-    def user_has_town? user
+    def has_town? user
       @@units.values.select{|unit| unit.user_id == user.id && unit.type == :town}.length == 1
+    end    
+
+    def has_heroes? user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :hero}.length > 0
+    end
+
+    def has_units? user
+      @@units.values.select{|unit| unit.user_id == user.id}.length > 0
+    end
+
+    def all_units_count user
+      @@units.values.select{|unit| unit.user_id == user.id}.length
     end
 
     def get_active_unit user
@@ -147,11 +159,11 @@ end
 
 class Hero < Unit
   def initialize(user)
-    super(:player_hero, user)
-    @hp = 150
+    super(:hero, user)
+    @hp = 50
     @dmg = 30
-    @ap = 10
-    @max_ap = 10
+    @max_ap = 100
+    @ap = @max_ap
   end
 end
 

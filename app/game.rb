@@ -2,6 +2,7 @@
 # code from here will be moved to more appropriate places
 # like data storage, attack strategy etc
 # dead heroes are dead if they never exists
+# should move unit creation methods to separate class
 class Game
   attr_reader :map
 
@@ -31,6 +32,10 @@ class Game
     hero = new_hero user
     user.active_unit_id = hero.id
     place_at_random hero
+    user.actions[:new_hero] = false
+    unless Unit.has_town? user
+      user.actions[:new_town] = true
+    end
   end
 
   def new_town_hero user
@@ -43,13 +48,13 @@ class Game
   end
 
   def new_town(user, active_unit_id)
-    unless Town.user_has_town? user
+    unless Unit.has_town? user
       hero = Hero.get active_unit_id
       empty_cell = empty_adj_cell hero
       if empty_cell
         town = Town.new(user)
         town.place empty_cell[:x], empty_cell[:y]
-        user.actions.delete :new_town
+        user.actions[:new_town] = false
       end
     end
   end
@@ -127,8 +132,7 @@ class Game
   def attack a_user, active_unit_id, def_id
     a = Unit.get_active_unit a_user
     d = Unit.get def_id
-    d_user = User.get d.user_id
-    Attack.attack a, d, d_user
+    Attack.attack a, d
   end
   
 end

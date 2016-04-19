@@ -120,7 +120,6 @@ class Map
     $('.unit').each((i, unit) ->
       id = $(unit).data('id')
       if $.inArray(id, all_units_ids) == -1
-        console.log("remove unit #{id}")
         $("#unit-#{id}").remove()
     )
 

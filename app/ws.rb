@@ -71,7 +71,7 @@ class OrbApp
                                      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
                                      :active_unit_id => user.active_unit_id,
                                      :user_id => user.id,
-                                     :actions => user.actions,
+                                     :actions => user.actions_arr,
                                      :units => Unit.all})
             when :close
               dispatch_units
@@ -140,7 +140,7 @@ class OrbApp
         rescue => e
           ex e
         end
-        sleep(10)
+        sleep(3)
       end
     end
   end
@@ -210,7 +210,7 @@ class OrbApp
   def dispatch_changes(changes, user = nil, action = nil, data = {})
     @ws_pool.each do |w|
       unless w.nil?
-        changes[:actions] = w[:user].actions
+        changes[:actions] = w[:user].actions_arr
         if user && action && w[:user] == user
           w[:ws].send JSON.generate(changes.merge({:action => action}).merge(data))
         else

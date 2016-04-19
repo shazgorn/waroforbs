@@ -11,11 +11,18 @@ class User
     @@id_seq += 1
     @login = login
     @active_unit_id = nil
-    @actions = [:new_town]
+    @actions = {
+      :new_town => true,
+      :new_hero => false
+    }
   end
 
   def actions
     @actions
+  end
+
+  def actions_arr
+    @actions.select{|k,v| v == true}.keys
   end
 
   class << self
