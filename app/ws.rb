@@ -4,6 +4,7 @@ require 'rmagick'
 require 'fileutils'
 
 require_relative 'building'
+require_relative 'banner'
 require_relative 'unit'
 require_relative 'user'
 require_relative 'map'

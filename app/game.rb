@@ -24,17 +24,33 @@ class Game
   ##################### END DATA SELECTION METHODS #######################
   
   ##################### CONSTRUCTORS #####################################
-  def new_hero user
-    Hero.new(user)
+  # init user
+  # If this is a 1st login then new user is created and new hero is placed
+  def init_user token
+    user = get_user_by_token token
+    if user.nil?
+      user = User.new(token)
+      @tokens[token] = user.id
+      Banner.new user
+      new_random_hero user
+    end
+    user
+  end
+
+  def new_hero user, banner
+    Hero.new(user, banner)
   end
 
   def new_random_hero user
-    hero = new_hero user
-    user.active_unit_id = hero.id
-    place_at_random hero
-    user.actions[:new_hero] = false
-    unless Unit.has_town? user
-      user.actions[:new_town] = true
+    unless Unit.has_units? user
+      banner = Banner.get_first_by_user user
+      hero = new_hero user, banner
+      user.active_unit_id = hero.id
+      place_at_random hero
+      user.actions[:new_hero] = false
+      unless Unit.has_town? user
+        user.actions[:new_town] = true
+      end
     end
   end
 
@@ -64,18 +80,6 @@ class Game
     town.build building_id
   end
   ##################### END CONSTRUCTORS #################################
-
-  # init user
-  # If this is a 1st login then new user is created and new hero is placed
-  def init_user token
-    user = get_user_by_token token
-    if user.nil?
-      user = User.new(token)
-      @tokens[token] = user.id
-      new_random_hero user
-    end
-    user
-  end
 
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}
@@ -112,7 +116,7 @@ class Game
         new_x = unit.x + x
         new_y = unit.y + y
         if Unit.place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
-           return {:x => new_x, :y => new_y}
+          return {:x => new_x, :y => new_y}
         end
       end
     end

@@ -18,6 +18,7 @@ class Unit
     @y = nil
     @max_ap = 0
     @ap = @max_ap
+    @@units[@id] = self
   end
 
   def to_hash()
@@ -88,11 +89,6 @@ class Unit
   end
 
   class << self
-    def new user = nil
-      unit = super user
-      @@units[unit.id] = unit
-    end
-
     def all
       @@units
     end
@@ -114,7 +110,7 @@ class Unit
     end
 
     def select_active_unit user
-      @@units.values.select{|unit| unit.user_id = user.id && unit.type == :hero}.first
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :hero}.first
     end
 
     def place_is_empty?(x, y)
@@ -154,16 +150,15 @@ class Unit
     
   end
 
-
 end
 
 class Hero < Unit
-  def initialize(user)
+  def initialize(user, banner)
     super(:hero, user)
-    @hp = 50
-    @dmg = 30
-    @max_ap = 100
-    @ap = @max_ap
+    @banner = banner
+    @dmg = 30 * banner.mod_attack
+    @hp = @max_hp = 50 * banner.mod_max_hp
+    @ap = @max_ap = 100 * banner.mod_max_ap
   end
 end
 
@@ -176,7 +171,7 @@ class BotHero < Hero
 end
 
 class GreenOrb < Unit
-  def initialize(user)
+  def initialize()
     super(:orb)
     @hp = 100
     @dmg = 20
