@@ -4,6 +4,7 @@ class Application
     @active_unit_id = null
     @units = []
     @my_units = []
+    @banners = []
     @controls = new Controls this
     @ws = new WS this
     @initialized = false

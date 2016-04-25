@@ -13,6 +13,17 @@ $column-gap: 30px;
 $hover-hero-color: #66a3ff;
 $active-hero-color: #0066ff;
 
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
 #top_container {
     height: 400px;
 }
@@ -222,8 +233,21 @@ $active-hero-color: #0066ff;
     }
 
     .modal-top-bar {
-        a {
+        @include clearfix();
+        .modal-title {
+            float: left;
+        }
+        .close-modal {
             float: right;
         }
     }
+}
+
+.open-building-screen {
+    border: thin solid black;
+    float: left;
+    height: 50px;
+    margin-right: 1rem;
+    text-align: center;
+    width: 100px;
 }

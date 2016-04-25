@@ -17,6 +17,15 @@ class Controls
         callback: () ->
           app.new_town_hero()
       }
+    @buildings =
+      'banner_shop': {
+        callback: () ->
+          console.log(App.banners)
+          for banner in App.banners
+            b = $(document.createElement('div'))
+              .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']}")
+              .appendTo('.modal.building .modal-body')
+      }
     controls = 
       7: {arr: '&#8598;', x: -1, y: -1},
       8: {arr: '&#8593;', x:  0, y: -1},
@@ -47,7 +56,7 @@ class Controls
         )
     )
 
-    $('#close-modal').click(() ->
+    $('.close-modal').click(() ->
       $(this).parent().parent().hide()
     )
 
@@ -101,15 +110,26 @@ class Controls
 
   # add building`s blocks and build buttons
   init_town_buildings: (buildings) ->
+    _this = this
     for id, building of buildings
       $b = $("##{id}")
+      open_building_sel = "open-#{id}-screen"
       if $b.length == 0
-        b = $(document.createElement('div'))
+        $open_building = $(document.createElement('a'))
           .html(building['@name'] + ' (' + building['@status'] + ')')
+          .attr('id', open_building_sel)
+          .attr('href', '#')
+          .data('id', id)
+          .click(() ->
+            _this.open_building(this)
+          )
+        b = $(document.createElement('div'))
+          .html($open_building)
           .attr('id', id)
+          .addClass('open-building-screen')
           .appendTo('.modal.town .buildings')
       else
-        $b.html(building['@name'] + ' (' + building['@status'] + ')')
+        $(open_building_sel).html(building['@name'] + ' (' + building['@status'] + ')')
       if building['@status'] == 1
         $("##{id} button").remove()
       else if building['@status'] == 0 && $("##{id}").length == 1 && $("##{id} button").length == 0
@@ -149,5 +169,13 @@ class Controls
           .data('id', id)
           .appendTo('#user-controls')
           .click(val.callback)
+
+  open_building: (button) ->
+    $('.modal').hide()
+    id = $(button).data('id')
+    $('.modal.building').show()
+    $('.modal.building .modal-title').html(id)
+    @buildings[id].callback()
+
 
 window.Controls = Controls

@@ -51,3 +51,10 @@ class Barracs < Building
     @name = 'Barracs'
   end
 end
+
+class BannerShop < Building
+  def initialize
+    super
+    @name = 'Banner Shop'
+  end
+end

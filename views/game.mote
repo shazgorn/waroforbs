@@ -13,7 +13,8 @@
     <table></table>
   </div>
 </div>
-{{ app.partial('town') }}
+{{ app.partial('modal-town') }}
+{{ app.partial('modal-building') }}
 <script src="js/map.js"></script>
 <script src="js/controls.js"></script>
 <script src="js/units.js"></script>

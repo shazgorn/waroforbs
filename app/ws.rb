@@ -73,6 +73,7 @@ class OrbApp
                                      :active_unit_id => user.active_unit_id,
                                      :user_id => user.id,
                                      :actions => user.actions_arr,
+                                     :banners => Banner.get_by_user(user),
                                      :units => Unit.all})
             when :close
               dispatch_units
@@ -212,6 +213,7 @@ class OrbApp
     @ws_pool.each do |w|
       unless w.nil?
         changes[:actions] = w[:user].actions_arr
+        changes[:banners] = Banner.get_by_user(w[:user])
         if user && action && w[:user] == user
           w[:ws].send JSON.generate(changes.merge({:action => action}).merge(data))
         else

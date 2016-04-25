@@ -1,5 +1,0 @@
-<div class="modal town">
-  <div class="modal-top-bar">Town <a href="#" id="close-modal">X</a></div>
-  <div class="buildings">Buildings</div>
-  <div class="actions">Fast actions</div>
-</div>

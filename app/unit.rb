@@ -187,7 +187,8 @@ class Town < Unit
     @dmg = 5
     @buildings = {
       :tavern => Tavern.new,
-      :barracs => Barracs.new
+      :barracs => Barracs.new,
+      :banner_shop => BannerShop.new
     }
     @actions = []
   end
@@ -206,5 +207,9 @@ class Town < Unit
   # select actions available based on constructed buildings for town menu
   def update_actions
     @actions = @buildings.values.map{|b| b.actions}.flatten
+  end
+
+  class << self
+    
   end
 end

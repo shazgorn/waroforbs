@@ -1,0 +1,7 @@
+<div class="modal town">
+  <div class="modal-top-bar">Town <a href="#" class="close-modal">X</a></div>
+  <div class="buildings">
+    <div>Buildings</div>
+  </div>
+  <div class="actions">Fast actions</div>
+</div>

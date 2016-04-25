@@ -22,12 +22,14 @@ class WS
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
             app.active_unit_id = data.active_unit_id
             app.user_id = data.user_id
+            app.banners = data.banners
             app.init_units data.units
             app.center_on_active()
             app.controls.set_active_unit(data.active_unit_id)
             app.controls.init_user_controls(data.actions)
             app.initialized = true
           when 'units'
+            app.banners = data.banners
             app.init_units data.units
             if data.active_unit_id
               app.set_active_unit data.active_unit_id

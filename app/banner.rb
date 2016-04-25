@@ -13,6 +13,24 @@ class Banner
     @user = user
   end
 
+  def to_hash()
+    hash = {}
+    self.instance_variables.each do |var|
+      unless var == :@user
+        hash[var] = self.instance_variable_get var
+      end
+    end
+    if @user
+      hash[:@user_name] = @user.login
+      hash[:@user_id] = @user.id
+    end
+    hash
+  end
+
+  def to_json(generator = JSON.generator)
+    to_hash().to_json
+  end
+
   class << self
     def new user
       banner = super user
@@ -22,5 +40,10 @@ class Banner
     def get_first_by_user user
       @@banners.values.select{|banner| banner.user.id == user.id}.first
     end
+
+    def get_by_user(user)
+      @@banners.values.select{|banner| banner.user.id == user.id}
+    end
+    
   end
 end
