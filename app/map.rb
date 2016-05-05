@@ -10,7 +10,7 @@ class Map
   SHIFT = 1000
 
   def initialize
-
+    # create_canvas_blocks
   end
 
   # generate map

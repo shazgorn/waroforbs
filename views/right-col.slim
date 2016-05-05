@@ -1,0 +1,35 @@
+#right-col
+  div class="unit-info unit-info-template"
+    .unit-name-info
+    table
+      tr
+        td unit id
+        td.unit-id-info
+      tr
+        td player name
+        td.player-name-info
+      tr
+        td hp
+        td.hp-info
+      tr
+        td x
+        td.x-info
+      tr
+        td y
+        td.y-info
+      tr
+        td ap
+        td.ap-info
+  #controls_arrows class="group"
+  #dimensions
+    div
+      label for="map_height" map height
+      select#map_height
+        - (9..30).step(2) do |i|
+          <option value="#{i}">#{i}</option>
+      label for="map_width" map width
+      select#map_width
+        - (9..50).step(2) do |i|
+          <option value="#{i}">#{i}</option>
+  #user-controls
+

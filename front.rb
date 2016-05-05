@@ -1,11 +1,10 @@
 require 'cuba'
-require 'mote'
-require 'mote/render'
-require 'json'
+require 'cuba/render'
+require 'slim'
 
-include Mote::Helpers
+Cuba.plugin Cuba::Render
 
-Cuba.plugin(Mote::Render)
+Cuba.settings[:render][:template_engine] = "slim"
 
 Cuba.define do
 
@@ -18,7 +17,7 @@ Cuba.define do
 
   on get do
     on 'game' do
-      render 'game'
+      render("game", {:map_height => (9..30)})
     end
 
     on 'js', extension('js') do |file|
@@ -60,4 +59,4 @@ Cuba.define do
 
 
   end #get
-end #define
+end
