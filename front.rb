@@ -1,6 +1,7 @@
 require 'cuba'
 require 'cuba/render'
 require 'slim'
+require 'tilt/sass'
 
 Cuba.plugin Cuba::Render
 
@@ -21,18 +22,14 @@ Cuba.define do
     end
 
     on 'js', extension('js') do |file|
-      File.open("./js/#{file}.js", 'r') do |f|
-        res['Content-Type'] = 'text/javascript'
-        res.write f.read
-      end
+      res['Content-Type'] = 'text/javascript'
+      res.write Tilt::CoffeeScriptTemplate.new("./coffee/#{file}.coffee").render
     end
 
     on 'css' do
       on extension('css') do |file|
-        File.open("./css/#{file}.css", 'r') do |f|
-          res['Content-Type'] = 'text/css'
-          res.write f.read
-        end
+        res['Content-Type'] = 'text/css'
+        res.write Tilt::ScssTemplate.new("./scss/#{file}.scss").render
       end
 
       on extension('map') do |file|

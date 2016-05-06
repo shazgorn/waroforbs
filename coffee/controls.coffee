@@ -19,12 +19,18 @@ class Controls
       }
     @buildings =
       'banner_shop': {
+        name: 'Banner Shop',
         callback: () ->
           console.log(App.banners)
+          $('.banner-card').remove()
           for banner in App.banners
             b = $(document.createElement('div'))
+              .addClass('banner-card')
               .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']}")
               .appendTo('.modal.building .modal-body')
+          $(document.createElement('button'))
+            .html('Create default banner')
+            .appendTo('.modal.building .modal-building-log')
       }
     controls = 
       7: {arr: '&#8598;', x: -1, y: -1},
@@ -98,8 +104,8 @@ class Controls
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     $(id_sel + ' .player-name-info').html(unit['@user_name'])
     $(id_sel + ' .hp-info').html(unit['@hp'])
-    $(id_sel + ' .x-info').html(unit['@x'])
-    $(id_sel + ' .y-info').html(unit['@y'])
+    $(id_sel + ' .xy-info').html(unit['@x'] + ',' + unit['@y'])
+    # $(id_sel + ' .y-info').html(unit['@y'])
     $(id_sel + ' .ap-info').html(unit['@ap'])
 
   set_active_unit: (id) ->
@@ -174,7 +180,7 @@ class Controls
     $('.modal').hide()
     id = $(button).data('id')
     $('.modal.building').show()
-    $('.modal.building .modal-title').html(id)
+    $('.modal.building .modal-title').html(@buildings[id].name)
     @buildings[id].callback()
 
 
