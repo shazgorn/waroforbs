@@ -9,8 +9,10 @@ class Map
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
 
-  def initialize
-    # create_canvas_blocks
+  def initialize(generate = false)
+    if generate
+      create_canvas_blocks
+    end
   end
 
   # generate map
