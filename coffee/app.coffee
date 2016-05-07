@@ -42,6 +42,14 @@ class Application
     id = $(button).data('id')
     @ws.build(id)
 
+  create_default_banner: () ->
+    @ws.create_default_banner()
+
+  refresh_modals: () ->
+    id = @controls.open_building_id
+    if id
+      @controls.fill_building_modal(id)
+
   set_active_unit: (unit_id) ->
     #if unit_id != @active_unit_id
     @active_unit_id = unit_id

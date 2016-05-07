@@ -37,6 +37,8 @@ class WS
               $('#log').prepend($(document.createElement('div')).html(data.log))
             app.controls.set_active_unit(app.active_unit_id)
             app.controls.init_user_controls(data.actions)
+            # refresh modals
+            app.refresh_modals()
           when 'dmg'
             app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
             app.log('damage dealt ' + data.dmg)
@@ -115,6 +117,14 @@ class WS
         token: @token,
         building: id,
         op: 'build'
+      })
+    )
+
+  create_default_banner: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'create_default_banner'
       })
     )
 

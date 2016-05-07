@@ -41,6 +41,8 @@ class Game
     Hero.new(user, banner)
   end
 
+  # Create new random hero for user if it`s his first login
+  # or all other heroes and towns are destroyed
   def new_random_hero user
     unless Unit.has_units? user
       banner = Banner.get_first_by_user user
@@ -78,6 +80,10 @@ class Game
   def build user, building_id
     town = Town.get_by_user user
     town.build building_id
+  end
+
+  def create_default_banner user
+    Banner.new user
   end
   ##################### END CONSTRUCTORS #################################
 

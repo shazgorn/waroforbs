@@ -222,7 +222,7 @@ $wooden-color: #996633;
     background-color: white;
     border: thin solid $wooden-color;
     display: none;
-    height: 50%;
+    min-height: 50%;
     left: 2rem;
     position: fixed;
     top: 3rem;
@@ -230,7 +230,9 @@ $wooden-color: #996633;
     z-index: 7;
 
     .buildings {
+        box-sizing: border-box;
         height: 50%;
+        margin: 1rem;
     }
 
     .modal-top-bar {
@@ -267,5 +269,8 @@ $wooden-color: #996633;
     height: 50px;
     margin-right: 1rem;
     text-align: center;
-    width: 100px;
+    width: 120px;
+    a {
+        display: block;
+    }
 }

@@ -123,6 +123,9 @@ class OrbApp
             when :build
               @game.build user, data['building'].to_sym
               dispatch_units
+            when :create_default_banner
+              @game.create_default_banner user
+              dispatch_units
             end #case
           rescue Exception => e
             ex e

@@ -1,5 +1,6 @@
 class Controls
   constructor: (app) ->
+    @open_building_id = null
     @user_actions =
       'new_hero': {
         name: 'New hero',
@@ -23,6 +24,7 @@ class Controls
         callback: () ->
           console.log(App.banners)
           $('.banner-card').remove()
+          $('.modal.building button').remove()
           for banner in App.banners
             b = $(document.createElement('div'))
               .addClass('banner-card')
@@ -31,6 +33,10 @@ class Controls
           $(document.createElement('button'))
             .html('Create default banner')
             .appendTo('.modal.building .modal-building-log')
+            .click(() ->
+              console.log('Create default banner')
+              App.create_default_banner()
+            )
       }
     controls = 
       7: {arr: '&#8598;', x: -1, y: -1},
@@ -63,6 +69,7 @@ class Controls
     )
 
     $('.close-modal').click(() ->
+      @open_building_id = null
       $(this).parent().parent().hide()
     )
 
@@ -176,12 +183,15 @@ class Controls
           .appendTo('#user-controls')
           .click(val.callback)
 
+  fill_building_modal: (id) ->
+    @buildings[id].callback()
+
   open_building: (button) ->
     $('.modal').hide()
     id = $(button).data('id')
     $('.modal.building').show()
     $('.modal.building .modal-title').html(@buildings[id].name)
-    @buildings[id].callback()
-
+    @fill_building_modal(id)
+    @open_building_id = id
 
 window.Controls = Controls

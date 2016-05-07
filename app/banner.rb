@@ -1,7 +1,7 @@
 class Banner
   attr_reader :id, :user, :mod_max_hp, :mod_max_ap, :mod_attack
   @@id_seq = 1
-  # id -> unit
+  # id -> banner
   @@banners = {}
 
   def initialize user
