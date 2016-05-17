@@ -28,7 +28,8 @@ class Controls
           for banner in App.banners
             b = $(document.createElement('div'))
               .addClass('banner-card')
-              .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']}")
+              .html("Banner ##{banner['@id']} <br> hp:
+  #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
               .appendTo('.modal.building .modal-body')
           $(document.createElement('button'))
             .html('Create default banner')

@@ -1,28 +1,43 @@
+##
+# Nothing like an ordianry ad but the one that soldiers follows
+#
+# Banner is linked to unit on unit spawn
+
 class Banner
+  attr_accessor :unit
   attr_reader :id, :user, :mod_max_hp, :mod_max_ap, :mod_attack
   @@id_seq = 1
   # id -> banner
   @@banners = {}
 
-  def initialize user
+  ##
+  # +user+ User
+  # +unit+ Unit
+  def initialize user, unit = nil
     @id = @@id_seq
     @@id_seq += 1
     @mod_max_hp = 1
     @mod_max_ap = 1
     @mod_attack = 1
     @user = user
+    @unit = unit
   end
 
   def to_hash()
     hash = {}
     self.instance_variables.each do |var|
-      unless var == :@user
+      if var == :@user
+        hash[:@user_name] = @user.login
+        hash[:@user_id] = @user.id
+      elsif var == :@unit
+        if @unit
+          hash[:@unit_id] = @unit.id
+        else
+          hash[:@unit_id] = nil
+        end
+      else
         hash[var] = self.instance_variable_get var
       end
-    end
-    if @user
-      hash[:@user_name] = @user.login
-      hash[:@user_id] = @user.id
     end
     hash
   end

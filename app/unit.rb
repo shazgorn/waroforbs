@@ -6,7 +6,7 @@ class Unit
   # id -> unit
   @@units = {}
 
-  # @user login string
+  # @user User
   # change user_id to user
   def initialize(type, user = nil)
     @id = @@id_seq
@@ -24,13 +24,16 @@ class Unit
   def to_hash()
     hash = {}
     self.instance_variables.each do |var|
-      unless var == :@user
+      if var == :@user
+        if @user
+          hash[:@user_name] = @user.login
+          hash[:@user_id] = @user.id
+        end
+      elsif var == :@banner
+        # id?
+      else
         hash[var] = self.instance_variable_get var
       end
-    end
-    if @user
-      hash[:@user_name] = @user.login
-      hash[:@user_id] = @user.id
     end
     hash
   end
@@ -156,6 +159,7 @@ class Hero < Unit
   def initialize(user, banner)
     super(:hero, user)
     @banner = banner
+    @banner.unit = self
     @dmg = 30 * banner.mod_attack
     @hp = @max_hp = 50 * banner.mod_max_hp
     @ap = @max_ap = 100 * banner.mod_max_ap

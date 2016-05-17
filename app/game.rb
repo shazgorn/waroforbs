@@ -25,7 +25,9 @@ class Game
   
   ##################### CONSTRUCTORS #####################################
   # init user
-  # If this is a 1st login then new user is created and new hero is placed
+  # If this is a 1st login then new user is created
+  # new banner
+  # and new hero is placed
   def init_user token
     user = get_user_by_token token
     if user.nil?

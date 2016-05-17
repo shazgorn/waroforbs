@@ -230,6 +230,7 @@ $wooden-color: #996633;
     z-index: 7;
 
     .buildings {
+        @include clearfix();
         box-sizing: border-box;
         height: 50%;
         margin: 1rem;
