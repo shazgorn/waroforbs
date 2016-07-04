@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class Map
   attr_accessor :ul
   SIZE = nil
@@ -25,6 +27,7 @@ class Map
   end
   
   def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim = CELL_DIM)
+    FileUtils::mkdir_p './img/bg'
     canvas = Magick::Image.new canvas_dim, canvas_dim
     canvas_y = 0
     while canvas_y < canvas_dim
