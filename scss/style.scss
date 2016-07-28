@@ -156,6 +156,7 @@ body {
 }
 
 #right-col {
+    margin-right: 1rem;
     opacity: 0.8;
     position: fixed;
     right: 0;
@@ -229,7 +230,7 @@ body {
 
 .modal {
     background-color: white;
-    border: thin solid $wooden-color;
+    border: thick solid $wooden-color;
     display: none;
     min-height: 50%;
     left: 2rem;
@@ -252,8 +253,11 @@ body {
         .modal-title {
             float: left;
         }
-        .close-modal {
+        .close-modal, .modal-controls {
             float: right;
+            * {
+                margin-left: 0.5rem;
+            }
         }
     }
 
