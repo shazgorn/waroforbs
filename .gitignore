@@ -1,3 +1,4 @@
+*#
 *~
 Gemfile.lock
 *.sass-cache/
@@ -7,3 +8,6 @@ img/bg/*
 js/*
 css/*
 doc/*
+GPATH
+GRTAGS
+GTAGS
