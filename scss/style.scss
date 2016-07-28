@@ -14,6 +14,11 @@ $hover-hero-color: #66a3ff;
 $active-hero-color: #0066ff;
 $wooden-color: #996633;
 
+@font-face {
+    font-family: Immortal;
+    src: url(/fonts/IMMORTAL.ttf);
+}
+
 @mixin clearfix() {
   &:before,
   &:after {
@@ -23,6 +28,10 @@ $wooden-color: #996633;
   &:after {
     clear: both;
   }
+}
+
+body {
+    font-family: Immortal;
 }
 
 #top_container {

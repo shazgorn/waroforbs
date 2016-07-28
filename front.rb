@@ -40,6 +40,13 @@ Cuba.define do
       end
     end
 
+    on 'fonts', extension('ttf') do |file|
+      File.open("./fonts/#{file}.ttf", 'rb') do |f|
+        res['Content-Type'] = 'application/octet-stream'
+        res.write f.read
+      end
+    end
+
     on 'img', extension('png') do |file|
       File.open("./img/#{file}.png", 'rb') do |f|
         res['Content-Type'] = 'image/png'
@@ -48,11 +55,11 @@ Cuba.define do
     end
 
     on 'img/bg', extension('png') do |file|
-        File.open("./img/bg/#{file}.png", 'rb') do |f|
-          res['Content-Type'] = 'image/png'
-          res.write f.read
-        end
+      File.open("./img/bg/#{file}.png", 'rb') do |f|
+        res['Content-Type'] = 'image/png'
+        res.write f.read
       end
+    end
 
 
   end #get
