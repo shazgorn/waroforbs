@@ -3,7 +3,8 @@ class Map
   @map_dim_in_blocks) ->
     mhc = parseInt(localStorage.getItem('map_height_cells'))
     mwc = parseInt(localStorage.getItem('map_width_cells'))
-    unless mhc?
+    console.log(mhc)
+    if !mhc || isNaN(mhc)
       mhc = 13
       localStorage.setItem('map_height_cells', mhc)
     $('#map_height').val(mhc)
@@ -21,9 +22,9 @@ class Map
       localStorage.setItem('map_width_cells', cells)
       # this_obj.center_on_hero('unit-' + @active_unit_id)
     )
-    unless mwc?
+    if !mwc || isNaN(mwc)
       mwc = 13
-      localStorage.setItem('map_height_cells', mwc)
+      localStorage.setItem('map_width_cells', mwc)
     $('#map_width').val(mwc)
     $('#map').height(mhc * @cell_dim_in_px).width(mwc * @cell_dim_in_px)
     this.initTooltip()
