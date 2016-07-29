@@ -127,8 +127,13 @@ class Application
     @controls.init_town_buildings(buildings)
 
   log: (data) ->
-    div = document.createElement('div')
-    div.innerHTML = data
-    $(div).prependTo('#log')
+    log_entry = $(document.createElement('div'))
+      .html(data)
+      .prependTo('#log')
+      .addClass('log-entry')
+      .addClass('new-log-entry')
+      setTimeout(() ->
+        log_entry.removeClass('new-log-entry')
+      , 2000)
 
 window.App = new Application

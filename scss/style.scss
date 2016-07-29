@@ -228,6 +228,16 @@ button {
     position: fixed;
     width: 100%;
     z-index: 10;
+
+    .log-entry {
+        color: black;
+        transition: color 1s ease;
+    }
+
+    .new-log-entry {
+        font-weight: bold;
+        color: red;
+    }
 }
 
 .group:after {
