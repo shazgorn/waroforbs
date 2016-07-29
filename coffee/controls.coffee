@@ -136,12 +136,13 @@ class Controls
           .data('id', id)
           .click(() ->
             _this.open_building(this)
+            $('.back-to-town').click(() ->
+              $('.modal.building').hide()
+              $('.modal.town').show()
+            )
           )
-        b = $(document.createElement('div'))
-          .html($open_building)
-          .attr('id', id)
-          .addClass('open-building-screen')
-          .appendTo('.modal.town .buildings')
+        b.html($open_building)
+
       else
         $(open_building_sel).html(building['@name'] + ' (' + building['@status'] + ')')
       if building['@status'] == 1

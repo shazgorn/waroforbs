@@ -9,6 +9,7 @@ class Application
     @ws = new WS this
     @initialized = false
     @attacking = false
+    @last_town = null
 
   move: (params) ->
     @ws.move(@active_unit_id, params)
@@ -113,11 +114,13 @@ class Application
       @attacking = true
       @ws.attack(@active_unit_id, {id: $(unit).data('id')})
 
+  # select unit or open town modal screen
   bind_select_handler: (unit) ->
     $(unit).addClass('select-target').off('click').on('click', () =>
       @set_active_unit($(unit).data('id'))
       if $(unit).hasClass('player-town')
         $('.modal.town').show()
+        @last_town = $(unit).data('id')
     )
 
   init_town_buildings: (buildings) ->
