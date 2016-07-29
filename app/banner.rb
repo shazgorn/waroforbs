@@ -59,6 +59,10 @@ class Banner
     def get_by_user(user)
       @@banners.values.select{|banner| banner.user.id == user.id}
     end
+
+    def get_count_by_user(user)
+      @@banners.select{|id, banner| banner.user.id == user.id}.size
+    end
     
   end
 end

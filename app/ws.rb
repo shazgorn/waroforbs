@@ -1,3 +1,4 @@
+# mirror for ws.coffee
 require 'em-websocket'
 require 'json'
 require 'rmagick'
@@ -124,8 +125,13 @@ class OrbApp
               @game.build user, data['building'].to_sym
               dispatch_units
             when :create_default_banner
-              @game.create_default_banner user
-              dispatch_units
+              res = @game.create_default_banner user
+              if res.nil?
+                log = "Unable to create more banners. Limit reached."
+              else
+                log = "Banner created"
+              end
+              dispatch_units user, :log, {:log => log}
             end #case
           rescue Exception => e
             ex e

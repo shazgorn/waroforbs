@@ -33,8 +33,11 @@ class WS
             app.init_units data.units
             if data.active_unit_id
               app.set_active_unit data.active_unit_id
-            if data.action == 'move'
-              $('#log').prepend($(document.createElement('div')).html(data.log))
+            switch data.action
+              when 'move'
+                app.log(data.log)
+              when 'log'
+                app.log(data.log)
             app.controls.set_active_unit(app.active_unit_id)
             app.controls.init_user_controls(data.actions)
             # refresh modals

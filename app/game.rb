@@ -5,6 +5,7 @@
 # should move unit creation methods to separate class
 class Game
   attr_reader :map
+  MAX_BANNERS = 3
 
   def initialize
     @map = Map.new
@@ -85,7 +86,11 @@ class Game
   end
 
   def create_default_banner user
-    Banner.new user
+    banner = nil
+    if Banner.get_count_by_user(user) < MAX_BANNERS
+      banner = Banner.new user
+    end
+    return banner
   end
   ##################### END CONSTRUCTORS #################################
 

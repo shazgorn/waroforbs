@@ -35,7 +35,6 @@ class Controls
             .html('Create default banner')
             .appendTo('.modal.building .modal-building-log')
             .click(() ->
-              console.log('Create default banner')
               App.create_default_banner()
             )
       }
@@ -71,7 +70,7 @@ class Controls
 
     $('.close-modal').click(() ->
       @open_building_id = null
-      $(this).parent().parent().hide()
+      $('.modal').hide()
     )
 
   lock_controls: () ->

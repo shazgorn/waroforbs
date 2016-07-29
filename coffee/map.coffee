@@ -3,7 +3,6 @@ class Map
   @map_dim_in_blocks) ->
     mhc = parseInt(localStorage.getItem('map_height_cells'))
     mwc = parseInt(localStorage.getItem('map_width_cells'))
-    console.log(mhc)
     if !mhc || isNaN(mhc)
       mhc = 13
       localStorage.setItem('map_height_cells', mhc)
@@ -138,7 +137,7 @@ class Map
         .css('top', -1 * top + 'px')
         .css('left', -1 * left + 'px')
     else
-      console.log('No position or no unit')
+      App.log('No position or no unit')
 
   # update unit div on map or append a new one
   append: (unit) ->
