@@ -22,7 +22,6 @@ class Controls
       'banner_shop': {
         name: 'Banner Shop',
         callback: () ->
-          console.log(App.banners)
           $('.banner-card').remove()
           $('.modal.building button').remove()
           for banner in App.banners
@@ -125,9 +124,27 @@ class Controls
   init_town_buildings: (buildings) ->
     _this = this
     for id, building of buildings
+      # console.log(building)
       $b = $("##{id}")
-      open_building_sel = "open-#{id}-screen"
+      open_building_sel = "open-screen-#{id}"
       if $b.length == 0
+        # building container with link, time to build and build button
+        b = $(document.createElement('div'))
+          .attr('id', id)
+          .addClass('open-building-screen')
+          .appendTo('.modal.town .buildings')
+
+        switch buildings['@status']
+          when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+            # if not built then 'gray' color
+            console.log('not build')
+          when App.building_states['BUILDING_STATE_IN_PROGRESS']
+            # if built then 'yellow' color
+            console.log('building in progress')
+          when App.building_states['BUILDING_STATE_BUILT']
+            # if built then 'black' color
+            console.log('built')
+
         $open_building = $(document.createElement('a'))
           .html(building['@name'] + ' (' + building['@status'] + ')')
           .attr('id', open_building_sel)

@@ -19,14 +19,20 @@ class WS
       if app.initialized || data.data_type == 'init_map'
         switch data.data_type
           when 'init_map'
+            # App init set properties
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
             app.active_unit_id = data.active_unit_id
             app.user_id = data.user_id
             app.banners = data.banners
+            app.building_states = data.building_states
+
+            # App init function calls
             app.init_units data.units
             app.center_on_active()
             app.controls.set_active_unit(data.active_unit_id)
             app.controls.init_user_controls(data.actions)
+
+            # App init finished
             app.initialized = true
           when 'units'
             app.banners = data.banners

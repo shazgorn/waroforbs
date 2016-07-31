@@ -1,16 +1,21 @@
-# status - 0 can be built
-# status - 1 already build
+# status = 0 can be built
+# status = 1 in progress
+# status = 2 already build
 class Building
+  STATE_CAN_BE_BUILT = 0
+  STATE_IN_PROGRESS = 1
+  STATE_BUILT = 2
+
   def initialize
-    @status = 0
+    @status = STATE_CAN_BE_BUILT
   end
 
   def build
-    @status = 1
+    @status = STATE_BUILT
   end
 
   def built?
-    @status == 1
+    @status == STATE_BUILT
   end
 
   def actions

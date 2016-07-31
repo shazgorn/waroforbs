@@ -75,7 +75,13 @@ class OrbApp
                                      :user_id => user.id,
                                      :actions => user.actions_arr,
                                      :banners => Banner.get_by_user(user),
-                                     :units => Unit.all})
+                                     :units => Unit.all,
+                                     :building_states => {
+                                       :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
+                                       :BUILDING_STATE_IN_PROGRESS => Building::STATE_IN_PROGRESS,
+                                       :BUILDING_STATE_BUILT => Building::STATE_BUILT
+                                     }
+                                    })
             when :close
               dispatch_units
             when :units

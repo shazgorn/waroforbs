@@ -192,18 +192,27 @@ button {
         color: #ccc;
         font-weight: bold;
     }
-    #controls_arrows button {
-        float: left;
-        font-size: 30px;
-        font-weight: bold;
-        line-height: 1px;
-        height: $button-size;
-        text-align: center;
-        width: $button-size;
-        &:nth-child(3n-2) {
-            clear: left;
+
+    #controls_arrows {
+        margin: 1rem 0;
+        button {
+            float: left;
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 1px;
+            height: $button-size;
+            text-align: center;
+            width: $button-size;
+            &:nth-child(3n-2) {
+                clear: left;
+            }
         }
     }
+
+    #dimensions {
+        margin: 1rem 0;
+    }
+
     #user-controls button {
         display: block;
         margin: 0.5rem 0;
