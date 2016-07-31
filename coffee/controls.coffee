@@ -29,10 +29,10 @@ class Controls
               .addClass('banner-card')
               .html("Banner ##{banner['@id']} <br> hp:
   #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
-              .appendTo('.modal.building .modal-body')
+              .appendTo('.modal.building .modal-building-inner')
           $(document.createElement('button'))
             .html('Create default banner')
-            .appendTo('.modal.building .modal-building-log')
+            .appendTo('.modal.building .modal-building-actions')
             .click(() ->
               App.create_default_banner()
             )
@@ -125,7 +125,6 @@ class Controls
     $('.open-building-screen').remove()
     _this = this
     for id, building of buildings
-      console.log(building)
       $b = $("##{id}")
       open_building_sel = "open-screen-#{id}"
       # building container with link, time to build and build button
@@ -143,7 +142,6 @@ class Controls
       switch building['@status']
         when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
           # if not built then 'gray' color
-          console.log('not build')
           $open_building
             .addClass('builging_not_built')
             .click((e) ->
@@ -151,13 +149,11 @@ class Controls
             )
         when App.building_states['BUILDING_STATE_IN_PROGRESS']
           # if built then 'yellow' color
-          console.log('building in progress')
           $open_building.click((e) ->
             e.preventDefault()
           )
         when App.building_states['BUILDING_STATE_BUILT']
           # if built then 'black' color
-          console.log('built')
           $open_building
             .addClass('builging_built')
             .click(() ->

@@ -270,7 +270,6 @@ button {
         @include clearfix();
         box-sizing: border-box;
         height: 50%;
-        margin: 1rem;
     }
 
     .modal-top-bar {
@@ -292,6 +291,10 @@ button {
         @include clearfix();
         padding: 0.5rem;
 
+        .modal-building-actions {
+            clear: both;
+        }
+
         .banner-card {
             border: thin solid $wooden-color;
             box-sizing: border-box;
@@ -301,10 +304,6 @@ button {
             padding: 1rem;
             width: 150px;
         }
-    }
-
-    .modal-building-log {
-        padding: 0.5rem;
     }
 }
 
