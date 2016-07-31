@@ -1,11 +1,16 @@
 # rename 'css_' to 'attr_'
 class Unit
   constructor: (unit) ->
+    @_unit = unit
     @id = unit['@id']
     @attr_id = "unit-#{@id}"
     @x = unit['@x']
     @y = unit['@y']
     @type = unit['@type']
+
+  # to call after unit initialization
+  init: () ->
+    return
 
 class Hero extends Unit
   constructor: (unit) ->
@@ -49,8 +54,10 @@ class PlayerTown extends Town
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-town'
-    App.init_town_buildings(unit['@buildings'])
-    App.controls.init_town_controls(unit['@actions'])
+
+  init: () ->
+    App.init_town_buildings(@_unit['@buildings'])
+    App.controls.init_town_controls(@_unit['@actions'])
 
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?

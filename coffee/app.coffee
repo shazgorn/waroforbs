@@ -74,6 +74,7 @@ class Application
           @my_units.push(unit_obj)
           @controls.unit_info(unit_hash)
           @bind_select_handler(unit_on_map)
+        unit_obj.init()
     @bind_action_handlers()
     # delete dead units
     if @my_units.length == 0

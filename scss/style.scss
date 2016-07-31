@@ -23,14 +23,14 @@ $modal-width: calc(80% - #{$right-col-width} + 4rem);
 }
 
 @mixin clearfix() {
-  &:before,
-  &:after {
-    content: " ";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
 }
 
 body {
@@ -317,5 +317,15 @@ button {
     width: 9rem;
     a {
         display: block;
+        text-decoration-line: unset;
+    }
+
+    .builging_not_built {
+        color: gray;
+    }
+
+    .builging_built {
+        color: black;
+        font-weight: bold;
     }
 }

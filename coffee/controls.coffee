@@ -124,7 +124,7 @@ class Controls
   init_town_buildings: (buildings) ->
     _this = this
     for id, building of buildings
-      # console.log(building)
+      console.log(building)
       $b = $("##{id}")
       open_building_sel = "open-screen-#{id}"
       if $b.length == 0
@@ -134,29 +134,40 @@ class Controls
           .addClass('open-building-screen')
           .appendTo('.modal.town .buildings')
 
-        switch buildings['@status']
-          when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-            # if not built then 'gray' color
-            console.log('not build')
-          when App.building_states['BUILDING_STATE_IN_PROGRESS']
-            # if built then 'yellow' color
-            console.log('building in progress')
-          when App.building_states['BUILDING_STATE_BUILT']
-            # if built then 'black' color
-            console.log('built')
-
         $open_building = $(document.createElement('a'))
           .html(building['@name'] + ' (' + building['@status'] + ')')
           .attr('id', open_building_sel)
           .attr('href', '#')
           .data('id', id)
-          .click(() ->
-            _this.open_building(this)
-            $('.back-to-town').click(() ->
-              $('.modal.building').hide()
-              $('.modal.town').show()
+
+        switch building['@status']
+          when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+            # if not built then 'gray' color
+            console.log('not build')
+            $open_building
+              .addClass('builging_not_built')
+              .click((e) ->
+                e.preventDefault()
+              )
+          when App.building_states['BUILDING_STATE_IN_PROGRESS']
+            # if built then 'yellow' color
+            console.log('building in progress')
+            $open_building.click((e) ->
+              e.preventDefault()
             )
-          )
+          when App.building_states['BUILDING_STATE_BUILT']
+            # if built then 'black' color
+            console.log('built')
+            $open_building
+              .addClass('builging_built')
+              .click(() ->
+                _this.open_building(this)
+                $('.back-to-town').click(() ->
+                  $('.modal.building').hide()
+                  $('.modal.town').show()
+                )
+              )
+
         b.html($open_building)
 
       else
