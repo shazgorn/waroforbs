@@ -122,56 +122,55 @@ class Controls
 
   # add building`s blocks and build buttons
   init_town_buildings: (buildings) ->
+    $('.open-building-screen').remove()
     _this = this
     for id, building of buildings
       console.log(building)
       $b = $("##{id}")
       open_building_sel = "open-screen-#{id}"
-      if $b.length == 0
-        # building container with link, time to build and build button
-        b = $(document.createElement('div'))
-          .attr('id', id)
-          .addClass('open-building-screen')
-          .appendTo('.modal.town .buildings')
+      # building container with link, time to build and build button
+      b = $(document.createElement('div'))
+        .attr('id', id)
+        .addClass('open-building-screen')
+        .appendTo('.modal.town .buildings')
 
-        $open_building = $(document.createElement('a'))
-          .html(building['@name'] + ' (' + building['@status'] + ')')
-          .attr('id', open_building_sel)
-          .attr('href', '#')
-          .data('id', id)
+      $open_building = $(document.createElement('a'))
+        .html(building['@name'] + ' (' + building['@status'] + ')')
+        .attr('id', open_building_sel)
+        .attr('href', '#')
+        .data('id', id)
 
-        switch building['@status']
-          when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-            # if not built then 'gray' color
-            console.log('not build')
-            $open_building
-              .addClass('builging_not_built')
-              .click((e) ->
-                e.preventDefault()
-              )
-          when App.building_states['BUILDING_STATE_IN_PROGRESS']
-            # if built then 'yellow' color
-            console.log('building in progress')
-            $open_building.click((e) ->
+      switch building['@status']
+        when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+          # if not built then 'gray' color
+          console.log('not build')
+          $open_building
+            .addClass('builging_not_built')
+            .click((e) ->
               e.preventDefault()
             )
-          when App.building_states['BUILDING_STATE_BUILT']
-            # if built then 'black' color
-            console.log('built')
-            $open_building
-              .addClass('builging_built')
-              .click(() ->
-                _this.open_building(this)
-                $('.back-to-town').click(() ->
-                  $('.modal.building').hide()
-                  $('.modal.town').show()
-                )
+        when App.building_states['BUILDING_STATE_IN_PROGRESS']
+          # if built then 'yellow' color
+          console.log('building in progress')
+          $open_building.click((e) ->
+            e.preventDefault()
+          )
+        when App.building_states['BUILDING_STATE_BUILT']
+          # if built then 'black' color
+          console.log('built')
+          $open_building
+            .addClass('builging_built')
+            .click(() ->
+              _this.open_building(this)
+              $('.back-to-town').click(() ->
+                $('.modal.building').hide()
+                $('.modal.town').show()
               )
+            )
 
-        b.html($open_building)
+      b.html($open_building)
 
-      else
-        $(open_building_sel).html(building['@name'] + ' (' + building['@status'] + ')')
+      # build button
       if building['@status'] == 1
         $("##{id} button").remove()
       else if building['@status'] == 0 && $("##{id}").length == 1 && $("##{id} button").length == 0
