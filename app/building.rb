@@ -40,6 +40,13 @@ class Tavern < Building
     super
     @name = 'Tavern'
   end
+end
+
+class Barracs < Building
+  def initialize
+    super
+    @name = 'Barracs'
+  end
 
   def actions
     if built?
@@ -47,13 +54,6 @@ class Tavern < Building
     else
       []
     end
-  end
-end
-
-class Barracs < Building
-  def initialize
-    super
-    @name = 'Barracs'
   end
 end
 

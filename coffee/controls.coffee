@@ -14,9 +14,9 @@ class Controls
       }
     @town_actions =
       'new_town_hero': {
-        name: 'New hero',
+        name: 'New squad',
         callback: () ->
-          app.new_town_hero()
+          app.create_default_squad()
       }
     @buildings =
       'banner_shop': {
