@@ -33,6 +33,8 @@ class Controls
               .html("Banner ##{banner['@id']} <br> hp:
   #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
               .appendTo('.modal.building .modal-building-inner')
+
+          # actions
           $(document.createElement('button'))
             .html('Create default banner')
             .appendTo('.modal.building .modal-building-actions')
@@ -44,12 +46,25 @@ class Controls
         name: 'Barracs',
         callback: () ->
           # clean up
+          $('.banner-card').remove()
           $('.modal-body .modal-building-inner *').remove()
           $('.modal-body .modal-building-actions *').remove()
           $('.modal.building button').remove()
 
           #fill up
-          b = $(document.createElement('button'))
+          for banner in App.banners
+            if banner['@unit_id'] == null
+              $(document.createElement('div'))
+                .data('id', banner['@id'])
+                .addClass('banner-card')
+                .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
+                .appendTo('.modal.building .modal-building-inner')
+                .click(() ->
+                  App.create_squad_from_banner($(this).data('id'))
+                )
+
+          # actions
+          $(document.createElement('button'))
             .html('Create squad')
             .appendTo('.modal.building .modal-building-actions')
             .click(() ->

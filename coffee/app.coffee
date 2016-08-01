@@ -46,6 +46,9 @@ class Application
   create_default_squad: () ->
     @ws.create_default_squad()
 
+  create_squad_from_banner: (banner_id) ->
+    @ws.create_squad_from_banner(banner_id)
+
   refresh_modals: () ->
     id = @controls.open_building_id
     if id

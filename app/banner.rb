@@ -52,6 +52,12 @@ class Banner
       @@banners[banner.id] = banner
     end
 
+    def get_by_id user, banner_id
+      @@banners.select{|id, banner|
+        banner.user.id == user.id && id == banner_id && banner.unit == nil
+      }.fetch(banner_id, nil)
+    end
+
     def get_first_by_user user
       @@banners.values.select{|banner| banner.user.id == user.id}.first
     end

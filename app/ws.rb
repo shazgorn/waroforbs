@@ -144,6 +144,14 @@ class OrbApp
                 log = "Squad created"
               end
               dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+            when :create_squad_from_banner
+              res = @game.create_squad_from_banner user, data['banner_id']
+              if res.nil?
+                log = "Unable to create squad. Banner is available."
+              else
+                log = "Squad created"
+              end
+              dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
             end #case
           rescue Exception => e
             ex e

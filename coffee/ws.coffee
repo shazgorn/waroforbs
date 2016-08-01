@@ -137,6 +137,15 @@ class WS
       })
     )
 
+  create_squad_from_banner: (banner_id) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'create_squad_from_banner'
+        banner_id: banner_id
+      })
+    )
+
   restart: () ->
     @socket.send(
       JSON.stringify({
