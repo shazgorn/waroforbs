@@ -195,7 +195,7 @@ class Town < Unit
     @hp = 1000
     @dmg = 5
     @buildings = {
-      :tavern => Tavern.new,
+      #:tavern => Tavern.new,
       :barracs => Barracs.new,
       :banner_shop => BannerShop.new
     }
