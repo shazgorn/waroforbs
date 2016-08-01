@@ -33,9 +33,6 @@ class Application
   new_town: () ->
     @ws.new_town(@active_unit_id)
 
-  new_town_hero: () ->
-    @ws.new_town_hero()
-
   restart: () ->
     @ws.restart()
 

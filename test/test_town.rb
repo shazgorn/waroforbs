@@ -16,8 +16,5 @@ class TestTown < MiniTest::Test
 
   # test town actions
   def test_update_actions
-    @town.build :tavern
-    assert @town.actions.include?(:new_town_hero)
-    assert @town.actions.length == 1
   end
 end

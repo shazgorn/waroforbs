@@ -119,9 +119,6 @@ class OrbApp
             when :new_hero
               @game.new_random_hero user
               dispatch_units user, :new_hero, {:active_unit_id => user.active_unit_id}
-            when :new_town_hero
-              @game.new_town_hero user
-              dispatch_units user, :new_hero, {:active_unit_id => user.active_unit_id}
             when :new_town
               @game.new_town user, user.active_unit_id
               dispatch_units
@@ -140,13 +137,13 @@ class OrbApp
               end
               dispatch_units user, :log, {:log => log}
             when :create_default_squad
-              res = @game.new_town_hero user
+              res = @game.create_default_squad user
               if res.nil?
                 log = "Unable to create more squads. Limit reached or no banner is available."
               else
                 log = "Squad created"
               end
-              dispatch_units user, :log, {:log => log}
+              dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
             end #case
           rescue Exception => e
             ex e

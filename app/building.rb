@@ -50,7 +50,7 @@ class Barracs < Building
 
   def actions
     if built?
-      [:new_town_hero]
+      [:create_default_squad]
     else
       []
     end

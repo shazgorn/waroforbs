@@ -13,8 +13,8 @@ class Controls
           App.new_town()
       }
     @town_actions =
-      'new_town_hero': {
-        name: 'New squad',
+      'create_default_squad': {
+        name: 'Create squad',
         callback: () ->
           app.create_default_squad()
       }
@@ -50,7 +50,7 @@ class Controls
 
           #fill up
           b = $(document.createElement('button'))
-            .html('Create new squad')
+            .html('Create squad')
             .appendTo('.modal.building .modal-building-actions')
             .click(() ->
               App.create_default_squad()

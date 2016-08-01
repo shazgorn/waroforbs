@@ -59,7 +59,7 @@ class Game
     end
   end
 
-  def new_town_hero user
+  def create_default_squad user
     squad = nil
     empty_cell = empty_adj_cell(Town.get_by_user(user))
     banner = Banner.get_first_free_by_user(user)
