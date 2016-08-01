@@ -113,7 +113,7 @@ class Unit
     end
 
     def select_active_unit user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :hero}.first
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :company}.first
     end
 
     def place_is_empty?(x, y)
@@ -129,7 +129,7 @@ class Unit
     end    
 
     def has_heroes? user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :hero}.length > 0
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :company}.length > 0
     end
 
     def has_units? user
@@ -155,9 +155,9 @@ class Unit
 
 end
 
-class Hero < Unit
+class Company < Unit
   def initialize(user, banner)
-    super(:hero, user)
+    super(:company, user)
     @banner = banner
     @banner.unit = self
     @dmg = 30 * banner.mod_attack
@@ -171,7 +171,7 @@ class Hero < Unit
   end
 end
 
-class BotHero < Hero
+class BotCompany < Company
   def initialize(user)
     super(user)
     @hp = 300

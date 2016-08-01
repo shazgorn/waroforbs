@@ -43,11 +43,11 @@ class Application
   create_default_banner: () ->
     @ws.create_default_banner()
 
-  create_default_squad: () ->
-    @ws.create_default_squad()
+  create_default_company: () ->
+    @ws.create_default_company()
 
-  create_squad_from_banner: (banner_id) ->
-    @ws.create_squad_from_banner(banner_id)
+  create_company_from_banner: (banner_id) ->
+    @ws.create_company_from_banner(banner_id)
 
   refresh_modals: () ->
     id = @controls.open_building_id

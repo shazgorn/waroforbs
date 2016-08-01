@@ -62,7 +62,7 @@ class Banner
       @@banners.values.select{|banner| banner.user.id == user.id}.first
     end
 
-    # Get first banner without squad by user
+    # Get first banner without company by user
     def get_first_free_by_user user
       @@banners.values.select{|banner| banner.user.id == user.id && banner.unit == nil}.first
     end

@@ -41,7 +41,7 @@ class Game
   end
 
   def new_hero user, banner
-    Hero.new(user, banner)
+    Company.new(user, banner)
   end
 
   # Create new random hero for user if it`s his first login
@@ -59,33 +59,33 @@ class Game
     end
   end
 
-  def create_default_squad user
-    squad = nil
+  def create_default_company user
+    company = nil
     empty_cell = empty_adj_cell(Town.get_by_user(user))
     banner = Banner.get_first_free_by_user(user)
     if empty_cell && banner
-      squad = new_hero user, banner
-      user.active_unit_id = squad.id
-      squad.place empty_cell[:x], empty_cell[:y]
+      company = new_hero user, banner
+      user.active_unit_id = company.id
+      company.place empty_cell[:x], empty_cell[:y]
     end
-    squad
+    company
   end
 
-  def create_squad_from_banner user, banner_id
-    squad = nil
+  def create_company_from_banner user, banner_id
+    company = nil
     empty_cell = empty_adj_cell(Town.get_by_user(user))
     banner = Banner.get_by_id(user, banner_id)
     if empty_cell && banner
-      squad = new_hero user, banner
-      user.active_unit_id = squad.id
-      squad.place empty_cell[:x], empty_cell[:y]
+      company = new_hero user, banner
+      user.active_unit_id = company.id
+      company.place empty_cell[:x], empty_cell[:y]
     end
-    squad
+    company
   end
 
   def new_town(user, active_unit_id)
     unless Unit.has_town? user
-      hero = Hero.get active_unit_id
+      hero = Company.get active_unit_id
       empty_cell = empty_adj_cell hero
       if empty_cell
         town = Town.new(user)

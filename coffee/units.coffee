@@ -12,22 +12,22 @@ class Unit
   init: () ->
     return
 
-class Hero extends Unit
+class Company extends Unit
   constructor: (unit) ->
     super unit
     @title = unit['@user_name'] + '(' + unit['@hp'] + ')'
 
-class PlayerHero extends Hero
+class PlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-hero'
 
-class OtherPlayerHero extends Hero
+class OtherPlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'other-player-hero'
 
-class BotHero extends Hero
+class BotCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'bot-hero'
@@ -62,12 +62,12 @@ class PlayerTown extends Town
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
     switch unit_hash['@type']
-      when "hero"
+      when "company"
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
-            unit = new PlayerHero unit_hash
-          else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotHero unit_hash
-          else unit = new OtherPlayerHero unit_hash
+            unit = new PlayerCompany unit_hash
+          else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotCompany unit_hash
+          else unit = new OtherPlayerCompany unit_hash
       when "orb" then unit = new GreenOrb unit_hash
       when "town"
         if unit_hash['@user_id']

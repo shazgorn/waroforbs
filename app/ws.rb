@@ -136,20 +136,20 @@ class OrbApp
                 log = "Banner created"
               end
               dispatch_units user, :log, {:log => log}
-            when :create_default_squad
-              res = @game.create_default_squad user
+            when :create_default_company
+              res = @game.create_default_company user
               if res.nil?
-                log = "Unable to create more squads. Limit reached or no banner is available."
+                log = "Unable to create more companies. Limit reached or no banner is available."
               else
-                log = "Squad created"
+                log = "Company created"
               end
               dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
-            when :create_squad_from_banner
-              res = @game.create_squad_from_banner user, data['banner_id']
+            when :create_company_from_banner
+              res = @game.create_company_from_banner user, data['banner_id']
               if res.nil?
-                log = "Unable to create squad. Banner is available."
+                log = "Unable to create Company"
               else
-                log = "Squad created"
+                log = "Company created"
               end
               dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
             end #case

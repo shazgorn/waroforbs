@@ -48,6 +48,6 @@ end
 class Bot < User
   def initialize(login)
     super(login)
-    @hero = BotHero.new(@login)
+    @hero = BotCompany.new(@login)
   end
 end

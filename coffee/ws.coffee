@@ -129,19 +129,19 @@ class WS
       })
     )
 
-  create_default_squad: () ->
+  create_default_company: () ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'create_default_squad'
+        op: 'create_default_company'
       })
     )
 
-  create_squad_from_banner: (banner_id) ->
+  create_company_from_banner: (banner_id) ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'create_squad_from_banner'
+        op: 'create_company_from_banner'
         banner_id: banner_id
       })
     )

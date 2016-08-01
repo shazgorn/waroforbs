@@ -13,10 +13,10 @@ class Controls
           App.new_town()
       }
     @town_actions =
-      'create_default_squad': {
-        name: 'Create squad',
+      'create_default_company': {
+        name: 'Create company',
         callback: () ->
-          app.create_default_squad()
+          app.create_default_company()
       }
     @buildings =
       'banner_shop': {
@@ -60,15 +60,15 @@ class Controls
                 .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
                 .appendTo('.modal.building .modal-building-inner')
                 .click(() ->
-                  App.create_squad_from_banner($(this).data('id'))
+                  App.create_company_from_banner($(this).data('id'))
                 )
 
           # actions
           $(document.createElement('button'))
-            .html('Create squad')
+            .html('Create company')
             .appendTo('.modal.building .modal-building-actions')
             .click(() ->
-              App.create_default_squad()
+              App.create_default_company()
             )
       }
     controls = 
@@ -139,7 +139,7 @@ class Controls
       App.set_active_unit($(this).data('id'))
     )
     switch unit['@type']
-      when 'PlayerHero' then $(id_sel + ' .unit-name-info').html('H')
+      when 'PlayerCompany' then $(id_sel + ' .unit-name-info').html('H')
       when 'Town' then $(id_sel + ' .unit-name-info').html('T')
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     $(id_sel + ' .player-name-info').html(unit['@user_name'])
