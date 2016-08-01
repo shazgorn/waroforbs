@@ -164,6 +164,11 @@ class Hero < Unit
     @hp = @max_hp = 50 * banner.mod_max_hp
     @ap = @max_ap = 100 * banner.mod_max_ap
   end
+
+  def die
+    super
+    @banner.unit = nil
+  end
 end
 
 class BotHero < Hero

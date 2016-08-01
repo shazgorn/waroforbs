@@ -149,7 +149,7 @@ class Game
   def restart(token)
   end
 
-  #################### ATTACK #############################################
+  #################### ATTACK ##################################################
   # a - attacker, {x,y} defender`s coordinates
   # @param [User] a_user attacker
   # @param [Integer] def_id if of the defender unit

@@ -1,5 +1,6 @@
 class Attack
   def self.bury(unit)
+    unit.die
     Unit.delete unit.id
     if unit.user
       unless Unit.has_units? unit.user
