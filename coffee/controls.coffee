@@ -22,8 +22,11 @@ class Controls
       'banner_shop': {
         name: 'Banner Shop',
         callback: () ->
+          # clean up
           $('.banner-card').remove()
           $('.modal.building button').remove()
+
+          # fill up
           for banner in App.banners
             b = $(document.createElement('div'))
               .addClass('banner-card')
@@ -35,6 +38,22 @@ class Controls
             .appendTo('.modal.building .modal-building-actions')
             .click(() ->
               App.create_default_banner()
+            )
+      },
+      'barracs': {
+        name: 'Barracs',
+        callback: () ->
+          # clean up
+          $('.modal-body .modal-building-inner *').remove()
+          $('.modal-body .modal-building-actions *').remove()
+          $('.modal.building button').remove()
+
+          #fill up
+          b = $(document.createElement('button'))
+            .html('Create new squad')
+            .appendTo('.modal.building .modal-building-actions')
+            .click(() ->
+              App.create_default_squad()
             )
       }
     controls = 

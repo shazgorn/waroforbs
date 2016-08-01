@@ -138,6 +138,14 @@ class OrbApp
                 log = "Banner created"
               end
               dispatch_units user, :log, {:log => log}
+            when :create_default_squad
+              res = @game.new_town_hero user
+              if res.nil?
+                log = "Unable to create more squads. Limit reached or no banner is available."
+              else
+                log = "Squad created"
+              end
+              dispatch_units user, :log, {:log => log}
             end #case
           rescue Exception => e
             ex e

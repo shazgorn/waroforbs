@@ -60,12 +60,15 @@ class Game
   end
 
   def new_town_hero user
+    squad = nil
     empty_cell = empty_adj_cell(Town.get_by_user(user))
-    if empty_cell
-      hero = new_hero user
-      user.active_unit_id = hero.id
-      hero.place empty_cell[:x], empty_cell[:y]
+    banner = Banner.get_first_free_by_user(user)
+    if empty_cell && banner
+      squad = new_hero user, banner
+      user.active_unit_id = squad.id
+      squad.place empty_cell[:x], empty_cell[:y]
     end
+    squad
   end
 
   def new_town(user, active_unit_id)
@@ -80,6 +83,7 @@ class Game
     end
   end
 
+  ##################### TOWN BUILDINGS ACTIONS #################################
   def build user, building_id
     town = Town.get_by_user user
     town.build building_id
@@ -90,9 +94,10 @@ class Game
     if Banner.get_count_by_user(user) < MAX_BANNERS
       banner = Banner.new user
     end
-    return banner
+    banner
   end
-  ##################### END CONSTRUCTORS #################################
+  #################  END TOWN BUILDINGS  #######################################
+  ##################### END CONSTRUCTORS #######################################
 
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}

@@ -137,6 +137,14 @@ class WS
       })
     )
 
+  create_default_squad: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'create_default_squad'
+      })
+    )
+
   restart: () ->
     @socket.send(
       JSON.stringify({
