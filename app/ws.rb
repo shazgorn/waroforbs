@@ -89,8 +89,9 @@ class OrbApp
             when :move
               params = data['params']
               res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+              log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
               if res[:moved]
-                dispatch_units user, :move, {:active_unit_id => user.active_unit_id}
+                dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
               else
                 dispatch_units
               end

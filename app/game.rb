@@ -108,6 +108,8 @@ class Game
       if Unit.place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)
         unit.move_to(new_x, new_y)
         res[:moved] = true
+        res[:new_x] = new_x
+        res[:new_y] = new_y
       else
         res[:moved] = false
       end
