@@ -159,16 +159,16 @@ class Controls
     )
     switch unit['@type']
       when 'company'
-        $(id_sel + ' .unit-name-info').html('H')
+        $(id_sel + ' .unit-name-info').html('C')
         $(id_sel + ' .squads-info').html(unit['@squads'])
       when 'town'
         $(id_sel + ' .unit-name-info').html('T')
-        $(id_sel + ' .ap-info').parent().remove()
-        $(id_sel + ' .squads-info').parent().remove()
+        #$(id_sel + ' .ap-info').remove()
+        #$(id_sel + ' .squads-info').remove()
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     $(id_sel + ' .player-name-info').html(unit['@user_name'])
     $(id_sel + ' .hp-info').html(unit['@hp'])
-    $(id_sel + ' .xy-info').html(unit['@x'] + ',' + unit['@y'])
+    $(id_sel + ' .xy-info').html('{' + unit['@x'] + ',' + unit['@y'] + '}')
     $(id_sel + ' .ap-info').html(unit['@ap'])
 
   set_active_unit: (id) ->

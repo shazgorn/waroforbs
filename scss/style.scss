@@ -202,8 +202,31 @@ button {
 	background-color: white;
         border: thin solid transparent;
         padding: 0 2px;
+        table {
+            width: 100%;
+            td {
+                width: 33%;
+            }
+        }
         .unit-name-info {
             font-size: 2rem;
+        }
+        .unit-id-info::before {
+            content: '#';
+        }
+        .unit-name-info, .unit-id-info, .unit-xy-info,
+        .hp-info, .ap-info, .squads-info {
+            display: inline-block;
+            width: 33%;
+        }
+        .hp-info {
+            color: red;
+        }
+        .ap-info {
+            color: orange;
+        }
+        .squads-info {
+            color: green;
         }
         &:hover {
             background-color: #e6f7ff;
