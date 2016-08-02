@@ -18,7 +18,7 @@ Cuba.define do
 
   on get do
     on 'game' do
-      render("game", {:map_height => (9..30)})
+      render("game")
     end
 
     on 'js', extension('js') do |file|

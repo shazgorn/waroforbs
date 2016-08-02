@@ -215,17 +215,17 @@ button {
             content: '#';
         }
         .unit-name-info, .unit-id-info, .unit-xy-info,
-        .hp-info, .ap-info, .squads-info {
+        .unit-hp-info, .unit-ap-info, .unit-squads-info {
             display: inline-block;
             width: 33%;
         }
-        .hp-info {
+        .unit-hp-info {
             color: red;
         }
-        .ap-info {
+        .unit-ap-info {
             color: orange;
         }
-        .squads-info {
+        .unit-squads-info {
             color: green;
         }
         &:hover {
