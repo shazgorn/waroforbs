@@ -138,7 +138,7 @@ class Controls
     if $(id_sel).length == 0
       info = $('.unit-info-template')
         .clone()
-        .prependTo('#right-col')
+        .appendTo('#unit-info-list')
         .removeClass('unit-info-template')
         .attr('id', id_attr)
         .data('id', id)

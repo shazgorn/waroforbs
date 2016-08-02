@@ -37,14 +37,15 @@ $modal-width: calc(80% - #{$right-col-width} + 4rem);
     border: thin solid $wooden-color;
     box-sizing: border-box;
     float: left;
-    height: 150px;
+    height: 10rem;
     margin: 1rem;
     padding: 1rem;
-    width: 150px;
+    width: 10rem;
 }
 
 body {
     font-family: $font-family;
+    font-size: 1rem;
 }
 
 button {
@@ -90,6 +91,7 @@ button {
     }
     
     .unit {
+        border: thin solid transparent;
         height: inherit;
         position: absolute;
         width: inherit;
@@ -109,10 +111,10 @@ button {
     }
     .player-unit {
         &:hover, &.player-unit-hover {
-            border: thin solid $hover-hero-color;
+            border: thin dashed $hover-hero-color;
         }
         &.active-player-unit {
-            border: thin dashed $active-hero-color;
+            border: thin solid $active-hero-color;
         }
         .player-unit-squad-info {
             bottom: 0;
@@ -182,8 +184,10 @@ button {
 }
 
 #right-col {
+    border-left: thin solid lightgray;
     margin-right: 1rem;
     opacity: 0.8;
+    padding-left: 1rem;
     position: fixed;
     right: 0;
     width: $right-col-width;
@@ -196,11 +200,14 @@ button {
     }
     .unit-info {
 	background-color: white;
+        border: thin solid transparent;
+        padding: 0 2px;
         .unit-name-info {
             font-size: 2rem;
         }
         &:hover {
-            background-color: gray;
+            background-color: #e6f7ff;
+            border: thin dashed $hover-hero-color;
             cursor: pointer;
         }
         &.active-unit-info {
@@ -213,7 +220,7 @@ button {
     }
 
     #controls_arrows {
-        margin: 1rem 0;
+        margin-bottom: 1rem;
         button {
             float: left;
             font-size: 30px;
@@ -221,11 +228,18 @@ button {
             line-height: 1px;
             height: $button-size;
             text-align: center;
-            width: $button-size;
+            width: 33%;
             &:nth-child(3n-2) {
                 clear: left;
             }
         }
+    }
+
+    #unit-info-list {
+        border-top: thin solid lightgray;
+        padding-top: 1rem;
+        border-bottom: thin solid lightgray;
+        padding-bottom: 1rem;
     }
 
     #dimensions {
