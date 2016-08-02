@@ -113,10 +113,8 @@ class Map
     $('.unit').remove()
 
   remove_stale_units: (units) ->
-    all_units_ids =
-    for id, unit of units
-      # keys are strings
-      parseInt(id)
+    # keys are strings
+    all_units_ids = (parseInt(id) for id, unit of units)
     $('.unit').each((i, unit) ->
       id = $(unit).data('id')
       if $.inArray(id, all_units_ids) == -1
@@ -155,9 +153,16 @@ class Map
         .appendTo(cell_sel)
       if unit.attr_id
         $unit.attr('id', unit.attr_id)
+      if unit.squads
+        $(document.createElement('span'))
+          .html(unit.squads)
+          .addClass('player-unit-squad-info')
+          .appendTo($unit)
     else if $unit.length == 1
       if $unit.parent().data('x') != unit.x || $unit.parent().data('y') != unit.y
         $unit.appendTo(cell_sel)
+      if unit.squads
+        $unit.children('.player-unit-squad-info').html(unit.squads)
     if unit.title then $unit.attr('title', unit.title)
     $unit
 

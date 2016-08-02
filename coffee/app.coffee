@@ -2,8 +2,9 @@ class Application
   constructor: () ->
     @user_id = null
     @active_unit_id = null
-    @units = []
-    @my_units = []
+    @units = {}
+    @my_units_ids = []
+    @my_units = {}
     @banners = []
     @controls = new Controls this
     @ws = new WS this
@@ -18,7 +19,7 @@ class Application
     @controls.lock_controls()
 
   unlock_controls: () ->
-    if @initialized and @my_units.length > 0
+    if @initialized and @my_units_ids.length > 0
       @controls.unlock_controls()
 
   spawn_bot: (id) ->
@@ -49,6 +50,9 @@ class Application
   create_company_from_banner: (banner_id) ->
     @ws.create_company_from_banner(banner_id)
 
+  add_squad_to_company: (company_id) ->
+    @ws.add_squad_to_company(company_id)
+
   refresh_modals: () ->
     id = @controls.open_building_id
     if id
@@ -66,28 +70,26 @@ class Application
 
   init_units: (units) ->
     @map.remove_stale_units(units)
-    @units = []
-    @my_units = []
+    @units = {}
+    @my_units = {}
     for unit_id, unit_hash of units
       unit_obj = UnitFactory(unit_hash, @user_id)
       if unit_obj
-        @units.push(unit_obj)
+        @units[unit_obj.id] = unit_obj
         unit_on_map = @map.append(unit_obj)
         if unit_hash['@user_id'] == @user_id
-          @my_units.push(unit_obj)
+          @my_units[unit_obj.id] = unit_obj
           @controls.unit_info(unit_hash)
           @bind_select_handler(unit_on_map)
         unit_obj.init()
     @bind_action_handlers()
+    @my_units_ids = (parseInt(id) for id, unit of @my_units)
     # delete dead units
-    if @my_units.length == 0
+    if @my_units_ids.length == 0
       @lock_controls()
-    my_units_ids = $.map(@my_units, (unit) ->
-      unit.id
-    )
     $('.unit-info:not(.unit-info-template)').each((i, el) =>
       id = $(el).data('id')
-      if $.inArray(id, my_units_ids) == -1
+      if $.inArray(id, @my_units_ids) == -1
         $(el).remove()
         if id == @active_unit_id
           @lock_controls()

@@ -82,4 +82,8 @@ class Map
     [dx, dy].count{|c| (-1..1).include? c} == 2
   end
 
+  def adj_cells?(x1, y1, x2, y2)
+    (-1..1).include?(x1 - x2) && (-1..1).include?(y1 - y2)
+  end
+
 end

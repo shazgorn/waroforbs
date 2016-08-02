@@ -141,8 +141,17 @@ class WS
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'create_company_from_banner'
+        op: 'create_company_from_banner',
         banner_id: banner_id
+      })
+    )
+
+  add_squad_to_company: (company_id) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'add_squad_to_company',
+        company_id: company_id
       })
     )
 

@@ -23,8 +23,8 @@ class Controls
         name: 'Banner Shop',
         callback: () ->
           # clean up
-          $('.banner-card').remove()
-          $('.modal.building button').remove()
+          $('.modal-body .modal-building-inner *').remove()
+          $('.modal-body .modal-building-actions *').remove()
 
           # fill up
           for banner in App.banners
@@ -49,7 +49,6 @@ class Controls
           $('.banner-card').remove()
           $('.modal-body .modal-building-inner *').remove()
           $('.modal-body .modal-building-actions *').remove()
-          $('.modal.building button').remove()
 
           #fill up
           for banner in App.banners
@@ -57,6 +56,8 @@ class Controls
               $(document.createElement('div'))
                 .data('id', banner['@id'])
                 .addClass('banner-card')
+                .addClass('pointer')
+                .attr('title', 'Create company')
                 .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
                 .appendTo('.modal.building .modal-building-inner')
                 .click(() ->
@@ -70,6 +71,24 @@ class Controls
             .click(() ->
               App.create_default_company()
             )
+
+          $(document.createElement('div'))
+            .addClass('modal-building-fill')
+            .appendTo('.modal.building .modal-building-inner')
+
+          for company_id in App.units[App.last_town].adj_companies
+            company = App.my_units[company_id]
+            card = $(document.createElement('div'))
+              .addClass('company-card')
+              .addClass('pointer')
+              .data('id', company_id)
+              .attr('title', 'Add squad')
+              .html("Company ##{company_id} <br> hp:
+  #{company.hp} <br>ap: #{company.ap} <br>squads: #{company.squads}<br>x,y: #{company.x},#{company.y}")
+              .appendTo('.modal.building .modal-building-fill')
+              .click(() ->
+                App.add_squad_to_company($(this).data('id'))
+              )
       }
     controls = 
       7: {arr: '&#8598;', x: -1, y: -1},
@@ -139,13 +158,17 @@ class Controls
       App.set_active_unit($(this).data('id'))
     )
     switch unit['@type']
-      when 'PlayerCompany' then $(id_sel + ' .unit-name-info').html('H')
-      when 'Town' then $(id_sel + ' .unit-name-info').html('T')
+      when 'company'
+        $(id_sel + ' .unit-name-info').html('H')
+        $(id_sel + ' .squads-info').html(unit['@squads'])
+      when 'town'
+        $(id_sel + ' .unit-name-info').html('T')
+        $(id_sel + ' .ap-info').parent().remove()
+        $(id_sel + ' .squads-info').parent().remove()
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     $(id_sel + ' .player-name-info').html(unit['@user_name'])
     $(id_sel + ' .hp-info').html(unit['@hp'])
     $(id_sel + ' .xy-info').html(unit['@x'] + ',' + unit['@y'])
-    # $(id_sel + ' .y-info').html(unit['@y'])
     $(id_sel + ' .ap-info').html(unit['@ap'])
 
   set_active_unit: (id) ->

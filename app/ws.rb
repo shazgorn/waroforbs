@@ -75,7 +75,7 @@ class OrbApp
                                      :user_id => user.id,
                                      :actions => user.actions_arr,
                                      :banners => Banner.get_by_user(user),
-                                     :units => Unit.all,
+                                     :units => @game.all_units(user),
                                      :building_states => {
                                        :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
                                        :BUILDING_STATE_IN_PROGRESS => Building::STATE_IN_PROGRESS,
@@ -85,7 +85,7 @@ class OrbApp
             when :close
               dispatch_units
             when :units
-              ws.send JSON.generate({:data_type => 'units', :units => Unit.all})
+              dispatch_units user
             when :move
               params = data['params']
               res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
@@ -126,8 +126,13 @@ class OrbApp
               @game.restart token
               dispatch_units
             when :build
-              @game.build user, data['building'].to_sym
-              dispatch_units
+              res = @game.build user, data['building'].to_sym
+              if res
+                log = "#{data['building']} built"
+              else
+                log = "#{data['building']} not built"
+              end
+              dispatch_units user, :log, {:log => log}
             when :create_default_banner
               res = @game.create_default_banner user
               if res.nil?
@@ -152,6 +157,14 @@ class OrbApp
                 log = "Company created"
               end
               dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+            when :add_squad_to_company
+              res = @game.add_squad_to_company user, data['company_id']
+              if res
+                log = "Squad added"
+              else
+                log = "Unable to add squad to company. Max limit reached"
+              end
+              dispatch_units user, :log, {:log => log}
             end #case
           rescue Exception => e
             ex e
@@ -235,7 +248,7 @@ class OrbApp
   end
 
   def dispatch_units(user = nil, action = nil, data = {})
-    dispatch_changes({:data_type => 'units', :units => Unit.all}, user, action, data)
+    dispatch_changes({:data_type => 'units', :units => @game.all_units(user)}, user, action, data)
   end
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})

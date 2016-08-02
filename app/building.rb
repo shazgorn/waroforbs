@@ -12,6 +12,7 @@ class Building
 
   def build
     @status = STATE_BUILT
+    true
   end
 
   def built?

@@ -21,6 +21,9 @@ class PlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-hero'
+    @squads = unit['@squads']
+    @hp = unit['@hp']
+    @ap = unit['@ap']
 
 class OtherPlayerCompany extends Company
   constructor: (unit) ->
@@ -54,6 +57,7 @@ class PlayerTown extends Town
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-town'
+    @adj_companies = unit['@adj_companies']
 
   init: () ->
     App.init_town_buildings(@_unit['@buildings'])

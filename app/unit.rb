@@ -156,19 +156,53 @@ class Unit
 end
 
 class Company < Unit
+  MAX_SQUADS = 10
+
   def initialize(user, banner)
     super(:company, user)
     @banner = banner
     @banner.unit = self
     @dmg = 30 * banner.mod_attack
+    # @hp - hp of 1st squad in line
     @hp = @max_hp = 50 * banner.mod_max_hp
     @ap = @max_ap = 100 * banner.mod_max_ap
+    # each company starts with one squad
+    @squads = 1
   end
 
   def die
     super
     @banner.unit = nil
   end
+
+  def add_squad
+    if @squads < MAX_SQUADS
+      @squads += 1
+    end
+  end
+
+  def take_dmg(dmg)
+    total_hp = @max_hp * (@squads - 1) + @hp
+    total_hp -= dmg
+    if total_hp <= 0
+      @dead = true
+    else
+      @squads = total_hp / @max_hp
+      modulus = total_hp % @max_hp
+      if modulus > 0
+        @squads += 1
+        @hp = modulus
+      else
+        @hp = @max_hp
+      end
+    end
+    dmg
+  end
+
+  def dmg
+    @squads * (@dmg + Random.rand(@dmg))
+  end
+
 end
 
 class BotCompany < Company
@@ -188,6 +222,7 @@ class GreenOrb < Unit
 end
 
 class Town < Unit
+  attr_accessor :adj_companies
   attr_reader :buildings, :actions
 
   def initialize(user)
@@ -200,6 +235,7 @@ class Town < Unit
       :banner_shop => BannerShop.new
     }
     @actions = []
+    @adj_companies = []
   end
 
   def place(x = nil, y = nil)
@@ -209,8 +245,11 @@ class Town < Unit
   end
 
   def build building_id
-    @buildings[building_id].build
-    update_actions
+    if @buildings[building_id].build
+      update_actions
+      return true
+    end
+    false
   end
 
   # select actions available based on constructed buildings for town menu

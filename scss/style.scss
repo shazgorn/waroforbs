@@ -33,6 +33,16 @@ $modal-width: calc(80% - #{$right-col-width} + 4rem);
     }
 }
 
+@mixin card() {
+    border: thin solid $wooden-color;
+    box-sizing: border-box;
+    float: left;
+    height: 150px;
+    margin: 1rem;
+    padding: 1rem;
+    width: 150px;
+}
+
 body {
     font-family: $font-family;
 }
@@ -40,7 +50,9 @@ body {
 button {
     font-family: $font-family;
 }
-
+.pointer {
+    cursor: pointer;
+}
 #top_container {
     height: 400px;
 }
@@ -101,6 +113,13 @@ button {
         }
         &.active-player-unit {
             border: thin dashed $active-hero-color;
+        }
+        .player-unit-squad-info {
+            bottom: 0;
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            right: 0;
         }
     }
     .other-player-hero {
@@ -295,14 +314,12 @@ button {
             clear: both;
         }
 
+        .company-card {
+            @include card();
+        }
+
         .banner-card {
-            border: thin solid $wooden-color;
-            box-sizing: border-box;
-            float: left;
-            height: 150px;
-            margin: 1rem;
-            padding: 1rem;
-            width: 150px;
+            @include card();
         }
     }
 }

@@ -22,6 +22,25 @@ class Game
     end
     user
   end
+
+  # Select and return all units.
+  # Select user`s town and select adjacent companies to it (one can add more
+  # squads in barracs)
+  def all_units user=nil
+    units = Unit.all
+    if user
+      town = units.values.select{|unit| unit.type == :town && unit.user.id == user.id}.first
+      if town
+        town.adj_companies.delete_if {|c| true}
+        units.each_value{|unit|
+          if unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
+            town.adj_companies.push(unit.id)
+          end
+        }
+      end
+    end
+    units
+  end
   ##################### END DATA SELECTION METHODS #######################
   
   ##################### CONSTRUCTORS #####################################
@@ -81,6 +100,11 @@ class Game
       company.place empty_cell[:x], empty_cell[:y]
     end
     company
+  end
+
+  def add_squad_to_company user, company_id
+    company = Company.get company_id
+    company && company.add_squad()
   end
 
   def new_town(user, active_unit_id)
