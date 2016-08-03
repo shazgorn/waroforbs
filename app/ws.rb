@@ -55,6 +55,7 @@ class OrbApp
         ws.onmessage do |msg, type|
           begin
             puts "Recieved message: #{msg} #{type}"
+            start = Time.now.to_f
             data = JSON.parse(msg)
             token = data['token']
             user = @game.get_user_by_token token
@@ -168,6 +169,9 @@ class OrbApp
           rescue Exception => e
             ex e
           end
+          finish = Time.now.to_f
+          diff = finish - start
+          puts "%10.5f" % diff.to_f
         end
       end
     end

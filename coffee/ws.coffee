@@ -14,6 +14,7 @@ class WS
       @socket.send(JSON.stringify({token: @token, op: 'init'}))
     
     @socket.onmessage = (e) ->
+      start = new Date();
       data = JSON.parse(e.data)
       console.log(data)
       if app.initialized || data.data_type == 'init_map'
@@ -59,6 +60,7 @@ class WS
             switch data.error
               when 'wrong_token' then location.pathname = '/'
         app.unlock_controls()
+        console.log(new Date() - start)
 
   move: (unit_id, params) ->
     @socket.send(
