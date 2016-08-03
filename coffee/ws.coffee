@@ -123,11 +123,20 @@ class WS
       })
     )
 
-  create_default_banner: () ->
+  create_random_banner: () ->
     @socket.send(
       JSON.stringify({
         token: @token,
         op: 'create_default_banner'
+      })
+    )
+
+  delete_banner: (banner_id) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'delete_banner',
+        banner_id: banner_id
       })
     )
 

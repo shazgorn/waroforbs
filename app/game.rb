@@ -182,6 +182,10 @@ class Game
   def restart(token)
   end
 
+  def delete_banner(user, banner_id)
+    Banner.delete user, banner_id
+  end
+
   #################### ATTACK ##################################################
   # a - attacker, {x,y} defender`s coordinates
   # @param [User] a_user attacker

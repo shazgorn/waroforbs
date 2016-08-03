@@ -41,8 +41,8 @@ class Application
     id = $(button).data('id')
     @ws.build(id)
 
-  create_default_banner: () ->
-    @ws.create_default_banner()
+  create_random_banner: () ->
+    @ws.create_random_banner()
 
   create_default_company: () ->
     @ws.create_default_company()
@@ -52,6 +52,9 @@ class Application
 
   add_squad_to_company: (company_id) ->
     @ws.add_squad_to_company(company_id)
+
+  delete_banner: (banner_id) ->
+    @ws.delete_banner(banner_id)
 
   refresh_modals: () ->
     id = @controls.open_building_id

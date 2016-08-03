@@ -141,6 +141,14 @@ class OrbApp
                 log = "Banner created"
               end
               dispatch_units user, :log, {:log => log}
+            when :delete_banner
+              res = @game.delete_banner user, data['banner_id']
+              if res
+                log = "Banner deleted"
+              else
+                log = "Unable to delete banner"
+              end
+              dispatch_units user, :log, {:log => log}
             when :create_default_company
               res = @game.create_default_company user
               if res.nil?

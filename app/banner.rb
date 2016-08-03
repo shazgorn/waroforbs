@@ -74,6 +74,17 @@ class Banner
     def get_count_by_user(user)
       @@banners.select{|id, banner| banner.user.id == user.id}.size
     end
+
+    def delete(user, banner_id)
+      if @@banners.has_key?(banner_id)
+        banner = @@banners[banner_id]
+        if banner.user == user
+          @@banners.delete banner_id
+          return true
+        end
+      end
+      false
+    end
     
   end
 end

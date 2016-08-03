@@ -33,13 +33,21 @@ class Controls
               .html("Banner ##{banner['@id']} <br> hp:
   #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
               .appendTo('.modal.building .modal-building-inner')
+            if !banner['@unit_id']
+              $(document.createElement('button'))
+                .data('id', banner['@id'])
+                .html('Delete')
+                .appendTo(b)
+                .click(() ->
+                  App.delete_banner($(this).data('id'))
+                )
 
           # actions
           $(document.createElement('button'))
-            .html('Create default banner')
+            .html('Create random banner')
             .appendTo('.modal.building .modal-building-actions')
             .click(() ->
-              App.create_default_banner()
+              App.create_random_banner()
             )
       },
       'barracs': {
