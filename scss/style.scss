@@ -219,8 +219,11 @@ button {
                 width: 30%
             }
         }
-        .unit-hp-info {
+        .unit-hp-info, .unit-dmg-info {
             color: red;
+        }
+        .unit-def-info {
+            color: blue;
         }
         .unit-ap-info {
             color: orange;

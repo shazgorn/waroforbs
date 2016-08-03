@@ -217,7 +217,7 @@ class Company < Unit
   end
 
   def dmg
-    @squads * (@dmg + Random.rand(@dmg))
+    @squads * (@dmg + Random.rand(@dmg * 0.2)).round(0)
   end
 
   class << self
