@@ -127,7 +127,7 @@ class WS
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'create_default_banner'
+        op: 'create_random_banner'
       })
     )
 

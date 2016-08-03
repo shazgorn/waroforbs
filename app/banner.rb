@@ -5,7 +5,7 @@
 
 class Banner
   attr_accessor :unit
-  attr_reader :id, :user, :mod_max_hp, :mod_max_ap, :mod_attack
+  attr_reader :id, :user, :mod_max_hp, :mod_max_ap, :mod_dmg
   @@id_seq = 1
   # id -> banner
   @@banners = {}
@@ -16,9 +16,13 @@ class Banner
   def initialize user, unit = nil
     @id = @@id_seq
     @@id_seq += 1
-    @mod_max_hp = 1
-    @mod_max_ap = 1
-    @mod_attack = 1
+    prng = Random.new
+    hp_bonus = prng.rand(0..0.5).round(1)
+    @mod_max_hp = 1 + hp_bonus
+    ap_bonus = prng.rand(0..0.5).round(1)
+    @mod_max_ap = 1 + ap_bonus
+    dmg_bonus = prng.rand(0..0.5).round(1)
+    @mod_dmg = 1 + dmg_bonus
     @user = user
     @unit = unit
   end
@@ -78,7 +82,7 @@ class Banner
     def delete(user, banner_id)
       if @@banners.has_key?(banner_id)
         banner = @@banners[banner_id]
-        if banner.user == user
+        if banner.unit.nil? && banner.user == user
           @@banners.delete banner_id
           return true
         end

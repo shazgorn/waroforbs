@@ -171,15 +171,18 @@ end
 
 class Company < Unit
   MAX_SQUADS = 10
+  BASE_DMG = 30
+  BASE_HP = 50
+  BASE_AP = 20
 
   def initialize(user, banner)
     super(:company, user)
     @banner = banner
     @banner.unit = self
-    @dmg = 30 * banner.mod_attack
+    @dmg = (BASE_DMG * banner.mod_dmg).round(0)
     # @hp - hp of 1st squad in line
-    @hp = @max_hp = 50 * banner.mod_max_hp
-    @ap = @max_ap = 20 * banner.mod_max_ap
+    @hp = @max_hp = (BASE_HP * banner.mod_max_hp).round(0)
+    @ap = @max_ap = (BASE_AP * banner.mod_max_ap).round(0)
     # each company starts with one squad
     @squads = 1
   end

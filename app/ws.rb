@@ -133,8 +133,8 @@ class OrbApp
                 log = "#{data['building']} not built"
               end
               dispatch_units user, :log, {:log => log}
-            when :create_default_banner
-              res = @game.create_default_banner user
+            when :create_random_banner
+              res = @game.create_random_banner user
               if res.nil?
                 log = "Unable to create more banners. Limit reached."
               else

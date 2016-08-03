@@ -122,13 +122,19 @@ class Game
     town.build building_id
   end
 
-  def create_default_banner user
+  def create_random_banner user
     banner = nil
     if Banner.get_count_by_user(user) < MAX_BANNERS
       banner = Banner.new user
     end
     banner
   end
+
+  def delete_banner(user, banner_id)
+    Banner.delete user, banner_id
+  end
+
+
   #################  END TOWN BUILDINGS  #######################################
   ##################### END CONSTRUCTORS #######################################
 
@@ -180,10 +186,6 @@ class Game
   end
 
   def restart(token)
-  end
-
-  def delete_banner(user, banner_id)
-    Banner.delete user, banner_id
   end
 
   #################### ATTACK ##################################################

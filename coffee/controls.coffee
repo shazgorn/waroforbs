@@ -1,5 +1,6 @@
 class Controls
   constructor: (app) ->
+    _controls = this
     @open_building_id = null
     @user_actions =
       'action_new_hero': {
@@ -18,6 +19,7 @@ class Controls
         callback: () ->
           app.create_default_company()
       }
+
     @buildings =
       'banner_shop': {
         name: 'Banner Shop',
@@ -28,11 +30,7 @@ class Controls
 
           # fill up
           for banner in App.banners
-            b = $(document.createElement('div'))
-              .addClass('banner-card')
-              .html("Banner ##{banner['@id']} <br> hp:
-  #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
-              .appendTo('.modal.building .modal-building-inner')
+            b = _controls.banner_card(banner, 'Banner')
             if !banner['@unit_id']
               $(document.createElement('button'))
                 .data('id', banner['@id'])
@@ -61,13 +59,9 @@ class Controls
           #fill up
           for banner in App.banners
             if banner['@unit_id'] == null
-              $(document.createElement('div'))
-                .data('id', banner['@id'])
-                .addClass('banner-card')
+              b = _controls.banner_card(banner, 'Create company')
+              b
                 .addClass('pointer')
-                .attr('title', 'Create company')
-                .html("Banner ##{banner['@id']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
-                .appendTo('.modal.building .modal-building-inner')
                 .click(() ->
                   App.create_company_from_banner($(this).data('id'))
                 )
@@ -132,6 +126,14 @@ class Controls
       @open_building_id = null
       $('.modal').hide()
     )
+
+  banner_card: (banner, title) ->
+    $(document.createElement('div'))
+      .addClass('banner-card')
+      .data('id', banner['@id'])
+      .attr('title', title)
+      .html("Banner ##{banner['@id']} <br> dmg: #{banner['@mod_dmg']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
+      .appendTo('.modal.building .modal-building-inner')
 
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')
