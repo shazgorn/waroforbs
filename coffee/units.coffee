@@ -63,6 +63,10 @@ class PlayerTown extends Town
     App.init_town_buildings(@_unit['@buildings'])
     App.controls.init_town_controls(@_unit['@actions'])
 
+class OtherPlayerTown extends Town
+  constructor: (unit) ->
+    super unit
+
 UnitFactory = (unit_hash, user_id) ->
   if unit_hash?
     switch unit_hash['@type']
@@ -77,8 +81,8 @@ UnitFactory = (unit_hash, user_id) ->
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
             unit = new PlayerTown unit_hash
-        else
-          unit = new Town unit_hash
+          else
+            unit = new OtherPlayerTown unit_hash
       else throw new Error 'Unit have no type'
   unit
 

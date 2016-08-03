@@ -1,6 +1,6 @@
 class User
   attr_reader :login, :id
-  attr_accessor :active_unit_id
+  attr_accessor :active_unit_id, :actions
 
   @@id_seq = 1
   # id -> user
@@ -15,10 +15,6 @@ class User
       :new_town => true,
       :new_hero => false
     }
-  end
-
-  def actions
-    @actions
   end
 
   def actions_arr

@@ -1,14 +1,5 @@
 class Attack
-  def self.bury(unit)
-    unit.die
-    Unit.delete unit.id
-    if unit.user
-      unless Unit.has_units? unit.user
-        unit.user.actions[:new_hero] = true
-        unit.user.actions[:new_town] = false
-      end
-    end
-  end
+  KILLED = 'Your hero has been killed'
 
   def self.attack a, d
     res = {
@@ -30,14 +21,13 @@ class Attack
       dmg = d.take_dmg a.dmg
       a.ap -= 1
       if d.dead?
-        bury d
-        res[:d_data][:log] = 'Your hero has been killed'
+        res[:d_data][:log] = KILLED
+        res[:d_data][:dead] = true
         ca_dmg = 0
       else
         ca_dmg = a.take_dmg d.dmg
         if a.dead?
-          bury a
-          res[:a_data][:log] = 'Your hero has been killed'
+          res[:a_data][:log] = KILLED
           res[:a_data][:dead] = true
         end
       end

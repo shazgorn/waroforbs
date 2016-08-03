@@ -1,3 +1,6 @@
+# Use specific type of unit subclass (Company, Town etc)
+# instead of general one (Unit)
+# for selecting units of specific type
 class Unit
   attr_reader :id, :type, :user, :hp, :x, :y
   attr_accessor :ap
@@ -185,7 +188,7 @@ class Company < Unit
     total_hp = @max_hp * (@squads - 1) + @hp
     total_hp -= dmg
     if total_hp <= 0
-      @dead = true
+      die()
     else
       @squads = total_hp / @max_hp
       modulus = total_hp % @max_hp
@@ -201,6 +204,12 @@ class Company < Unit
 
   def dmg
     @squads * (@dmg + Random.rand(@dmg))
+  end
+
+  class << self
+    def has_any? user
+      @@units.select{|id, unit| unit.user_id == user.id && unit.type == :company}.length > 0
+    end
   end
 
 end
@@ -258,6 +267,8 @@ class Town < Unit
   end
 
   class << self
-    
+    def has_any? user
+      @@units.select{|id, unit| unit.user_id == user.id && unit.type == :town}.length > 0
+    end
   end
 end

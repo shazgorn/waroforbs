@@ -192,7 +192,36 @@ class Game
   def attack a_user, active_unit_id, def_id
     a = Unit.get_active_unit a_user
     d = Unit.get def_id
-    Attack.attack a, d
+    res = Attack.attack a, d
+    if res[:a_data][:dead]
+      bury(a)
+    end
+    if res[:d_data][:dead]
+      bury(d)
+    end
+    res
+  end
+
+  def bury(unit)
+    Unit.delete unit.id
+    if unit.user
+      recalculate_user_actions unit.user
+    end
+  end
+
+  def recalculate_user_actions user
+    has_town = Town.has_any? user
+    has_company = Company.has_any? user
+    actions = {
+      :new_town => false,
+      :new_hero => false
+    }
+    if has_company && !has_town
+      actions[:new_town] = true
+    elsif !has_company && !has_town
+      actions[:new_hero] = true
+    end
+    user.actions = actions
   end
   
 end
