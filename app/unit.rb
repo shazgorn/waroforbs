@@ -165,7 +165,7 @@ class Company < Unit
     @dmg = 30 * banner.mod_attack
     # @hp - hp of 1st squad in line
     @hp = @max_hp = 50 * banner.mod_max_hp
-    @ap = @max_ap = 100 * banner.mod_max_ap
+    @ap = @max_ap = 20 * banner.mod_max_ap
     # each company starts with one squad
     @squads = 1
   end
@@ -227,7 +227,7 @@ class Town < Unit
 
   def initialize(user)
     super(:town, user)
-    @hp = 1000
+    @hp = @max_hp = 300
     @dmg = 5
     @buildings = {
       #:tavern => Tavern.new,

@@ -167,9 +167,9 @@ class Controls
         #$(id_sel + ' .unit-squads-info').remove()
     $(id_sel + ' .unit-id-info').html(unit['@id'])
     #$(id_sel + ' .player-name-info').html(unit['@user_name'])
-    $(id_sel + ' .unit-hp-info').html(unit['@hp'])
+    $(id_sel + ' .unit-hp-info').html(unit['@hp'] + '/' + unit['@max_hp'])
     $(id_sel + ' .unit-xy-info').html('{' + unit['@x'] + ',' + unit['@y'] + '}')
-    $(id_sel + ' .unit-ap-info').html(unit['@ap'])
+    $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])
 
   set_active_unit: (id) ->
     $('.active-unit-info').removeClass('active-unit-info')
