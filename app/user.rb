@@ -12,9 +12,17 @@ class User
     @login = login
     @active_unit_id = nil
     @actions = {
-      :new_town => true,
-      :new_hero => false
+      :action_new_town => true,
+      :action_new_hero => false
     }
+  end
+
+  def set_action_new_town value
+    @actions[:action_new_town] = value
+  end
+
+  def set_action_new_hero value
+    @actions[:action_new_hero] = value
   end
 
   def actions_arr

@@ -2,12 +2,12 @@ class Controls
   constructor: (app) ->
     @open_building_id = null
     @user_actions =
-      'new_hero': {
+      'action_new_hero': {
         name: 'New hero',
         callback: () ->
           App.new_hero()
       },
-      'new_town': {
+      'action_new_town': {
         name: 'New town',
         callback: () ->
           App.new_town()

@@ -71,10 +71,7 @@ class Game
       hero = new_hero user, banner
       user.active_unit_id = hero.id
       place_at_random hero
-      user.actions[:new_hero] = false
-      unless Unit.has_town? user
-        user.actions[:new_town] = true
-      end
+      recalculate_user_actions user
     end
   end
 
@@ -114,7 +111,7 @@ class Game
       if empty_cell
         town = Town.new(user)
         town.place empty_cell[:x], empty_cell[:y]
-        user.actions[:new_town] = false
+        recalculate_user_actions user
       end
     end
   end
@@ -212,16 +209,13 @@ class Game
   def recalculate_user_actions user
     has_town = Town.has_any? user
     has_company = Company.has_any? user
-    actions = {
-      :new_town => false,
-      :new_hero => false
-    }
+    user.set_action_new_town false
+    user.set_action_new_hero false
     if has_company && !has_town
-      actions[:new_town] = true
+      user.set_action_new_town true
     elsif !has_company && !has_town
-      actions[:new_hero] = true
+      user.set_action_new_hero true
     end
-    user.actions = actions
   end
   
 end
