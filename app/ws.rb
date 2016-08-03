@@ -20,7 +20,6 @@ end
 
 # Class
 class OrbApp
-  MAX_ORBS = 20
   MAX_BOTS = 1
   
   def initialize
@@ -180,6 +179,7 @@ class OrbApp
         begin
           Unit.all.values.each{|unit|
             unit.restore_ap
+            unit.restore_hp
           }
         rescue => e
           ex e
@@ -193,7 +193,7 @@ class OrbApp
     Thread.new do
       while true
         begin
-          if Unit.green_orbs_length < MAX_ORBS
+          if GreenOrb.below_limit?
             puts "spawn green orb"
             orb = GreenOrb.new
             @game.place_at_random orb
@@ -253,7 +253,7 @@ class OrbApp
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})
     @ws_pool.each do |w|
-      unless w.nil?
+      unless w.nil? # add w.has_key?[:user] and w[:user].nil? / Looks like there are some race conditions
         changes[:actions] = w[:user].actions_arr
         changes[:banners] = Banner.get_by_user(w[:user])
         if user && action && w[:user] == user

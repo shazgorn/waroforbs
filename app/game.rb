@@ -135,7 +135,7 @@ class Game
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}
     unit = Unit.get unit_id
-    if unit && unit.ap >= 1
+    if unit && unit.can_move?
       new_x = unit.x + dx
       new_y = unit.y + dy
       if Unit.place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)

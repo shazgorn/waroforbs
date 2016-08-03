@@ -84,7 +84,7 @@ class Controls
               .data('id', company_id)
               .attr('title', 'Add squad')
               .html("Company ##{company_id} <br> hp:
-  #{company.hp} <br>ap: #{company.ap} <br>squads: #{company.squads}<br>x,y: #{company.x},#{company.y}")
+  #{company.hp} <br>ap: #{company.ap} <br>x,y: #{company.x},#{company.y}<br>squads: #{company.squads}")
               .appendTo('.modal.building .modal-building-fill')
               .click(() ->
                 App.add_squad_to_company($(this).data('id'))

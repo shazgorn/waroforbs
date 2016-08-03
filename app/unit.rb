@@ -2,8 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :hp, :x, :y
-  attr_accessor :ap
+  attr_reader :id, :type, :user, :x, :y
 
   @@id_seq = 1
   # id -> unit
@@ -19,8 +18,8 @@ class Unit
     @dead = false
     @x = nil
     @y = nil
-    @max_ap = 0
-    @ap = @max_ap
+    @ap = @max_ap = 0
+    @hp = @max_hp = 1
     @@units[@id] = self
   end
 
@@ -87,10 +86,26 @@ class Unit
     @ap -= 1
   end
 
+  def can_move?
+    @ap >= 1
+  end
+
+  def move
+    if @ap >= 1
+      @ap -= 1
+    end
+  end
+
   # restore some amount of @ap per tick
   def restore_ap
     if @ap <= @max_ap - 1
       @ap += 1
+    end
+  end
+
+  def restore_hp
+    if @hp <= @max_hp - 1
+      @hp += 1
     end
   end
 
@@ -109,10 +124,6 @@ class Unit
 
     def delete id
       @@units.delete id
-    end
-    
-    def green_orbs_length
-      @@units.select{|k,unit| unit.type == :orb}.length
     end
 
     def select_active_unit user
@@ -223,10 +234,22 @@ class BotCompany < Company
 end
 
 class GreenOrb < Unit
+  MAX_ORBS = 20
+
   def initialize()
     super(:orb)
     @hp = 100
     @dmg = 20
+  end
+
+  class << self
+    def length
+      @@units.select{|k,unit| unit.type == :orb}.length
+    end
+
+    def below_limit?
+      self.length < MAX_ORBS
+    end
   end
 end
 
