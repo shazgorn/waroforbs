@@ -1,6 +1,6 @@
 {
   "name": "Waroforbs",
   "tagline": "Yet Another Browser MMORTS",
-  "body": "### Waroforbs game\r\n![town](img/screenshot_town.png)\r\n\r\n![map](img/screenshot_map.png)",
+  "body": "### Waroforbs game\r\n\r\n![town](https://github.com/username/repository/blob/gh-pages/img/screenshot_town.png)\r\n\r\n![map](https://github.com/username/repository/blob/gh-pages/img/screenshot_map.png)",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
