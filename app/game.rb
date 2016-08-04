@@ -136,6 +136,7 @@ class Game
 
   TER2RES = {
     :tree => :wood,
+    :mountain => :stone,
     :grass => nil
   }
 

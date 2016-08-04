@@ -264,11 +264,14 @@ end
 
 class Resource
   T = {
+    :gold => {
+      :ttc => 20
+    },
     :wood => {
       :ttc => 10
     },
-    :gold => {
-      :ttc => 20
+    :stone => {
+      :ttc => 15
     }
   }
 end
@@ -323,7 +326,8 @@ class Town < Unit
     @dmg = 5
     @inventory = {
       :gold => 0,
-      :wood => 0
+      :wood => 0,
+      :stone => 0
     }
     @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
     @buildings = {

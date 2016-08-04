@@ -296,14 +296,11 @@ class Controls
             html = 'Town'
             title = 'Town'
           else
-            if App.cells["#{adj_x}_#{adj_y}"]['@type'] == 'tree'
-              worker_cell
-                .addClass('worker-cell-tree')
-              title = 'Tree'
-            else
-              worker_cell
-                .addClass('worker-cell-grass')
-              title = 'Grass'
+            type = App.cells["#{adj_x}_#{adj_y}"]['@type']
+            worker_cell
+              .addClass('worker-cell-' + type)
+            title = type
+
             html += adj_x + ',' + adj_y
             if workers_on_work_hash[adj_x + '_' + adj_y]
               title += ' Worker'

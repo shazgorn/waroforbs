@@ -403,6 +403,9 @@ button {
         .worker-cell-grass {
             background-color: green;
         }
+        .worker-cell-mountain {
+            background-color: gray;
+        }
     }
 
     .town-inventory {
@@ -417,12 +420,16 @@ button {
             text-align: center;
             width: 2rem;
         }
+        .inventory-res-gold {
+            background-color: gold;
+            color: black;
+        }
         .inventory-res-wood {
             background-color: $wood-color;
             color: white;
         }
-        .inventory-res-gold {
-            background-color: gold;
+        .inventory-res-stone {
+            background-color: gray;
             color: black;
         }
     }
