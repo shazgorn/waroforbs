@@ -57,7 +57,14 @@ body {
 }
 
 button {
+    background-color: $theme-bg;
+    border: thin solid $theme-border;
+    color: $theme-color;
+    cursor: pointer;
     font-family: $font-family;
+    &:hover {
+        background-color: sienna;
+    }
 }
 .pointer {
     cursor: pointer;
@@ -275,9 +282,6 @@ button {
             &:nth-child(3n-2) {
                 clear: left;
             }
-            &:hover {
-                background-color: sienna;
-            }
         }
     }
 
@@ -313,6 +317,7 @@ button {
     height: 100px;
     opacity: 0.9;
     overflow-y: scroll;
+    padding-left: 0.3rem;
     position: fixed;
     width: 100%;
     z-index: 10;
@@ -341,10 +346,15 @@ button {
     display: none;
     min-height: 50%;
     left: 2rem;
+    opacity: 0.9;
     position: fixed;
     top: 3rem;
     width: $modal-width;
     z-index: 7;
+
+    &:hover {
+        opacity: 1;
+    }
 
     .buildings {
         @include clearfix();
@@ -359,8 +369,10 @@ button {
         .modal-title {
             float: left;
         }
-        .close-modal, .modal-controls {
+        .modal-controls a {
             color: $theme-color;
+        }
+        .close-modal, .modal-controls {
             float: right;
             * {
                 margin-left: 0.5rem;
@@ -382,6 +394,10 @@ button {
 
         .banner-card {
             @include card();
+        }
+
+        .modal-town-actions {
+            margin: 1rem 0;
         }
     }
 
@@ -409,9 +425,8 @@ button {
     }
 
     .town-inventory {
-        .town-inventory-title {
-            margin: 1rem 0;
-        }
+        margin: 1rem 0;
+
         .inventory-res {
             border: thin solid brown;
             display: inline-block;

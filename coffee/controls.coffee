@@ -26,7 +26,7 @@ class Controls
         callback: () ->
           # clean up
           $('.modal-body .modal-building-inner *').remove()
-          $('.modal-body .modal-building-actions *').remove()
+          $('.modal-body .modal-building-actions-inner *').remove()
 
           # fill up
           for banner in App.banners
@@ -43,7 +43,7 @@ class Controls
           # actions
           $(document.createElement('button'))
             .html('Create random banner')
-            .appendTo('.modal.building .modal-building-actions')
+            .appendTo('.modal.building .modal-building-actions-inner')
             .click(() ->
               App.create_random_banner()
             )
@@ -54,7 +54,7 @@ class Controls
           # clean up
           $('.banner-card').remove()
           $('.modal-body .modal-building-inner *').remove()
-          $('.modal-body .modal-building-actions *').remove()
+          $('.modal-body .modal-building-actions-inner *').remove()
 
           #fill up
           for banner in App.banners
@@ -69,7 +69,7 @@ class Controls
           # actions
           $(document.createElement('button'))
             .html('Create company')
-            .appendTo('.modal.building .modal-building-actions')
+            .appendTo('.modal.building .modal-building-actions-inner')
             .click(() ->
               App.create_default_company()
             )
@@ -258,13 +258,13 @@ class Controls
   init_town_controls: (actions) ->
     for action in actions
       action_val = @town_actions[action]
-      $a = $(".town .actions ##{action}")
+      $a = $(".town .modal-town-actions-inner ##{action}")
       if $a.length == 0
         b = $(document.createElement('button'))
           .html(action_val.name)
           .attr('id', action)
           .data('id', action)
-          .appendTo('.town .actions')
+          .appendTo('.town .modal-town-actions-inner')
           .click(() ->
             action_val.callback this
           )
