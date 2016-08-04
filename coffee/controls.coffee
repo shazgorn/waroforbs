@@ -215,11 +215,20 @@ class Controls
             .click((e) ->
               e.preventDefault()
             )
+          $(document.createElement('div'))
+            .addClass('builging_not_built')
+            .html(building['@ttb_string'])
+            .appendTo(b)
         when App.building_states['BUILDING_STATE_IN_PROGRESS']
           # if built then 'yellow' color
-          $open_building.click((e) ->
-            e.preventDefault()
-          )
+          $open_building
+            .addClass('building_in_progress')
+            .click((e) ->
+              e.preventDefault()
+            )
+          $(document.createElement('div'))
+            .html(building['@ttb_string'])
+            .appendTo(b)
         when App.building_states['BUILDING_STATE_BUILT']
           # if built then 'black' color
           $open_building
@@ -232,7 +241,7 @@ class Controls
               )
             )
 
-      b.html($open_building)
+      b.prepend($open_building)
 
       # build button
       if building['@status'] == 1

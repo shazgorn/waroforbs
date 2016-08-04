@@ -237,7 +237,7 @@ class BotCompany < Company
 end
 
 class GreenOrb < Unit
-  MAX_ORBS = 20
+  MAX_ORBS = 200
 
   def initialize()
     super(:orb)

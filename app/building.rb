@@ -8,10 +8,20 @@ class Building
 
   def initialize
     @status = STATE_CAN_BE_BUILT
+    # time to build (remaining time)
+    @ttb = nil
+    @ttb_string = nil
+    @cost_time = nil
+    @start_time = nil
+    @finish_time = nil
   end
 
   def build
-    @status = STATE_BUILT
+    @status = STATE_IN_PROGRESS
+    if @cost_time
+      @start_time = Time.now()
+      @finish_time = @start_time + @cost_time
+    end
     true
   end
 
@@ -19,11 +29,35 @@ class Building
     @status == STATE_BUILT
   end
 
+  def in_progress?
+    @status == STATE_IN_PROGRESS
+  end
+
   def actions
     []
   end
 
+  def seconds_to_hm t
+    minutes = (t / 60).round(0)
+    seconds = t % 60
+    if seconds < 10
+      seconds = "0#{seconds}"
+    end
+    "#{minutes}:#{seconds}"
+  end
+
   def to_hash()
+    if in_progress?
+      if Time.now() > @finish_time
+        @status = STATE_BUILT
+        @finish_time = nil
+        @start_time = nil
+        @ttb = nil
+      else
+        @ttb = (@finish_time - Time.now()).round(0)
+        @ttb_string = seconds_to_hm @ttb
+      end
+    end
     hash = {}
     self.instance_variables.each do |var|
       hash[var] = self.instance_variable_get var
@@ -47,6 +81,8 @@ class Barracs < Building
   def initialize
     super
     @name = 'Barracs'
+    @cost_time = 20
+    @ttb_string = seconds_to_hm @cost_time
   end
 
   def actions
@@ -62,5 +98,7 @@ class BannerShop < Building
   def initialize
     super
     @name = 'Banner Shop'
+    @cost_time = 20
+    @ttb_string = seconds_to_hm @cost_time
   end
 end

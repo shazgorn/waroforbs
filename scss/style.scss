@@ -367,8 +367,9 @@ button {
 .open-building-screen {
     border: thin solid black;
     float: left;
-    height: 3rem;
+    min-height: 3rem;
     margin-right: 1rem;
+    padding: 0.5rem;
     text-align: center;
     width: 9rem;
     a {
@@ -383,5 +384,10 @@ button {
     .builging_built {
         color: black;
         font-weight: bold;
+    }
+
+    .building_in_progress {
+        color: blue;
+        font-style: italic;
     }
 }
