@@ -266,6 +266,9 @@ class Resource
   T = {
     :wood => {
       :ttc => 10
+    },
+    :gold => {
+      :ttc => 20
     }
   }
 end
@@ -281,6 +284,11 @@ class TownWorker < JSONable
     @start_time = nil
     @ttc = nil
     @finish_time = nil
+    start_default_res_collection
+  end
+
+  def start_default_res_collection
+    start_res_collection :gold
   end
 
   def start_res_collection res_type
@@ -291,7 +299,8 @@ class TownWorker < JSONable
   end
 
   def clear
-    @x = @y = @type = @ttc = @start_time = @finish_time = nil
+    @x = @y = nil
+    start_default_res_collection
   end
 
   # check if it`s time to collect resource
@@ -313,6 +322,7 @@ class Town < Unit
     @hp = @max_hp = 300
     @dmg = 5
     @inventory = {
+      :gold => 0,
       :wood => 0
     }
     @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
@@ -329,7 +339,6 @@ class Town < Unit
     super
     @workers.each{|worker|
       if worker.check_res
-        p worker
         @inventory[worker.type] += 1
       end
     }

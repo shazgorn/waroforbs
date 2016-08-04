@@ -388,7 +388,12 @@ button {
     }
 
     .town-inventory {
+        .town-inventory-title {
+            margin: 1rem 0;
+        }
         .inventory-res {
+            border: thin solid brown;
+            display: inline-block;
             height: 2rem;
             line-height: 2rem;
             text-align: center;
@@ -397,6 +402,10 @@ button {
         .inventory-res-wood {
             background-color: $wood-color;
             color: white;
+        }
+        .inventory-res-gold {
+            background-color: gold;
+            color: black;
         }
     }
 }

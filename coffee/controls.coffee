@@ -331,12 +331,13 @@ class Controls
     console.log(inventory)
     $('.inventory-res').remove()
     for type, count of inventory
-      $(document.createElement('div'))
-        .addClass('inventory-res')
-        .addClass('inventory-res-' + type)
-        .attr('title', type + ' ' + count)
-        .html(count)
-        .appendTo('.town-inventory-inner')
+      if count
+        $(document.createElement('div'))
+          .addClass('inventory-res')
+          .addClass('inventory-res-' + type)
+          .attr('title', type + ' ' + count)
+          .html(count)
+          .appendTo('.town-inventory-inner')
 
   init_user_controls: (actions) ->
     for id, val of @user_actions
