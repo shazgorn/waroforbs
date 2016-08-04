@@ -146,7 +146,7 @@ class Game
     raise OrbError, 'Cell is not near town' unless @map.adj_cells?(x, y, town.x, town.y)
     cell = @map.cell_at(x, y)
     type = TER2RES[cell['@type'].to_sym]
-    town.set_free_worker_to x, y, type.to_sym
+    town.set_free_worker_to x, y, type
   end
 
   def free_worker(user, town_id, x, y)
