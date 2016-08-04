@@ -120,4 +120,8 @@ class Map
     (-1..1).include?(x1 - x2) && (-1..1).include?(y1 - y2)
   end
 
+  def cell_at(x, y)
+    @cells["#{x}_#{y}"]
+  end
+
 end

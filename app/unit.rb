@@ -96,6 +96,12 @@ class Unit
     end
   end
 
+  # game loop function called every `n` seconds
+  def tick
+    restore_ap
+    restore_hp
+  end
+
   # restore some amount of @ap per tick
   def restore_ap
     if @ap <= @max_ap - 1
@@ -256,12 +262,45 @@ class GreenOrb < Unit
   end
 end
 
+class Resource
+  T = {
+    :wood => {
+      :ttc => 10
+    }
+  }
+end
+
 class TownWorker < JSONable
+  attr_reader :type
   attr_accessor :x, :y
 
-  def initialize(x = nil, y = nil)
-    @x = x
-    @y = y
+  def initialize
+    @x = nil
+    @y = nil
+    @type = nil
+    @start_time = nil
+    @ttc = nil
+    @finish_time = nil
+  end
+
+  def start_res_collection res_type
+    @type = res_type
+    @ttc = Resource::T[@type][:ttc]
+    @start_time = Time.now
+    @finish_time = @start_time + @ttc
+  end
+
+  def clear
+    @x = @y = @type = @ttc = @start_time = @finish_time = nil
+  end
+
+  # check if it`s time to collect resource
+  def check_res
+    if @finish_time && Time.now > @finish_time
+      @finish_time += @ttc
+      return true
+    end
+    return false
   end
 end
 
@@ -273,6 +312,9 @@ class Town < Unit
     super(:town, user)
     @hp = @max_hp = 300
     @dmg = 5
+    @inventory = {
+      :wood => 0
+    }
     @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
     @buildings = {
       #:tavern => Tavern.new,
@@ -283,14 +325,23 @@ class Town < Unit
     @adj_companies = []
   end
 
+  def tick
+    super
+    @workers.each{|worker|
+      if worker.check_res
+        p worker
+        @inventory[worker.type] += 1
+      end
+    }
+  end
+
   def free_worker_at x, y
     w_at_xy = get_worker_at x, y
     raise OrbError, "No worker at #{x}, #{y}" unless w_at_xy
-    w_at_xy.x = nil
-    w_at_xy.y = nil
+    w_at_xy.clear
   end
 
-  def set_free_worker_to x, y
+  def set_free_worker_to x, y, type
     w_at_xy = get_worker_at x, y
     raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
     if w_at_xy.nil?
@@ -299,6 +350,9 @@ class Town < Unit
       if worker
         worker.x = x
         worker.y = y
+        if type
+          worker.start_res_collection type
+        end
         return true
       end
     end

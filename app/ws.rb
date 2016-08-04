@@ -208,8 +208,7 @@ class OrbApp
       while true
         begin
           Unit.all.values.each{|unit|
-            unit.restore_ap
-            unit.restore_hp
+            unit.tick
           }
         rescue => e
           ex e

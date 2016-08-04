@@ -12,10 +12,13 @@ $button-size: 60px;
 $column-gap: 30px;
 $hover-hero-color: #66a3ff;
 $active-hero-color: #0066ff;
+// color of wooden theme
 $wooden-color: #996633;
 $font-family: Immortal, fantasy;
 $right-col-width: 12rem;
 $modal-width: calc(80% - #{$right-col-width} + 4rem);
+// color of wood
+$wood-color: Sienna;
 
 @font-face {
     font-family: Immortal;
@@ -377,10 +380,23 @@ button {
             border-color: orange;
         }
         .worker-cell-tree {
-            background-color: Sienna;
+            background-color: $wood-color;
         }
         .worker-cell-grass {
             background-color: green;
+        }
+    }
+
+    .town-inventory {
+        .inventory-res {
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            width: 2rem;
+        }
+        .inventory-res-wood {
+            background-color: $wood-color;
+            color: white;
         }
     }
 }

@@ -273,7 +273,7 @@ class Controls
   init_town_workers: (workers, town_id, town_x, town_y) ->
     workers_on_work_hash = {}
     for worker in workers
-      if worker['@x'] && worker['@y']
+      if worker['@x']? && worker['@y']?
         workers_on_work_hash[worker['@x'] + '_' + worker['@y']] = worker
 
     $('.workers-inner *').remove()
@@ -326,6 +326,17 @@ class Controls
             .html('TI')
         worker_cell
           .appendTo(row)  
+
+  init_town_inventory: (inventory) ->
+    console.log(inventory)
+    $('.inventory-res').remove()
+    for type, count of inventory
+      $(document.createElement('div'))
+        .addClass('inventory-res')
+        .addClass('inventory-res-' + type)
+        .attr('title', type + ' ' + count)
+        .html(count)
+        .appendTo('.town-inventory-inner')
 
   init_user_controls: (actions) ->
     for id, val of @user_actions

@@ -63,6 +63,7 @@ class PlayerTown extends Town
     App.init_town_buildings(@_unit['@buildings'])
     App.controls.init_town_controls(@_unit['@actions'])
     App.controls.init_town_workers(@_unit['@workers'], @_unit['@id'], @_unit['@x'], @_unit['@y'])
+    App.controls.init_town_inventory(@_unit['@inventory'])
 
 class OtherPlayerTown extends Town
   constructor: (unit) ->

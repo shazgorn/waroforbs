@@ -134,12 +134,19 @@ class Game
     Banner.delete user, banner_id
   end
 
+  TER2RES = {
+    :tree => :wood,
+    :grass => nil
+  }
+
   def set_free_worker_to_xy(user, town_id, x, y)
     town = Town.get_by_user user
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless @map.adj_cells?(x, y, town.x, town.y)
-    town.set_free_worker_to x, y
+    cell = @map.cell_at(x, y)
+    type = TER2RES[cell['@type'].to_sym]
+    town.set_free_worker_to x, y, type.to_sym
   end
 
   def free_worker(user, town_id, x, y)
