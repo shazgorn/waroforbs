@@ -359,7 +359,8 @@ class Town < Unit
       if worker
         worker.x = x
         worker.y = y
-        if type
+        # do send worker mining gold if he is doing nothing
+        if type && worker.type != type
           worker.start_res_collection type
         end
         return true
