@@ -16,6 +16,10 @@ $active-hero-color: #0066ff;
 $wooden-color: #996633;
 $font-family: Immortal, fantasy;
 $right-col-width: 12rem;
+$right-col-border: chocolate;
+$theme-bg: saddlebrown;
+$theme-border: chocolate;
+$theme-color: lightyellow;
 $modal-width: calc(80% - #{$right-col-width} + 4rem);
 // color of wood
 $wood-color: Sienna;
@@ -47,6 +51,7 @@ $wood-color: Sienna;
 }
 
 body {
+    background-color: black;
     font-family: $font-family;
     font-size: 1rem;
 }
@@ -188,10 +193,12 @@ button {
 }
 
 #right-col {
-    border-left: thin solid lightgray;
-    margin-right: 1rem;
-    opacity: 0.8;
-    padding-left: 1rem;
+    background-color: $theme-bg;
+    border: thin solid $theme-border;
+    color: $theme-color;
+    margin-right: 0.5rem;
+    opacity: 0.9;
+    padding: 1rem;
     position: fixed;
     right: 0;
     width: $right-col-width;
@@ -203,7 +210,6 @@ button {
 	display: none;
     }
     .unit-info {
-	background-color: white;
         border: thin solid transparent;
         padding: 0 2px;
         .unit-name-info {
@@ -223,8 +229,11 @@ button {
                 width: 30%
             }
         }
-        .unit-hp-info, .unit-dmg-info {
-            color: red;
+        .unit-hp-info {
+            color: #e60000;
+        }
+        .unit-dmg-info {
+            color: lightgray;
         }
         .unit-def-info {
             color: blue;
@@ -233,15 +242,15 @@ button {
             color: orange;
         }
         .unit-squads-info {
-            color: green;
+            color: limegreen;
         }
         &:hover {
-            background-color: #e6f7ff;
-            border: thin dashed $hover-hero-color;
+            background-color: sienna;
+            border: thin dashed $right-col-border;
             cursor: pointer;
         }
         &.active-unit-info {
-            border: thin solid $active-hero-color;
+            border: thin solid $right-col-border;
         }
     }
     label {
@@ -252,6 +261,10 @@ button {
     #controls_arrows {
         margin-bottom: 1rem;
         button {
+            background-color: saddlebrown;
+            border-color: $right-col-border;
+            border-style: groove;
+            cursor: pointer;
             float: left;
             font-size: 30px;
             font-weight: bold;
@@ -262,13 +275,16 @@ button {
             &:nth-child(3n-2) {
                 clear: left;
             }
+            &:hover {
+                background-color: sienna;
+            }
         }
     }
 
     #unit-info-list {
-        border-top: thin solid lightgray;
+        border-top: thin solid $right-col-border;
         padding-top: 1rem;
-        border-bottom: thin solid lightgray;
+        border-bottom: thin solid $right-col-border;
         padding-bottom: 1rem;
     }
 
@@ -319,8 +335,9 @@ button {
 }
 
 .modal {
-    background-color: white;
-    border: thick solid $wooden-color;
+    background-color: $theme-bg;
+    border: thin solid $theme-border;
+    color: $theme-color;
     display: none;
     min-height: 50%;
     left: 2rem;
@@ -343,6 +360,7 @@ button {
             float: left;
         }
         .close-modal, .modal-controls {
+            color: $theme-color;
             float: right;
             * {
                 margin-left: 0.5rem;

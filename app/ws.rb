@@ -90,10 +90,14 @@ class OrbApp
               dispatch_units user
             when :move
               params = data['params']
-              res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
-              log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
-              if res[:moved]
-                dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
+              if params['dx'].to_i && params['dy'].to_i
+                res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+                if res[:moved]
+                  log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
+                  dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
+                else
+                  dispatch_units
+                end
               else
                 dispatch_units
               end

@@ -97,7 +97,7 @@ class Controls
       8: {arr: '&#8593;', x:  0, y: -1},
       9: {arr: '&#8599;', x:  1, y: -1},
       4: {arr: '&#8592;', x: -1, y:  0},
-      5: {arr: '&#8597;', x:  0, y:  0},
+      5: {arr: '&#8635;', x:  0, y:  0},
       6: {arr: '&#8594;', x:  1, y:  0},
       1: {arr: '&#8601;', x: -1, y:  1},
       2: {arr: '&#8595;', x:  0, y:  1},
@@ -139,7 +139,7 @@ class Controls
     $('#controls_arrows button').prop('disabled', 'disabled')
 
   unlock_controls: () ->
-    $('#controls_arrows button:not(#control_5)').prop('disabled', '')
+    $('#controls_arrows button').prop('disabled', '')
 
   unit_info: (unit) ->
     id = unit['@id']
