@@ -4,6 +4,7 @@ require 'json'
 require 'rmagick'
 require 'fileutils'
 
+require_relative 'jsonable'
 require_relative 'building'
 require_relative 'banner'
 require_relative 'unit'
@@ -166,6 +167,22 @@ class OrbApp
                 log = "Company created"
               end
               dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+            when :set_free_worker_to_xy
+              log = "Set worker to #{data['x']}, #{data['y']}"
+              begin
+                @game.set_free_worker_to_xy(user, data['town_id'], data['x'], data['y'])
+              rescue OrbError => log_str
+                log = log_str
+              end
+              dispatch_units user, :log, {:log => log}
+            when :free_worker
+              log = "Set worker free on #{data['x']}, #{data['y']}"
+              begin
+                @game.free_worker user, data['town_id'], data['x'], data['y']
+              rescue OrbError => log_str
+                log = log_str
+              end
+              dispatch_units user, :log, {:log => log}
             when :add_squad_to_company
               res = @game.add_squad_to_company user, data['company_id']
               if res

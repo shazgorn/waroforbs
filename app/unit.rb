@@ -256,6 +256,15 @@ class GreenOrb < Unit
   end
 end
 
+class TownWorker < JSONable
+  attr_accessor :x, :y
+
+  def initialize(x = nil, y = nil)
+    @x = x
+    @y = y
+  end
+end
+
 class Town < Unit
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
@@ -264,6 +273,7 @@ class Town < Unit
     super(:town, user)
     @hp = @max_hp = 300
     @dmg = 5
+    @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
     @buildings = {
       #:tavern => Tavern.new,
       :barracs => Barracs.new,
@@ -271,6 +281,36 @@ class Town < Unit
     }
     @actions = []
     @adj_companies = []
+  end
+
+  def free_worker_at x, y
+    w_at_xy = get_worker_at x, y
+    raise OrbError, "No worker at #{x}, #{y}" unless w_at_xy
+    w_at_xy.x = nil
+    w_at_xy.y = nil
+  end
+
+  def set_free_worker_to x, y
+    w_at_xy = get_worker_at x, y
+    raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
+    if w_at_xy.nil?
+      worker = get_free_worker
+      raise OrbError, "No free workers" if worker.nil?
+      if worker
+        worker.x = x
+        worker.y = y
+        return true
+      end
+    end
+    false
+  end
+
+  def get_worker_at x, y
+    @workers.select{|w| w.x == x && w.y == y}.first
+  end
+
+  def get_free_worker
+    @workers.select{|w| w.x == nil && w.y == nil}.first
   end
 
   def place(x = nil, y = nil)

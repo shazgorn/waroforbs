@@ -270,6 +270,63 @@ class Controls
           )
     # delete old actions
 
+  init_town_workers: (workers, town_id, town_x, town_y) ->
+    workers_on_work_hash = {}
+    for worker in workers
+      if worker['@x'] && worker['@y']
+        workers_on_work_hash[worker['@x'] + '_' + worker['@y']] = worker
+
+    $('.workers-inner *').remove()
+    for dy in [-1..1]
+      row = $(document.createElement('div'))
+        .addClass('worker-row')
+        .appendTo('.modal.town .workers-inner')
+      for dx in [-1..1]
+        adj_x = town_x + dx
+        adj_y = town_y + dy
+        worker_cell = $(document.createElement('div'))
+              .addClass('worker-cell')
+              .data('x', adj_x)
+              .data('y', adj_y)
+              .data('town_id', town_id)
+        if adj_x >= 0 && adj_y >= 0
+          html = ''
+          title = ''
+          if dx == 0 && dy == 0
+            html = 'Town'
+            title = 'Town'
+          else
+            if App.cells["#{adj_x}_#{adj_y}"]['@type'] == 'tree'
+              worker_cell
+                .addClass('worker-cell-tree')
+              title = 'Tree'
+            else
+              worker_cell
+                .addClass('worker-cell-grass')
+              title = 'Grass'
+            html += adj_x + ',' + adj_y
+            if workers_on_work_hash[adj_x + '_' + adj_y]
+              title += ' Worker'
+              worker_cell
+                .addClass('worker-cell-has-worker')
+                .click(() ->
+                  App.free_worker($(this).data('town_id'), $(this).data('x'), $(this).data('y'))
+                )
+            else
+              worker_cell
+                .click(() ->
+                  App.set_free_worker_to_xy($(this).data('town_id'), $(this).data('x'), $(this).data('y'))
+                )
+          worker_cell
+            .attr('title', title)
+            .html(html)
+        else
+          worker_cell
+            .attr('title', 'Terra incognita')
+            .html('TI')
+        worker_cell
+          .appendTo(row)  
+
   init_user_controls: (actions) ->
     for id, val of @user_actions
       $a = $("#user-controls ##{id}")

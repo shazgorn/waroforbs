@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'json'
 
-class MapCell
+class MapCell < JSONable
   attr_accessor :x, :y, :type, :unit
   def initialize(x = nil, y = nil, type = nil, unit = nil)
     @x = x
@@ -10,15 +10,6 @@ class MapCell
     @type = type
     @unit = unit
   end
-
-  def to_json(generator = JSON.generator)
-    hash = {}
-    self.instance_variables.each do |var|
-      hash[var] = self.instance_variable_get var
-    end
-    hash.to_json
-  end
-
 end
 
 class Map
@@ -28,7 +19,7 @@ class Map
   CELL_DIM_PX = 40
   BLOCK_DIM = 10
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM
-  BLOCKS_IN_MAP_DIM = 5
+  BLOCKS_IN_MAP_DIM = 2
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
@@ -46,7 +37,6 @@ class Map
     else
       file = File.open(@path, "r")
       @cells = JSON.load(file)
-      p @cells
     end
   end
 

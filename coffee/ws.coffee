@@ -167,6 +167,28 @@ class WS
       })
     )
 
+  set_free_worker_to_xy: (town_id, x, y) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'set_free_worker_to_xy',
+        town_id: town_id,
+        x: x,
+        y: y
+      })
+    )
+
+  free_worker: (town_id, x, y) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'free_worker',
+        town_id: town_id,
+        x: x,
+        y: y
+      })
+    )
+
   restart: () ->
     @socket.send(
       JSON.stringify({

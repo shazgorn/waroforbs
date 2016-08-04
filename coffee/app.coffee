@@ -57,6 +57,12 @@ class Application
   delete_banner: (banner_id) ->
     @ws.delete_banner(banner_id)
 
+  set_free_worker_to_xy: (town_id, x, y) ->
+    @ws.set_free_worker_to_xy(town_id, x, y)
+
+  free_worker: (town_id, x, y) ->
+    @ws.free_worker(town_id, x, y)
+
   refresh_modals: () ->
     id = @controls.open_building_id
     if id

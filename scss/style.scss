@@ -363,6 +363,26 @@ button {
             @include card();
         }
     }
+
+    .workers-inner {
+        .worker-cell {
+            border: thin solid black;
+            display: inline-block;
+            line-height: 3rem;
+            height: 3rem;
+            text-align: center;
+            width: 3rem;
+        }
+        .worker-cell-has-worker {
+            border-color: orange;
+        }
+        .worker-cell-tree {
+            background-color: Sienna;
+        }
+        .worker-cell-grass {
+            background-color: green;
+        }
+    }
 }
 
 .open-building-screen {
