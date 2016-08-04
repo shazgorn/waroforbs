@@ -26,6 +26,7 @@ class WS
             app.user_id = data.user_id
             app.banners = data.banners
             app.building_states = data.building_states
+            app.cells = data.cells
 
             # App init function calls
             app.init_units data.units

@@ -11,6 +11,7 @@ class Application
     @initialized = false
     @attacking = false
     @last_town = null
+    @cells = null
 
   move: (params) ->
     @ws.move(@active_unit_id, params)

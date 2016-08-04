@@ -83,7 +83,8 @@ class Map
     block_y = y // @block_dim_in_cells
     left = x % 10 * @cell_dim_in_px
     top = y % 10 * @cell_dim_in_px
-    $(document.createElement('div'))
+    mapCell = App.cells[x + '_' + y]
+    cell = $(document.createElement('div'))
       .attr('id', "cell_#{x}_#{y}")
       .data('x', x)
       .data('y', y)
@@ -91,6 +92,9 @@ class Map
       .css('left', left)
       .css('top', top)
       .appendTo("#block_#{block_x}_#{block_y}")
+    if mapCell
+      cell.attr('title', mapCell['@x'] + ',' + mapCell['@y'] + ' ' + mapCell['@type'])
+    cell
 
   applyDmgTo: (cell, dmg, type) ->
     d = $(document.createElement('span'))

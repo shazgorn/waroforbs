@@ -1,19 +1,52 @@
 require 'fileutils'
+require 'json'
+
+class MapCell
+  attr_accessor :x, :y, :type, :unit
+  def initialize(x = nil, y = nil, type = nil, unit = nil)
+    @x = x
+    @y = y
+    # type - :grass, :tree
+    @type = type
+    @unit = unit
+  end
+
+  def to_json(generator = JSON.generator)
+    hash = {}
+    self.instance_variables.each do |var|
+      hash[var] = self.instance_variable_get var
+    end
+    hash.to_json
+  end
+
+end
 
 class Map
+  attr_reader :cells
   attr_accessor :ul
   SIZE = nil
-  CELL_DIM = 40
+  CELL_DIM_PX = 40
   BLOCK_DIM = 10
-  BLOCK_DIM_PX = CELL_DIM * BLOCK_DIM
+  BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM
   BLOCKS_IN_MAP_DIM = 5
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
 
   def initialize(generate = false)
+    @path = '/home/user/public_html/waroforbs/map.dat'
+    @cells = {}
+    JSON.dump_default_options[:max_nesting] = 10
+    JSON.load_default_options[:max_nesting] = 10
     if generate
       create_canvas_blocks
+      File.open(@path, "w") do |file|
+        file.print @cells.to_json
+      end
+    else
+      file = File.open(@path, "r")
+      @cells = JSON.load(file)
+      p @cells
     end
   end
 
@@ -26,29 +59,40 @@ class Map
     end
   end
   
-  def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim = CELL_DIM)
+  def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim_px = CELL_DIM_PX)
     FileUtils::mkdir_p './img/bg'
     canvas = Magick::Image.new canvas_dim, canvas_dim
     canvas_y = 0
+    cell_y = block_y * BLOCK_DIM
     while canvas_y < canvas_dim
       canvas_x = 0
+      cell_x = block_x * BLOCK_DIM
       while canvas_x < canvas_dim
+        map_cell = MapCell.new(cell_x, cell_y)
         n = Random.rand 10
         case n
         when 1, 2, 3, 4
           path = "./img/bg_grass_#{n}.png"
+          map_cell.type = :grass
+        when 5
+          path = "./img/bg_tree_on_grass.png"
+          map_cell.type = :tree
         else
           path = './img/bg_grass_1.png'
+          map_cell.type = :grass
         end
+        @cells["#{cell_x}_#{cell_y}"] = map_cell
         cell = Magick::ImageList.new path
-        cell_dim.times do |x|
-          cell_dim.times do |y|
+        cell_dim_px.times do |x|
+          cell_dim_px.times do |y|
             canvas.pixel_color(canvas_x + x, canvas_y + y, cell.pixel_color(x, y))
           end
         end
-        canvas_x += cell_dim
+        canvas_x += cell_dim_px
+        cell_x += 1
       end
-      canvas_y += cell_dim
+      canvas_y += cell_dim_px
+      cell_y += 1
     end
     #see map.coffee::addBlocks
     canvas_path = "./img/bg/bg_#{block_x}_#{block_y}.png"
