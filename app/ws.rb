@@ -160,7 +160,7 @@ class OrbApp
               end
               dispatch_units user, :log, {:log => log}
             when :create_default_company
-              res = @game.create_default_company user
+              res = @game.create_company user, :new
               if res.nil?
                 log = "Unable to create more companies. Limit reached or no banner is available."
               else
@@ -168,7 +168,7 @@ class OrbApp
               end
               dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
             when :create_company_from_banner
-              res = @game.create_company_from_banner user, data['banner_id']
+              res = @game.create_company user, data['banner_id']
               if res.nil?
                 log = "Unable to create Company"
               else

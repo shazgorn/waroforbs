@@ -75,26 +75,22 @@ class Game
     end
   end
 
-  def create_default_company user
+  def create_company user, banner_id=:new
+    town = Town.get_by_user(user)
+    raise OrbError, 'User have no town' if town.nil?
+    town.can_form_company?
     company = nil
-    empty_cell = empty_adj_cell(Town.get_by_user(user))
-    banner = Banner.get_first_free_by_user(user)
-    if empty_cell && banner
-      company = new_hero user, banner
-      user.active_unit_id = company.id
-      company.place empty_cell[:x], empty_cell[:y]
+    empty_cell = empty_adj_cell(town)
+    if banner_id == :new
+      banner = Banner.get_first_free_by_user(user)
+    else
+      banner = Banner.get_by_id(user, banner_id)
     end
-    company
-  end
-
-  def create_company_from_banner user, banner_id
-    company = nil
-    empty_cell = empty_adj_cell(Town.get_by_user(user))
-    banner = Banner.get_by_id(user, banner_id)
     if empty_cell && banner
       company = new_hero user, banner
       user.active_unit_id = company.id
       company.place empty_cell[:x], empty_cell[:y]
+      town.pay_company_price
     end
     company
   end

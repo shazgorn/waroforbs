@@ -95,6 +95,8 @@ class Tavern < Building
 end
 
 class Barracs < Building
+  COMPANY_COST = 10
+
   def initialize
     super
     @name = 'Barracs'

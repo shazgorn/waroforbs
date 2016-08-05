@@ -423,8 +423,17 @@ class Town < Unit
     true
   end
 
+  def can_form_company?
+    raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
+    raise OrbError, 'Not enough gold to form company' unless @inventory[:gold] >= Barracs::COMPANY_COST
+  end
+
   def pay_banner_price
     @inventory[:gold] -= BannerShop::BANNER_COST
+  end
+
+  def pay_company_price
+    @inventory[:gold] -= Barracs::COMPANY_COST
   end
 
   # select actions available based on constructed buildings for town menu
