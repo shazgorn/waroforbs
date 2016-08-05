@@ -196,12 +196,13 @@ class Controls
     for id, building of buildings
       $b = $("##{id}")
       open_building_sel = "open-screen-#{id}"
-      # building container with link, time to build and build button
+      # building container with link, time to build, cost and build button
       b = $(document.createElement('div'))
         .attr('id', id)
         .addClass('open-building-screen')
         .appendTo('.modal.town .buildings')
 
+      # open building link
       $open_building = $(document.createElement('a'))
         .html(building['@name'] + ' (' + building['@status'] + ')')
         .attr('id', open_building_sel)
@@ -210,16 +211,30 @@ class Controls
 
       switch building['@status']
         when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-          # if not built then 'gray' color
           $open_building
             .addClass('builging_not_built')
             .click((e) ->
               e.preventDefault()
             )
+          # building time
           $(document.createElement('div'))
             .addClass('builging_not_built')
             .html(building['@ttb_string'])
             .appendTo(b)
+
+          $cost_res =
+            $(document.createElement('div'))
+              .addClass('building-cost')
+
+          for res, count of building['@cost_res']
+            if count
+              $(document.createElement('div'))
+                .addClass('cost-res')
+                .addClass('cost-res-' + res)
+                .html(count)
+                .appendTo($cost_res)
+
+          $cost_res.appendTo(b)
         when App.building_states['BUILDING_STATE_IN_PROGRESS']
           # if built then 'yellow' color
           $open_building
@@ -227,6 +242,7 @@ class Controls
             .click((e) ->
               e.preventDefault()
             )
+          # building time
           $(document.createElement('div'))
             .html(building['@ttb_string'])
             .appendTo(b)

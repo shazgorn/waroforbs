@@ -50,6 +50,19 @@ $wood-color: Sienna;
     width: 10rem;
 }
 
+@mixin res-gold() {
+    background-color: gold;
+    color: black;
+}
+@mixin res-wood() {
+    background-color: $wood-color;
+    color: white;
+}
+@mixin res-stone() {
+    background-color: gray;
+    color: black;
+}
+
 body {
     background-color: black;
     font-family: $font-family;
@@ -401,6 +414,21 @@ button {
         }
     }
 
+    .cost-res {
+        display: inline-block;
+        margin: 0.1rem 0.3rem;
+    }
+
+    .cost-res-gold {
+        @include res-gold();
+    }
+    .cost-res-wood {
+        @include res-wood();
+    }
+    .cost-res-stone {
+        @include res-stone();
+    }
+
     .workers-inner {
         .worker-cell {
             border: thin solid black;
@@ -436,16 +464,13 @@ button {
             width: 2rem;
         }
         .inventory-res-gold {
-            background-color: gold;
-            color: black;
+            @include res-gold();
         }
         .inventory-res-wood {
-            background-color: $wood-color;
-            color: white;
+            @include res-wood();
         }
         .inventory-res-stone {
-            background-color: gray;
-            color: black;
+            @include res-stone();
         }
     }
 }

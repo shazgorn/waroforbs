@@ -2,6 +2,8 @@
 # status = 1 in progress
 # status = 2 already build
 class Building
+  attr_reader :cost_res
+
   STATE_CAN_BE_BUILT = 0
   STATE_IN_PROGRESS = 1
   STATE_BUILT = 2
@@ -12,16 +14,31 @@ class Building
     @ttb = nil
     @ttb_string = nil
     @cost_time = nil
+    @cost_res = {
+      :gold => 0,
+      :wood => 0,
+      :stone => 0
+    }
     @start_time = nil
     @finish_time = nil
   end
 
   def build
+    raise OrbError, 'Building already in progress' if @status == STATE_IN_PROGRESS
     @status = STATE_IN_PROGRESS
     if @cost_time
       @start_time = Time.now()
       @finish_time = @start_time + @cost_time
     end
+    true
+  end
+
+  def enough_resources? avail_resources
+    @cost_res.each{|res_name, res_count|
+      if res_count > 0 && (!avail_resources.has_key?(res_name) || avail_resources[res_name] < res_count)
+        return false
+      end
+    }
     true
   end
 
@@ -82,6 +99,8 @@ class Barracs < Building
     super
     @name = 'Barracs'
     @cost_time = 3
+    @cost_res[:gold] = 20
+    @cost_res[:wood] = 5
     @ttb_string = seconds_to_hm @cost_time
   end
 
@@ -99,6 +118,7 @@ class BannerShop < Building
     super
     @name = 'Banner Shop'
     @cost_time = 3
+    @cost_res[:gold] = 10
     @ttb_string = seconds_to_hm @cost_time
   end
 end

@@ -398,8 +398,17 @@ class Town < Unit
     end
   end
 
+  def extract_cost cost
+    cost.each_pair{|res, count|
+      @inventory[res] -= count
+    }
+  end
+
   def build building_id
-    if @buildings[building_id].build
+    building = @buildings[building_id]
+    raise OrbError, 'Not enough resources' unless building.enough_resources?(@inventory)
+    extract_cost building.cost_res
+    if building.build
       update_actions
       return true
     end

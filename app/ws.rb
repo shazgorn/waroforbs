@@ -132,11 +132,15 @@ class OrbApp
               @game.restart token
               dispatch_units
             when :build
-              res = @game.build user, data['building'].to_sym
-              if res
-                log = "#{data['building']} building in progress"
-              else
-                log = "#{data['building']} not built"
+              begin
+                res = @game.build user, data['building'].to_sym
+                if res
+                  log = "#{data['building']} building in progress"
+                else
+                  log = "#{data['building']} not built"
+                end
+              rescue OrbError => log_str
+                log = log_str
               end
               dispatch_units user, :log, {:log => log}
             when :create_random_banner

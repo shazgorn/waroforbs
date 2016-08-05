@@ -119,6 +119,7 @@ class Game
   ##################### TOWN / BUILDINGS ACTIONS #################################
   def build user, building_id
     town = Town.get_by_user user
+    raise OrbError, 'User have no town' if town.nil?
     town.build building_id
   end
 
