@@ -18,6 +18,7 @@ class Unit
     @dead = false
     @x = nil
     @y = nil
+    @def = 0
     @ap = @max_ap = 0
     @hp = @max_hp = 1
     @@units[@id] = self
@@ -60,12 +61,14 @@ class Unit
     !dead?
   end
 
-  def take_dmg(dmg)
-    @hp -= dmg
+  def take_dmg(income_dmg)
+    reduced_dmg = income_dmg - @def
+    reduced_dmg = 1 if reduced_dmg < 1
+    @hp -= reduced_dmg
     if @hp <= 0
-      @dead = true
+      die
     end
-    dmg
+    reduced_dmg
   end
 
   def die
@@ -176,16 +179,20 @@ class Unit
 end
 
 class Company < Unit
+  #attr_reader :dmg, :def
+
   MAX_SQUADS = 10
   BASE_DMG = 30
   BASE_HP = 50
   BASE_AP = 20
+  BASE_DEF = 10
 
   def initialize(user, banner)
     super(:company, user)
     @banner = banner
     @banner.unit = self
     @dmg = (BASE_DMG * banner.mod_dmg).round(0)
+    @def = (BASE_DEF * banner.mod_def).round(0)
     # @hp - hp of 1st squad in line
     @hp = @max_hp = (BASE_HP * banner.mod_max_hp).round(0)
     @ap = @max_ap = (BASE_AP * banner.mod_max_ap).round(0)
@@ -204,9 +211,11 @@ class Company < Unit
     end
   end
 
-  def take_dmg(dmg)
+  def take_dmg(income_dmg)
     total_hp = @max_hp * (@squads - 1) + @hp
-    total_hp -= dmg
+    reduced_dmg = income_dmg - (@def * @squads)
+    reduced_dmg = 1 if reduced_dmg < 1
+    total_hp -= reduced_dmg
     if total_hp <= 0
       die()
     else
@@ -219,7 +228,7 @@ class Company < Unit
         @hp = @max_hp
       end
     end
-    dmg
+    reduced_dmg
   end
 
   def dmg
@@ -243,12 +252,13 @@ class BotCompany < Company
 end
 
 class GreenOrb < Unit
-  MAX_ORBS = 3
+  MAX_ORBS = 20
 
   def initialize()
     super(:orb)
     @hp = 100
     @dmg = 20
+    @def = 3
   end
 
   class << self
@@ -324,6 +334,7 @@ class Town < Unit
     super(:town, user)
     @hp = @max_hp = 300
     @dmg = 5
+    @def = 50
     @inventory = {
       :gold => 0,
       :wood => 0,

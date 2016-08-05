@@ -7,6 +7,8 @@ class Unit
     @x = unit['@x']
     @y = unit['@y']
     @type = unit['@type']
+    @dmg = unit['@dmg']
+    @def = unit['@def']
 
   # to call after unit initialization
   init: () ->

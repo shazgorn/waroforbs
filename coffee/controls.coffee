@@ -85,8 +85,8 @@ class Controls
               .addClass('pointer')
               .data('id', company_id)
               .attr('title', 'Add squad')
-              .html("Company ##{company_id} <br> hp:
-  #{company.hp} <br>ap: #{company.ap} <br>x,y: #{company.x},#{company.y}<br>squads: #{company.squads}")
+              .html("Company ##{company_id} <br> x,y: #{company.x},#{company.y}<br> dmg: #{company.dmg} <br> def: #{company.def} <br> hp:
+  #{company.hp} <br>ap: #{company.ap} <br> squads: #{company.squads}")
               .appendTo('.modal.building .modal-building-fill')
               .click(() ->
                 App.add_squad_to_company($(this).data('id'))
@@ -132,7 +132,7 @@ class Controls
       .addClass('banner-card')
       .data('id', banner['@id'])
       .attr('title', title)
-      .html("Banner ##{banner['@id']} <br> dmg: #{banner['@mod_dmg']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
+      .html("Banner ##{banner['@id']} <br> dmg: #{banner['@mod_dmg']} <br> def: #{banner['@mod_def']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
       .appendTo('.modal.building .modal-building-inner')
 
   lock_controls: () ->
@@ -181,6 +181,7 @@ class Controls
     $(id_sel + ' .unit-xy-info').html('{' + unit['@x'] + ',' + unit['@y'] + '}')
     $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])
     $(id_sel + ' .unit-dmg-info').html(unit['@dmg'])
+    $(id_sel + ' .unit-def-info').html(unit['@def'])
 
   set_active_unit: (id) ->
     $('.active-unit-info').removeClass('active-unit-info')

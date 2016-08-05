@@ -5,7 +5,7 @@
 
 class Banner
   attr_accessor :unit
-  attr_reader :id, :user, :mod_max_hp, :mod_max_ap, :mod_dmg
+  attr_reader :id, :user, :mod_max_hp, :mod_max_ap, :mod_dmg, :mod_def
   @@id_seq = 1
   # id -> banner
   @@banners = {}
@@ -16,15 +16,17 @@ class Banner
   def initialize user, unit = nil
     @id = @@id_seq
     @@id_seq += 1
-    prng = Random.new
-    hp_bonus = prng.rand(0..0.5).round(1)
-    @mod_max_hp = 1 + hp_bonus
-    ap_bonus = prng.rand(0..0.5).round(1)
-    @mod_max_ap = 1 + ap_bonus
-    dmg_bonus = prng.rand(0..0.5).round(1)
-    @mod_dmg = 1 + dmg_bonus
+    @prng = Random.new
+    @mod_max_hp = get_random_param
+    @mod_max_ap = get_random_param
+    @mod_dmg = get_random_param
+    @mod_def = get_random_param
     @user = user
     @unit = unit
+  end
+
+  def get_random_param
+    @prng.rand(-0.2..0.5).round(1) + 1
   end
 
   def to_hash()

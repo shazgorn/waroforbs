@@ -61,7 +61,7 @@ class WS
             switch data.error
               when 'wrong_token' then location.pathname = '/'
         app.unlock_controls()
-        console.log(new Date() - start)
+        console.log('js execution time:', new Date() - start)
 
   move: (unit_id, params) ->
     @socket.send(
