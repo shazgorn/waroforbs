@@ -218,6 +218,12 @@ class Game
   def restart(token)
   end
 
+  def tick
+    Unit.all.values.each{|unit|
+      unit.tick
+    }
+  end
+
   #################### ATTACK ##################################################
   # a - attacker, {x,y} defender`s coordinates
   # @param [User] a_user attacker

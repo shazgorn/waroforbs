@@ -211,9 +211,7 @@ class OrbApp
     Thread.new do
       while true
         begin
-          Unit.all.values.each{|unit|
-            unit.tick
-          }
+          @game.tick
         rescue => e
           ex e
         end

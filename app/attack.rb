@@ -19,7 +19,7 @@ class Attack
     dmg = nil
     if d && a != d && a.can_move?
       dmg = d.take_dmg a.dmg
-      a.move
+      a.move 1
       if d.dead?
         res[:d_data][:log] = KILLED
         res[:d_data][:dead] = true
