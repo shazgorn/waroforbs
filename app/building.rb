@@ -95,7 +95,8 @@ class Tavern < Building
 end
 
 class Barracs < Building
-  COMPANY_COST = 10
+  COMPANY_COST = 20
+  SQUAD_COST = 10
 
   def initialize
     super

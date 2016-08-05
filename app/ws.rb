@@ -192,11 +192,11 @@ class OrbApp
               end
               dispatch_units user, :log, {:log => log}
             when :add_squad_to_company
-              res = @game.add_squad_to_company user, data['company_id']
-              if res
-                log = "Squad added"
-              else
-                log = "Unable to add squad to company. Max limit reached"
+              log = "Squad added"
+              begin
+                res = @game.add_squad_to_company user, data['town_id'], data['company_id']
+              rescue OrbError => log_str
+                log = log_str
               end
               dispatch_units user, :log, {:log => log}
             end #case

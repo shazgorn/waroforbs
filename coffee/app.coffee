@@ -52,7 +52,7 @@ class Application
     @ws.create_company_from_banner(banner_id)
 
   add_squad_to_company: (company_id) ->
-    @ws.add_squad_to_company(company_id)
+    @ws.add_squad_to_company(company_id, @last_town)
 
   delete_banner: (banner_id) ->
     @ws.delete_banner(banner_id)

@@ -208,9 +208,8 @@ class Company < Unit
   end
 
   def add_squad
-    if @squads < MAX_SQUADS
-      @squads += 1
-    end
+    raise OrbError, 'Unable to add squad. Squads limit reached' unless @squads < MAX_SQUADS
+    @squads += 1
   end
 
   def take_dmg(income_dmg)
@@ -426,6 +425,13 @@ class Town < Unit
   def can_form_company?
     raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
     raise OrbError, 'Not enough gold to form company' unless @inventory[:gold] >= Barracs::COMPANY_COST
+    true
+  end
+
+  def can_add_squad?
+    raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
+    raise OrbError, 'Not enough gold to add squad' unless @inventory[:gold] >= Barracs::SQUAD_COST
+    true
   end
 
   def pay_banner_price
@@ -434,6 +440,10 @@ class Town < Unit
 
   def pay_company_price
     @inventory[:gold] -= Barracs::COMPANY_COST
+  end
+
+  def pay_squad_price
+    @inventory[:gold] -= Barracs::SQUAD_COST
   end
 
   # select actions available based on constructed buildings for town menu

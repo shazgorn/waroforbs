@@ -95,9 +95,16 @@ class Game
     company
   end
 
-  def add_squad_to_company user, company_id
-    company = Company.get company_id
-    company && company.add_squad()
+  def add_squad_to_company user, town_id, company_id
+    town = Town.get_by_user(user)
+    raise OrbError, 'User have no town' if town.nil?
+    if town.can_add_squad?
+      company = Company.get company_id
+      raise OrbError, 'No company' unless company
+      raise OrbError, 'Company must be near town' unless @map.adj_cells?(town.x, town.y, company.x, company.y)
+      town.pay_squad_price()
+      company.add_squad()
+    end
   end
 
   def new_town(user, active_unit_id)

@@ -158,12 +158,13 @@ class WS
       })
     )
 
-  add_squad_to_company: (company_id) ->
+  add_squad_to_company: (company_id, town_id) ->
     @socket.send(
       JSON.stringify({
         token: @token,
         op: 'add_squad_to_company',
-        company_id: company_id
+        company_id: company_id,
+        town_id: town_id
       })
     )
 
