@@ -163,6 +163,9 @@ class Map
           .addClass('player-unit-squad-info')
           .appendTo($unit)
     else if $unit.length == 1
+      # unit already on map, update it
+      if $unit.hasClass('green-orb')
+        $unit.addClass(unit.css_class)
       if $unit.parent().data('x') != unit.x || $unit.parent().data('y') != unit.y
         $unit.appendTo(cell_sel)
       if unit.squads

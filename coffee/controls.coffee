@@ -342,7 +342,6 @@ class Controls
           .appendTo(row)  
 
   init_town_inventory: (inventory) ->
-    console.log(inventory)
     $('.inventory-res').remove()
     for type, count of inventory
       if count
