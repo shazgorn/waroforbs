@@ -17,7 +17,7 @@ class Attack
     end
     
     dmg = nil
-    if d && a != d && a.can_move?
+    if d && a != d && a.can_move?(Unit::ATTACK_COST)
       dmg = d.take_dmg a.dmg
       a.move 1
       if d.dead?

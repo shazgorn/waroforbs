@@ -114,6 +114,8 @@ class Barracs < Building
 end
 
 class BannerShop < Building
+  BANNER_COST = 10
+
   def initialize
     super
     @name = 'Banner Shop'

@@ -42,7 +42,7 @@ class Controls
 
           # actions
           $(document.createElement('button'))
-            .html('Create random banner')
+            .html('Create random banner 10 gold')
             .appendTo('.modal.building .modal-building-actions-inner')
             .click(() ->
               App.create_random_banner()

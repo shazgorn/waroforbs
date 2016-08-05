@@ -124,11 +124,12 @@ class Game
   end
 
   def create_random_banner user
-    banner = nil
-    if Banner.get_count_by_user(user) < MAX_BANNERS
-      banner = Banner.new user
-    end
-    banner
+    town = Town.get_by_user user
+    raise OrbError, 'No user town' unless town
+    raise OrbError, 'Banners limit reached. No more than three banners allowed' unless Banner.get_count_by_user(user) < MAX_BANNERS
+    raise OrbError, 'Unable to bought banner. Not enough gold or Banner shop is not built' unless town.can_buy_banner?
+    town.pay_banner_price
+    Banner.new user
   end
 
   def delete_banner(user, banner_id)

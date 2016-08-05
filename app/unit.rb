@@ -4,6 +4,8 @@
 class Unit
   attr_reader :id, :type, :user, :x, :y
 
+  ATTACK_COST = 1
+
   @@id_seq = 1
   # id -> unit
   @@units = {}
@@ -336,8 +338,8 @@ class Town < Unit
     @dmg = 5
     @def = 50
     @inventory = {
-      :gold => 0,
-      :wood => 0,
+      :gold => 50,
+      :wood => 50,
       :stone => 0
     }
     @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
@@ -413,6 +415,16 @@ class Town < Unit
       return true
     end
     false
+  end
+
+  def can_buy_banner?
+    raise OrbError, 'Banner shop is not built' unless @buildings[:banner_shop].built?
+    raise OrbError, 'Not enough gold to buy banner' unless @inventory[:gold] >= BannerShop::BANNER_COST
+    true
+  end
+
+  def pay_banner_price
+    @inventory[:gold] -= BannerShop::BANNER_COST
   end
 
   # select actions available based on constructed buildings for town menu

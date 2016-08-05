@@ -144,11 +144,11 @@ class OrbApp
               end
               dispatch_units user, :log, {:log => log}
             when :create_random_banner
-              res = @game.create_random_banner user
-              if res.nil?
-                log = "Unable to create more banners. Limit reached."
-              else
-                log = "Banner created"
+              log = "Banner bought"
+              begin
+                res = @game.create_random_banner user
+              rescue OrbError => log_str
+                log = log_str
               end
               dispatch_units user, :log, {:log => log}
             when :delete_banner
