@@ -84,13 +84,13 @@ class Unit
     @y = y
   end
 
-  def move_to(x, y)
+  def move_to(x, y, cost = 1)
     place(x, y)
-    @ap -= 1
+    @ap -= cost
   end
 
-  def can_move?
-    @ap >= 1
+  def can_move? (cost = 1)
+    @ap >= cost
   end
 
   def move

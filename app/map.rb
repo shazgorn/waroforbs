@@ -127,4 +127,9 @@ class Map
     @cells["#{x}_#{y}"]
   end
 
+  def cell_type_at(x, y)
+    cell = cell_at(x, y)
+    cell['@type'].to_sym
+  end
+
 end

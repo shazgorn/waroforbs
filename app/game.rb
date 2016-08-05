@@ -135,9 +135,9 @@ class Game
   end
 
   TER2RES = {
+    :grass => nil,
     :tree => :wood,
-    :mountain => :stone,
-    :grass => nil
+    :mountain => :stone
   }
 
   def set_free_worker_to_xy(user, town_id, x, y)
@@ -145,8 +145,7 @@ class Game
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless @map.adj_cells?(x, y, town.x, town.y)
-    cell = @map.cell_at(x, y)
-    type = TER2RES[cell['@type'].to_sym]
+    type = TER2RES[@map.cell_type_at(x, y)]
     town.set_free_worker_to x, y, type
   end
 
@@ -161,14 +160,22 @@ class Game
   #################  END TOWN BUILDINGS  #######################################
   ##################### END CONSTRUCTORS #######################################
 
+  TYPE2COST = {
+    :grass => 1,
+    :tree => 2,
+    :mountain => 3
+  }
+
   def move_hero_by user, unit_id, dx, dy
     res = {:log => nil, :moved => false}
     unit = Unit.get unit_id
-    if unit && unit.can_move?
-      new_x = unit.x + dx
-      new_y = unit.y + dy
+    new_x = unit.x + dx
+    new_y = unit.y + dy
+    type = @map.cell_type_at new_x, new_y
+    cost = TYPE2COST[type]
+    if unit && unit.can_move?(cost)
       if Unit.place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)
-        unit.move_to(new_x, new_y)
+        unit.move_to(new_x, new_y, cost)
         res[:moved] = true
         res[:new_x] = new_x
         res[:new_y] = new_y
