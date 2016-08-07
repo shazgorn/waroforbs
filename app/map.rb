@@ -68,6 +68,9 @@ class Map
           path = "./img/bg_tree_on_grass.png"
           map_cell.type = :tree
         when 6
+          path = "./img/bg_oak_on_grass_1.png"
+          map_cell.type = :tree
+        when 7
           path = "./img/bg_mountain_on_grass.png"
           map_cell.type = :mountain
         else
