@@ -50,8 +50,5 @@ class AdminUser < User
 end
 
 class Bot < User
-  def initialize(login)
-    super(login)
-    @hero = BotCompany.new(@login)
-  end
+
 end

@@ -86,7 +86,7 @@ class OrbApp
               end
             when :attack
               params = data['params']
-              res = @game.attack user, active_unit_id, params['id'].to_i
+              res = @game.attack_by_user user, active_unit_id, params['id'].to_i
               ws.send JSON.generate({
                                       :data_type => 'dmg',
                                       :dmg => res[:a_data][:dmg],
@@ -212,9 +212,9 @@ class OrbApp
       while true
         begin
           if GreenOrb.below_limit?
-            puts "spawn green orb"
             orb = GreenOrb.new
             @game.place_at_random orb
+            puts "spawn green orb"
             dispatch_units
           end
         rescue => e
@@ -222,6 +222,30 @@ class OrbApp
         end
         sleep(1)
       end
+    end
+  end
+
+  def spawn_black_orb
+    begin
+      if @game.black_orbs_below_limit
+        orb = @game.spawn_black_orb
+        @game.place_at_random orb
+        puts "spawn black orb"
+        dispatch_units
+        Thread.new {
+          begin
+            while true
+              puts 'black orb attack'
+              @game.attack_adj_cells orb
+              sleep(3)
+            end
+          rescue => e
+            ex e
+          end
+        }
+      end
+    rescue => e
+      ex e
     end
   end
 
@@ -255,7 +279,7 @@ class OrbApp
             sleep(1)
           end
         rescue => e
-          puts "#{e.message}"
+          ex e
         end
       }
     end
@@ -288,4 +312,5 @@ end
 app = OrbApp.new
 app.run_green_orbs_spawner
 app.run_ap_restorer
+app.spawn_black_orb
 app.run_ws

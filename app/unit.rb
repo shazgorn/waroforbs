@@ -142,7 +142,11 @@ class Unit
     end
 
     def place_is_empty?(x, y)
-      @@units.select{|k,unit| unit.x == x && unit.y == y}.length == 0
+      @@units.select{|k, unit| unit.x == x && unit.y == y}.length == 0
+    end
+
+    def get_by_xy(x, y)
+      @@units.values.select{|unit| unit.x == x && unit.y == y}.first
     end
 
     def get_by_user user
@@ -253,22 +257,49 @@ class BotCompany < Company
 end
 
 class GreenOrb < Unit
-  MAX_ORBS = 20
+  LIMIT = 20
+  TYPE = :orb
 
   def initialize()
-    super(:orb)
-    @hp = 100
+    super(TYPE)
+    @max_hp = @hp = 100
     @dmg = 20
     @def = 3
   end
 
   class << self
     def length
-      @@units.select{|k,unit| unit.type == :orb}.length
+      @@units.select{|k,unit| unit.type == TYPE}.length
     end
 
     def below_limit?
-      self.length < MAX_ORBS
+      self.length < LIMIT
+    end
+  end
+end
+
+class BlackOrb < Unit
+  LIMIT = 1
+  TYPE = :black_orb
+
+  def initialize()
+    super(TYPE)
+    @max_hp = @hp = 1000
+    @dmg = 500
+    @def = 100
+  end
+
+  def can_move?(cost)
+    true
+  end
+
+  class << self
+    def length
+      @@units.select{|k,unit| unit.type == TYPE}.length
+    end
+
+    def below_limit?
+      self.length < LIMIT
     end
   end
 end
@@ -340,7 +371,7 @@ class Town < Unit
     @dmg = 5
     @def = 50
     @inventory = {
-      :gold => 50,
+      :gold => 1000,
       :wood => 50,
       :stone => 0
     }

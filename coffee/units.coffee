@@ -49,6 +49,18 @@ class GreenOrb extends Unit
     else
       @css_class += ' orb'
 
+class BlackOrb extends Unit
+  constructor: (unit) ->
+    super unit
+    @css_class = 'black-orb'
+    @title = unit['@hp']
+    if unit['@hp'] < 500
+      @css_class += ' orb-sm'
+    else if unit['@hp'] < 700
+      @css_class += ' orb-md'
+    else
+      @css_class += ' orb'
+
 class Town extends Unit
   constructor: (unit) ->
     super unit
@@ -72,6 +84,7 @@ class OtherPlayerTown extends Town
     super unit
 
 UnitFactory = (unit_hash, user_id) ->
+  throw new Error 'Unit is not set on map' if !unit_hash['@x']? || !unit_hash['@y']?
   if unit_hash?
     switch unit_hash['@type']
       when "company"
@@ -81,6 +94,7 @@ UnitFactory = (unit_hash, user_id) ->
           else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotCompany unit_hash
           else unit = new OtherPlayerCompany unit_hash
       when "orb" then unit = new GreenOrb unit_hash
+      when "black_orb" then unit = new BlackOrb unit_hash
       when "town"
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id

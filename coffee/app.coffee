@@ -84,15 +84,18 @@ class Application
     @units = {}
     @my_units = {}
     for unit_id, unit_hash of units
-      unit_obj = UnitFactory(unit_hash, @user_id)
-      if unit_obj
-        @units[unit_obj.id] = unit_obj
-        unit_on_map = @map.append(unit_obj)
-        if unit_hash['@user_id'] == @user_id
-          @my_units[unit_obj.id] = unit_obj
-          @controls.unit_info(unit_hash)
-          @bind_select_handler(unit_on_map)
-        unit_obj.init()
+      try
+        unit_obj = UnitFactory(unit_hash, @user_id)
+        if unit_obj
+          @units[unit_obj.id] = unit_obj
+          unit_on_map = @map.append(unit_obj)
+          if unit_hash['@user_id'] == @user_id
+            @my_units[unit_obj.id] = unit_obj
+            @controls.unit_info(unit_hash)
+            @bind_select_handler(unit_on_map)
+          unit_obj.init()
+      catch Error
+        console.log(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
     # delete dead units

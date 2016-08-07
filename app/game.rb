@@ -256,13 +256,36 @@ class Game
     }
   end
 
+  def black_orbs_below_limit
+    BlackOrb.below_limit?
+  end
+
+  def spawn_black_orb
+    BlackOrb.new
+  end
+
   #################### ATTACK ##################################################
-  # a - attacker, {x,y} defender`s coordinates
-  # @param [User] a_user attacker
-  # @param [Integer] def_id if of the defender unit
-  def attack a_user, active_unit_id, def_id
-    a = Unit.get_active_unit a_user
-    d = Unit.get def_id
+  def attack_adj_cells a
+    dmg = nil
+    (-1..1).each do |adx|
+      (-1..1).each do |ady|
+        if !(adx == 0 && ady == 0)
+          adj_x = a.x + adx
+          adj_y = a.y + ady
+          d = Unit.get_by_xy adj_x, adj_y
+          if d
+            res = attack a, d
+            dmg = res[:dmg] unless res[:dmg].nil?
+          end
+        end
+      end
+    end
+    dmg
+  end
+
+  # a - attacker, d - defender
+  def attack a, d
+    raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
     res = Attack.attack a, d
     if res[:a_data][:dead]
       bury(a)
@@ -271,6 +294,14 @@ class Game
       bury(d)
     end
     res
+  end
+
+  # @param [User] a_user attacker
+  # @param [Integer] def_id if of the defender unit
+  def attack_by_user a_user, active_unit_id, def_id
+    a = Unit.get_active_unit a_user
+    d = Unit.get def_id
+    attack a, d
   end
 
   def bury(unit)
