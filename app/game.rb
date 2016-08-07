@@ -178,7 +178,7 @@ class Game
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
     type = TER2RES[@map.cell_type_at(x, y)]
-    town.set_free_worker_to x, y, type
+    town.set_free_worker_to x, y, type, @map.max_diff(town.x, town.y, x, y)
   end
 
   def free_worker(user, town_id, x, y)

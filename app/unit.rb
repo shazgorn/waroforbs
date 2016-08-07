@@ -296,6 +296,7 @@ class TownWorker < JSONable
     @y = nil
     @type = nil
     @start_time = nil
+    # time to collect
     @ttc = nil
     @finish_time = nil
     start_default_res_collection
@@ -305,9 +306,9 @@ class TownWorker < JSONable
     start_res_collection :gold
   end
 
-  def start_res_collection res_type
+  def start_res_collection res_type, distance = 1
     @type = res_type
-    @ttc = Resource::T[@type][:ttc]
+    @ttc = Resource::T[@type][:ttc] * distance
     @start_time = Time.now
     @finish_time = @start_time + @ttc
   end
@@ -368,7 +369,7 @@ class Town < Unit
     w_at_xy.clear
   end
 
-  def set_free_worker_to x, y, type
+  def set_free_worker_to x, y, type, distance
     w_at_xy = get_worker_at x, y
     raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
     if w_at_xy.nil?
@@ -379,7 +380,7 @@ class Town < Unit
         worker.y = y
         # do send worker mining gold if he is doing nothing
         if type && worker.type != type
-          worker.start_res_collection type
+          worker.start_res_collection type, distance
         end
         return true
       end
