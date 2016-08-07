@@ -294,11 +294,12 @@ class Controls
         workers_on_work_hash[worker['@x'] + '_' + worker['@y']] = worker
 
     $('.workers-inner *').remove()
-    for dy in [-1..1]
+    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
+    for dy in range
       row = $(document.createElement('div'))
         .addClass('worker-row')
         .appendTo('.modal.town .workers-inner')
-      for dx in [-1..1]
+      for dx in range
         adj_x = town_x + dx
         adj_y = town_y + dy
         worker_cell = $(document.createElement('div'))
@@ -306,7 +307,7 @@ class Controls
               .data('x', adj_x)
               .data('y', adj_y)
               .data('town_id', town_id)
-        if adj_x >= 0 && adj_y >= 0
+        if adj_x >= 0 && adj_y >= 0 && adj_x <= App.MAX_COORD && adj_y <= App.MAX_COORD
           html = ''
           title = ''
           if dx == 0 && dy == 0

@@ -66,24 +66,7 @@ class OrbApp
             case data['op'].to_sym
             when :init
               @ws_pool[ws.signature][:user] = user = @game.init_user token
-              ws.send JSON.generate({:data_type => 'init_map',
-                                     :map_shift => Map::SHIFT,
-                                     :cell_dim_in_px => Map::CELL_DIM_PX,
-                                     :block_dim_in_cells => Map::BLOCK_DIM,
-                                     :block_dim_in_px => Map::BLOCK_DIM_PX,
-                                     :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
-                                     :active_unit_id => user.active_unit_id,
-                                     :user_id => user.id,
-                                     :actions => user.actions_arr,
-                                     :banners => Banner.get_by_user(user),
-                                     :units => @game.all_units(user),
-                                     :cells => @game.map.cells,
-                                     :building_states => {
-                                       :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
-                                       :BUILDING_STATE_IN_PROGRESS => Building::STATE_IN_PROGRESS,
-                                       :BUILDING_STATE_BUILT => Building::STATE_BUILT
-                                     }
-                                    })
+              ws.send JSON.generate({:data_type => 'init_map'}.merge(@game.init_map user))
             when :close
               dispatch_units
             when :units

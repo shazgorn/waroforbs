@@ -331,6 +331,8 @@ class Town < Unit
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
 
+  RADIUS = 3
+
   def initialize(user)
     super(:town, user)
     @hp = @max_hp = 300

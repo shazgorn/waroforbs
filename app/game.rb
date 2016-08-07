@@ -59,6 +59,29 @@ class Game
     user
   end
 
+  def init_map user
+    {
+      :map_shift => Map::SHIFT,
+      :cell_dim_in_px => Map::CELL_DIM_PX,
+      :block_dim_in_cells => Map::BLOCK_DIM,
+      :block_dim_in_px => Map::BLOCK_DIM_PX,
+      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
+      :MAX_COORD => Map::MAX_COORD,
+      :active_unit_id => user.active_unit_id,
+      :user_id => user.id,
+      :actions => user.actions_arr,
+      :banners => Banner.get_by_user(user),
+      :units => all_units(user),
+      :cells => @map.cells,
+      :TOWN_RADIUS => Town::RADIUS,
+      :building_states => {
+        :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
+        :BUILDING_STATE_IN_PROGRESS => Building::STATE_IN_PROGRESS,
+        :BUILDING_STATE_BUILT => Building::STATE_BUILT
+      }
+    }
+  end
+
   def new_hero user, banner
     Company.new(user, banner)
   end
@@ -145,11 +168,15 @@ class Game
     :mountain => :stone
   }
 
+  def in_town_radius?(town, x, y)
+    @map.max_diff(town.x, town.y, x, y) <= Town::RADIUS
+  end
+
   def set_free_worker_to_xy(user, town_id, x, y)
     town = Town.get_by_user user
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
-    raise OrbError, 'Cell is not near town' unless @map.adj_cells?(x, y, town.x, town.y)
+    raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
     type = TER2RES[@map.cell_type_at(x, y)]
     town.set_free_worker_to x, y, type
   end
@@ -158,7 +185,7 @@ class Game
     town = Town.get_by_user user
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to free worker at town coordinates' if town.x == x && town.y == y
-    raise OrbError, 'Cell is not near town' unless @map.adj_cells?(x, y, town.x, town.y)
+    raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
     town.free_worker_at x, y
   end
 

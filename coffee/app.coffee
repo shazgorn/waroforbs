@@ -12,6 +12,7 @@ class Application
     @attacking = false
     @last_town = null
     @cells = null
+    @TOWN_RADIUS = null
 
   move: (params) ->
     @ws.move(@active_unit_id, params)

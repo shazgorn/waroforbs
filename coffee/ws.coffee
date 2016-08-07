@@ -27,6 +27,8 @@ class WS
             app.banners = data.banners
             app.building_states = data.building_states
             app.cells = data.cells
+            app.TOWN_RADIUS = data.TOWN_RADIUS
+            app.MAX_COORD = data.MAX_COORD
 
             # App init function calls
             app.init_units data.units

@@ -20,6 +20,7 @@ class Map
   BLOCK_DIM = 10
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM
   BLOCKS_IN_MAP_DIM = 5
+  MAX_COORD = BLOCKS_IN_MAP_DIM * BLOCK_DIM - 1
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
@@ -124,6 +125,11 @@ class Map
 
   def adj_cells?(x1, y1, x2, y2)
     (-1..1).include?(x1 - x2) && (-1..1).include?(y1 - y2)
+  end
+
+  # max distance
+  def max_diff(x1, y1, x2, y2)
+    [(x1 - x2).abs(), (y1 - y2).abs()].max
   end
 
   def cell_at(x, y)
