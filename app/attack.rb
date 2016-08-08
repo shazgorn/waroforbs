@@ -35,10 +35,11 @@ class Attack
       if d.user
         res[:d_user] = d.user
         res[:d_data].merge!({
-                              :data_type => 'dmg',
-                              :id => d.id,
-                              :dmg => ca_dmg,
-                              :ca_dmg => dmg
+                              :data_type => 'enemy_dmg',
+                              :dmg => dmg,
+                              :ca_dmg => ca_dmg,
+                              :a_id => a.id,
+                              :d_id => d.id
                             })
       end
     end

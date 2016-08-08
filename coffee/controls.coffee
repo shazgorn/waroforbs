@@ -307,7 +307,7 @@ class Controls
               .data('x', adj_x)
               .data('y', adj_y)
               .data('town_id', town_id)
-        if adj_x >= 0 && adj_y >= 0 && adj_x <= App.MAX_COORD && adj_y <= App.MAX_COORD
+        if adj_x >= 0 && adj_y >= 0 && adj_x <= App.MAX_CELL_IDX && adj_y <= App.MAX_CELL_IDX
           html = ''
           title = ''
           if dx == 0 && dy == 0

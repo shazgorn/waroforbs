@@ -421,7 +421,10 @@ button {
 
     .cost-res {
         display: inline-block;
-        margin: 0.1rem 0.3rem;
+        height: 2rem;
+        line-height: 2rem;
+        margin: 0.3rem 0;
+        min-width: 2rem;
     }
 
     .cost-res-gold {
@@ -464,10 +467,10 @@ button {
         .inventory-res {
             border: thin solid brown;
             display: inline-block;
-            height: 2rem;
-            line-height: 2rem;
+            height: 3rem;
+            line-height: 3rem;
             text-align: center;
-            width: 2rem;
+            min-width: 3rem;
         }
         .inventory-res-gold {
             @include res-gold();

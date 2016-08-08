@@ -24,7 +24,7 @@ class OrbApp
   MAX_BOTS = 1
   
   def initialize
-    @ws_pool = []
+    @ws_pool = {}
     @game = Game.new
     @bot_id = 1
     JSON.dump_default_options[:max_nesting] = 10
@@ -36,7 +36,16 @@ class OrbApp
   end
 
   def get_ws_by_user user
-    @ws_pool.select{|w| w[:user] == user}.first
+    @ws_pool.values.select{|w| w && w.has_key?(:user) && w[:user] == user}.first
+  end
+
+  def send_attack_info_to_def res
+    if res && res.has_key?(:d_user) && res[:d_user]
+      d_ws = get_ws_by_user res[:d_user]
+      d_ws[:ws].send JSON.generate(res[:d_data])
+      return true
+    end
+    false
   end
 
   # run me last, infinite loop you know
@@ -74,11 +83,12 @@ class OrbApp
             when :move
               params = data['params']
               if params['dx'].to_i && params['dy'].to_i
-                res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
-                if res[:moved]
+                begin
+                  res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
                   log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
                   dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
-                else
+                rescue OrbError => log_str
+                  log = log_str
                   dispatch_units
                 end
               else
@@ -92,13 +102,10 @@ class OrbApp
                                       :dmg => res[:a_data][:dmg],
                                       :ca_dmg => res[:a_data][:ca_dmg],
                                       :a_id => user.active_unit_id,
-                                      :a_dead => res[:a_data][:dead],
+                                      :dead => res[:a_data][:dead],
                                       :d_id => params['id']
                                     })
-              if res.has_key? :d_data && !res[:d_user].nil?
-                d_ws = get_ws_by_user res[:d_user]
-                d_ws.send JSON.generate(res[:d_data])
-              end
+              send_attack_info_to_def res
               dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
             when :spawn_bot
               spawn_bot
@@ -235,8 +242,13 @@ class OrbApp
         Thread.new {
           begin
             while true
-              puts 'black orb attack'
-              @game.attack_adj_cells orb
+              res = @game.attack_adj_cells orb
+              attacked = send_attack_info_to_def res
+              if attacked
+                # log me gently
+                puts 'black orb attack'
+                dispatch_units
+              end
               sleep(3)
             end
           rescue => e
@@ -294,8 +306,8 @@ class OrbApp
   end
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})
-    @ws_pool.each do |w|
-      unless w.nil? # add w.has_key?[:user] and w[:user].nil? / Looks like there are some race conditions
+    @ws_pool.each_value do |w|
+      unless w.nil? && w.has_key?[:user] && w[:user]
         changes[:actions] = w[:user].actions_arr
         changes[:banners] = Banner.get_by_user(w[:user])
         if user && action && w[:user] == user

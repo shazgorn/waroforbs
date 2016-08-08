@@ -257,7 +257,7 @@ class BotCompany < Company
 end
 
 class GreenOrb < Unit
-  LIMIT = 20
+  LIMIT = 1
   TYPE = :orb
 
   def initialize()

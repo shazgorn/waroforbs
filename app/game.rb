@@ -66,7 +66,7 @@ class Game
       :block_dim_in_cells => Map::BLOCK_DIM,
       :block_dim_in_px => Map::BLOCK_DIM_PX,
       :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
-      :MAX_COORD => Map::MAX_COORD,
+      :MAX_CELL_IDX => Map::MAX_CELL_IDX,
       :active_unit_id => user.active_unit_id,
       :user_id => user.id,
       :actions => user.actions_arr,
@@ -199,25 +199,20 @@ class Game
   }
 
   def move_hero_by user, unit_id, dx, dy
+    raise OrbError, 'Wrong direction' unless @map.d_include?(dx, dy)
     res = {:log => nil, :moved => false}
     unit = Unit.get unit_id
+    raise OrbError, 'No unit' unless unit
     new_x = unit.x + dx
     new_y = unit.y + dy
+    raise OrbError, 'Out of map' unless @map.has?(new_x, new_y)
     type = @map.cell_type_at new_x, new_y
     cost = TYPE2COST[type]
-    if unit && unit.can_move?(cost)
-      if Unit.place_is_empty?(new_x, new_y) && @map.has?(new_x, new_y) && @map.d_include?(dx, dy)
-        unit.move_to(new_x, new_y, cost)
-        res[:moved] = true
-        res[:new_x] = new_x
-        res[:new_y] = new_y
-      else
-        res[:moved] = false
-      end
-    else
-      puts 'Risen dead'
-      res[:log] = 'Your hero is dead'
-    end
+    raise OrbError, 'Not enough AP' unless unit.can_move?(cost)
+    raise OrbError, 'Cell is occupied' unless Unit.place_is_empty?(new_x, new_y)
+    unit.move_to(new_x, new_y, cost)
+    res.merge!({:moved => true, :new_x => new_x, :new_y => new_y})
+    res[:moved] = false
     res
   end
 
@@ -266,7 +261,6 @@ class Game
 
   #################### ATTACK ##################################################
   def attack_adj_cells a
-    dmg = nil
     (-1..1).each do |adx|
       (-1..1).each do |ady|
         if !(adx == 0 && ady == 0)
@@ -274,13 +268,12 @@ class Game
           adj_y = a.y + ady
           d = Unit.get_by_xy adj_x, adj_y
           if d
-            res = attack a, d
-            dmg = res[:dmg] unless res[:dmg].nil?
+            return attack a, d
           end
         end
       end
     end
-    dmg
+    nil
   end
 
   # a - attacker, d - defender

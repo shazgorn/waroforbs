@@ -28,7 +28,7 @@ class WS
             app.building_states = data.building_states
             app.cells = data.cells
             app.TOWN_RADIUS = data.TOWN_RADIUS
-            app.MAX_COORD = data.MAX_COORD
+            app.MAX_CELL_IDX = data.MAX_CELL_IDX
 
             # App init function calls
             app.init_units data.units
@@ -43,11 +43,6 @@ class WS
             app.init_units data.units
             if data.active_unit_id
               app.set_active_unit data.active_unit_id
-            switch data.action
-              when 'move'
-                app.log(data.log)
-              when 'log'
-                app.log(data.log)
             app.controls.set_active_unit(app.active_unit_id)
             app.controls.init_user_controls(data.actions)
             # refresh modals
@@ -56,12 +51,16 @@ class WS
             app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
             app.log('damage dealt ' + data.dmg)
             app.log('damage taken ' + data.ca_dmg)
-            if data.a_dead
-              app.log('Your hero has been killed')
             app.attacking = false
+          when 'enemy_dmg'
+            app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
+            app.log('damage dealt ' + data.dmg)
+            app.log('damage taken ' + data.ca_dmg)
           when 'error'
             switch data.error
               when 'wrong_token' then location.pathname = '/'
+        if data.log
+          app.log(data.log)
         app.unlock_controls()
         console.log('js execution time:', new Date() - start)
 
