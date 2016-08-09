@@ -23,6 +23,19 @@ class Game
     user
   end
 
+  def all_units_for_all units
+    units.each_value{|unit|
+      if unit.type == :town
+        unit.adj_companies = []
+        units.each_value{|unit2|
+          if unit != unit2 && unit.user && unit.user == unit2.user && @map.adj_cells?(unit.x, unit.y, unit2.x, unit2.y)
+            unit.adj_companies.push(unit2.id)
+          end
+        }
+      end
+    }
+  end
+
   # Select and return all units.
   # Select user`s town and select adjacent companies to it (one can add more
   # squads in barracs)
@@ -31,13 +44,15 @@ class Game
     if user
       town = units.values.select{|unit| unit.type == :town && unit.user.id == user.id}.first
       if town
-        town.adj_companies.delete_if {|c| true}
+        town.adj_companies = []
         units.each_value{|unit|
           if unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
             town.adj_companies.push(unit.id)
           end
         }
       end
+    else
+      all_units_for_all units
     end
     units
   end

@@ -65,10 +65,9 @@ class TownControls
           $(document.createElement('div'))
             .addClass('modal-building-fill')
             .appendTo('.modal.building .modal-building-inner')
-          console.log(App.units[App.last_town].adj_companies)
+
           for company_id in App.units[App.last_town].adj_companies
             company = App.my_units[company_id]
-            console.log(company)
             card = $(document.createElement('div'))
               .addClass('company-card')
               .addClass('pointer')
