@@ -52,7 +52,7 @@ class OrbApp
   def run_ws
     EM.run do
       EM::WebSocket.run(:host => ARGV[0] || '0.0.0.0', :port => 9293) do |ws|
-        ws.onopen do |hanshake|
+        ws.onopen do |handshake|
           puts "WebSocket connection open"
           @ws_pool[ws.signature] = {:ws => ws}
         end

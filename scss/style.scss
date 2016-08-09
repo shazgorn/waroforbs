@@ -20,6 +20,7 @@ $right-col-border: chocolate;
 $theme-bg: saddlebrown;
 $theme-border: chocolate;
 $theme-color: lightyellow;
+$theme-hover: sienna;
 $modal-width: calc(80% - #{$right-col-width} + 4rem);
 // color of wood
 $wood-color: Sienna;
@@ -76,7 +77,7 @@ button {
     cursor: pointer;
     font-family: $font-family;
     &:hover {
-        background-color: sienna;
+        background-color: $theme-hover;
     }
 }
 .pointer {
@@ -270,7 +271,7 @@ button {
             color: limegreen;
         }
         &:hover {
-            background-color: sienna;
+            background-color: $theme-hover;
             border: thin dashed $right-col-border;
             cursor: pointer;
         }
@@ -297,6 +298,9 @@ button {
             height: $button-size;
             text-align: center;
             width: 33%;
+            &:hover {
+                background-color: $theme-hover;
+            }
             &:nth-child(3n-2) {
                 clear: left;
             }

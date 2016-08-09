@@ -7,6 +7,7 @@ class Application
     @my_units = {}
     @banners = []
     @controls = new Controls this
+    @town_controls = new TownControls this
     @ws = new WS this
     @initialized = false
     @attacking = false
@@ -65,9 +66,12 @@ class Application
     @ws.free_worker(town_id, x, y)
 
   refresh_modals: () ->
-    id = @controls.open_building_id
+    id = @town_controls.open_building_id
     if id
-      @controls.fill_building_modal(id)
+      @town_controls.fill_building_modal(id)
+
+  set_active_unit_directly: (unit_id) ->
+    @controls.set_active_unit(unit_id)
 
   set_active_unit: (unit_id) ->
     #if unit_id != @active_unit_id
@@ -143,8 +147,20 @@ class Application
         @last_town = $(unit).data('id')
     )
 
+  init_user_controls: (actions) ->
+    @controls.init_user_controls(actions)
+
   init_town_buildings: (buildings) ->
-    @controls.init_town_buildings(buildings)
+    @town_controls.init_town_buildings(buildings)
+
+  init_town_controls: (actions) ->
+    @town_controls.init_town_controls(actions)
+
+  init_town_workers: (workers, town_id, town_x, town_y) ->
+    @town_controls.init_town_workers(workers, town_id, town_x, town_y)
+
+  init_town_inventory: (inventory) ->
+    @town_controls.init_town_inventory(inventory)
 
   log: (data) ->
     log_entry = $(document.createElement('div'))

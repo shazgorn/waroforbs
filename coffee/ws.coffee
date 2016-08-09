@@ -33,8 +33,8 @@ class WS
             # App init function calls
             app.init_units data.units
             app.center_on_active()
-            app.controls.set_active_unit(data.active_unit_id)
-            app.controls.init_user_controls(data.actions)
+            app.set_active_unit_directly(data.active_unit_id)
+            app.init_user_controls(data.actions)
 
             # App init finished
             app.initialized = true
