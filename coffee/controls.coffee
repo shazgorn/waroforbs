@@ -14,7 +14,6 @@ class Controls
           App.new_town()
       }
 
-
     controls = 
       7: {arr: '&#8598;', x: -1, y: -1},
       8: {arr: '&#8593;', x:  0, y: -1},

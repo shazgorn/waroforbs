@@ -25,14 +25,21 @@ class Map
   SHIFT = 1000
 
   def initialize(generate = false)
-    @path = '/home/user/public_html/waroforbs/data/map.json'
+    @path = './data/map.dat'
     @cells = {}
+    @cells_pixels = {}
     JSON.dump_default_options[:max_nesting] = 10
     JSON.load_default_options[:max_nesting] = 10
     if generate
+      start = Time.now.to_f
+      FileUtils::mkdir_p './img/bg'
       create_canvas_blocks
+      finish = Time.now.to_f
+      diff = finish - start
+      puts "Map generated in %f seconds" % diff.to_f
       File.open(@path, "w") do |file|
         file.print Marshal.dump(@cells)
+        puts "Map data saved to %s" % @path
       end
     else
       file = File.open(@path, "r")
@@ -50,7 +57,6 @@ class Map
   end
   
   def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim_px = CELL_DIM_PX)
-    FileUtils::mkdir_p './img/bg'
     canvas = Magick::Image.new canvas_dim, canvas_dim
     canvas_y = 0
     cell_y = block_y * BLOCK_DIM
@@ -78,12 +84,11 @@ class Map
           map_cell.type = :grass
         end
         @cells["#{cell_x}_#{cell_y}"] = map_cell
-        cell = Magick::ImageList.new path
-        cell_dim_px.times do |x|
-          cell_dim_px.times do |y|
-            canvas.pixel_color(canvas_x + x, canvas_y + y, cell.pixel_color(x, y))
-          end
+        unless @cells_pixels.has_key?(n)
+          puts "read #{path}"
+          @cells_pixels[n] = Magick::ImageList.new(path).get_pixels(0, 0, CELL_DIM_PX, CELL_DIM_PX)
         end
+        canvas.store_pixels(canvas_x, canvas_y, CELL_DIM_PX, CELL_DIM_PX, @cells_pixels[n])
         canvas_x += cell_dim_px
         cell_x += 1
       end
