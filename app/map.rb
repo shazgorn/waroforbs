@@ -6,7 +6,7 @@ class MapCell < JSONable
   def initialize(x = nil, y = nil, type = nil, unit = nil)
     @x = x
     @y = y
-    # type - :grass, :tree
+    # type - :grass, :tree, etc
     @type = type
     @unit = unit
   end
@@ -32,11 +32,11 @@ class Map
     if generate
       create_canvas_blocks
       File.open(@path, "w") do |file|
-        file.print @cells.to_json
+        file.print Marshal.dump(@cells)
       end
     else
       file = File.open(@path, "r")
-      @cells = JSON.load(file)
+      @cells = Marshal.load(file)
     end
   end
 
@@ -137,7 +137,7 @@ class Map
 
   def cell_type_at(x, y)
     cell = cell_at(x, y)
-    cell['@type'].to_sym
+    cell.type
   end
 
 end

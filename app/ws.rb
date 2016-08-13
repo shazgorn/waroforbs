@@ -240,7 +240,7 @@ class OrbApp
     end
   end
 
-  def spawn_black_orb
+  def run_black_orb_spawner
     begin
       if @game.black_orbs_below_limit
         orb = @game.spawn_black_orb
@@ -331,6 +331,6 @@ end
 
 app = OrbApp.new
 app.run_green_orbs_spawner
+app.run_black_orb_spawner
 app.run_ap_restorer
-app.spawn_black_orb
 app.run_ws
