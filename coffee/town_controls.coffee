@@ -97,7 +97,7 @@ class TownControls
       b = $(document.createElement('div'))
         .attr('id', id)
         .addClass('open-building-screen')
-        .appendTo('.modal.town .buildings')
+        .appendTo('.modal.town .buildings-inner')
 
       # open building link
       $open_building = $(document.createElement('a'))

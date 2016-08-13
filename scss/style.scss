@@ -378,7 +378,11 @@ button {
         opacity: 1;
     }
 
-    .buildings {
+    div[class$=container] {
+        margin: 1rem 0;
+    }
+
+    .buildings-inner {
         @include clearfix();
         box-sizing: border-box;
         height: 50%;
@@ -416,10 +420,6 @@ button {
 
         .banner-card {
             @include card();
-        }
-
-        .modal-town-actions {
-            margin: 1rem 0;
         }
     }
 
@@ -465,9 +465,7 @@ button {
         }
     }
 
-    .town-inventory {
-        margin: 1rem 0;
-
+    .town-inventory-container {
         .inventory-res {
             border: thin solid brown;
             display: inline-block;
