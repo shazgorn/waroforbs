@@ -11,4 +11,5 @@ doc/*
 GPATH
 GRTAGS
 GTAGS
-map.dat
+map.json
+config.yml

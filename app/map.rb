@@ -15,17 +15,17 @@ end
 class Map
   attr_reader :cells
   attr_accessor :ul
-  SIZE = nil
+
   CELL_DIM_PX = 40
   BLOCK_DIM = 10
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM
-  BLOCKS_IN_MAP_DIM = 2
+  BLOCKS_IN_MAP_DIM = Config.get('BLOCKS_IN_MAP_DIM')
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
 
   def initialize(generate = false)
-    @path = '/home/user/public_html/waroforbs/map.dat'
+    @path = '/home/user/public_html/waroforbs/data/map.json'
     @cells = {}
     JSON.dump_default_options[:max_nesting] = 10
     JSON.load_default_options[:max_nesting] = 10

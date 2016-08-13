@@ -262,7 +262,7 @@ class Orb < Unit
 end
 
 class GreenOrb < Orb
-  LIMIT = 500
+  LIMIT = Config.get("GREEN_ORB_LIMIT")
   TYPE = :orb
 
   def initialize()
