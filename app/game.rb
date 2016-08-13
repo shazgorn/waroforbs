@@ -7,8 +7,8 @@ class Game
   attr_reader :map
   MAX_BANNERS = 3
 
-  def initialize
-    @map = Map.new
+  def initialize(generate = false)
+    @map = Map.new(generate)
     # token -> user_id
     @tokens = {}
   end

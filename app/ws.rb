@@ -27,7 +27,13 @@ class OrbApp
   
   def initialize
     @ws_pool = {}
-    @game = Game.new
+    generate = false
+    ARGV.each{|k|
+      if k == 'gen'
+        generate = true
+      end
+    }
+    @game = Game.new(generate)
     @bot_id = 1
     JSON.dump_default_options[:max_nesting] = 10
   end
@@ -53,7 +59,7 @@ class OrbApp
   # run me last, infinite loop you know
   def run_ws
     EM.run do
-      EM::WebSocket.run(:host => ARGV[0] || '0.0.0.0', :port => 9293) do |ws|
+      EM::WebSocket.run(:host => Config.get("host"), :port => Config.get("port")) do |ws|
         ws.onopen do |handshake|
           puts "WebSocket connection open"
           @ws_pool[ws.signature] = {:ws => ws}

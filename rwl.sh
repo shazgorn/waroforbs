@@ -1,1 +1,1 @@
-ruby --verbose -wW2 app/ws.rb
+ruby --verbose -wW2 app/ws.rb "$@"
