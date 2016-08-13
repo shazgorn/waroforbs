@@ -149,24 +149,8 @@ class Unit
       @@units.values.select{|unit| unit.x == x && unit.y == y}.first
     end
 
-    def get_by_user user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :town}.first
-    end
-
-    def has_town? user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :town}.length == 1
-    end    
-
-    def has_heroes? user
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :company}.length > 0
-    end
-
     def has_units? user
       @@units.values.select{|unit| unit.user_id == user.id}.length > 0
-    end
-
-    def all_units_count user
-      @@units.values.select{|unit| unit.user_id == user.id}.length
     end
 
     def get_active_unit user
@@ -256,51 +240,46 @@ class BotCompany < Company
   end
 end
 
-class GreenOrb < Unit
+class Orb < Unit
   LIMIT = 1
-  TYPE = :orb
 
-  def initialize()
-    super(TYPE)
-    @max_hp = @hp = 100
-    @dmg = 20
-    @def = 3
+  def initialize(type, hp, damage, defence)
+    super(type)
+    @max_hp = @hp = hp
+    @dmg = damage
+    @def = defence
   end
 
   class << self
     def length
-      @@units.select{|k,unit| unit.type == TYPE}.length
+      @@units.select{|k,unit| unit.type == self::TYPE}.length
     end
 
     def below_limit?
-      self.length < LIMIT
+      self.length < self::LIMIT
     end
   end
 end
 
-class BlackOrb < Unit
+class GreenOrb < Orb
+  LIMIT = 500
+  TYPE = :orb
+
+  def initialize()
+    super(TYPE, 100, 20, 3)
+  end
+end
+
+class BlackOrb < Orb
   LIMIT = 1
   TYPE = :black_orb
 
   def initialize()
-    super(TYPE)
-    @max_hp = @hp = 1000
-    @dmg = 500
-    @def = 100
+    super(TYPE, 1000, 500, 100)
   end
 
   def can_move?(cost)
     true
-  end
-
-  class << self
-    def length
-      @@units.select{|k,unit| unit.type == TYPE}.length
-    end
-
-    def below_limit?
-      self.length < LIMIT
-    end
   end
 end
 
@@ -363,6 +342,7 @@ class Town < Unit
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
 
+  TYPE = :town
   RADIUS = 3
 
   def initialize(user)
@@ -487,7 +467,15 @@ class Town < Unit
 
   class << self
     def has_any? user
-      @@units.select{|id, unit| unit.user_id == user.id && unit.type == :town}.length > 0
+      @@units.select{|id, unit| unit.user_id == user.id && unit.type == self::TYPE}.length > 0
+    end
+
+    def has_town? user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == self::TYPE}.length == 1
+    end
+
+    def get_by_user user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == self::TYPE}.first
     end
   end
 end

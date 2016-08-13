@@ -221,7 +221,7 @@ class OrbApp
           if GreenOrb.below_limit?
             orb = GreenOrb.new
             @game.place_at_random orb
-            puts "spawn green orb"
+            printf "spawn green orb (%d)\n", GreenOrb.length
             dispatch_units
           end
         rescue => e

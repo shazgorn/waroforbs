@@ -146,7 +146,7 @@ class Game
   end
 
   def new_town(user, active_unit_id)
-    unless Unit.has_town? user
+    unless Town.has_town? user
       hero = Company.get active_unit_id
       empty_cell = empty_adj_cell hero
       if empty_cell
