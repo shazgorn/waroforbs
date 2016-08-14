@@ -27,7 +27,39 @@ class Map
   def initialize(generate = false)
     @path = './data/map.dat'
     @cells = {}
-    @cells_pixels = {}
+    @cells_bg = {
+      1 => {
+        :path => "./img/bg_grass_1.png",
+        :type => :grass
+      },
+      2 => {
+        :path => "./img/bg_grass_2.png",
+        :type => :grass
+      },
+      3 => {
+        :path => "./img/bg_grass_3.png",
+        :type => :grass
+      },
+      4 => {
+        :path => "./img/bg_grass_4.png",
+        :type => :grass
+      },
+      5 => {
+        :path => "./img/bg_tree_on_grass.png",
+        :type => :tree
+      },
+      6 => {
+        :path => "./img/bg_oak_on_grass_1.png",
+        :type => :tree
+      },
+      7 => {
+        :path => "./img/bg_mountain_on_grass.png",
+        :type => :mountain
+      }
+    }
+    @cells_bg.each_value {|m|
+      m[:pixels] = Magick::ImageList.new(m[:path]).get_pixels(0, 0, CELL_DIM_PX, CELL_DIM_PX)
+    }
     JSON.dump_default_options[:max_nesting] = 10
     JSON.load_default_options[:max_nesting] = 10
     if generate
@@ -66,29 +98,14 @@ class Map
       while canvas_x < canvas_dim
         map_cell = MapCell.new(cell_x, cell_y)
         n = Random.rand 10
-        case n
-        when 1, 2, 3, 4
-          path = "./img/bg_grass_#{n}.png"
-          map_cell.type = :grass
-        when 5
-          path = "./img/bg_tree_on_grass.png"
-          map_cell.type = :tree
-        when 6
-          path = "./img/bg_oak_on_grass_1.png"
-          map_cell.type = :tree
-        when 7
-          path = "./img/bg_mountain_on_grass.png"
-          map_cell.type = :mountain
+        if @cells_bg.has_key?(n)
+          cell_bg = @cells_bg[n]
         else
-          path = './img/bg_grass_1.png'
-          map_cell.type = :grass
+          cell_bg = @cells_bg[1]
         end
+        map_cell.type = cell_bg[:type]
+        canvas.store_pixels(canvas_x, canvas_y, CELL_DIM_PX, CELL_DIM_PX, cell_bg[:pixels])
         @cells["#{cell_x}_#{cell_y}"] = map_cell
-        unless @cells_pixels.has_key?(n)
-          puts "read #{path}"
-          @cells_pixels[n] = Magick::ImageList.new(path).get_pixels(0, 0, CELL_DIM_PX, CELL_DIM_PX)
-        end
-        canvas.store_pixels(canvas_x, canvas_y, CELL_DIM_PX, CELL_DIM_PX, @cells_pixels[n])
         canvas_x += cell_dim_px
         cell_x += 1
       end
