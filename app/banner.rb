@@ -53,6 +53,10 @@ class Banner
   end
 
   class << self
+    def all
+      @@banners
+    end
+
     def new user
       banner = super user
       @@banners[banner.id] = banner

@@ -30,6 +30,7 @@ class OrbApp
   include Logging
   
   def initialize
+    logger.info "Create app"
     @ws_pool = {}
     generate = false
     ARGV.each{|k|
@@ -62,155 +63,171 @@ class OrbApp
 
   # run me last, infinite loop you know
   def run_ws
-    EM.run do
-      EM::WebSocket.run(:host => Config.get("host"), :port => Config.get("port")) do |ws|
-        ws.onopen do |handshake|
-          logger.info "WebSocket connection open"
-          @ws_pool[ws.signature] = {:ws => ws}
-        end
+    begin
+      logger.info 'Start ws'
+      EM.run do
+        EM::WebSocket.run(:host => Config.get("host"), :port => Config.get("port")) do |ws|
+          ws.onopen do |handshake|
+            logger.info "WebSocket connection open"
+            @ws_pool[ws.signature] = {:ws => ws}
+          end
 
-        ws.onclose do
-          logger.info 'Connection closed'
-          @ws_pool.delete ws.signature
-        end
+          ws.onclose do
+            logger.info 'Connection closed'
+            @ws_pool.delete ws.signature
+          end
 
-        ws.onmessage do |msg, type|
-          begin
-            logger.info "Recieved message: #{msg} #{type}"
-            start = Time.now.to_f
-            data = JSON.parse(msg)
-            token = data['token']
-            user = @game.get_user_by_token token
-            if data.has_key?('unit_id')
-              user.active_unit_id = active_unit_id = data['unit_id'].to_i
-            end
-            case data['op'].to_sym
-            when :init
-              @ws_pool[ws.signature][:user] = user = @game.init_user token
-              ws.send JSON.generate({:data_type => 'init_map'}.merge(@game.init_map user))
-            when :close
-              dispatch_units
-            when :units
-              dispatch_units user
-            when :move
-              params = data['params']
-              if params['dx'].to_i && params['dy'].to_i
-                begin
-                  res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
-                  log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
-                  dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
-                rescue OrbError => log_str
-                  log = log_str
+          ws.onerror { |error|
+            ex e
+          }
+
+          ws.onmessage do |msg, type|
+            begin
+              logger.info "Recieved message: #{msg} #{type}"
+              start = Time.now.to_f
+              data = JSON.parse(msg)
+              token = data['token']
+              user = @game.get_user_by_token token
+              if data.has_key?('unit_id')
+                user.active_unit_id = active_unit_id = data['unit_id'].to_i
+              end
+              case data['op'].to_sym
+              when :init
+                @ws_pool[ws.signature][:user] = user = @game.init_user token
+                ws.send JSON.generate({:data_type => 'init_map'}.merge(@game.init_map user))
+              when :close
+                dispatch_units
+              when :units
+                dispatch_units user
+              when :move
+                params = data['params']
+                if params['dx'].to_i && params['dy'].to_i
+                  begin
+                    res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+                    log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
+                    dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
+                  rescue OrbError => log_str
+                    log = log_str
+                    dispatch_units
+                  end
+                else
                   dispatch_units
                 end
-              else
+              when :attack
+                params = data['params']
+                res = @game.attack_by_user user, active_unit_id, params['id'].to_i
+                ws.send JSON.generate({
+                                        :data_type => 'dmg',
+                                        :dmg => res[:a_data][:dmg],
+                                        :ca_dmg => res[:a_data][:ca_dmg],
+                                        :a_id => user.active_unit_id,
+                                        :dead => res[:a_data][:dead],
+                                        :d_id => params['id']
+                                      })
+                send_attack_info_to_def res
+                dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
+              when :spawn_bot
+                spawn_bot
+              when :revive
+                @game.revive token
                 dispatch_units
-              end
-            when :attack
-              params = data['params']
-              res = @game.attack_by_user user, active_unit_id, params['id'].to_i
-              ws.send JSON.generate({
-                                      :data_type => 'dmg',
-                                      :dmg => res[:a_data][:dmg],
-                                      :ca_dmg => res[:a_data][:ca_dmg],
-                                      :a_id => user.active_unit_id,
-                                      :dead => res[:a_data][:dead],
-                                      :d_id => params['id']
-                                    })
-              send_attack_info_to_def res
-              dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
-            when :spawn_bot
-              spawn_bot
-            when :revive
-              @game.revive token
-              dispatch_units
-            when :new_hero
-              @game.new_random_hero user
-              dispatch_units user, :new_hero, {:active_unit_id => user.active_unit_id}
-            when :new_town
-              @game.new_town user, user.active_unit_id
-              dispatch_units
-            when :restart
-              @game.restart token
-              dispatch_units
-            when :build
-              begin
-                res = @game.build user, data['building'].to_sym
-                if res
-                  log = "#{data['building']} building in progress"
-                else
-                  log = "#{data['building']} not built"
+              when :new_hero
+                @game.new_random_hero user
+                dispatch_units user, :new_hero, {:active_unit_id => user.active_unit_id}
+              when :new_town
+                @game.new_town user, user.active_unit_id
+                dispatch_units
+              when :restart
+                @game.restart token
+                dispatch_units
+              when :build
+                begin
+                  res = @game.build user, data['building'].to_sym
+                  if res
+                    log = "#{data['building']} building in progress"
+                  else
+                    log = "#{data['building']} not built"
+                  end
+                rescue OrbError => log_str
+                  log = log_str
                 end
-              rescue OrbError => log_str
-                log = log_str
-              end
-              dispatch_units user, :log, {:log => log}
-            when :create_random_banner
-              log = "Banner bought"
-              begin
-                res = @game.create_random_banner user
-              rescue OrbError => log_str
-                log = log_str
-              end
-              dispatch_units user, :log, {:log => log}
-            when :delete_banner
-              res = @game.delete_banner user, data['banner_id']
-              if res
-                log = "Banner deleted"
-              else
-                log = "Unable to delete banner"
-              end
-              dispatch_units user, :log, {:log => log}
-            when :create_default_company
-              res = @game.create_company user, :new
-              if res.nil?
-                log = "Unable to create more companies. Limit reached or no banner is available."
-              else
-                log = "Company created"
-              end
-              dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
-            when :create_company_from_banner
-              res = @game.create_company user, data['banner_id']
-              if res.nil?
-                log = "Unable to create Company"
-              else
-                log = "Company created"
-              end
-              dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
-            when :set_free_worker_to_xy
-              log = "Set worker to #{data['x']}, #{data['y']}"
-              begin
-                @game.set_free_worker_to_xy(user, data['town_id'], data['x'], data['y'])
-              rescue OrbError => log_str
-                log = log_str
-              end
-              dispatch_units user, :log, {:log => log}
-            when :free_worker
-              log = "Set worker free on #{data['x']}, #{data['y']}"
-              begin
-                @game.free_worker user, data['town_id'], data['x'], data['y']
-              rescue OrbError => log_str
-                log = log_str
-              end
-              dispatch_units user, :log, {:log => log}
-            when :add_squad_to_company
-              log = "Squad added"
-              begin
-                res = @game.add_squad_to_company user, data['town_id'], data['company_id']
-              rescue OrbError => log_str
-                log = log_str
-              end
-              dispatch_units user, :log, {:log => log}
-            end #case
-          rescue Exception => e
-            ex e
+                dispatch_units user, :log, {:log => log}
+              when :create_random_banner
+                log = "Banner bought"
+                begin
+                  res = @game.create_random_banner user
+                rescue OrbError => log_str
+                  log = log_str
+                end
+                dispatch_units user, :log, {:log => log}
+              when :delete_banner
+                res = @game.delete_banner user, data['banner_id']
+                if res
+                  log = "Banner deleted"
+                else
+                  log = "Unable to delete banner"
+                end
+                dispatch_units user, :log, {:log => log}
+              when :create_default_company
+                res = @game.create_company user, :new
+                if res.nil?
+                  log = "Unable to create more companies. Limit reached or no banner is available."
+                else
+                  log = "Company created"
+                end
+                dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+              when :create_company_from_banner
+                res = @game.create_company user, data['banner_id']
+                if res.nil?
+                  log = "Unable to create Company"
+                else
+                  log = "Company created"
+                end
+                dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+              when :set_free_worker_to_xy
+                log = "Set worker to #{data['x']}, #{data['y']}"
+                begin
+                  @game.set_free_worker_to_xy(user, data['town_id'], data['x'], data['y'])
+                rescue OrbError => log_str
+                  log = log_str
+                end
+                dispatch_units user, :log, {:log => log}
+              when :free_worker
+                log = "Set worker free on #{data['x']}, #{data['y']}"
+                begin
+                  @game.free_worker user, data['town_id'], data['x'], data['y']
+                rescue OrbError => log_str
+                  log = log_str
+                end
+                dispatch_units user, :log, {:log => log}
+              when :add_squad_to_company
+                log = "Squad added"
+                begin
+                  res = @game.add_squad_to_company user, data['town_id'], data['company_id']
+                rescue OrbError => log_str
+                  log = log_str
+                end
+                dispatch_units user, :log, {:log => log}
+              end #case
+            rescue Exception => e
+              ex e
+            end
+            finish = Time.now.to_f
+            diff = finish - start
+            logger.info "%10.5f" % diff.to_f
           end
-          finish = Time.now.to_f
-          diff = finish - start
-          logger.info "%10.5f" % diff.to_f
         end
-      end
-    end
+      end # run
+    rescue Interrupt
+      save_and_exit
+    end #begin
+  end # run_ws
+
+  def save_and_exit
+    logger.info "Terminating..."
+    @game.dump
+    logger.info "Good bye!"
+    exit
   end
 
   def run_ap_restorer

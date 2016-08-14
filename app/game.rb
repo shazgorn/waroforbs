@@ -7,6 +7,8 @@ class Game
   attr_reader :map
   MAX_BANNERS = 3
 
+  include Logging
+
   def initialize(generate = false)
     @map = Map.new(generate)
     # token -> user_id
@@ -55,6 +57,18 @@ class Game
       all_units_for_all units
     end
     units
+  end
+
+  def dump
+    logger.info "Dump data"
+    ts = Time.now.strftime "%Y_%m_%d_%H_%M_%S"
+    [User, Unit, Banner].each{|cls|
+      path = "data/" + cls.to_s + '_' + ts + '.dat'
+      File.open(path, "w") do |file|
+        file.print Marshal.dump(cls.all)
+        logger.info cls.to_s + " data saved to %s" % path
+      end
+    }
   end
   ##################### END DATA SELECTION METHODS #######################
   
