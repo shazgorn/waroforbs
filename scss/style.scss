@@ -121,6 +121,7 @@ button {
     
     .unit {
         border: thin solid transparent;
+        box-sizing: border-box;
         height: inherit;
         position: absolute;
         width: inherit;
