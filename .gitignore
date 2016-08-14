@@ -13,3 +13,7 @@ GRTAGS
 GTAGS
 data/map.*
 config.yml
+*.pid
+*.log
+app.yml
+thin.yml

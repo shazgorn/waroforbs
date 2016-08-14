@@ -3,7 +3,7 @@ class Config
   class << self
     def get value
       if @@config.nil?
-        @@config = YAML.load_file('data/config.yml')
+        @@config = YAML.load_file('config/app.yml')
       end
       @@config[value]
     end

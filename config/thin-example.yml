@@ -1,0 +1,14 @@
+---
+chdir: "/home/user/public_html/waroforbs"
+environment: development
+address: 0.0.0.0
+port: 9292
+timeout: 30
+log: "/home/user/public_html/waroforbs/log/thin.log"
+pid: tmp/pids/thin.pid
+max_conns: 1024
+max_persistent_conns: 100
+require: []
+wait: 30
+threadpool_size: 20
+daemonize: true
