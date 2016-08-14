@@ -24,6 +24,8 @@ class Map
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
 
+  include Logging
+
   def initialize(generate = false)
     @path = './data/map.dat'
     @cells = {}
@@ -68,10 +70,10 @@ class Map
       create_canvas_blocks
       finish = Time.now.to_f
       diff = finish - start
-      puts "Map generated in %f seconds" % diff.to_f
+      logger.info "Map generated in %f seconds" % diff.to_f
       File.open(@path, "w") do |file|
         file.print Marshal.dump(@cells)
-        puts "Map data saved to %s" % @path
+        logger.info "Map data saved to %s" % @path
       end
     else
       file = File.open(@path, "r")
@@ -115,7 +117,7 @@ class Map
     #see map.coffee::addBlocks
     canvas_path = "./img/bg/bg_#{block_x}_#{block_y}.png"
     canvas.write canvas_path
-    puts "write to #{canvas_path}"
+    logger.info "write to #{canvas_path}"
   end
 
   # check if coordinates are valid, alias may be

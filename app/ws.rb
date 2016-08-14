@@ -4,7 +4,9 @@ require 'json'
 require 'rmagick'
 require 'fileutils'
 require 'yaml'
+require 'logger'
 
+require_relative 'logging'
 require_relative 'config'
 require_relative 'jsonable'
 require_relative 'building'
@@ -24,6 +26,8 @@ end
 # Class
 class OrbApp
   MAX_BOTS = 1
+
+  include Logging
   
   def initialize
     @ws_pool = {}
@@ -39,8 +43,8 @@ class OrbApp
   end
 
   def ex(e)
-    puts "#{e.class} #{e.message}"
-    puts e.backtrace.join("\n")
+    logger.error "#{e.class} #{e.message}"
+    logger.error e.backtrace.join("\n")
   end
 
   def get_ws_by_user user
@@ -61,18 +65,18 @@ class OrbApp
     EM.run do
       EM::WebSocket.run(:host => Config.get("host"), :port => Config.get("port")) do |ws|
         ws.onopen do |handshake|
-          puts "WebSocket connection open"
+          logger.info "WebSocket connection open"
           @ws_pool[ws.signature] = {:ws => ws}
         end
 
         ws.onclose do
-          puts 'Connection closed'
+          logger.info 'Connection closed'
           @ws_pool.delete ws.signature
         end
 
         ws.onmessage do |msg, type|
           begin
-            puts "Recieved message: #{msg} #{type}"
+            logger.info "Recieved message: #{msg} #{type}"
             start = Time.now.to_f
             data = JSON.parse(msg)
             token = data['token']
@@ -203,7 +207,7 @@ class OrbApp
           end
           finish = Time.now.to_f
           diff = finish - start
-          puts "%10.5f" % diff.to_f
+          logger.info "%10.5f" % diff.to_f
         end
       end
     end
@@ -229,7 +233,7 @@ class OrbApp
           if GreenOrb.below_limit?
             orb = GreenOrb.new
             @game.place_at_random orb
-            printf "spawn green orb (%d)\n", GreenOrb.length
+            logger.info sprintf "spawn green orb (%d)", GreenOrb.length
             dispatch_units
           end
         rescue => e
@@ -245,7 +249,7 @@ class OrbApp
       if @game.black_orbs_below_limit
         orb = @game.spawn_black_orb
         @game.place_at_random orb
-        puts "spawn black orb"
+        logger.info "spawn black orb"
         dispatch_units
         Thread.new {
           begin
@@ -254,7 +258,7 @@ class OrbApp
               attacked = send_attack_info_to_def res
               if attacked
                 # log me gently
-                puts 'black orb attack'
+                logger.info 'black orb attack'
                 dispatch_units
               end
               sleep(3)
