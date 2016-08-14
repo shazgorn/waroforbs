@@ -227,10 +227,9 @@ class Game
     :mountain => 3
   }
 
-  def move_hero_by user, unit_id, dx, dy
+  def move_unit_by unit, dx, dy
     raise OrbError, 'Wrong direction' unless @map.d_include?(dx, dy)
     res = {:log => nil, :moved => false}
-    unit = Unit.get unit_id
     raise OrbError, 'No unit' unless unit
     new_x = unit.x + dx
     new_y = unit.y + dy
@@ -243,6 +242,21 @@ class Game
     res.merge!({:moved => true, :new_x => new_x, :new_y => new_y})
     res[:moved] = false
     res
+  end
+
+  def move_user_hero_by user, unit_id, dx, dy
+    unit = Unit.get unit_id
+    move_unit_by unit, dx, dy
+  end
+
+  def random_move unit
+    dx = dy = 0
+    begin
+      dx = Random.rand(-1..1)
+      dy = Random.rand(-1..1)
+    end while (dx == 0 && dy == 0) || !@map.has?(unit.x + dx, unit.y + dy)
+    logger.info "random move ##{unit.id} by #{dx}, #{dy}"
+    move_unit_by unit, dx, dy
   end
 
   def place_at_random unit

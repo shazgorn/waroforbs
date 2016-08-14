@@ -103,7 +103,7 @@ class OrbApp
                 params = data['params']
                 if params['dx'].to_i && params['dy'].to_i
                   begin
-                    res = @game.move_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+                    res = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
                     log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
                     dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
                   rescue OrbError => log_str
@@ -277,6 +277,9 @@ class OrbApp
                 # log me gently
                 logger.info 'black orb attack'
                 dispatch_units
+              else
+                @game.random_move orb
+                dispatch_units
               end
               sleep(3)
             end
@@ -314,7 +317,7 @@ class OrbApp
             if dmg.nil?
               dx = Random.rand(3) - 1
               dy = Random.rand(3) - 1
-              @game.move_hero_by User.get(bot.id).hero, dx, dy
+              @game.move_unit_by User.get(bot.id).hero, dx, dy
             end
             dispatch_units
             sleep(1)
