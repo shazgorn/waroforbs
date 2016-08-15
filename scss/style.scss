@@ -89,7 +89,7 @@ button {
 
 #map {
     background-color: black;
-    border: thin solid black;
+    border: thin solid $theme-border;
     height: $map-dimension;
     overflow: hidden;
     position: absolute;
@@ -219,6 +219,9 @@ button {
     
 }
 
+#right-col > div {
+    margin: 1rem 0;
+}
 #right-col {
     background-color: $theme-bg;
     border: thin solid $theme-border;
@@ -286,7 +289,6 @@ button {
     }
 
     #controls_arrows {
-        margin-bottom: 1rem;
         button {
             background-color: saddlebrown;
             border-color: $right-col-border;
@@ -313,10 +315,6 @@ button {
         padding-top: 1rem;
         border-bottom: thin solid $right-col-border;
         padding-bottom: 1rem;
-    }
-
-    #dimensions {
-        margin: 1rem 0;
     }
 
     #user-controls button {

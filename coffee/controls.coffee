@@ -43,6 +43,14 @@ class Controls
             }
         )
     )
+    $('#open-options').click(() ->
+      $('.modal').hide()
+      $('.modal.options').show()
+    )
+    $('#open-help').click(() ->
+      $('.modal').hide()
+      $('.modal.help').show()
+    )
 
   lock_controls: () ->
     $('#controls_arrows button').prop('disabled', 'disabled')

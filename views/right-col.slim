@@ -14,19 +14,11 @@
       div.unit-hp-info title="hp"
       div.unit-ap-info title="ap"
       div.unit-squads-info title="squads"
+  div
+    button#open-options Options
+    button#open-help Help!
 
   #unit-info-list
 
-  #dimensions
-    div
-      label for="map_height" map height
-      select#map_height
-        - (9..30).step(2) do |i|
-          <option value="#{i}">#{i}</option>
-    div
-      label for="map_width" map width
-      select#map_width
-        - (9..50).step(2) do |i|
-          <option value="#{i}">#{i}</option>
   #user-controls
 

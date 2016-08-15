@@ -1,0 +1,17 @@
+.modal.options
+  .modal-top-bar
+    | Options
+    .modal-controls
+      a.close-modal href="#"
+        | X
+  .modal-body
+    div
+      label for="map_height" map height
+      select#map_height
+        - (9..30).step(2) do |i|
+          <option value="#{i}">#{i}</option>
+    div
+      label for="map_width" map width
+      select#map_width
+        - (9..50).step(2) do |i|
+          <option value="#{i}">#{i}</option>
