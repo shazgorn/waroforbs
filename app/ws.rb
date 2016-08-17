@@ -31,8 +31,8 @@ class OrbApp
   
   def initialize
     logger.info "Create app"
-    # ws_pool => {ws.signature => {:ws => ws, :user => user}}
-    @ws_pool = {}
+    # conn_pool => {ws.signature => {:ws => ws, :user => user}}
+    @conn_pool = {}
     generate = false
     ARGV.each{|k|
       if k == 'gen'
@@ -49,15 +49,15 @@ class OrbApp
     logger.error e.backtrace.join("\n")
   end
 
-  def get_ws_by_user user
-    @ws_pool.values.select{|w| w && w.has_key?(:user) && w[:user] == user}.first
+  def get_conn_by_user user
+    @conn_pool.values.select{|conn| conn && conn.has_key?(:user) && conn[:user] == user}.first
   end
 
   def send_attack_info_to_def res
     if res && res.has_key?(:d_user) && res[:d_user]
-      d_ws = get_ws_by_user res[:d_user]
-      if d_ws
-        d_ws[:ws].send JSON.generate(res[:d_data])
+      d_conn = get_conn_by_user res[:d_user]
+      if d_conn
+        d_conn[:ws].send JSON.generate(res[:d_data])
       end
       return true
     end
@@ -72,12 +72,12 @@ class OrbApp
         EM::WebSocket.run(:host => Config.get("host"), :port => Config.get("port")) do |ws|
           ws.onopen do |handshake|
             logger.info "WebSocket connection open"
-            @ws_pool[ws.signature] = {:ws => ws}
+            @conn_pool[ws.signature] = {:ws => ws}
           end
 
           ws.onclose do
             logger.info 'Connection closed'
-            @ws_pool.delete ws.signature
+            @conn_pool.delete ws.signature
           end
 
           ws.onerror { |error|
@@ -97,12 +97,11 @@ class OrbApp
               case data['op'].to_sym
               when :init
                 user = @game.init_user token
-                old_ws = get_ws_by_user user
-                if old_ws
-                  @ws_pool.delete old_ws.signature
-                else
-                  @ws_pool[ws.signature][:user] = user
+                old_conn = get_conn_by_user user
+                if old_conn
+                  @conn_pool.delete old_conn[:ws].signature
                 end
+                @conn_pool[ws.signature][:user] = user
                 ws.send JSON.generate({:data_type => 'init_map'}.merge(@game.init_map user))
               when :close
                 dispatch_units
@@ -347,14 +346,14 @@ class OrbApp
   end
 
   def dispatch_changes(changes, user = nil, action = nil, data = {})
-    @ws_pool.each_value do |w|
-      unless w.nil? && w.has_key?[:user] && w[:user]
-        changes[:actions] = w[:user].actions_arr
-        changes[:banners] = Banner.get_by_user(w[:user])
-        if user && action && w[:user] == user
-          w[:ws].send JSON.generate(changes.merge({:action => action}).merge(data))
+    @conn_pool.each_value do |conn|
+      unless conn.nil? && conn.has_key?[:user] && conn[:user]
+        changes[:actions] = conn[:user].actions_arr
+        changes[:banners] = Banner.get_by_user(conn[:user])
+        if user && action && conn[:user] == user
+          conn[:ws].send JSON.generate(changes.merge({:action => action}).merge(data))
         else
-          w[:ws].send JSON.generate(changes)
+          conn[:ws].send JSON.generate(changes)
         end
       end
     end
