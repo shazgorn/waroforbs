@@ -353,6 +353,10 @@ class OrbApp
 
 end
 
+File.open(Config.get('pid'), 'w') {|file|
+  file.write Process.pid
+}
+
 app = OrbApp.new
 app.run_green_orbs_spawner
 app.run_black_orb_spawner
