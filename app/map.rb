@@ -64,24 +64,29 @@ class Map
     }
     JSON.dump_default_options[:max_nesting] = 10
     JSON.load_default_options[:max_nesting] = 10
-    if generate
-      start = Time.now.to_f
-      FileUtils::mkdir_p './img/bg'
-      create_canvas_blocks
-      finish = Time.now.to_f
-      diff = finish - start
-      logger.info "Map generated in %f seconds" % diff.to_f
-      File.open(@path, "w") do |file|
-        file.print Marshal.dump(@cells)
-        logger.info "Map data saved to %s" % @path
-      end
+    if generate || !File.exist?(@path)
+      generate_map
     else
       file = File.open(@path, "r")
       @cells = Marshal.load(file)
     end
   end
 
-  # generate map
+  def generate_map
+    start = Time.now.to_f
+    logger.info "Generate map"
+    FileUtils::mkdir_p './img/bg'
+    create_canvas_blocks
+    finish = Time.now.to_f
+    diff = finish - start
+    logger.info "Map generated in %f seconds" % diff.to_f
+    File.open(@path, "w") do |file|
+      file.print Marshal.dump(@cells)
+      logger.info "Map data saved to %s" % @path
+    end
+  end
+
+  # generate map blocks
   def create_canvas_blocks(size = BLOCKS_IN_MAP_DIM)
     size.times do |block_x|
       size.times do |block_y|
