@@ -255,7 +255,7 @@ class Game
       dx = Random.rand(-1..1)
       dy = Random.rand(-1..1)
     end while (dx == 0 && dy == 0) || !@map.has?(unit.x + dx, unit.y + dy)
-    logger.info "random move ##{unit.id} by #{dx}, #{dy}"
+    # logger.info "random move ##{unit.id} by #{dx}, #{dy}"
     move_unit_by unit, dx, dy
   end
 

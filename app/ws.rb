@@ -30,6 +30,24 @@ class OrbApp
   include Logging
   
   def initialize
+    if File.exist?(Config.get('pid'))
+      pid = nil
+      File.open(Config.get('pid')) {|file|
+        pid = file.readline.to_i
+      }
+      begin
+        if pid
+          Process.kill("HUP", pid)
+        end
+      rescue Errno::ESRCH => e
+        Logging.logger.info "%s with pid %d" % [e.message, pid]
+      end
+    end
+
+    File.open(Config.get('pid'), 'w') {|file|
+      file.write Process.pid
+    }
+
     logger.info "Create app"
     # conn_pool => {ws.signature => {:ws => ws, :user => user}}
     @conn_pool = {}
@@ -258,7 +276,7 @@ class OrbApp
           if GreenOrb.below_limit?
             orb = GreenOrb.new
             @game.place_at_random orb
-            logger.info sprintf "spawn green orb (%d)", GreenOrb.length
+            logger.info "spawn green orb (%d)" % GreenOrb.length
             dispatch_units
           end
         rescue => e
@@ -282,14 +300,13 @@ class OrbApp
               res = @game.attack_adj_cells orb
               attacked = send_attack_info_to_def res
               if attacked
-                # log me gently
                 logger.info 'black orb attack'
                 dispatch_units
               else
                 @game.random_move orb
                 dispatch_units
               end
-              sleep(3)
+              sleep(3600)
             end
           rescue => e
             ex e
@@ -360,10 +377,6 @@ class OrbApp
   end
 
 end
-
-File.open(Config.get('pid'), 'w') {|file|
-  file.write Process.pid
-}
 
 app = OrbApp.new
 app.run_green_orbs_spawner
