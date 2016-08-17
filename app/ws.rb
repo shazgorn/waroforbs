@@ -31,6 +31,7 @@ class OrbApp
   
   def initialize
     logger.info "Create app"
+    # ws_pool => {ws.signature => {:ws => ws, :user => user}}
     @ws_pool = {}
     generate = false
     ARGV.each{|k|
@@ -55,7 +56,9 @@ class OrbApp
   def send_attack_info_to_def res
     if res && res.has_key?(:d_user) && res[:d_user]
       d_ws = get_ws_by_user res[:d_user]
-      d_ws[:ws].send JSON.generate(res[:d_data])
+      if d_ws
+        d_ws[:ws].send JSON.generate(res[:d_data])
+      end
       return true
     end
     false
@@ -93,7 +96,13 @@ class OrbApp
               end
               case data['op'].to_sym
               when :init
-                @ws_pool[ws.signature][:user] = user = @game.init_user token
+                user = @game.init_user token
+                old_ws = get_ws_by_user user
+                if old_ws
+                  @ws_pool.delete old_ws.signature
+                else
+                  @ws_pool[ws.signature][:user] = user
+                end
                 ws.send JSON.generate({:data_type => 'init_map'}.merge(@game.init_map user))
               when :close
                 dispatch_units
