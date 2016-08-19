@@ -30,6 +30,29 @@ class OrbApp
   include Logging
   
   def initialize
+    generate = false
+    ARGV.each{|k|
+      case k
+      when 'gen'
+        generate = true
+      when 'stop'
+        stop
+        exit
+      end
+    }
+    File.open(Config.get('pid'), 'w') {|f|
+      f.write Process.pid
+    }
+
+    logger.info "Create app"
+    # conn_pool => {ws.signature => {:ws => ws, :user => user}}
+    @conn_pool = {}
+    @game = Game.new(generate)
+    @bot_id = 1
+    JSON.dump_default_options[:max_nesting] = 10
+  end
+
+  def stop
     if File.exist?(Config.get('pid'))
       pid = nil
       File.open(Config.get('pid')) {|file|
@@ -43,23 +66,6 @@ class OrbApp
         Logging.logger.info "%s with pid %d" % [e.message, pid]
       end
     end
-
-    File.open(Config.get('pid'), 'w') {|file|
-      file.write Process.pid
-    }
-
-    logger.info "Create app"
-    # conn_pool => {ws.signature => {:ws => ws, :user => user}}
-    @conn_pool = {}
-    generate = false
-    ARGV.each{|k|
-      if k == 'gen'
-        generate = true
-      end
-    }
-    @game = Game.new(generate)
-    @bot_id = 1
-    JSON.dump_default_options[:max_nesting] = 10
   end
 
   def ex(e)

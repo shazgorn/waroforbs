@@ -3,7 +3,7 @@
 git fetch
 git clone
 sh front.sh stop
-pkill --pidfile tmp/pids/app.pid
+sh rwl.sh stop
 ####
 sh front.sh start
 sh rwl.sh gen
