@@ -147,17 +147,23 @@ class OrbApp
                 end
               when :attack
                 params = data['params']
-                res = @game.attack_by_user user, active_unit_id, params['id'].to_i
-                ws.send JSON.generate({
-                                        :data_type => 'dmg',
-                                        :dmg => res[:a_data][:dmg],
-                                        :ca_dmg => res[:a_data][:ca_dmg],
-                                        :a_id => user.active_unit_id,
-                                        :dead => res[:a_data][:dead],
-                                        :d_id => params['id']
-                                      })
-                send_attack_info_to_def res
-                dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
+                begin
+                  log = nil
+                  res = @game.attack_by_user user, active_unit_id, params['id'].to_i
+                  ws.send JSON.generate({
+                                          :data_type => 'dmg',
+                                          :dmg => res[:a_data][:dmg],
+                                          :ca_dmg => res[:a_data][:ca_dmg],
+                                          :a_id => user.active_unit_id,
+                                          :dead => res[:a_data][:dead],
+                                          :d_id => params['id']
+                                        })
+                  send_attack_info_to_def res
+                  dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
+                rescue OrbError => log_str
+                  log = log_str
+                  dispatch_units user, :units, {:active_unit_id => user.active_unit_id, :log => log}
+                end
               when :spawn_bot
                 spawn_bot
               when :revive

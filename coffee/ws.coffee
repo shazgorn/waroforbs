@@ -16,7 +16,7 @@ class WS
     @socket.onmessage = (e) ->
       start = new Date();
       data = JSON.parse(e.data)
-      console.log(data)
+      console.log('data:', data)
       if app.initialized || data.data_type == 'init_map'
         switch data.data_type
           when 'init_map'
@@ -43,10 +43,12 @@ class WS
             app.init_units data.units
             if data.active_unit_id
               app.set_active_unit data.active_unit_id
-            app.controls.set_active_unit(app.active_unit_id)
-            app.controls.init_user_controls(data.actions)
+            else
+              app.set_active_unit app.active_unit_id
+            app.init_user_controls data.actions
             # refresh modals
             app.refresh_modals()
+            app.attacking = false
           when 'dmg'
             app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
             app.log('damage dealt ' + data.dmg)
