@@ -236,6 +236,9 @@ button {
     &:hover {
         opacity: 1;
     }
+    #opt-help * {
+        margin-right: 1rem;
+    }
     .unit-info-template {
 	display: none;
     }
