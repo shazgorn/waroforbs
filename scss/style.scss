@@ -348,6 +348,8 @@ button {
 
     .log-entry {
         color: black;
+        height: 20px;
+        line-height: 20px;
         transition: color 1s ease;
     }
 
@@ -485,6 +487,14 @@ button {
         .inventory-res-stone {
             @include res-stone();
         }
+    }
+}
+
+.modal.options {
+    label {
+        display: inline-block;
+        line-height: 2rem;
+        width: 10rem;
     }
 }
 

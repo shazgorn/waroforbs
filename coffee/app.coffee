@@ -6,6 +6,7 @@ class Application
     @my_units_ids = []
     @my_units = {}
     @banners = []
+    @options = new Options
     @controls = new Controls this
     @town_controls = new TownControls this
     @ws = new WS this

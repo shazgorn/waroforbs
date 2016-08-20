@@ -1,34 +1,16 @@
 class Map
   constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells,
   @map_dim_in_blocks) ->
-    mhc = parseInt(localStorage.getItem('map_height_cells'))
-    mwc = parseInt(localStorage.getItem('map_width_cells'))
-    if !mhc || isNaN(mhc)
-      mhc = 13
-      localStorage.setItem('map_height_cells', mhc)
-    $('#map_height').val(mhc)
-    cell_px = @cell_dim_in_px
     this_obj = this
-    $('#map_height').change((e) ->
-      cells = parseInt($(this).val())
-      $('#map').height(cell_px * cells)
-      localStorage.setItem('map_height_cells', cells)
-      # this_obj.center_on_hero('unit-' + @active_unit_id)
-    )
-    $('#map_width').change((e) ->
-      cells = parseInt($(this).val())
-      $('#map').width(cell_px * cells)
-      localStorage.setItem('map_width_cells', cells)
-      # this_obj.center_on_hero('unit-' + @active_unit_id)
-    )
-    if !mwc || isNaN(mwc)
-      mwc = 13
-      localStorage.setItem('map_width_cells', mwc)
-    $('#map_width').val(mwc)
-    $('#map').height(mhc * @cell_dim_in_px).width(mwc * @cell_dim_in_px)
-    this.initTooltip()
+
+    @set_size(App.options.mhc, App.options.mwc)
+
+    #this.initTooltip()
     this.initDragHandler()
     this.addBlocks()
+
+  set_size: (mhc, mwc) ->
+    $('#map').height(mhc * @cell_dim_in_px).width(mwc * @cell_dim_in_px)
 
   initTooltip: () ->
     $('#blocks').mousemove((e) ->
