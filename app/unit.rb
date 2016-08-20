@@ -133,6 +133,11 @@ class Unit
       @@units[id]
     end
 
+    def get_by_user_id user, id
+      unit = @@units[id]
+      return unit if unit.user && unit.user_id == user.id
+    end
+
     def delete id
       @@units.delete id
     end

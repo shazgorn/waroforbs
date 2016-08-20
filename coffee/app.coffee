@@ -44,6 +44,9 @@ class Application
     id = $(button).data('id')
     @ws.build(id)
 
+  destroy: (id) ->
+    @ws.destroy(id)
+
   create_random_banner: () ->
     @ws.create_random_banner()
 

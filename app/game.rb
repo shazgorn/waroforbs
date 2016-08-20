@@ -75,8 +75,15 @@ class Game
       end
     }
   end
-  ##################### END DATA SELECTION METHODS #######################
-  
+
+  ##################### DATA MODIFICATION METHODS  #######################
+  def destroy user, id
+    unit = Unit.get_by_user_id user, id
+    raise OrbError, "No unit to destroy" unless unit
+    Unit.delete id
+    recalculate_user_actions user
+  end
+
   ##################### CONSTRUCTORS #####################################
   # init user
   # If this is a 1st login then new user is created
@@ -166,8 +173,9 @@ class Game
 
   def new_town(user, active_unit_id)
     unless Town.has_town? user
-      hero = Company.get active_unit_id
-      empty_cell = empty_adj_cell hero
+      unit = Company.get active_unit_id
+      raise OrbError, "Active unit is nil" unless unit
+      empty_cell = empty_adj_cell unit
       if empty_cell
         town = Town.new(user)
         town.place empty_cell[:x], empty_cell[:y]
@@ -222,9 +230,6 @@ class Game
     raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
     town.free_worker_at x, y
   end
-
-  #################  END TOWN BUILDINGS  #######################################
-  ##################### END CONSTRUCTORS #######################################
 
   TYPE2COST = {
     :grass => 1,

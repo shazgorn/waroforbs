@@ -51,6 +51,7 @@ class Controls
     $('#controls_arrows button').prop('disabled', '')
 
   unit_info: (unit) ->
+    _this = this
     id = unit['@id']
     id_attr = 'unit-info-' + id
     id_sel = '#' + id_attr
@@ -72,7 +73,6 @@ class Controls
         info.addClass('active-unit-info')
     
     $(id_sel).data('id', id)
-    _this = this
     $(id_sel).off('click').on('click', () ->
       App.set_active_unit($(this).data('id'))
     )
@@ -96,6 +96,9 @@ class Controls
     $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])
     $(id_sel + ' .unit-dmg-info').html(unit['@dmg'])
     $(id_sel + ' .unit-def-info').html(unit['@def'])
+    $(id_sel + ' .unit-info-destroy').data('id', unit['@id']).click(() ->
+      App.destroy($(this).data('id'))
+    )
 
   set_active_unit: (id) ->
     $('.active-unit-info').removeClass('active-unit-info')

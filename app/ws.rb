@@ -180,8 +180,22 @@ class OrbApp
                 @game.new_random_hero user
                 dispatch_units({user.id => {:active_unit_id => user.active_unit_id}})
               when :new_town
-                @game.new_town user, user.active_unit_id
-                dispatch_units
+                begin
+                  @game.new_town user, user.active_unit_id
+                  log = 'Town has been settled'
+                rescue OrbError => log_str
+                  log = log_str
+                end
+                dispatch_units({user.id => {:log => log}})
+              when :destroy
+                unit_id = data['unit_id']
+                begin
+                  @game.destroy user, unit_id
+                  log = "Unit ##{unit_id} destroyed"
+                rescue OrbError => log_str
+                  log = log_str
+                end
+                dispatch_units({user.id => {:log => log}})
               when :restart
                 @game.restart token
                 dispatch_units

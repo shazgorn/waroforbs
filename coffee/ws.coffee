@@ -118,6 +118,15 @@ class WS
       })
     )
 
+  destroy: (unit_id) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        unit_id: unit_id,
+        op: 'destroy'
+      })
+    )
+
   build: (id) ->
     @socket.send(
       JSON.stringify({
