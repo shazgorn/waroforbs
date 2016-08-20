@@ -77,6 +77,10 @@ class OrbApp
     @conn_pool.values.select{|conn| conn && conn.has_key?(:user) && conn[:user] == user}.first
   end
 
+  def user_online? user
+    !get_conn_by_user(user).nil?
+  end
+
   def send_attack_info_to_def res
     if res && res.has_key?(:d_user) && res[:d_user]
       d_conn = get_conn_by_user res[:d_user]
@@ -126,21 +130,21 @@ class OrbApp
                   @conn_pool.delete old_conn[:ws].signature
                 end
                 @conn_pool[ws.signature][:user] = user
-                ws.send JSON.generate({:data_type => 'init_map'}.merge(@game.init_map user))
+                dispatch_units({user.id => {:data_type => 'init_map'}.merge(@game.init_map user)})
               when :close
                 dispatch_units
               when :units
-                dispatch_units user
+                dispatch_units
               when :move
                 params = data['params']
                 if params['dx'].to_i && params['dy'].to_i
                   begin
                     res = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
                     log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
-                    dispatch_units user, :move, {:active_unit_id => user.active_unit_id, :log => log}
+                    dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
                   rescue OrbError => log_str
                     log = log_str
-                    dispatch_units
+                    dispatch_units({user.id => {:log => log}})
                   end
                 else
                   dispatch_units
@@ -149,20 +153,23 @@ class OrbApp
                 params = data['params']
                 begin
                   log = nil
+                  users = {}
                   res = @game.attack_by_user user, active_unit_id, params['id'].to_i
-                  ws.send JSON.generate({
-                                          :data_type => 'dmg',
-                                          :dmg => res[:a_data][:dmg],
-                                          :ca_dmg => res[:a_data][:ca_dmg],
-                                          :a_id => user.active_unit_id,
-                                          :dead => res[:a_data][:dead],
-                                          :d_id => params['id']
-                                        })
-                  send_attack_info_to_def res
-                  dispatch_units user, :attack, {:active_unit_id => user.active_unit_id}
+                  users[user.id] = {
+                    :active_unit_id => user.active_unit_id,
+                    :dmg => res[:a_data][:dmg],
+                    :ca_dmg => res[:a_data][:ca_dmg],
+                    :a_id => user.active_unit_id,
+                    :dead => res[:a_data][:dead],
+                    :d_id => params['id']
+                  }
+                  if res.has_key?(:d_user) && res[:d_user] && user_online?(res[:d_user])
+                    users[res[:d_user].id] = res[:d_data]
+                  end
+                  dispatch_units(users)
                 rescue OrbError => log_str
                   log = log_str
-                  dispatch_units user, :units, {:active_unit_id => user.active_unit_id, :log => log}
+                  dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
                 end
               when :spawn_bot
                 spawn_bot
@@ -171,9 +178,10 @@ class OrbApp
                 dispatch_units
               when :new_hero
                 @game.new_random_hero user
-                dispatch_units user, :new_hero, {:active_unit_id => user.active_unit_id}
+                dispatch_units({user.id => {:active_unit_id => user.active_unit_id}})
               when :new_town
                 @game.new_town user, user.active_unit_id
+                p @game.all_units
                 dispatch_units
               when :restart
                 @game.restart token
@@ -189,7 +197,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
-                dispatch_units user, :log, {:log => log}
+                dispatch_units({user.id => {:log => log}})
               when :create_random_banner
                 log = "Banner bought"
                 begin
@@ -197,7 +205,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
-                dispatch_units user, :log, {:log => log}
+                dispatch_units({user.id => {:log => log}})
               when :delete_banner
                 res = @game.delete_banner user, data['banner_id']
                 if res
@@ -205,7 +213,7 @@ class OrbApp
                 else
                   log = "Unable to delete banner"
                 end
-                dispatch_units user, :log, {:log => log}
+                dispatch_units({user.id => {:log => log}})
               when :create_default_company
                 res = @game.create_company user, :new
                 if res.nil?
@@ -213,7 +221,7 @@ class OrbApp
                 else
                   log = "Company created"
                 end
-                dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+                dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
               when :create_company_from_banner
                 res = @game.create_company user, data['banner_id']
                 if res.nil?
@@ -221,7 +229,7 @@ class OrbApp
                 else
                   log = "Company created"
                 end
-                dispatch_units user, :log, {:active_unit_id => user.active_unit_id, :log => log}
+                dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
               when :set_free_worker_to_xy
                 log = "Set worker to #{data['x']}, #{data['y']}"
                 begin
@@ -229,7 +237,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
-                dispatch_units user, :log, {:log => log}
+                dispatch_units({user.id => {:log => log}})
               when :free_worker
                 log = "Set worker free on #{data['x']}, #{data['y']}"
                 begin
@@ -237,7 +245,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
-                dispatch_units user, :log, {:log => log}
+                dispatch_units({user.id => {:log => log}})
               when :add_squad_to_company
                 log = "Squad added"
                 begin
@@ -245,7 +253,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
-                dispatch_units user, :log, {:log => log}
+                dispatch_units({user.id => {:log => log}})
               end #case
             rescue Exception => e
               ex e
@@ -366,21 +374,19 @@ class OrbApp
     end
   end
 
-  def dispatch_scores
-    dispatch_changes({:data_type => 'scores', :scores => @game.collect_scores})
+  # users_data = {user.id => data, ...}
+  def dispatch_units(users_data = {})
+    dispatch_changes({:data_type => 'units', :units => @game.all_units(users_data)}, users_data)
   end
 
-  def dispatch_units(user = nil, action = nil, data = {})
-    dispatch_changes({:data_type => 'units', :units => @game.all_units(user)}, user, action, data)
-  end
-
-  def dispatch_changes(changes, user = nil, action = nil, data = {})
+  # users_data = {user.id => data, ...}
+  def dispatch_changes(changes, users_data = {})
     @conn_pool.each_value do |conn|
       unless conn.nil? && conn.has_key?[:user] && conn[:user]
         changes[:actions] = conn[:user].actions_arr
         changes[:banners] = Banner.get_by_user(conn[:user])
-        if user && action && conn[:user] == user
-          conn[:ws].send JSON.generate(changes.merge({:action => action}).merge(data))
+        if users_data.has_key?(conn[:user].id)
+          conn[:ws].send JSON.generate(changes.merge(users_data[conn[:user].id]))
         else
           conn[:ws].send JSON.generate(changes)
         end

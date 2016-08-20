@@ -39,6 +39,15 @@ class WS
             # App init finished
             app.initialized = true
           when 'units'
+            if data.dmg
+              if data.defender
+                app.map.dmg(data.ca_dmg, data.dmg, data.d_id, data.a_id, 789, 123)
+                app.log('damage taken ' + data.dmg)
+                app.log('damage dealt ' + data.ca_dmg)
+              else
+                app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id, 123, 789)
+                app.log('damage dealt ' + data.dmg)
+                app.log('damage taken ' + data.ca_dmg)
             app.banners = data.banners
             app.init_units data.units
             if data.active_unit_id
@@ -49,15 +58,6 @@ class WS
             # refresh modals
             app.refresh_modals()
             app.attacking = false
-          when 'dmg'
-            app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
-            app.log('damage dealt ' + data.dmg)
-            app.log('damage taken ' + data.ca_dmg)
-            app.attacking = false
-          when 'enemy_dmg'
-            app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id)
-            app.log('damage dealt ' + data.dmg)
-            app.log('damage taken ' + data.ca_dmg)
           when 'error'
             switch data.error
               when 'wrong_token' then location.pathname = '/'

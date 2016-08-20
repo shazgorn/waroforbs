@@ -41,18 +41,23 @@ class Game
   # Select and return all units.
   # Select user`s town and select adjacent companies to it (one can add more
   # squads in barracs)
-  def all_units user=nil
+  def all_units(users = {})
     units = Unit.all
-    if user
-      town = units.values.select{|unit| unit.type == :town && unit.user.id == user.id}.first
-      if town
-        town.adj_companies = []
-        units.each_value{|unit|
-          if unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
-            town.adj_companies.push(unit.id)
+    if users.length
+      users.each{|id, data|
+        user = User.get(id)
+        if user
+          town = units.values.select{|unit| unit.type == :town && unit.user.id == user.id}.first
+          if town
+            town.adj_companies = []
+            units.each_value{|unit|
+              if unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
+                town.adj_companies.push(unit.id)
+              end
+            }
           end
-        }
-      end
+        end
+      }
     else
       all_units_for_all units
     end
@@ -100,7 +105,7 @@ class Game
       :user_id => user.id,
       :actions => user.actions_arr,
       :banners => Banner.get_by_user(user),
-      :units => all_units(user),
+      :units => all_units({user.id => {}}),
       :cells => @map.cells,
       :TOWN_RADIUS => Town::RADIUS,
       :building_states => {

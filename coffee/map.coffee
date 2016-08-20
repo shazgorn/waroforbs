@@ -96,7 +96,7 @@ class Map
       cell.attr('title', mapCell['@x'] + ',' + mapCell['@y'] + ' ' + mapCell['@type'])
     cell
 
-  applyDmgTo: (cell, dmg, type) ->
+  applyDmgTo: (cell, dmg, type, timeout) ->
     d = $(document.createElement('span'))
     d.html(dmg)
     d.addClass('dmg').addClass('dmg_start').addClass("#{type}_dmg_start")
@@ -107,11 +107,11 @@ class Map
     setTimeout(() ->
         d.addClass('dmg_end').addClass("#{type}_dmg_end")
         setTimeout((() -> d.remove()), 1234)
-    , 123)
+    , timeout)
 
-  dmg: (dmg, ca_dmg, a_id, d_id) ->
-    @applyDmgTo($("#unit-#{d_id}").parent(), dmg,    'def')
-    @applyDmgTo($("#unit-#{a_id}").parent(), ca_dmg, 'att')
+  dmg: (dmg, ca_dmg, a_id, d_id, a_delay, d_delay) ->
+    @applyDmgTo($("#unit-#{d_id}").parent(), dmg,    'def', a_delay)
+    @applyDmgTo($("#unit-#{a_id}").parent(), ca_dmg, 'att', d_delay)
 
   remove_units: () ->
     $('.unit').remove()
