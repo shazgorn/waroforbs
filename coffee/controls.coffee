@@ -82,10 +82,15 @@ class Controls
         $(id_sel + ' .unit-squads-info').html(unit['@squads'])
       when 'town'
         $(id_sel + ' .unit-name-info').html('T')
-        #$(id_sel + ' .unit-ap-info').remove()
-        #$(id_sel + ' .unit-squads-info').remove()
+        $(id_sel + ' .unit-action-info').html(
+          $(document.createElement('button'))
+            .html('Open')
+            .data('id', unit['@id'])
+            .click((e) ->
+              App.town_controls.open_town($(this).data('id'))
+            )
+        )
     $(id_sel + ' .unit-id-info').html(unit['@id'])
-    #$(id_sel + ' .player-name-info').html(unit['@user_name'])
     $(id_sel + ' .unit-hp-info').html(unit['@hp'] + '/' + unit['@max_hp'])
     $(id_sel + ' .unit-xy-info').html('{' + unit['@x'] + ',' + unit['@y'] + '}')
     $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])

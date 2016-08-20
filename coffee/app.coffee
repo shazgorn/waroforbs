@@ -12,7 +12,6 @@ class Application
     @ws = new WS this
     @initialized = false
     @attacking = false
-    @last_town = null
     @cells = null
     @TOWN_RADIUS = null
 
@@ -55,7 +54,7 @@ class Application
     @ws.create_company_from_banner(banner_id)
 
   add_squad_to_company: (company_id) ->
-    @ws.add_squad_to_company(company_id, @last_town)
+    @ws.add_squad_to_company(company_id, @town_controls.last_town)
 
   delete_banner: (banner_id) ->
     @ws.delete_banner(banner_id)
@@ -144,8 +143,7 @@ class Application
     $(unit).addClass('select-target').off('click').on('click', () =>
       @set_active_unit($(unit).data('id'))
       if $(unit).hasClass('player-town')
-        $('.modal.town').show()
-        @last_town = $(unit).data('id')
+        @town_controls.open_town($(unit).data('id'))
     )
 
   init_user_controls: (actions) ->

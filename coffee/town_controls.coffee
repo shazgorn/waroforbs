@@ -1,7 +1,10 @@
 class TownControls
   constructor: () ->
     _town_controls = this
+    _this = this
+
     @open_building_id = null
+    @last_town = null
     @town_actions =
       'create_default_company': {
         name: 'Create company',
@@ -66,7 +69,7 @@ class TownControls
             .addClass('modal-building-fill')
             .appendTo('.modal.building .modal-building-inner')
 
-          for company_id in App.units[App.last_town].adj_companies
+          for company_id in App.units[_this.last_town].adj_companies
             company = App.my_units[company_id]
             card = $(document.createElement('div'))
               .addClass('company-card')
@@ -250,6 +253,10 @@ class TownControls
           .attr('title', type + ' ' + count)
           .html(count)
           .appendTo('.town-inventory-inner')
+
+  open_town: (id) ->
+    @last_town = id
+    $('.modal.town').show()
 
   open_building: (button) ->
     $('.modal').hide()
