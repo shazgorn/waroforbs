@@ -3,4 +3,5 @@ port: 9293
 log: /home/user/public_html/waroforbs/log/app.log
 pid: tmp/pids/app.pid
 BLOCKS_IN_MAP_DIM: 5
+GREEN_ORB_PER_BLOCK: 3
 GREEN_ORB_LIMIT: 100

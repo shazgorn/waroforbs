@@ -262,7 +262,7 @@ class Orb < Unit
 end
 
 class GreenOrb < Orb
-  LIMIT = Config.get("GREEN_ORB_LIMIT")
+  LIMIT = Config.get("GREEN_ORB_PER_BLOCK") * (Config.get("BLOCKS_IN_MAP_DIM") ** 2)
   TYPE = :orb
 
   def initialize()

@@ -181,7 +181,6 @@ class OrbApp
                 dispatch_units({user.id => {:active_unit_id => user.active_unit_id}})
               when :new_town
                 @game.new_town user, user.active_unit_id
-                p @game.all_units
                 dispatch_units
               when :restart
                 @game.restart token
