@@ -8,6 +8,8 @@ Cuba.plugin Cuba::Render
 Cuba.settings[:render][:template_engine] = "slim"
 
 Cuba.define do
+  # Drop cache. See Cuba::Render module
+  Thread.current[:_cache] = Tilt::Cache.new
 
   on root do
     render('index', {:body_class => 'main'})
