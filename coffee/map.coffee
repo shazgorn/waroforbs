@@ -6,10 +6,10 @@ class Map
     @set_size(App.options.map_height, App.options.map_width)
 
     #this.initTooltip()
-    this.initDragHandler()
     this.addBlocks()
     if App.options.all_cells
       @addAllCells(cells)
+    this.initDragHandler()
 
   set_size: (height, width) ->
     $('#map').height(height * @cell_dim_in_px).width(width * @cell_dim_in_px)
@@ -26,12 +26,26 @@ class Map
     top = 0
     left = 0
     ee = 0
+    $last_block = $('.block:last-of-type')
+    pos = $last_block.position()
+    far_left = -1 * pos.left
+    far_top = -1 * pos.top
     setInterval(() ->
       if moving && ee
         dx = ee.pageX - sx
         dy = ee.pageY - sy
         unless dx in [-2..2] || dy in [-2..2]
-          $('#blocks').css('top', top + dy + 'px').css('left', left + dx + 'px')
+          new_x = left + dx
+          new_y = top + dy
+          if new_x > 200
+            new_x = 200
+          if new_y > 200
+            new_y = 200
+          if new_x < far_left
+            new_x = far_left
+          if new_y < far_top
+            new_y = far_top
+          $('#blocks').css('top', new_y + 'px').css('left', new_x + 'px')
         false
     , 123)
     $('#map')

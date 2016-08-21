@@ -31,7 +31,6 @@ class Options
       @load_int(key, d)
     else if type == 'bool'
       @load_bool(key, d)
-    console.log('option', key, this[key], trigger)
     if callback && trigger
       callback(_this)
     $('#' + key).change(() ->
@@ -68,18 +67,15 @@ class Options
 
   load_bool: (key) ->
     val = @get_bool(key)
-    console.log('load_bool', key, val)
     $('#' + key).prop("checked", this[key])
 
   # Get from localStorage -> Options
   get: (key) ->
     val = localStorage.getItem(key)
-    console.log('get', key, val)
     this[key] = val
 
   get_bool: (key, d) ->
     val = @get(key) == 'true' ? true : false
-    console.log('get_bool', key, val)
     this[key] = val
 
   get_int: (key, d = 0) ->
