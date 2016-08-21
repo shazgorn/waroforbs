@@ -16,12 +16,14 @@
         - (9..50).step(2) do |i|
           <option value="#{i}">#{i}</option>
     div
-      label for="log_height" title="Max: 10" Log height, lines
-      input#log_height type="text" value="5"
+      label for="log_height" Log height, lines
+      select#log_height
+        - (0..10).each do |i|
+          <option value="#{i}">#{i}</option>
     div
       label for="all_cells" title="Refresh page" All cells *
       input#all_cells type="checkbox"
     div
       label for="show_grid" Show grid
       input#show_grid type="checkbox"
-    button#save-options Save
+    /!button#save-options Save

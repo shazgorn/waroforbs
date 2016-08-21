@@ -114,7 +114,8 @@ input[type="text"] {
 }
 
 #map.bordered-cells .cell {
-    border: thin dashed #555;
+    border-bottom: thin dashed darkolivegreen;
+    border-right: thin dashed darkolivegreen;
 }
 
 #map {

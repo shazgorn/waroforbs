@@ -12,8 +12,6 @@ class Options
     @bind()
 
     @option('log_height', 5, 'int', (t) ->
-      if t.log_height > 10
-        t.log_height = 10
       $('#log').height(t.log_height * 20)
     , true)
     map_callback = (t) -> App.map.set_size(t.map_height, t.map_width)
