@@ -64,8 +64,8 @@ class Options
     @get(key)
     $('#' + key).val(this[key])
 
-  load_int: (key) ->
-    @get_int(key)
+  load_int: (key, d) ->
+    @get_int(key, d)
     $('#' + key).val(this[key])
 
   load_bool: (key) ->
