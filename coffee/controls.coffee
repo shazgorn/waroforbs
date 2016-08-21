@@ -96,8 +96,8 @@ class Controls
     $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])
     $(id_sel + ' .unit-dmg-info').html(unit['@dmg'])
     $(id_sel + ' .unit-def-info').html(unit['@def'])
-    $(id_sel + ' .unit-info-destroy').data('id', unit['@id']).click(() ->
-      App.destroy($(this).data('id'))
+    $(id_sel + ' .unit-info-disband').data('id', unit['@id']).click(() ->
+      App.disband($(this).data('id'))
     )
 
   set_active_unit: (id) ->

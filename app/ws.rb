@@ -187,11 +187,11 @@ class OrbApp
                   log = log_str
                 end
                 dispatch_units({user.id => {:log => log}})
-              when :destroy
+              when :disband
                 unit_id = data['unit_id']
                 begin
-                  @game.destroy user, unit_id
-                  log = "Unit ##{unit_id} destroyed"
+                  @game.disband user, unit_id
+                  log = "Unit ##{unit_id} disbanded"
                 rescue OrbError => log_str
                   log = log_str
                 end

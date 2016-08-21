@@ -77,9 +77,9 @@ class Game
   end
 
   ##################### DATA MODIFICATION METHODS  #######################
-  def destroy user, id
+  def disband user, id
     unit = Unit.get_by_user_id user, id
-    raise OrbError, "No unit to destroy" unless unit
+    raise OrbError, "No unit to disband" unless unit
     Unit.delete id
     recalculate_user_actions user
   end
