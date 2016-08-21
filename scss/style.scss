@@ -63,22 +63,48 @@ $wood-color: Sienna;
     background-color: gray;
     color: black;
 }
-
-body {
-    background-color: black;
-    font-family: $font-family;
-    font-size: 1rem;
-}
-
-button {
+@mixin themed() {
     background-color: $theme-bg;
     border: thin solid $theme-border;
     color: $theme-color;
-    cursor: pointer;
-    font-family: $font-family;
+}
+@mixin themed-hovered() {
+    @include themed();
     &:hover {
         background-color: $theme-hover;
     }
+}
+@mixin button() {
+    @include themed-hovered();
+    cursor: pointer;
+    font-family: $font-family;
+}
+
+body {
+    background-color: black;
+    color: $theme-color;
+    font-family: $font-family;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+}
+body#main {
+    text-align: center;
+    #login_form {
+        div {
+            margin: 1rem 0;
+        }
+    }
+}
+
+button {
+    @include button();
+}
+input[type="submit"] {
+    @include button();
+}
+input[type="text"] {
+    @include themed();
 }
 .pointer {
     cursor: pointer;
@@ -223,10 +249,7 @@ button {
     margin: 1rem 0;
 }
 #right-col {
-    background-color: $theme-bg;
-    border: thin solid $theme-border;
-    color: $theme-color;
-    margin-right: 0.5rem;
+    @include themed();
     opacity: 0.9;
     padding: 1rem;
     position: fixed;
@@ -237,7 +260,7 @@ button {
         opacity: 1;
     }
     #opt-help * {
-        margin-right: 1rem;
+        width: 33%;
     }
     .unit-info-template {
 	display: none;
@@ -369,9 +392,7 @@ button {
 }
 
 .modal {
-    background-color: $theme-bg;
-    border: thin solid $theme-border;
-    color: $theme-color;
+    @include themed();
     display: none;
     min-height: 50%;
     left: 2rem;
@@ -404,6 +425,7 @@ button {
         }
         .modal-controls a {
             color: $theme-color;
+            text-decoration-line: none;
         }
         .close-modal, .modal-controls {
             float: right;

@@ -10,7 +10,7 @@ Cuba.settings[:render][:template_engine] = "slim"
 Cuba.define do
 
   on root do
-    render('index')
+    render('index', {:body_class => 'main'})
   end
 
   on post do
@@ -18,7 +18,7 @@ Cuba.define do
 
   on get do
     on 'game' do
-      render("game")
+      render('game', {:body_class => 'game'})
     end
 
     on 'js', extension('js') do |file|

@@ -19,6 +19,10 @@ class Options
       $('.modal').hide()
       $('.modal.help').show()
     )
+    $('#exit').click(() ->
+      localStorage.setItem('token', '')
+      location.pathname = '/'
+    )
     # log_heigth
     @log_height = localStorage.getItem('log_height')
     unless @log_height
