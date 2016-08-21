@@ -20,7 +20,7 @@ class Unit
     @dead = false
     @x = nil
     @y = nil
-    @def = 0
+    @defence = 0
     @ap = @max_ap = 0
     @hp = @max_hp = 1
     @@units[@id] = self
@@ -64,7 +64,7 @@ class Unit
   end
 
   def take_dmg(income_dmg)
-    reduced_dmg = income_dmg - @def
+    reduced_dmg = income_dmg - @defence
     reduced_dmg = 1 if reduced_dmg < 1
     @hp -= reduced_dmg
     if @hp <= 0
@@ -78,7 +78,7 @@ class Unit
   end
 
   def dmg
-    @dmg + Random.rand(@dmg)
+    @damage + Random.rand(@damage)
   end
 
   def place(x = nil, y = nil)
@@ -174,8 +174,6 @@ class Unit
 end
 
 class Company < Unit
-  #attr_reader :dmg, :def
-
   MAX_SQUADS = 10
   BASE_DMG = 30
   BASE_HP = 50
@@ -186,8 +184,8 @@ class Company < Unit
     super(:company, user)
     @banner = banner
     @banner.unit = self
-    @dmg = (BASE_DMG * banner.mod_dmg).round(0)
-    @def = (BASE_DEF * banner.mod_def).round(0)
+    @damage = (BASE_DMG * banner.mod_dmg).round(0)
+    @defence = (BASE_DEF * banner.mod_def).round(0)
     # @hp - hp of 1st squad in line
     @hp = @max_hp = (BASE_HP * banner.mod_max_hp).round(0)
     @ap = @max_ap = (BASE_AP * banner.mod_max_ap).round(0)
@@ -207,7 +205,7 @@ class Company < Unit
 
   def take_dmg(income_dmg)
     total_hp = @max_hp * (@squads - 1) + @hp
-    reduced_dmg = income_dmg - (@def * @squads)
+    reduced_dmg = income_dmg - (@defence * @squads)
     reduced_dmg = 1 if reduced_dmg < 1
     total_hp -= reduced_dmg
     if total_hp <= 0
@@ -226,7 +224,7 @@ class Company < Unit
   end
 
   def dmg
-    @squads * (@dmg + Random.rand(@dmg * 0.2)).round(0)
+    @squads * (@damage + Random.rand(@damage * 0.2)).round(0)
   end
 
   class << self
@@ -237,22 +235,14 @@ class Company < Unit
 
 end
 
-class BotCompany < Company
-  def initialize(user)
-    super(user)
-    @hp = 300
-    @dmg = 20
-  end
-end
-
 class Orb < Unit
   LIMIT = 1
 
   def initialize(type, hp, damage, defence)
     super(type)
     @max_hp = @hp = hp
-    @dmg = damage
-    @def = defence
+    @damage = damage
+    @defence = defence
   end
 
   class << self
@@ -353,8 +343,8 @@ class Town < Unit
   def initialize(user)
     super(:town, user)
     @hp = @max_hp = 300
-    @dmg = 5
-    @def = 50
+    @damage = 5
+    @defence = 50
     @inventory = {
       :gold => 1000,
       :wood => 50,

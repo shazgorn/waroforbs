@@ -114,6 +114,7 @@ class Game
       :banners => Banner.get_by_user(user),
       :units => all_units({user.id => {}}),
       :cells => @map.cells,
+      :logs => Log.get_by_user(user),
       :TOWN_RADIUS => Town::RADIUS,
       :building_states => {
         :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
@@ -290,9 +291,6 @@ class Game
       end
     end
     nil
-  end
-
-  def revive(token)
   end
 
   def restart(token)

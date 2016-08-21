@@ -94,8 +94,8 @@ class Controls
     $(id_sel + ' .unit-hp-info').html(unit['@hp'] + '/' + unit['@max_hp'])
     $(id_sel + ' .unit-xy-info').html('{' + unit['@x'] + ',' + unit['@y'] + '}')
     $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])
-    $(id_sel + ' .unit-dmg-info').html(unit['@dmg'])
-    $(id_sel + ' .unit-def-info').html(unit['@def'])
+    $(id_sel + ' .unit-dmg-info').html(unit['@damage'])
+    $(id_sel + ' .unit-def-info').html(unit['@defence'])
     $(id_sel + ' .unit-info-disband').data('id', unit['@id']).click(() ->
       App.disband($(this).data('id'))
     )

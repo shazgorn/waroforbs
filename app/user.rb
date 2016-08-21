@@ -46,9 +46,5 @@ class User
 end
 
 class AdminUser < User
-  @actions = [:spawn_bot]
-end
-
-class Bot < User
-
+  @actions = []
 end

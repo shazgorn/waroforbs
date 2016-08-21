@@ -187,9 +187,6 @@ input[type="text"] {
     .other-player-hero {
         background-image: url('/img/other_player_hero.png');
     }
-    .bot-hero {
-        background-image: url('/img/bot_hero.png');
-    }
     .green-orb {
         border-color: black;
         border-radius: 20px;
@@ -381,6 +378,10 @@ input[type="text"] {
         height: 20px;
         line-height: 20px;
         transition: color 1s ease;
+        time {
+            display: inline-block;
+            width: 10rem;
+        }
     }
 
     .new-log-entry {

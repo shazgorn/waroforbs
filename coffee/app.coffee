@@ -25,12 +25,6 @@ class Application
     if @initialized and @my_units_ids.length > 0
       @controls.unlock_controls()
 
-  spawn_bot: (id) ->
-    @ws.spawn_bot()
-
-  revive: () ->
-    @ws.revive()
-
   new_hero: () ->
     @ws.new_hero()
 

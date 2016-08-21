@@ -7,8 +7,8 @@ class Unit
     @x = unit['@x']
     @y = unit['@y']
     @type = unit['@type']
-    @dmg = unit['@dmg']
-    @def = unit['@def']
+    @damage = unit['@damage']
+    @defence = unit['@defence']
 
   # to call after unit initialization
   init: () ->
@@ -31,11 +31,6 @@ class OtherPlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'other-player-hero'
-
-class BotCompany extends Company
-  constructor: (unit) ->
-    super unit
-    @css_class = 'bot-hero'
 
 class GreenOrb extends Unit
   constructor: (unit) ->
@@ -91,7 +86,6 @@ UnitFactory = (unit_hash, user_id) ->
         if unit_hash['@user_id']
           if unit_hash['@user_id'] == user_id
             unit = new PlayerCompany unit_hash
-          else if unit_hash['@user_name'].search('bot') != -1 then unit = new BotCompany unit_hash
           else unit = new OtherPlayerCompany unit_hash
       when "orb" then unit = new GreenOrb unit_hash
       when "black_orb" then unit = new BlackOrb unit_hash

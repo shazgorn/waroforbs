@@ -36,6 +36,9 @@ class WS
             app.set_active_unit_directly(data.active_unit_id)
             app.init_user_controls(data.actions)
 
+            for l in data.logs
+              app.log('<time>' + l.time + ':</time> ' + l.log)
+
             # App init finished
             app.initialized = true
           when 'units'
@@ -53,7 +56,8 @@ class WS
             if data.active_unit_id
               app.set_active_unit data.active_unit_id
             else
-              app.set_active_unit app.active_unit_id
+              null
+              #app.set_active_unit app.active_unit_id
             app.init_user_controls data.actions
             # refresh modals
             app.refresh_modals()
@@ -76,13 +80,6 @@ class WS
       })
     )
 
-  spawn_bot: () ->
-    @socket.send(
-      JSON.stringify({
-          op: 'spawn_bot'
-      })
-    )
-
   attack: (unit_id, params) ->
     @socket.send(
       JSON.stringify({
@@ -90,14 +87,6 @@ class WS
           unit_id: unit_id,
           op: 'attack',
           params: params
-      })
-    )
-
-  revive: () ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'revive'
       })
     )
 

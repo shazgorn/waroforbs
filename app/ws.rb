@@ -7,6 +7,7 @@ require 'yaml'
 require 'logger'
 
 require_relative 'logging'
+require_relative 'log'
 require_relative 'config'
 require_relative 'jsonable'
 require_relative 'building'
@@ -25,8 +26,6 @@ end
 
 # Class
 class OrbApp
-  MAX_BOTS = 1
-
   include Logging
   
   def initialize
@@ -48,7 +47,6 @@ class OrbApp
     # conn_pool => {ws.signature => {:ws => ws, :user => user}}
     @conn_pool = {}
     @game = Game.new(generate)
-    @bot_id = 1
     JSON.dump_default_options[:max_nesting] = 10
   end
 
@@ -141,9 +139,11 @@ class OrbApp
                   begin
                     res = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
                     log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
+                    Log.log user, log
                     dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
                   rescue OrbError => log_str
                     log = log_str
+                    Log.log user, log
                     dispatch_units({user.id => {:log => log}})
                   end
                 else
@@ -166,19 +166,18 @@ class OrbApp
                   if res.has_key?(:d_user) && res[:d_user] && user_online?(res[:d_user])
                     users[res[:d_user].id] = res[:d_data]
                   end
+                  Log.log user, "attack"
                   dispatch_units(users)
                 rescue OrbError => log_str
                   log = log_str
+                  Log.log user, log
                   dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
                 end
-              when :spawn_bot
-                spawn_bot
-              when :revive
-                @game.revive token
-                dispatch_units
               when :new_hero
                 @game.new_random_hero user
-                dispatch_units({user.id => {:active_unit_id => user.active_unit_id}})
+                log = 'New hero spawned'
+                Log.log user, log
+                dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
               when :new_town
                 begin
                   @game.new_town user, user.active_unit_id
@@ -186,6 +185,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :disband
                 unit_id = data['unit_id']
@@ -195,6 +195,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :restart
                 @game.restart token
@@ -210,6 +211,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :create_random_banner
                 log = "Banner bought"
@@ -218,6 +220,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :delete_banner
                 res = @game.delete_banner user, data['banner_id']
@@ -226,6 +229,7 @@ class OrbApp
                 else
                   log = "Unable to delete banner"
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :create_default_company
                 res = @game.create_company user, :new
@@ -234,6 +238,7 @@ class OrbApp
                 else
                   log = "Company created"
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
               when :create_company_from_banner
                 res = @game.create_company user, data['banner_id']
@@ -242,6 +247,7 @@ class OrbApp
                 else
                   log = "Company created"
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log}})
               when :set_free_worker_to_xy
                 log = "Set worker to #{data['x']}, #{data['y']}"
@@ -250,6 +256,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :free_worker
                 log = "Set worker free on #{data['x']}, #{data['y']}"
@@ -258,6 +265,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               when :add_squad_to_company
                 log = "Squad added"
@@ -266,6 +274,7 @@ class OrbApp
                 rescue OrbError => log_str
                   log = log_str
                 end
+                Log.log user, log
                 dispatch_units({user.id => {:log => log}})
               end #case
             rescue Exception => e
@@ -339,7 +348,7 @@ class OrbApp
                 @game.random_move orb
                 dispatch_units
               end
-              sleep(3600)
+              sleep(3)
             end
           rescue => e
             ex e
@@ -348,42 +357,6 @@ class OrbApp
       end
     rescue => e
       ex e
-    end
-  end
-
-  def spawn_bot
-    if User.all.values.count{|user| user.login.index('bot') != nil} < MAX_BOTS
-      Thread.new {
-        begin
-          bot_name = 'bot_' + @bot_id.to_s
-          @bot_id += 1
-          bot = Bot.new(bot_name)
-          @game.map.place_at_random bot.hero
-          dmg = nil
-          while true
-            dmg = nil
-            xy = @game.map.h2c (User.get bot.id).hero.pos
-            (-1..1).each do |adx|
-              (-1..1).each do |ady|
-                x = xy[:x] + adx
-                y = xy[:y] + ady
-                res = @game.attack User.get(bot.id).hero, x, y
-                dmg = res[:dmg] unless res[:dmg].nil?
-              end
-            end
-            sleep(2)
-            if dmg.nil?
-              dx = Random.rand(3) - 1
-              dy = Random.rand(3) - 1
-              @game.move_unit_by User.get(bot.id).hero, dx, dy
-            end
-            dispatch_units
-            sleep(1)
-          end
-        rescue => e
-          ex e
-        end
-      }
     end
   end
 
