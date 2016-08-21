@@ -113,6 +113,10 @@ input[type="text"] {
     height: 400px;
 }
 
+#map.bordered-cells .cell {
+    border: thin dashed #555;
+}
+
 #map {
     background-color: black;
     border: thin solid $theme-border;
@@ -130,7 +134,6 @@ input[type="text"] {
         width: $block-dimension;
     }
     .cell {
-        /*border: thin dashed #555;*/
         box-sizing: border-box;
         height: $cell-dimension;
         position: absolute;
@@ -251,7 +254,7 @@ input[type="text"] {
 #right-col {
     @include themed();
     opacity: 0.9;
-    padding: 1rem;
+    padding: 0 1rem;
     position: fixed;
     right: 0;
     width: $right-col-width;

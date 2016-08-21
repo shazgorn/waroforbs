@@ -1,16 +1,97 @@
 class Options
   constructor: () ->
     @log_height = 100
-    @mhc = 13
-    @mwc = 13
+    @map_height = 13
+    @map_width = 13
+    @all_cells = false
+    @show_grid = false
     @init_options()
+
+  init_options: () ->
+    _this = this
+    @bind()
+
+    @option('log_height', 5, 'int', (t) ->
+      if t.log_height > 10
+        t.log_height = 10
+      $('#log').height(t.log_height * 20)
+    , true)
+    map_callback = (t) -> App.map.set_size(t.map_height, t.map_width)
+    @option('map_height', 13, 'int', map_callback, false)
+    @option('map_width', 13, 'int', map_callback, false)
+    @option('all_cells', false, 'bool', null, false)
+    @option('show_grid', false, 'bool', (t) ->
+      if t.show_grid
+        $('#map').addClass("bordered-cells")
+      else
+        $('#map').removeClass("bordered-cells")
+    , true)
+
+  option: (key, d, type, callback, trigger) ->
+    _this = this
+    if type == 'int'
+      @load_int(key, d)
+    else if type == 'bool'
+      @load_bool(key, d)
+    console.log('option', key, this[key], trigger)
+    if callback && trigger
+      callback(_this)
+    $('#' + key).change(() ->
+      if type == 'int'
+        _this.imp_int(key)
+      else if type == 'bool'
+        _this.imp_bool(key)
+      if callback
+        callback(_this)
+    )
 
   set: (key, value) ->
     localStorage.setItem(key, value)
     this[key] = value
 
-  init_options: () ->
-    _this = this
+  # Import form -> Options, localStorage
+  imp: (key) ->
+    $('#' + key).val()
+
+  imp_int: (key) ->
+    @set(key, parseInt(@imp(key)))
+
+  imp_bool: (key) ->
+    @set(key, $('#' + key).prop("checked"))
+
+  # Load data Options -> Form
+  load: (key) ->
+    @get(key)
+    $('#' + key).val(this[key])
+
+  load_int: (key) ->
+    @get_int(key)
+    $('#' + key).val(this[key])
+
+  load_bool: (key) ->
+    val = @get_bool(key)
+    console.log('load_bool', key, val)
+    $('#' + key).prop("checked", this[key])
+
+  # Get from localStorage -> Options
+  get: (key) ->
+    val = localStorage.getItem(key)
+    console.log('get', key, val)
+    this[key] = val
+
+  get_bool: (key, d) ->
+    val = @get(key) == 'true' ? true : false
+    console.log('get_bool', key, val)
+    this[key] = val
+
+  get_int: (key, d = 0) ->
+    val = parseInt(@get(key))
+    if !val || isNaN(val)
+      val = d
+    this[key] = val
+
+  # Bind event hanlders to buttons
+  bind: () ->
     $('#open-options').click(() ->
       $('.modal').hide()
       $('.modal.options').show()
@@ -22,39 +103,6 @@ class Options
     $('#exit').click(() ->
       localStorage.setItem('token', '')
       location.pathname = '/'
-    )
-    # log_heigth
-    @log_height = localStorage.getItem('log_height')
-    unless @log_height
-      @log_height = 100
-    $('#log').height(@log_height)
-    $('#log_height').val(@log_height)
-    $('#save-options').click(() =>
-      @log_height = $('#log_height').val()
-      @set('log_height', @log_height)
-      $('#log').height(@log_height)
-    )
-    # map height cells
-    @mhc = parseInt(localStorage.getItem('mhc'))
-    if !@mhc || isNaN(@mhc)
-      @mhc = 13
-      @set('mhc', @mhc)
-    $('#map_height').val(@mhc)
-
-    #map width cells
-    @mwc = parseInt(localStorage.getItem('mwc'))
-    if !@mwc || isNaN(@mwc)
-      @mwc = 13
-      @set('mwc', @mwc)
-    $('#map_width').val(@mwc)
-
-    $('#map_height').change((e) ->
-      _this.set('mhc', parseInt($(this).val()))
-      App.map.set_size(_this.mhc, _this.mwc)
-    )
-    $('#map_width').change((e) ->
-      _this.set('mwc', parseInt($(this).val()))
-      App.map.set_size(_this.mhc, _this.mwc)
     )
 
 this.Options = Options

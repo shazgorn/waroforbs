@@ -21,12 +21,12 @@ class WS
         switch data.data_type
           when 'init_map'
             # App init set properties
-            app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks
+            app.cells = data.cells
+            app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks, data.cells
             app.active_unit_id = data.active_unit_id
             app.user_id = data.user_id
             app.banners = data.banners
             app.building_states = data.building_states
-            app.cells = data.cells
             app.TOWN_RADIUS = data.TOWN_RADIUS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
 

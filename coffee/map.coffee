@@ -1,16 +1,18 @@
 class Map
   constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells,
-  @map_dim_in_blocks) ->
+  @map_dim_in_blocks, cells) ->
     this_obj = this
 
-    @set_size(App.options.mhc, App.options.mwc)
+    @set_size(App.options.map_height, App.options.map_width)
 
     #this.initTooltip()
     this.initDragHandler()
     this.addBlocks()
+    if App.options.all_cells
+      @addAllCells(cells)
 
-  set_size: (mhc, mwc) ->
-    $('#map').height(mhc * @cell_dim_in_px).width(mwc * @cell_dim_in_px)
+  set_size: (height, width) ->
+    $('#map').height(height * @cell_dim_in_px).width(width * @cell_dim_in_px)
 
   initTooltip: () ->
     $('#blocks').mousemove((e) ->
@@ -77,6 +79,10 @@ class Map
     if mapCell
       cell.attr('title', mapCell['@x'] + ',' + mapCell['@y'] + ' ' + mapCell['@type'])
     cell
+
+  addAllCells: (cells) ->
+    for id, cell of cells
+      @addCell(cell['@x'], cell['@y'])
 
   applyDmgTo: (cell, dmg, type, timeout) ->
     d = $(document.createElement('span'))
