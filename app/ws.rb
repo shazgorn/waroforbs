@@ -27,7 +27,7 @@ end
 # Class
 class OrbApp
   include Logging
-  
+
   def initialize
     generate = false
     ARGV.each{|k|
@@ -80,14 +80,12 @@ class OrbApp
   end
 
   def send_attack_info_to_def res
-    if res && res.has_key?(:d_user) && res[:d_user]
-      d_conn = get_conn_by_user res[:d_user]
-      if d_conn
-        d_conn[:ws].send JSON.generate(res[:d_data])
-      end
-      return true
-    end
-    false
+    if !res return false end
+    if !res.has_key?(:d_user) return false end
+    if !res[:d_user] return false end
+
+    d_conn = get_conn_by_user res[:d_user]
+    if d_conn d_conn[:ws].send JSON.generate(res[:d_data]) end
   end
 
   # run me last, infinite loop you know
