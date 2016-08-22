@@ -86,6 +86,7 @@ class OrbApp
 
     d_conn = get_conn_by_user res[:d_user]
     if d_conn d_conn[:ws].send JSON.generate(res[:d_data]) end
+    true
   end
 
   # run me last, infinite loop you know
