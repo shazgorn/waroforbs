@@ -13,6 +13,7 @@ require_relative 'jsonable'
 require_relative 'building'
 require_relative 'banner'
 require_relative 'unit'
+require_relative 'orb'
 require_relative 'user'
 require_relative 'map'
 require_relative 'attack'
@@ -42,7 +43,7 @@ class OrbApp
     File.open(Config.get('pid'), 'w') {|f|
       f.write Process.pid
     }
-
+    logger.info "-----------------------------------------"
     logger.info "Create app"
     # conn_pool => {ws.signature => {:ws => ws, :user => user}}
     @conn_pool = {}
@@ -79,15 +80,10 @@ class OrbApp
     !get_conn_by_user(user).nil?
   end
 
-  def send_attack_info_to_def res
-    if res && res.has_key?(:d_user) && res[:d_user]
-      d_conn = get_conn_by_user res[:d_user]
-      if d_conn
-        d_conn[:ws].send JSON.generate(res[:d_data])
-      end
-      return true
+  def set_def_data users, res
+    if res.has_key?(:d_user) && res[:d_user] && user_online?(res[:d_user])
+      users[res[:d_user].id] = res[:d_data]
     end
-    false
   end
 
   # run me last, infinite loop you know
@@ -163,10 +159,8 @@ class OrbApp
                     :dead => res[:a_data][:dead],
                     :d_id => params['id']
                   }
-                  if res.has_key?(:d_user) && res[:d_user] && user_online?(res[:d_user])
-                    users[res[:d_user].id] = res[:d_data]
-                  end
-                  Log.log user, "attack"
+                  set_def_data users, res
+                  Log.log user, "attack #%d dmg: %d, ca_dmg: %d" % [params['id'], res[:a_data][:dmg], res[:a_data][:ca_dmg]]
                   dispatch_units(users)
                 rescue OrbError => log_str
                   log = log_str
@@ -298,7 +292,7 @@ class OrbApp
     exit
   end
 
-  def run_ap_restorer
+  def run_clock
     Thread.new do
       while true
         begin
@@ -334,21 +328,27 @@ class OrbApp
       if @game.black_orbs_below_limit
         orb = @game.spawn_black_orb
         @game.place_at_random orb
+        speed = Config.get("BLACK_ORB_START_SPEED")
+        max_speed = Config.get("BLACK_ORB_MAX_SPEED")
         logger.info "spawn black orb"
         dispatch_units
         Thread.new {
           begin
             while true
               res = @game.attack_adj_cells orb
-              attacked = send_attack_info_to_def res
-              if attacked
+              users = {}
+              if res
+                if res[:d_data][:dead]
+                  orb.lvl_up
+                  speed -= 1 if speed > max_speed
+                end
                 logger.info 'black orb attack'
-                dispatch_units
+                set_def_data users, res
               else
                 @game.random_move orb
-                dispatch_units
               end
-              sleep(3)
+              dispatch_units(users)
+              sleep(speed)
             end
           rescue => e
             ex e
@@ -385,5 +385,5 @@ end
 app = OrbApp.new
 app.run_green_orbs_spawner
 app.run_black_orb_spawner
-app.run_ap_restorer
+app.run_clock
 app.run_ws

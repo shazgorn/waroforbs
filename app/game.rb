@@ -327,10 +327,11 @@ class Game
     nil
   end
 
-  # a - attacker, d - defender
+  # a - attacker unit, d - defender unit
   def attack a, d
     raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
     res = Attack.attack a, d
+    Log.log d.user, "attack from %d dmg:%d, ca_dmg:%d" % [a.id, res[:d_data][:dmg], res[:d_data][:ca_dmg]] if d.user
     if res[:a_data][:dead]
       bury(a)
     end

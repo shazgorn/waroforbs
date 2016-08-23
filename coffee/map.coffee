@@ -100,9 +100,12 @@ class Map
 
   applyDmgTo: (cell, dmg, type, timeout) ->
     d = $(document.createElement('span'))
-    d.html(dmg)
-    d.addClass('dmg').addClass('dmg_start').addClass("#{type}_dmg_start")
-    $(cell).append(d)
+      .html(dmg)
+      .addClass('dmg')
+      .addClass('dmg_start')
+      .addClass("#{type}_dmg_start")
+      .appendTo(cell)
+
     ###
     If you apply it instantly it will fuck you up. I do love timeouts anyway...
     ###

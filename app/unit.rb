@@ -235,49 +235,6 @@ class Company < Unit
 
 end
 
-class Orb < Unit
-  LIMIT = 1
-
-  def initialize(type, hp, damage, defence)
-    super(type)
-    @max_hp = @hp = hp
-    @damage = damage
-    @defence = defence
-  end
-
-  class << self
-    def length
-      @@units.select{|k,unit| unit.type == self::TYPE}.length
-    end
-
-    def below_limit?
-      self.length < self::LIMIT
-    end
-  end
-end
-
-class GreenOrb < Orb
-  LIMIT = Config.get("GREEN_ORB_PER_BLOCK") * (Config.get("BLOCKS_IN_MAP_DIM") ** 2)
-  TYPE = :orb
-
-  def initialize()
-    super(TYPE, 100, 20, 3)
-  end
-end
-
-class BlackOrb < Orb
-  LIMIT = 1
-  TYPE = :black_orb
-
-  def initialize()
-    super(TYPE, 1000, 500, 100)
-  end
-
-  def can_move?(cost)
-    true
-  end
-end
-
 class Resource
   T = {
     :gold => {
