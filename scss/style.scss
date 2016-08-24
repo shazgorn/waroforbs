@@ -21,7 +21,8 @@ $theme-bg: saddlebrown;
 $theme-border: chocolate;
 $theme-color: lightyellow;
 $theme-hover: sienna;
-$modal-width: calc(80% - #{$right-col-width} + 4rem);
+// 2rem left + 2rem between right col + 2 rem for paddings
+$modal-width: calc(100% - #{$right-col-width} - 6rem);
 // - 2.5rem for padding + scroll
 $log-width: calc(100% - #{$right-col-width} - 2.5rem);
 // color of wood
@@ -81,6 +82,11 @@ $wood-color: Sienna;
     cursor: pointer;
     font-family: $font-family;
 }
+@mixin big-modal() {
+    bottom: 10%;
+    height: 80%;
+    overflow-y: auto;
+}
 
 body {
     background-color: black;
@@ -91,6 +97,7 @@ body {
     padding: 0;
 }
 body#main {
+    margin-top: 4rem;
     text-align: center;
     #login_form {
         div {
@@ -409,11 +416,10 @@ input[type="text"] {
 .modal {
     @include themed();
     display: none;
-    min-height: 50%;
     left: 2rem;
     opacity: 0.9;
     position: fixed;
-    top: 3rem;
+    top: 10%;
     width: $modal-width;
     z-index: 7;
 
@@ -528,6 +534,16 @@ input[type="text"] {
             @include res-stone();
         }
     }
+}
+
+.modal.town {
+    @include big-modal();
+}
+.modal.building {
+    @include big-modal();
+}
+.modal.help {
+    @include big-modal();
 }
 
 .modal.options {
