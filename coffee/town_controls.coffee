@@ -76,7 +76,7 @@ class TownControls
               .addClass('pointer')
               .data('id', company_id)
               .attr('title', 'Add squad')
-              .html("Company ##{company_id} <br> x,y: #{company.x},#{company.y}<br> dmg: #{company.dmg} <br> def: #{company.def} <br> hp:
+              .html("Company ##{company_id} <br> x,y: #{company.x},#{company.y}<br> damage: #{company.damage} <br> defence: #{company.defence} <br> hp:
   #{company.hp} <br>ap: #{company.ap} <br> squads: #{company.squads}")
               .appendTo('.modal.building .modal-building-fill')
               .click(() ->
