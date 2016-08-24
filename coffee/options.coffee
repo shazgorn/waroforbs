@@ -98,7 +98,7 @@ class Options
 
   get_int: (key, d = 0) ->
     val = parseInt(@get(key))
-    if !val || isNaN(val)
+    if val != 0 && val? || isNaN(val)
       val = d
     this[key] = val
 

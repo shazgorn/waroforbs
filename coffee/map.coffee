@@ -41,9 +41,14 @@ class Map
     ee = 0
     $last_block = $('.block:last-of-type')
     pos = $last_block.position()
-    far_left = -1 * pos.left + $last_block.width()
-    far_top = -1 * pos.top + $last_block.height()
-    border = 10
+    h = pos.top + $last_block.height()
+    w = pos.left + $last_block.width()
+    ww = $(window).width() / 2
+    wh = $(window).height() / 2
+    min_x = ww - w - $('#right-col').width() / 2
+    min_y = wh - h - $('#log').height() / 2
+    max_x = ww
+    max_y = wh
     setInterval(() ->
       if moving && ee
         dx = ee.pageX - sx
@@ -51,18 +56,18 @@ class Map
         unless dx in [-2..2] || dy in [-2..2]
           new_x = left + dx
           new_y = top + dy
-          if new_x > border
-            new_x = border
-          if new_y > border
-            new_y = border
-          if new_x < far_left
-            new_x = far_left
-          if new_y < far_top
-            new_y = far_top
+          if new_x > max_x
+            new_x = max_x
+          if new_y > max_y
+            new_y = max_y
+          if new_x < min_x
+            new_x = min_x
+          if new_y < min_y
+            new_y = min_y
           $('#blocks').css('top', new_y + 'px').css('left', new_x + 'px')
         false
     , 123)
-    $('#map')
+    $('#top_container')
       .mousemove((e) ->
         ee = e
       )

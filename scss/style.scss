@@ -110,7 +110,9 @@ input[type="text"] {
     cursor: pointer;
 }
 #top_container {
-    height: 400px;
+    height: 100%;
+    position: absolute;
+    width: 100%;
 }
 
 #map.bordered-cells .cell {
