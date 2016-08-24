@@ -152,6 +152,9 @@ class Map
       map = $("#map")
       bias_top = (map.height() - @cell_dim_in_px) / 2
       bias_left = (map.width() - @cell_dim_in_px) / 2
+      if App.options.fullscreen
+        bias_top -= $('#log').height() / 2
+        bias_left -= $('#right-col').width() / 2
       top = block_pos.top + cell_pos.top - bias_top
       left = block_pos.left + cell_pos.left - bias_left
       $('#blocks')

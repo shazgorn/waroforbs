@@ -255,7 +255,9 @@ input[type="text"] {
 }
 #right-col {
     @include themed();
+    height: 100%;
     opacity: 0.9;
+    overflow-y: auto;
     padding: 0 1rem;
     position: fixed;
     right: 0;
