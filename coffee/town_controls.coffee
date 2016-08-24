@@ -104,21 +104,21 @@ class TownControls
 
       # open building link
       $open_building = $(document.createElement('a'))
-        .html(building['@name'] + ' (' + building['@status'] + ')')
+        .html(building['@name'])
         .attr('id', open_building_sel)
         .attr('href', '#')
         .data('id', id)
 
       switch building['@status']
         when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+          b.addClass('builging_not_built')
           $open_building
-            .addClass('builging_not_built')
             .click((e) ->
               e.preventDefault()
             )
           # building time
           $(document.createElement('div'))
-            .addClass('builging_not_built')
+            .addClass('building-time')
             .html(building['@ttb_string'])
             .appendTo(b)
 
@@ -137,20 +137,19 @@ class TownControls
 
           $cost_res.appendTo(b)
         when App.building_states['BUILDING_STATE_IN_PROGRESS']
-          # if built then 'yellow' color
+          b.addClass('building_in_progress')
           $open_building
-            .addClass('building_in_progress')
             .click((e) ->
               e.preventDefault()
             )
           # building time
           $(document.createElement('div'))
+            .addClass('building-time')
             .html(building['@ttb_string'])
             .appendTo(b)
         when App.building_states['BUILDING_STATE_BUILT']
-          # if built then 'black' color
+          b.addClass('builging_built')
           $open_building
-            .addClass('builging_built')
             .click(() ->
               _this.open_building(this)
               $('.back-to-town').click(() ->

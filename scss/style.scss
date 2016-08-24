@@ -421,7 +421,7 @@ input[type="text"] {
     position: fixed;
     top: 10%;
     width: $modal-width;
-    z-index: 7;
+    z-index: 21;
 
     &:hover {
         opacity: 1;
@@ -555,29 +555,32 @@ input[type="text"] {
 }
 
 .open-building-screen {
-    border: thin solid black;
+    border: thin solid gray;
     float: left;
     min-height: 3rem;
     margin-right: 1rem;
     padding: 0.5rem;
     text-align: center;
     width: 9rem;
+    &.builging_built {
+        @include themed();
+        a {
+            color: $theme-color;
+        }
+    }
+    &.builging_not_built {
+        a, .building-time {
+            color: gray;
+        }
+    }
+    &.building_in_progress {
+        a, .building-time {
+            color: gray;
+            font-style: italic;
+        }
+    }
     a {
         display: block;
         text-decoration-line: unset;
-    }
-
-    .builging_not_built {
-        color: gray;
-    }
-
-    .builging_built {
-        color: black;
-        font-weight: bold;
-    }
-
-    .building_in_progress {
-        color: blue;
-        font-style: italic;
     }
 }
