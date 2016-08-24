@@ -66,7 +66,7 @@ class Map
             new_y = min_y
           $('#blocks').css('top', new_y + 'px').css('left', new_x + 'px')
         false
-    , 123)
+    , 10)
     $('#top_container')
       .mousemove((e) ->
         ee = e
