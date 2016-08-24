@@ -11,10 +11,22 @@ class Options
     _this = this
     @bind()
 
+    @option('fullscreen', false, 'bool', (t) ->
+      if t.fullscreen
+        t.disable('map_height')
+        t.disable('map_width')
+        App.map.set_fullscreen()
+        App.center_on_active()
+      else
+        t.enable('map_height')
+        t.enable('map_width')
+        App.map.remove_fullscreen()
+        App.center_on_active()
+    , false)
     @option('log_height', 5, 'int', (t) ->
       $('#log').height(t.log_height * 20)
     , true)
-    map_callback = (t) -> App.map.set_size(t.map_height, t.map_width)
+    map_callback = (t) -> App.map.update_size()
     @option('map_height', 13, 'int', map_callback, false)
     @option('map_width', 13, 'int', map_callback, false)
     @option('all_cells', false, 'bool', null, false)
@@ -41,6 +53,12 @@ class Options
       if callback
         callback(_this)
     )
+
+  enable: (key) ->
+    $('#' + key).prop('disabled', false)
+
+  disable: (key) ->
+    $('#' + key).prop('disabled', true)
 
   set: (key, value) ->
     localStorage.setItem(key, value)

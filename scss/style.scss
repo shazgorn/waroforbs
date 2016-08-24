@@ -118,6 +118,10 @@ input[type="text"] {
     border-right: thin dashed darkolivegreen;
 }
 
+#map.fullscreen {
+    border: none;
+}
+
 #map {
     background-color: black;
     border: thin solid $theme-border;

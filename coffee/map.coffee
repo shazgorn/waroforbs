@@ -3,13 +3,26 @@ class Map
   @map_dim_in_blocks, cells) ->
     this_obj = this
 
-    @set_size(App.options.map_height, App.options.map_width)
+    if App.options.fullscreen
+      @set_fullscreen()
+    else
+      @remove_fullscreen()
 
     #this.initTooltip()
     this.addBlocks()
     if App.options.all_cells
       @addAllCells(cells)
     this.initDragHandler()
+
+  update_size: () ->
+    @set_size(App.options.map_height, App.options.map_width)
+
+  set_fullscreen: () ->
+    $('#map').height('100%').width('100%').addClass('fullscreen')
+
+  remove_fullscreen: () ->
+    $('#map').removeClass('fullscreen')
+    @update_size()
 
   set_size: (height, width) ->
     $('#map').height(height * @cell_dim_in_px).width(width * @cell_dim_in_px)
@@ -28,8 +41,9 @@ class Map
     ee = 0
     $last_block = $('.block:last-of-type')
     pos = $last_block.position()
-    far_left = -1 * pos.left
-    far_top = -1 * pos.top
+    far_left = -1 * pos.left + $last_block.width()
+    far_top = -1 * pos.top + $last_block.height()
+    border = 10
     setInterval(() ->
       if moving && ee
         dx = ee.pageX - sx
@@ -37,10 +51,10 @@ class Map
         unless dx in [-2..2] || dy in [-2..2]
           new_x = left + dx
           new_y = top + dy
-          if new_x > 200
-            new_x = 200
-          if new_y > 200
-            new_y = 200
+          if new_x > border
+            new_x = border
+          if new_y > border
+            new_y = border
           if new_x < far_left
             new_x = far_left
           if new_y < far_top

@@ -6,6 +6,9 @@
         | X
   .modal-body
     div
+      label for="fullscreen" Fullscreen
+      input#fullscreen type="checkbox"
+    div
       label for="map_height" Map height
       select#map_height
         - (9..30).step(2) do |i|
