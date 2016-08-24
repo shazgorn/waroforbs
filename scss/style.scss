@@ -22,6 +22,8 @@ $theme-border: chocolate;
 $theme-color: lightyellow;
 $theme-hover: sienna;
 $modal-width: calc(80% - #{$right-col-width} + 4rem);
+// - 2.5rem for padding + scroll
+$log-width: calc(100% - #{$right-col-width} - 2.5rem);
 // color of wood
 $wood-color: Sienna;
 
@@ -378,7 +380,7 @@ input[type="text"] {
     overflow-y: scroll;
     padding-left: 0.3rem;
     position: fixed;
-    width: 100%;
+    width: $log-width;
     z-index: 10;
 
     .log-entry {
