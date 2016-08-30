@@ -62,16 +62,64 @@ class Town extends Unit
     @css_class = 'town'
     @title = unit['@user_name'] + ' Town'
 
+class TownCell
+  constructor: (id, x, y, town_id) ->
+    @id = id
+    @x = x
+    @y = y
+    @type = ''
+    @title = ''
+    @html = ''
+    @town_id = town_id
+    @set_type(@type)
+    @has_worker = false
+    # $DOMElement
+    @el = null
+
+  set_type: (type) ->
+    @type = type
+    @title = "#{@x},#{@y} #{@type}"
+    @html = "#{@x},#{@y}"
+
+  trigger_worker: () ->
+    if @has_worker
+      App.free_worker(@town_id, @x, @y)
+    else
+      App.set_free_worker_to_xy(@town_id, @x, @y)
+
 class PlayerTown extends Town
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-town'
     @adj_companies = unit['@adj_companies']
+    # id => cell
+    @cells = {}
+    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
+    for dy in range
+      for dx in range
+        x = @x + dx
+        y = @y + dy
+        id = "#{x}_#{y}"
+        if App.cells[id]
+          cell = new TownCell(id, x, y, @id)
+          if @x == x && @y == y
+            cell.html = cell.title = cell.type = 'town'
+          else
+            cell.set_type(App.cells[id]['@type'])
+        else
+          cell = new TownCell(id, null, null, @id)
+          cell.html = '&nbsp;'
+          cell.title = 'Hic sunt dracones'
+        @cells[id] = cell
+    @workers = unit['@workers']
+    for id, w of @workers
+      if w['@x'] && w['@y']
+        @cells[w['@x'] + '_' + w['@y']].has_worker = true
 
   init: () ->
     App.init_town_buildings(@_unit['@buildings'])
     App.init_town_controls(@_unit['@actions'])
-    App.init_town_workers(@_unit['@workers'], @_unit['@id'], @_unit['@x'], @_unit['@y'])
+    App.init_town_workers(this)
     App.init_town_inventory(@_unit['@inventory'])
 
 class OtherPlayerTown extends Town

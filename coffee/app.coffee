@@ -152,8 +152,8 @@ class Application
   init_town_controls: (actions) ->
     @town_controls.init_town_controls(actions)
 
-  init_town_workers: (workers, town_id, town_x, town_y) ->
-    @town_controls.init_town_workers(workers, town_id, town_x, town_y)
+  init_town_workers: (town) ->
+    @town_controls.init_town_workers(town)
 
   init_town_inventory: (inventory) ->
     @town_controls.init_town_inventory(inventory)

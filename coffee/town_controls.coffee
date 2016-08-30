@@ -187,60 +187,46 @@ class TownControls
           )
     # delete old actions
 
-  init_town_workers: (workers, town_id, town_x, town_y) ->
-    workers_on_work_hash = {}
-    for worker in workers
-      if worker['@x']? && worker['@y']?
-        workers_on_work_hash[worker['@x'] + '_' + worker['@y']] = worker
+  create_cell: (cell) ->
+    $(document.createElement('div'))
+      .attr('id', "town_cell_#{cell.x}_#{cell.y}")
+      .addClass('worker-cell')
+      .addClass("worker-cell-#{cell.type}")
+      .attr('title', cell.title)
+      .html(cell.html)
 
-    $('.workers-inner *').remove()
-    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
-    for dy in range
-      row = $(document.createElement('div'))
-        .addClass('worker-row')
-        .appendTo('.modal.town .workers-inner')
-      for dx in range
-        adj_x = town_x + dx
-        adj_y = town_y + dy
-        worker_cell = $(document.createElement('div'))
-              .addClass('worker-cell')
-              .data('x', adj_x)
-              .data('y', adj_y)
-              .data('town_id', town_id)
-        if adj_x >= 0 && adj_y >= 0 && adj_x <= App.MAX_CELL_IDX && adj_y <= App.MAX_CELL_IDX
-          html = ''
-          title = ''
-          if dx == 0 && dy == 0
-            html = 'Town'
-            title = 'Town'
-          else
-            type = App.cells["#{adj_x}_#{adj_y}"]['@type']
-            worker_cell
-              .addClass('worker-cell-' + type)
-            title = type
+  create_row: (id) ->
+    $(document.createElement('div'))
+      .attr('id', "worker-row-#{id}")
+      .addClass('worker-row')
+      .appendTo('.modal.town .workers-inner')
 
-            html += adj_x + ',' + adj_y
-            if workers_on_work_hash[adj_x + '_' + adj_y]
-              title += ' Worker'
-              worker_cell
-                .addClass('worker-cell-has-worker')
-                .click(() ->
-                  App.free_worker($(this).data('town_id'), $(this).data('x'), $(this).data('y'))
-                )
-            else
-              worker_cell
-                .click(() ->
-                  App.set_free_worker_to_xy($(this).data('town_id'), $(this).data('x'), $(this).data('y'))
-                )
-          worker_cell
-            .attr('title', title)
-            .html(html)
-        else
-          worker_cell
-            .attr('title', 'Terra incognita')
-            .html('TI')
-        worker_cell
-          .appendTo(row)
+  draw_town_cells_new: (town) ->
+    for id, cell of town.cells
+      $row = $("#worker-row-#{cell.y}")
+      if $row.length == 0
+        $row = @create_row(cell.y)
+      $cell = $("#town_cell_#{cell.id}")
+      if $cell.length == 0
+        $cell = @create_cell(cell)
+        $row.append($cell)
+      cell.el = $cell
+      if cell.has_worker && !$cell.hasClass('worker-cell-has-worker')
+        $cell.addClass('worker-cell-has-worker')
+      else if !cell.has_worker && $cell.hasClass('worker-cell-has-worker')
+        $cell.removeClass('worker-cell-has-worker')
+
+  bind_actions_cells: (town) ->
+    for id, cell of town.cells
+      cell.el.off('click')
+      do (cell) ->
+        cell.el.click(() ->
+          cell.trigger_worker()
+        )
+
+  init_town_workers: (town) ->
+    @draw_town_cells_new(town)
+    @bind_actions_cells(town)
 
   init_town_inventory: (inventory) ->
     $('.inventory-res').remove()
