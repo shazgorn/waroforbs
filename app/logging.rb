@@ -1,4 +1,6 @@
 module Logging
+  @logger = nil
+
   # This is the magical bit that gets mixed into your classes
   def logger
     Logging.logger
@@ -6,6 +8,10 @@ module Logging
 
   # Global, memoized, lazy initialized instance of a logger
   def self.logger
-    @logger ||= Logger.new(Config.get('log'))
+    unless @logger
+      @logger = Logger.new(Config.get('log'), 'weekly')
+      @logger.level = Logger::INFO
+    end
+    @logger
   end
 end

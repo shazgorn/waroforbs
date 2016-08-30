@@ -313,7 +313,7 @@ class OrbApp
           if GreenOrb.below_limit?
             orb = GreenOrb.new
             @game.place_at_random orb
-            logger.info "spawn green orb (%d)" % GreenOrb.length
+            logger.debug "spawn green orb (%d)" % GreenOrb.length
             dispatch_units
           end
         rescue => e
@@ -343,7 +343,7 @@ class OrbApp
                   orb.lvl_up
                   speed -= 1 if speed > max_speed
                 end
-                logger.info 'black orb attack'
+                logger.debug 'black orb attack'
                 set_def_data users, res
               else
                 @game.random_move orb
