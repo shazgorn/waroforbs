@@ -493,6 +493,24 @@ input[type="text"] {
     }
 
     .workers-inner {
+        .workers-list {
+            .worker {
+                border: thin solid $theme-border;
+                display: inline-block;
+                margin-right: 0.5rem;
+                height: 1rem;
+                width: 1rem;
+            }
+            .worker-gold {
+                @include res-gold();
+            }
+            .worker-wood {
+                @include res-wood();
+            }
+            .worker-stone {
+                @include res-stone();
+            }
+        }
         .worker-cell {
             border: thin solid black;
             display: inline-block;

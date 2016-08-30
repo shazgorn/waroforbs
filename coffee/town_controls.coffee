@@ -224,7 +224,17 @@ class TownControls
           cell.trigger_worker()
         )
 
+  draw_workers: (workers) ->
+    $('.worker').remove()
+    for w in workers
+      $w = $(document.createElement('span'))
+        .addClass('worker')
+        .addClass('worker-' + w['@type'])
+        .attr('title', w['@type'])
+        .appendTo('.workers-list')
+
   init_town_workers: (town) ->
+    @draw_workers(town.workers)
     @draw_town_cells_new(town)
     @bind_actions_cells(town)
 
