@@ -126,9 +126,12 @@ class Application
             if unit
               # do not attack our own
               if !$(unit).hasClass('player-unit')
-                $(unit).addClass('attack-target').off('click').one('click', () ->
-                  App.attack(this)
-                )
+                $(unit)
+                  .addClass('attack-target')
+                  .off('click')
+                  .one('click', () ->
+                    App.attack(this)
+                  )
 
   attack: (unit) ->
     if !@attacking

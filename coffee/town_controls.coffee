@@ -76,8 +76,13 @@ class TownControls
               .addClass('pointer')
               .data('id', company_id)
               .attr('title', 'Add squad')
-              .html("Company ##{company_id} <br> x,y: #{company.x},#{company.y}<br> damage: #{company.damage} <br> defence: #{company.defence} <br> hp:
-  #{company.hp} <br>ap: #{company.ap} <br> squads: #{company.squads}")
+              .html("Company ##{company_id} <br> \
+              x,y: #{company.x},#{company.y}<br> \
+              damage: #{company.damage} <br>\
+              defence: #{company.defence} <br>\
+              hp: #{company.hp} <br>\
+              ap: #{company.ap} <br>\
+              squads: #{company.squads}")
               .appendTo('.modal.building .modal-building-fill')
               .click(() ->
                 App.add_squad_to_company($(this).data('id'))
@@ -163,7 +168,8 @@ class TownControls
       # build button
       if building['@status'] == 1
         $("##{id} button").remove()
-      else if building['@status'] == 0 && $("##{id}").length == 1 && $("##{id} button").length == 0
+      else if building['@status'] == 0 && $("##{id}").length == 1 &&
+          $("##{id} button").length == 0
         button = $(document.createElement('button'))
           .html('Build')
           .data('id', id)
@@ -269,7 +275,12 @@ class TownControls
       .addClass('banner-card')
       .data('id', banner['@id'])
       .attr('title', title)
-      .html("Banner ##{banner['@id']} <br> dmg: #{banner['@mod_dmg']} <br> def: #{banner['@mod_def']} <br> hp: #{banner['@mod_max_hp']} <br>ap: #{banner['@mod_max_ap']} <br>unit_id: #{banner['@unit_id']}")
+      .html("Banner ##{banner['@id']} <br>\
+      dmg: #{banner['@mod_dmg']} <br> \
+      def: #{banner['@mod_def']} <br> \
+      hp: #{banner['@mod_max_hp']} <br>\
+      ap: #{banner['@mod_max_ap']} <br>\
+      unit_id: #{banner['@unit_id']}")
       .appendTo('.modal.building .modal-building-inner')
 
 

@@ -110,7 +110,10 @@ class Map
       .css('top', top)
       .appendTo("#block_#{block_x}_#{block_y}")
     if mapCell
-      cell.attr('title', mapCell['@x'] + ',' + mapCell['@y'] + ' ' + mapCell['@type'])
+      cell.attr(
+        'title',
+        mapCell['@x'] + ',' + mapCell['@y'] + ' ' + mapCell['@type']
+      )
     cell
 
   addAllCells: (cells) ->
@@ -129,8 +132,8 @@ class Map
     If you apply it instantly it will fuck you up. I do love timeouts anyway...
     ###
     setTimeout(() ->
-        d.addClass('dmg_end').addClass("#{type}_dmg_end")
-        setTimeout((() -> d.remove()), 1234)
+      d.addClass('dmg_end').addClass("#{type}_dmg_end")
+      setTimeout((() -> d.remove()), 1234)
     , timeout)
 
   dmg: (dmg, ca_dmg, a_id, d_id, a_delay, d_delay) ->
@@ -193,7 +196,8 @@ class Map
       # unit already on map, update it
       if $unit.hasClass('green-orb')
         $unit.addClass(unit.css_class)
-      if $unit.parent().data('x') != unit.x || $unit.parent().data('y') != unit.y
+      if $unit.parent().data('x') != unit.x ||
+          $unit.parent().data('y') != unit.y
         $unit.appendTo(cell_sel)
       if unit.squads
         $unit.children('.player-unit-squad-info').html(unit.squads)

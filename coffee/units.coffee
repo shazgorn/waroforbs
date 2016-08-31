@@ -100,14 +100,13 @@ class PlayerTown extends Town
         x = @x + dx
         y = @y + dy
         id = "#{x}_#{y}"
+        cell = new TownCell(id, x, y, @id)
         if App.cells[id]
-          cell = new TownCell(id, x, y, @id)
           if @x == x && @y == y
             cell.html = cell.title = cell.type = 'town'
           else
             cell.set_type(App.cells[id]['@type'])
         else
-          cell = new TownCell(id, null, null, @id)
           cell.html = '&nbsp;'
           cell.title = 'Hic sunt dracones'
         @cells[id] = cell
@@ -127,7 +126,8 @@ class OtherPlayerTown extends Town
     super unit
 
 UnitFactory = (unit_hash, user_id) ->
-  throw new Error 'Unit is not set on map' if !unit_hash['@x']? || !unit_hash['@y']?
+  if !unit_hash['@x']? || !unit_hash['@y']?
+    throw new Error 'Unit is not set on map'
   if unit_hash?
     switch unit_hash['@type']
       when "company"

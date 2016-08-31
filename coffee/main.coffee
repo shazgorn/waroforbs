@@ -9,4 +9,4 @@ $('#login_form').submit((e) ->
   if login
     localStorage.setItem('token', login)
     location.pathname = '/game'
-);
+)
