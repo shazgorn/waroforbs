@@ -116,7 +116,7 @@ class TownControls
 
       switch building['@status']
         when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-          b.addClass('builging_not_built')
+          b.addClass('builging-not-built')
           $open_building
             .click((e) ->
               e.preventDefault()
@@ -142,7 +142,7 @@ class TownControls
 
           $cost_res.appendTo(b)
         when App.building_states['BUILDING_STATE_IN_PROGRESS']
-          b.addClass('building_in_progress')
+          b.addClass('building-in-progress')
           $open_building
             .click((e) ->
               e.preventDefault()
@@ -153,7 +153,7 @@ class TownControls
             .html(building['@ttb_string'])
             .appendTo(b)
         when App.building_states['BUILDING_STATE_BUILT']
-          b.addClass('builging_built')
+          b.addClass('builging-built')
           $open_building
             .click(() ->
               _this.open_building(this)

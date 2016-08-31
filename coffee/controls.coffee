@@ -33,9 +33,9 @@ class Controls
       $(control_button).attr('id', 'control_' + bn)
       control_button.dataset.dx = control.x
       control_button.dataset.dy = control.y
-      $('#controls_arrows').append(control_button)
+      $('#controls-arrows').append(control_button)
     @lock_controls()
-    $('#controls_arrows button').click(() ->
+    $('#controls-arrows button').click(() ->
       app.lock_controls()
       app.move({
         dx: parseInt(this.dataset.dx),
@@ -44,10 +44,10 @@ class Controls
     )
 
   lock_controls: () ->
-    $('#controls_arrows button').prop('disabled', 'disabled')
+    $('#controls-arrows button').prop('disabled', 'disabled')
 
   unlock_controls: () ->
-    $('#controls_arrows button').prop('disabled', '')
+    $('#controls-arrows button').prop('disabled', '')
 
   unit_info: (unit) ->
     _this = this

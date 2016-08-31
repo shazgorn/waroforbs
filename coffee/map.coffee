@@ -67,7 +67,7 @@ class Map
           $('#blocks').css('top', new_y + 'px').css('left', new_x + 'px')
         false
     , 10)
-    $('#top_container')
+    $('#top-container')
       .mousemove((e) ->
         ee = e
       )
@@ -124,15 +124,19 @@ class Map
     d = $(document.createElement('span'))
       .html(dmg)
       .addClass('dmg')
-      .addClass('dmg_start')
-      .addClass("#{type}_dmg_start")
+      .addClass('dmg-start')
+      .addClass("#{type}-dmg-start")
       .appendTo(cell)
 
     ###
     If you apply it instantly it will fuck you up. I do love timeouts anyway...
     ###
     setTimeout(() ->
-      d.addClass('dmg_end').addClass("#{type}_dmg_end")
+      d
+        .removeClass('dmg-start')
+        .addClass('dmg-end')
+        .removeClass("#{type}-dmg-start")
+        .addClass("#{type}-dmg-end")
       setTimeout((() -> d.remove()), 1234)
     , timeout)
 

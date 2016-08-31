@@ -384,7 +384,7 @@ class OrbApp
 end
 
 app = OrbApp.new
-#app.run_green_orbs_spawner
-#app.run_black_orb_spawner
+app.run_green_orbs_spawner
+app.run_black_orb_spawner
 app.run_clock
 app.run_ws

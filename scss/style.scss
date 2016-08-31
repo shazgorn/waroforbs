@@ -4,602 +4,688 @@ $block-dimension: $cell-dimension * 10;
 $orb-dimension: 36px;
 $orb-md-dimension: $orb-dimension - 4px;
 $orb-sm-dimension: $orb-md-dimension - 4px;
-$unit_dimension: 40px;
 $orb-margin: ($cell-dimension - $orb-dimension) / 2;
 $orb-md-margin: ($cell-dimension - $orb-md-dimension) / 2;
 $orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
 $button-size: 60px;
 $column-gap: 30px;
-$hover-hero-color: #66a3ff;
-$active-hero-color: #0066ff;
-// color of wooden theme
-$wooden-color: #996633;
 $font-family: Immortal, fantasy;
 $right-col-width: 12rem;
-$right-col-border: chocolate;
-$theme-bg: saddlebrown;
-$theme-border: chocolate;
-$theme-color: lightyellow;
-$theme-hover: sienna;
+// colors
+// color of wooden theme
+$wooden-color: #963;
+// color of wood
+$hp-info-color: #e60000;
+$sienna: #a0522d;
+$wood-color: $sienna;
+$hover-hero-color: #66a3ff;
+$active-hero-color: #06f;
+$chocolate: #d2691e;
+$right-col-border: $chocolate;
+$saddlebrown: #8b4513;
+$orb-color: #ffc;
+$theme-bg: $saddlebrown;
+$theme-border: $chocolate;
+$theme-color: #ffffe0;
+$theme-hover: $sienna;
+$aqua: #0ff;
+$black: #000;
+$blue: #00f;
+$brown: #a52a2a;
+$darkolivegreen: #556b2f;
+$gold: #ffd700;
+$gray: #808080;
+$green: #008000;
+$lightgray: #d3d3d3;
+$limegreen: #32cd32;
+$orange: #ffa500;
+$red: #f00;
+$yellow: #ff0;
+$white: #fff;
 // 2rem left + 2rem between right col + 2 rem for paddings
 $modal-width: calc(100% - #{$right-col-width} - 6rem);
 // - 2.5rem for padding + scroll
 $log-width: calc(100% - #{$right-col-width} - 2.5rem);
-// color of wood
-$wood-color: Sienna;
 
 @font-face {
-    font-family: Immortal;
-    src: url(/fonts/IMMORTAL.ttf);
+  font-family: Immortal;
+  src: url('/fonts/IMMORTAL.ttf');
 }
 
 @mixin clearfix() {
-    &:before,
-    &:after {
-        content: " ";
-        display: table;
-    }
-    &:after {
-        clear: both;
-    }
+  &::before,
+  &::after {
+    content: ' ';
+    display: table;
+  }
+
+  &::after {
+    clear: both;
+  }
 }
 
 @mixin card() {
-    border: thin solid $wooden-color;
-    box-sizing: border-box;
-    float: left;
-    height: 11rem;
-    margin: 1rem;
-    padding: 1rem;
-    width: 10rem;
+  border: thin solid $wooden-color;
+  box-sizing: border-box;
+  float: left;
+  height: 11rem;
+  margin: 1rem;
+  padding: 1rem;
+  width: 10rem;
 }
 
 @mixin res-gold() {
-    background-color: gold;
-    color: black;
+  background-color: $gold;
+  color: $black;
 }
+
 @mixin res-wood() {
-    background-color: $wood-color;
-    color: white;
+  background-color: $wood-color;
+  color: $white;
 }
+
 @mixin res-stone() {
-    background-color: gray;
-    color: black;
+  background-color: $gray;
+  color: $black;
 }
+
 @mixin themed() {
-    background-color: $theme-bg;
-    border: thin solid $theme-border;
-    color: $theme-color;
+  background-color: $theme-bg;
+  border: thin solid $theme-border;
+  color: $theme-color;
 }
+
 @mixin themed-hovered() {
-    @include themed();
-    &:hover {
-        background-color: $theme-hover;
-    }
+  @include themed();
+  &:hover {
+    background-color: $theme-hover;
+  }
 }
+
 @mixin button() {
-    @include themed-hovered();
-    cursor: pointer;
-    font-family: $font-family;
+  @include themed-hovered();
+  cursor: pointer;
+  font-family: $font-family;
 }
+
 @mixin big-modal() {
-    bottom: 10%;
-    height: 80%;
-    overflow-y: auto;
+  bottom: 10%;
+  height: 80%;
+  overflow-y: auto;
 }
 
 body {
-    background-color: black;
-    color: $theme-color;
-    font-family: $font-family;
-    font-size: 1rem;
-    margin: 0;
-    padding: 0;
-}
-body#main {
+  background-color: $black;
+  color: $theme-color;
+  font-family: $font-family;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+
+  &.main {
     margin-top: 4rem;
     text-align: center;
-    #login_form {
-        div {
-            margin: 1rem 0;
-        }
-    }
+  }
+}
+
+.login-form {
+  div {
+    margin: 1rem 0;
+  }
 }
 
 button {
-    @include button();
+  @include button();
 }
-input[type="submit"] {
-    @include button();
+
+.submit {
+  @include button();
 }
-input[type="text"] {
-    @include themed();
+
+.text {
+  @include themed();
 }
+
 .pointer {
-    cursor: pointer;
-}
-#top_container {
-    height: 100%;
-    position: absolute;
-    width: 100%;
+  cursor: pointer;
 }
 
-#map.bordered-cells .cell {
-    border-bottom: thin dashed darkolivegreen;
-    border-right: thin dashed darkolivegreen;
-}
-
-#map.fullscreen {
-    border: none;
+#top-container {
+  height: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 #map {
-    background-color: black;
-    border: thin solid $theme-border;
-    height: $map-dimension;
-    overflow: hidden;
+  background-color: $black;
+  border: thin solid $theme-border;
+  height: $map-dimension;
+  overflow: hidden;
+  position: absolute;
+  width: $map-dimension;
+
+  &.fullscreen {
+    border: 0;
+  }
+
+  &.bordered-cells .cell {
+    border-bottom: thin dashed $darkolivegreen;
+    border-right: thin dashed $darkolivegreen;
+  }
+
+  .blocks {
     position: absolute;
-    width: $map-dimension;
+  }
 
-    #blocks {
-        position: absolute;
-    }
-    .block {
-        height: $block-dimension;
-        position: absolute;
-        width: $block-dimension;
-    }
-    .cell {
-        box-sizing: border-box;
-        height: $cell-dimension;
-        position: absolute;
-        width: $cell-dimension;
-    }
-    
-    .cell.white {
-        background-color: white;
+  .block {
+    height: $block-dimension;
+    position: absolute;
+    width: $block-dimension;
+  }
+
+  .cell {
+    box-sizing: border-box;
+    height: $cell-dimension;
+    position: absolute;
+    width: $cell-dimension;
+
+    &.white {
+      background-color: $white;
     }
 
-    .cell.black {
-        background-color: black;
+    &.black {
+      background-color: $black;
     }
-    
-    .unit {
-        border: thin solid transparent;
-        box-sizing: border-box;
-        height: inherit;
-        position: absolute;
-        width: inherit;
-        z-index: 6;
+  }
 
-        &.attack-target {
-            border: thin solid red;
-            cursor: crosshair;
-        }
-        &.select-target {
-            cursor: pointer;
-        }
+  .unit {
+    border: thin solid transparent;
+    box-sizing: border-box;
+    height: inherit;
+    position: absolute;
+    width: inherit;
+    z-index: 6;
+
+    &.attack-target {
+      border: thin solid $red;
+      cursor: crosshair;
     }
 
-    .player-hero {
-        background-image: url('/img/player_hero.png');
+    &.select-target {
+      cursor: pointer;
     }
-    .player-unit {
-        &:hover, &.player-unit-hover {
-            border: thin dashed $hover-hero-color;
-        }
-        &.active-player-unit {
-            border: thin solid $active-hero-color;
-        }
-        .player-unit-squad-info {
-            bottom: 0;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            position: absolute;
-            right: 0;
-        }
+  }
+
+  .player-hero {
+    background-image: url('/img/player_hero.png');
+  }
+
+  .player-unit {
+    &:hover,
+    &.player-unit-hover {
+      border: thin dashed $hover-hero-color;
     }
-    .other-player-hero {
-        background-image: url('/img/other_player_hero.png');
+
+    &.active-player-unit {
+      border: thin solid $active-hero-color;
     }
-    .green-orb {
-        border-color: black;
-        border-radius: 20px;
-        background-color: #FFFFCC;
+
+    .player-unit-squad-info {
+      bottom: 0;
+      color: $white;
+      font-size: 12px;
+      font-weight: bold;
+      position: absolute;
+      right: 0;
     }
-    .black-orb {
-        border-color: gray;
-        border-radius: 20px;
-        background-color: black;
-    }
-    .town, .player-town {
-        background-image: url('/img/town.png');
-    }
-    .orb {
-        height: $orb-dimension;
-        left: $orb-margin;
-        top: $orb-margin;
-        width: $orb-dimension;
-    }
-    .orb-md {
-        height: $orb-md-dimension;
-        left: $orb-md-margin;
-        top: $orb-md-margin;
-        width: $orb-md-dimension;
-    }
-    .orb-sm {
-        height: $orb-sm-dimension;
-        left: $orb-sm-margin;
-        top: $orb-sm-margin;
-        width: $orb-sm-dimension;
-    }
-    .dmg {
-        font-weight: bold;
-        left: 4px;
-        position: absolute;
-        transition: top 3s ease, color 3s ease;
-        z-index: 10;
-    }
-    .dmg_start {
-        top: -10px;
-    }
-    .dmg_end {
-        top: -30px !important;
-    }
-    .def_dmg_start {
-        color: red;
-    }
-    .def_dmg_end {
-        color: yellow !important;
-    }
-    .att_dmg_start {
-        color: blue;
-    }
-    .att_dmg_end {
-        color: aqua !important;
-    }
-    
+  }
+
+  .other-player-hero {
+    background-image: url('/img/other_player_hero.png');
+  }
+
+  .green-orb {
+    background-color: $orb-color;
+    border-color: $black;
+    border-radius: 20px;
+  }
+
+  .black-orb {
+    background-color: $black;
+    border-color: $gray;
+    border-radius: 20px;
+  }
+
+  .town,
+  .player-town {
+    background-image: url('/img/town.png');
+  }
+
+  .orb {
+    height: $orb-dimension;
+    left: $orb-margin;
+    top: $orb-margin;
+    width: $orb-dimension;
+  }
+
+  .orb-md {
+    height: $orb-md-dimension;
+    left: $orb-md-margin;
+    top: $orb-md-margin;
+    width: $orb-md-dimension;
+  }
+
+  .orb-sm {
+    height: $orb-sm-dimension;
+    left: $orb-sm-margin;
+    top: $orb-sm-margin;
+    width: $orb-sm-dimension;
+  }
+
+  .dmg {
+    font-weight: bold;
+    left: 4px;
+    position: absolute;
+    transition: top 3s ease, color 3s ease;
+    z-index: 10;
+  }
+
+  .dmg-start {
+    top: -10px;
+  }
+
+  .dmg-end {
+    top: -30px;
+  }
+
+  .def-dmg-start {
+    color: $red;
+  }
+
+  .def-dmg-end {
+    color: $yellow;
+  }
+
+  .att-dmg-start {
+    color: $blue;
+  }
+
+  .att-dmg-end {
+    color: $aqua;
+  }
 }
 
-#right-col > div {
-    margin: 1rem 0;
-}
 #right-col {
-    @include themed();
-    height: 100%;
-    opacity: 0.9;
-    overflow-y: auto;
-    padding: 0 1rem;
-    position: fixed;
-    right: 0;
-    width: $right-col-width;
-    z-index: 20;
-    &:hover {
-        opacity: 1;
-    }
-    #opt-help * {
-        width: 33%;
-    }
-    .unit-info-template {
-	display: none;
-    }
-    .unit-info {
-        border: thin solid transparent;
-        padding: 0 2px;
-        .unit-name-info {
-            font-size: 2rem;
-        }
-        .unit-id-info::before {
-            content: '#';
-        }
-        .unit-info-row {
-            div {
-                display: inline-block;
-            }
-            div:nth-of-type(1) {
-                width: 30%
-            }
-            div:nth-of-type(n+2) {
-                width: 35%
-            }
-        }
-        &:not(.active-unit-info) > .unit-info-actions {
-            display: none;
-        }
-        .unit-hp-info {
-            color: #e60000;
-        }
-        .unit-dmg-info {
-            color: lightgray;
-        }
-        .unit-def-info {
-            color: blue;
-        }
-        .unit-ap-info {
-            color: orange;
-        }
-        .unit-squads-info {
-            color: limegreen;
-        }
-        &:hover {
-            background-color: $theme-hover;
-            border: thin dashed $right-col-border;
-            cursor: pointer;
-        }
-        &.active-unit-info {
-            border: thin solid $right-col-border;
-        }
-    }
-    label {
-        color: #ccc;
-        font-weight: bold;
-    }
+  @include themed();
+  height: 100%;
+  opacity: .9;
+  overflow-y: auto;
+  padding: 0 1rem;
+  position: fixed;
+  right: 0;
+  width: $right-col-width;
+  z-index: 20;
 
-    #controls_arrows {
-        button {
-            background-color: saddlebrown;
-            border-color: $right-col-border;
-            border-style: groove;
-            cursor: pointer;
-            float: left;
-            font-size: 30px;
-            font-weight: bold;
-            line-height: 1px;
-            height: $button-size;
-            text-align: center;
-            width: 33%;
-            &:hover {
-                background-color: $theme-hover;
-            }
-            &:nth-child(3n-2) {
-                clear: left;
-            }
-        }
-    }
+  > div {
+    margin: 1rem 0;
+  }
 
-    #unit-info-list {
-        border-top: thin solid $right-col-border;
-        padding-top: 1rem;
-        border-bottom: thin solid $right-col-border;
-        padding-bottom: 1rem;
-    }
+  &:hover {
+    opacity: 1;
+  }
 
-    #user-controls button {
-        display: block;
-        margin: 0.5rem 0;
-    }
+  .opt-help * {
+    width: 33%;
+  }
+
+  .unit-info-template {
+    display: none;
+  }
+
+  #unit-info-list {
+    border-bottom: thin solid $right-col-border;
+    border-top: thin solid $right-col-border;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+  }
+
+  #user-controls button {
+    display: block;
+    margin: .5rem 0;
+  }
 }
 
-#scores {
-    display: none;
-    float: right;
+.unit-info {
+  border: thin solid transparent;
+  padding: 0 2px;
 
-    table td:last-child {
-        text-align: right;
+  .unit-name-info {
+    font-size: 2rem;
+  }
+
+  .unit-id-info::before {
+    content: '#';
+  }
+
+  .unit-info-row {
+    div {
+      display: inline-block;
     }
+
+    div:nth-of-type(1) {
+      width: 30%;
+    }
+
+    div:nth-of-type(n+2) {
+      width: 35%;
+    }
+  }
+
+  &:not(.active-unit-info) > .unit-info-actions {
+    display: none;
+  }
+
+  .unit-hp-info {
+    color: $hp-info-color;
+  }
+
+  .unit-dmg-info {
+    color: $lightgray;
+  }
+
+  .unit-def-info {
+    color: $blue;
+  }
+
+  .unit-ap-info {
+    color: $orange;
+  }
+
+  .unit-squads-info {
+    color: $limegreen;
+  }
+
+  &:hover {
+    background-color: $theme-hover;
+    border: thin dashed $right-col-border;
+    cursor: pointer;
+  }
+
+  &.active-unit-info {
+    border: thin solid $right-col-border;
+  }
+}
+
+#controls-arrows {
+  button {
+    background-color: $saddlebrown;
+    border-color: $right-col-border;
+    border-style: groove;
+    cursor: pointer;
+    float: left;
+    font-size: 30px;
+    font-weight: bold;
+    height: $button-size;
+    line-height: 1px;
+    text-align: center;
+    width: 33%;
+
+    &:hover {
+      background-color: $theme-hover;
+    }
+
+    &:nth-child(3n-2) {
+      clear: left;
+    }
+  }
 }
 
 #log {
-    background-color: #fffeab;
-    bottom: 0px;
-    height: 100px;
-    opacity: 0.9;
-    overflow-y: scroll;
-    padding-left: 0.3rem;
-    position: fixed;
-    width: $log-width;
-    z-index: 10;
+  background-color: $theme-color;
+  bottom: 0;
+  height: 100px;
+  opacity: .9;
+  overflow-y: scroll;
+  padding-left: .3rem;
+  position: fixed;
+  width: $log-width;
+  z-index: 10;
 
-    .log-entry {
-        color: black;
-        height: 20px;
-        line-height: 20px;
-        transition: color 1s ease;
-        time {
-            display: inline-block;
-            width: 10rem;
-        }
-    }
+  .log-entry {
+    color: $black;
+    height: 20px;
+    line-height: 20px;
+    transition: color 1s ease;
 
-    .new-log-entry {
-        font-weight: bold;
-        color: red;
+    time {
+      display: inline-block;
+      width: 10rem;
     }
+  }
+
+  .new-log-entry {
+    color: $red;
+    font-weight: bold;
+  }
 }
 
-.group:after {
-    content: "";
-    display: table;
-    clear: both;
+.group::after {
+  clear: both;
+  content: '';
+  display: table;
 }
 
 .modal {
-    @include themed();
-    display: none;
-    left: 2rem;
-    opacity: 0.9;
-    position: fixed;
-    top: 10%;
-    width: $modal-width;
-    z-index: 21;
+  @include themed();
+  display: none;
+  left: 2rem;
+  opacity: .9;
+  position: fixed;
+  top: 10%;
+  width: $modal-width;
+  z-index: 21;
 
-    &:hover {
-        opacity: 1;
+  &:hover {
+    opacity: 1;
+  }
+
+  .container {
+    margin: 1rem 0;
+  }
+
+  .buildings-inner {
+    @include clearfix();
+    box-sizing: border-box;
+    height: 50%;
+  }
+
+  .cost-res {
+    display: inline-block;
+    height: 2rem;
+    line-height: 2rem;
+    margin: .3rem 0;
+    min-width: 2rem;
+  }
+
+  .cost-res-gold {
+    @include res-gold();
+  }
+
+  .cost-res-wood {
+    @include res-wood();
+  }
+
+  .cost-res-stone {
+    @include res-stone();
+  }
+
+  .workers-inner {
+    .worker {
+      border: thin solid $theme-border;
+      display: inline-block;
+      height: 1rem;
+      margin-right: .5rem;
+      width: 1rem;
     }
 
-    div[class$=container] {
-        margin: 1rem 0;
+    .worker-gold {
+      @include res-gold();
     }
 
-    .buildings-inner {
-        @include clearfix();
-        box-sizing: border-box;
-        height: 50%;
+    .worker-wood {
+      @include res-wood();
     }
 
-    .modal-top-bar {
-        border-bottom: thin solid $wooden-color;
-        padding: 0.5rem;
-        @include clearfix();
-        .modal-title {
-            float: left;
-        }
-        .modal-controls a {
-            color: $theme-color;
-            text-decoration-line: none;
-        }
-        .close-modal, .modal-controls {
-            float: right;
-            * {
-                margin-left: 0.5rem;
-            }
-        }
+    .worker-stone {
+      @include res-stone();
     }
 
-    .modal-body {
-        @include clearfix();
-        padding: 0.5rem;
-
-        .modal-building-actions {
-            clear: both;
-        }
-
-        .company-card {
-            @include card();
-        }
-
-        .banner-card {
-            @include card();
-        }
+    .worker-cell {
+      border: thin solid $black;
+      cursor: pointer;
+      display: inline-block;
+      height: 3rem;
+      line-height: 3rem;
+      text-align: center;
+      width: 3rem;
     }
 
-    .cost-res {
-        display: inline-block;
-        height: 2rem;
-        line-height: 2rem;
-        margin: 0.3rem 0;
-        min-width: 2rem;
+    .worker-cell-has-worker {
+      border-color: $orange;
     }
 
-    .cost-res-gold {
-        @include res-gold();
-    }
-    .cost-res-wood {
-        @include res-wood();
-    }
-    .cost-res-stone {
-        @include res-stone();
+    .worker-cell-tree {
+      background-color: $wood-color;
     }
 
-    .workers-inner {
-        .workers-list {
-            .worker {
-                border: thin solid $theme-border;
-                display: inline-block;
-                margin-right: 0.5rem;
-                height: 1rem;
-                width: 1rem;
-            }
-            .worker-gold {
-                @include res-gold();
-            }
-            .worker-wood {
-                @include res-wood();
-            }
-            .worker-stone {
-                @include res-stone();
-            }
-        }
-        .worker-cell {
-            border: thin solid black;
-            display: inline-block;
-            cursor: pointer;
-            line-height: 3rem;
-            height: 3rem;
-            text-align: center;
-            width: 3rem;
-        }
-        .worker-cell-has-worker {
-            border-color: orange;
-        }
-        .worker-cell-tree {
-            background-color: $wood-color;
-        }
-        .worker-cell-grass {
-            background-color: green;
-        }
-        .worker-cell-mountain {
-            background-color: gray;
-        }
+    .worker-cell-grass {
+      background-color: $green;
     }
 
-    .town-inventory-container {
-        .inventory-res {
-            border: thin solid brown;
-            display: inline-block;
-            height: 3rem;
-            line-height: 3rem;
-            text-align: center;
-            min-width: 3rem;
-        }
-        .inventory-res-gold {
-            @include res-gold();
-        }
-        .inventory-res-wood {
-            @include res-wood();
-        }
-        .inventory-res-stone {
-            @include res-stone();
-        }
+    .worker-cell-mountain {
+      background-color: $gray;
     }
-}
+  }
 
-.modal.town {
-    @include big-modal();
-}
-.modal.building {
-    @include big-modal();
-}
-.modal.help {
-    @include big-modal();
-}
+  .town-inventory.container {
+    .inventory-res {
+      border: thin solid $brown;
+      display: inline-block;
+      height: 3rem;
+      line-height: 3rem;
+      min-width: 3rem;
+      text-align: center;
+    }
 
-.modal.options {
+    .inventory-res-gold {
+      @include res-gold();
+    }
+
+    .inventory-res-wood {
+      @include res-wood();
+    }
+
+    .inventory-res-stone {
+      @include res-stone();
+    }
+  }
+
+  &.options {
     label {
-        display: inline-block;
-        line-height: 2rem;
-        width: 10rem;
+      display: inline-block;
+      line-height: 2rem;
+      width: 10rem;
     }
+  }
+
+  &.town {
+    @include big-modal();
+  }
+
+  &.building {
+    @include big-modal();
+  }
+
+  &.help {
+    @include big-modal();
+  }
 }
+
+.modal-top-bar {
+  @include clearfix();
+  border-bottom: thin solid $wooden-color;
+  padding: .5rem;
+
+  .modal-title {
+    float: left;
+  }
+
+  .modal-controls a {
+    color: $theme-color;
+    text-decoration-line: none;
+  }
+
+  .close-modal,
+  .modal-controls {
+    float: right;
+
+    * {
+      margin-left: .5rem;
+    }
+  }
+}
+
+.modal-body {
+  @include clearfix();
+  padding: .5rem;
+
+  .modal-building-actions {
+    clear: both;
+  }
+
+  .company-card {
+    @include card();
+  }
+
+  .banner-card {
+    @include card();
+  }
+}
+
 
 .open-building-screen {
-    border: thin solid gray;
-    float: left;
-    min-height: 3rem;
-    margin-right: 1rem;
-    padding: 0.5rem;
-    text-align: center;
-    width: 9rem;
-    &.builging_built {
-        @include themed();
-        a {
-            color: $theme-color;
-        }
-    }
-    &.builging_not_built {
-        a, .building-time {
-            color: gray;
-        }
-    }
-    &.building_in_progress {
-        a, .building-time {
-            color: gray;
-            font-style: italic;
-        }
-    }
+  border: thin solid $gray;
+  float: left;
+  margin-right: 1rem;
+  min-height: 3rem;
+  padding: .5rem;
+  text-align: center;
+  width: 9rem;
+
+  &.builging-built {
+    @include themed();
     a {
-        display: block;
-        text-decoration-line: unset;
+      color: $theme-color;
     }
+  }
+
+  &.builging-not-built {
+    a,
+    .building-time {
+      color: $gray;
+    }
+  }
+
+  &.building-in-progress {
+    a,
+    .building-time {
+      color: $gray;
+      font-style: italic;
+    }
+  }
+
+  a {
+    display: block;
+    text-decoration-line: unset;
+  }
 }
