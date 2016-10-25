@@ -1,5 +1,5 @@
 # waroforbs
-Browser MMORTS written in Ruby, CoffeeScript
+Browser MMORTS written in Ruby, CoffeeScript inspired by warchaos.ru game
 
 ## Directory structure
 

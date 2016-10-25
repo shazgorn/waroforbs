@@ -69,30 +69,35 @@ class TownControls
             .addClass('modal-building-fill')
             .appendTo('.modal.building .modal-building-inner')
 
-          for company_id in App.units[_this.last_town].adj_companies
-            company = App.my_units[company_id]
-            card = $(document.createElement('div'))
-              .addClass('company-card')
-              .addClass('pointer')
-              .data('id', company_id)
-              .attr('title', 'Add squad')
-              .html("Company ##{company_id} <br> \
-              x,y: #{company.x},#{company.y}<br> \
-              damage: #{company.damage} <br>\
-              defence: #{company.defence} <br>\
-              hp: #{company.hp} <br>\
-              ap: #{company.ap} <br>\
-              squads: #{company.squads}")
-              .appendTo('.modal.building .modal-building-fill')
-              .click(() ->
-                App.add_squad_to_company($(this).data('id'))
-              )
+          last_town = App.units[_this.last_town]
+          if last_town
+            for company_id in last_town.adj_companies
+              create_company_card(App.my_units[company_id])
       }
     $('.close-modal').click(() ->
       @open_building_id = null
       $('.modal').hide()
     )
 
+  create_company_card: (company) ->
+    $(document.createElement('div'))
+      .addClass('company-card')
+      .addClass('pointer')
+      .data('id', company.id)
+      .attr('title', 'Add squad')
+      .html("\
+      Company ##{company.id} <br> \
+      x,y: #{company.x},#{company.y}<br> \
+      damage: #{company.damage} <br>\
+      defence: #{company.defence} <br>\
+      hp: #{company.hp} <br>\
+      ap: #{company.ap} <br>\
+      squads: #{company.squads}\
+      ")
+      .appendTo('.modal.building .modal-building-fill')
+      .click(() ->
+        App.add_squad_to_company($(this).data('id'))
+      )
 
   # add building`s blocks and build buttons
   init_town_buildings: (buildings) ->
