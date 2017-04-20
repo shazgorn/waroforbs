@@ -1,4 +1,3 @@
-require 'rmagick'
 require 'fileutils'
 
 require_relative 'app/map'

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 gem 'rake'
-gem 'rmagick'
+gem 'mini_magick'
 gem 'thin'
 gem 'cuba'
 gem 'mote'
@@ -11,3 +11,4 @@ gem 'coffee-script'
 gem 'listen'
 gem 'minitest'
 gem 'slim'
+gem 'execjs'

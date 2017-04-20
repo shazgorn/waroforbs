@@ -59,9 +59,6 @@ class Map
         :type => :mountain
       }
     }
-    @cells_bg.each_value {|m|
-      m[:pixels] = Magick::ImageList.new(m[:path]).get_pixels(0, 0, CELL_DIM_PX, CELL_DIM_PX)
-    }
     JSON.dump_default_options[:max_nesting] = 10
     JSON.load_default_options[:max_nesting] = 10
     if generate || !File.exist?(@path)
@@ -96,33 +93,33 @@ class Map
   end
   
   def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim_px = CELL_DIM_PX)
-    canvas = Magick::Image.new canvas_dim, canvas_dim
-    canvas_y = 0
-    cell_y = block_y * BLOCK_DIM
-    while canvas_y < canvas_dim
-      canvas_x = 0
-      cell_x = block_x * BLOCK_DIM
-      while canvas_x < canvas_dim
-        map_cell = MapCell.new(cell_x, cell_y)
-        n = Random.rand 10
-        if @cells_bg.has_key?(n)
+    MiniMagick::Tool::Montage.new do |builder|
+      builder.geometry "+0+0"
+      canvas_y = 0
+      cell_y = block_y * BLOCK_DIM
+      while canvas_y < canvas_dim
+        canvas_x = 0
+        cell_x = block_x * BLOCK_DIM
+        while canvas_x < canvas_dim
+          map_cell = MapCell.new(cell_x, cell_y)
+          n = Random.rand 10
+          n = 1 unless @cells_bg.has_key?(n)
           cell_bg = @cells_bg[n]
-        else
-          cell_bg = @cells_bg[1]
+          map_cell.type = cell_bg[:type]
+          builder << cell_bg[:path]
+          # canvas.store_pixels(canvas_x, canvas_y, CELL_DIM_PX, CELL_DIM_PX, cell_bg[:pixels])
+          @cells["#{cell_x}_#{cell_y}"] = map_cell
+          canvas_x += cell_dim_px
+          cell_x += 1
         end
-        map_cell.type = cell_bg[:type]
-        canvas.store_pixels(canvas_x, canvas_y, CELL_DIM_PX, CELL_DIM_PX, cell_bg[:pixels])
-        @cells["#{cell_x}_#{cell_y}"] = map_cell
-        canvas_x += cell_dim_px
-        cell_x += 1
+        canvas_y += cell_dim_px
+        cell_y += 1
       end
-      canvas_y += cell_dim_px
-      cell_y += 1
+      #see map.coffee::addBlocks
+      canvas_path = "./img/bg/bg_#{block_x}_#{block_y}.png"
+      builder << canvas_path
+      logger.info "write to #{canvas_path}"
     end
-    #see map.coffee::addBlocks
-    canvas_path = "./img/bg/bg_#{block_x}_#{block_y}.png"
-    canvas.write canvas_path
-    logger.info "write to #{canvas_path}"
   end
 
   # check if coordinates are valid, alias may be

@@ -1,7 +1,7 @@
 # mirror for ws.coffee
 require 'em-websocket'
 require 'json'
-require 'rmagick'
+require 'mini_magick'
 require 'fileutils'
 require 'yaml'
 require 'logger'
