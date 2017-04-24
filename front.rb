@@ -12,15 +12,20 @@ Cuba.define do
   Thread.current[:_cache] = Tilt::Cache.new
 
   on root do
-    render('index', {:body_class => 'main'})
-  end
-
-  on post do
+    render('index', {:body_class => 'main', :title => 'War of Orbs'})
   end
 
   on get do
     on 'game' do
-      render('game', {:body_class => 'game'})
+      render('game', {:body_class => 'game', :title => 'War of Orbs'})
+    end
+
+    on 'about' do
+      render('about', {:body_class => 'about', :title => 'About War of Orbs'})
+    end
+
+    on 'media' do
+      render('media', {:body_class => 'media', :title => 'Media, Screenshots'})
     end
 
     on 'js', extension('js') do |file|
@@ -62,7 +67,9 @@ Cuba.define do
         res.write f.read
       end
     end
-
-
   end #get
+
+  on post do
+  end
+
 end

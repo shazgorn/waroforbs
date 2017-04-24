@@ -113,7 +113,12 @@ $log-width: calc(100% - #{$right-col-width} - 2.5rem);
   height: 80%;
   overflow-y: auto;
 }
-
+a {
+    color: $theme-color;
+    &:hover {
+	color: $theme-hover;
+    }
+}
 body {
   background-color: $black;
   color: $theme-color;

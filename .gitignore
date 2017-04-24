@@ -18,3 +18,4 @@ config.yml
 app.yml
 thin.yml
 *.dat
+log/*
