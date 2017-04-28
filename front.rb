@@ -1,7 +1,17 @@
 require 'cuba'
 require 'cuba/render'
+require 'i18n'
 require 'slim'
+require 'slim/translator'
 require 'tilt/sass'
+
+module CubaI18n
+  def t(key)
+    I18n.t key
+  end
+end
+
+Cuba.plugin CubaI18n
 
 Cuba.plugin Cuba::Render
 
@@ -10,22 +20,35 @@ Cuba.settings[:render][:template_engine] = "slim"
 Cuba.define do
   # Drop cache. See Cuba::Render module
   Thread.current[:_cache] = Tilt::Cache.new
-
-  on root do
-    render('index', {:body_class => 'main', :title => 'War of Orbs'})
-  end
+  I18n.load_path += Dir['config/locales/views/*.yml']
+  I18n.default_locale = :ru
 
   on get do
+
+    on root do
+      # on param("locale") do |locale|
+      #   begin
+      #     I18n.locale = locale || I18n.default_locale
+      #   rescue
+      #     I18n.locale = I18n.default_locale
+      #   ensure
+      #     res.redirect "/"
+      #   end
+      # end
+
+      render('index', {:body_class => 'main', :title => t('main_page_title')})
+    end
+
     on 'game' do
-      render('game', {:body_class => 'game', :title => 'War of Orbs'})
+      render('game', {:body_class => 'game', :title => t('game_title')})
     end
 
     on 'about' do
-      render('about', {:body_class => 'about', :title => 'About War of Orbs'})
+      render('about', {:body_class => 'about', :title => t('about_title')})
     end
 
     on 'media' do
-      render('media', {:body_class => 'media', :title => 'Media, Screenshots'})
+      render('media', {:body_class => 'media', :title => t('media_title')})
     end
 
     on 'js', extension('js') do |file|

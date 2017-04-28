@@ -1,0 +1,32 @@
+ru:
+  main_page_title: "War of Orbs - Главная"
+  game_title: "War of Orbs - Игра"
+  about_title: "О War of Orbs"
+  media_title: "Медиа, скриншоты"
+  browser_mmorts: "Браузерная MMORTS"
+  form_login: "Пожалуйста введите свой логин. Регистрация не требуется."
+  log_in: "Войти"
+  login_placeholder: "Логин"
+  about: "О проекте"
+  media: "Медиа"
+
+  Options: Опции
+  Help: Помощь
+  Exit: Выход
+  Disband: Распустить
+  name: имя
+  squads: отряды
+  Quick actions: Быстрые действия
+  Fullscreen: Полный экран
+  Map height: Высота карты
+  Map width: Ширирна карты
+  Log height, lines: Высота лога, в строках
+  Refresh page: Обновите страницу
+  All cells: Все клетки
+  Show grid: Показывать сеткуу
+  Save: Сохранить
+  Buildings: Здания
+  Workers: Работники
+  Inventory: Инвентарь
+  Open: Открыть
+  Build: Построить

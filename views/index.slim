@@ -1,14 +1,16 @@
-h1 Welcome to the War of Orbs
+h1 War of Orbs
+h2 browser_mmorts
 
 form.login-form action="/login" method="post" id="login-form"
-  label for="login" Please enter your login. No registration required.
+  label for="login" form_login
   div
-    input.text type="text" name="login" id="login" placeholder="Login" required="true"
+    input.text type="text" name="login" id="login" required="required" placeholder=t('login_placeholder')
   div
-    input.submit type="submit" value="Log in"
+    input.submit type="submit" value=t('log_in')
 
-a href="/about" About
-| &nbsp;
-a href="/media" Media
+div
+  a href="/about" about
+  | &nbsp;
+  a href="/media" media
 
 script src="/js/main.js"
