@@ -157,10 +157,10 @@ class Map
     )
 
   center_on_hero: (unit_id) ->
-    unit_jq = $("##{unit_id}")
-    block_pos = unit_jq.parent().parent().position()
+    $unit = $("##{unit_id}")
+    block_pos = $unit.parent().parent().position()
     if block_pos
-      cell_pos = unit_jq.parent().position()
+      cell_pos = $unit.parent().position()
       map = $("#map")
       bias_top = (map.height() - @cell_dim_in_px) / 2
       bias_left = (map.width() - @cell_dim_in_px) / 2
@@ -173,7 +173,7 @@ class Map
         .css('top', -1 * top + 'px')
         .css('left', -1 * left + 'px')
     else
-      App.log('No position or no unit')
+      App.log({message: 'No position or no unit', type: 'error', time: 'Interface error'})
 
   # update unit div on map or append a new one
   append: (unit) ->

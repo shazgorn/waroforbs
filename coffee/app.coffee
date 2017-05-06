@@ -71,7 +71,6 @@ class Application
     @controls.set_active_unit(unit_id)
 
   set_active_unit: (unit_id) ->
-    #if unit_id != @active_unit_id
     @active_unit_id = unit_id
     @controls.set_active_unit(@active_unit_id)
     @center_on_active()
@@ -163,8 +162,10 @@ class Application
 
   log: (data) ->
     log_entry = $(document.createElement('div'))
-      .html(data)
+      .append($(document.createElement('time')).html(data.time))
+      .append($(document.createElement('span')).html(data.message))
       .prependTo('#log')
+      .addClass(data.type)
       .addClass('log-entry')
       .addClass('new-log-entry')
       setTimeout(() ->

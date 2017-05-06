@@ -52,14 +52,18 @@ Cuba.define do
     end
 
     on 'js', extension('js') do |file|
-      res['Content-Type'] = 'text/javascript'
-      res.write Tilt::CoffeeScriptTemplate.new("./coffee/#{file}.coffee").render
+      File.open("./js/#{file}.js", 'r') do |f|
+        res['Content-Type'] = 'text/javascript'
+        res.write f.read
+      end
     end
 
     on 'css' do
       on extension('css') do |file|
-        res['Content-Type'] = 'text/css'
-        res.write Tilt::ScssTemplate.new("./scss/#{file}.scss").render
+        File.open("./css/#{file}.css", 'r') do |f|
+          res['Content-Type'] = 'text/css'
+          res.write f.read
+        end
       end
 
       on extension('map') do |file|

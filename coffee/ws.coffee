@@ -12,6 +12,13 @@ class WS
 
     @socket.onopen = () =>
       @socket.send(JSON.stringify({token: @token, op: 'init'}))
+
+    @socket.onerror = (e) =>
+      console.log(e)
+
+    @socket.onclose = (e) =>
+      App.log({message: 'Connection to server has been closed. Please reload page.', type: 'info', time: 'interface'})
+      console.log(e)
     
     @socket.onmessage = (e) ->
       start = new Date();
@@ -37,7 +44,7 @@ class WS
             app.init_user_controls(data.actions)
 
             for l in data.logs
-              app.log('<time>' + l.time + ':</time> ' + l.log)
+              app.log(l)
 
             # App init finished
             app.initialized = true
@@ -45,19 +52,12 @@ class WS
             if data.dmg
               if data.defender
                 app.map.dmg(data.ca_dmg, data.dmg, data.d_id, data.a_id, 789, 123)
-                app.log('damage taken ' + data.dmg)
-                app.log('damage dealt ' + data.ca_dmg)
               else
                 app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id, 123, 789)
-                app.log('damage dealt ' + data.dmg)
-                app.log('damage taken ' + data.ca_dmg)
             app.banners = data.banners
             app.init_units data.units
-            if data.active_unit_id
+            if data.active_unit_id && data.op == 'move'
               app.set_active_unit data.active_unit_id
-            else
-              null
-              #app.set_active_unit app.active_unit_id
             app.init_user_controls data.actions
             # refresh modals
             app.refresh_modals()
@@ -68,7 +68,7 @@ class WS
         if data.log
           app.log(data.log)
         app.unlock_controls()
-        console.log('js execution time:', new Date() - start)
+        console.log('js execution time:', new Date() - start, 'ms')
 
   move: (unit_id, params) ->
     @socket.send(

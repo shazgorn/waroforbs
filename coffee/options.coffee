@@ -16,12 +16,11 @@ class Options
         t.disable('map_height')
         t.disable('map_width')
         App.map.set_fullscreen()
-        App.center_on_active()
       else
         t.enable('map_height')
         t.enable('map_width')
         App.map.remove_fullscreen()
-        App.center_on_active()
+      App.center_on_active()
     , false)
     @option('log_height', 5, 'int', (t) ->
       $('#log').height(t.log_height * 20)

@@ -464,12 +464,31 @@ button {
 
     time {
       display: inline-block;
-      width: 10rem;
+      width: 12rem;
     }
   }
 
-  .new-log-entry {
+  .info {
+    color: cyan;
+  }
+
+  .error {
+    color: pink;
+  }
+
+  .new_hero {
+    color: blue;
+  }
+
+  .attack {
     color: $red;
+  }
+
+  .move {
+    color: $green;
+  }
+
+  .new-log-entry {
     font-weight: bold;
   }
 }
