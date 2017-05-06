@@ -196,7 +196,7 @@ class OrbApp
                 @game.new_random_hero user
                 log = 'New hero spawned'
                 log_entry = Log.push user, log, op
-                dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
+                dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :op => op, :log => log_entry}})
               when :new_town
                 begin
                   @game.new_town user, user.active_unit_id

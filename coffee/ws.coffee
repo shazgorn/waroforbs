@@ -56,10 +56,9 @@ class WS
                 app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id, 123, 789)
             app.banners = data.banners
             app.init_units data.units
-            if data.active_unit_id && data.op == 'move'
+            if data.active_unit_id && data.op in ['move', 'new_hero']
               app.set_active_unit data.active_unit_id
             app.init_user_controls data.actions
-            # refresh modals
             app.refresh_modals()
             app.attacking = false
           when 'error'
