@@ -88,10 +88,11 @@ class OrbApp
 
   def set_def_data users, res
     if res.has_key?(:d_user) && res[:d_user]
-      log_entry = Log.push res[:d_user], "damage taken ca_dmg: %d, damage dealt dmg: %d" % [res[:d_data][:ca_dmg], res[:d_data][:dmg]], attack
+      log_msg = "damage taken ca_dmg: %d, damage dealt dmg: %d" % [res[:d_data][:ca_dmg], res[:d_data][:dmg]]
       if res[:d_data][:dead]
-        log_msg += '. You hero has been killed.'
+        log_msg += '. Your hero has been killed.'
       end
+      log_entry = Log.push res[:d_user], log_msg, :attack
       if user_online?(res[:d_user])
         users[res[:d_user].id] = res[:d_data]
         users[res[:d_user].id][:log] = log_entry
@@ -173,7 +174,7 @@ class OrbApp
                   res = @game.attack_by_user user, active_unit_id, params['id'].to_i
                   log_msg = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
                   if res[:a_data][:dead]
-                    log_msg += '. You hero has been killed.'
+                    log_msg += '. Your hero has been killed.'
                   end
                   log_entry = Log.push user, log_msg, op
                   users[user.id] = {
