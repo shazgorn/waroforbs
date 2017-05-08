@@ -81,6 +81,13 @@ Cuba.define do
       end
     end
 
+    on 'favicon.ico' do |file|
+      File.open("./favicon.ico", 'rb') do |f|
+        res['Content-Type'] = 'image/vnd.microsoft.icon'
+        res.write f.read
+      end
+    end
+
     on 'img', extension('png') do |file|
       File.open("./img/#{file}.png", 'rb') do |f|
         res['Content-Type'] = 'image/png'
