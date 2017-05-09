@@ -121,7 +121,7 @@ class TownControls
 
       switch building['@status']
         when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-          b.addClass('builging-not-built')
+          b.addClass('building-not-built')
           $open_building
             .click((e) ->
               e.preventDefault()
@@ -158,7 +158,7 @@ class TownControls
             .html(building['@ttb_string'])
             .appendTo(b)
         when App.building_states['BUILDING_STATE_BUILT']
-          b.addClass('builging-built')
+          b.addClass('building-built')
           $open_building
             .click(() ->
               _this.open_building(this)

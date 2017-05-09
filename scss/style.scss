@@ -686,14 +686,14 @@ button {
   text-align: center;
   width: 9rem;
 
-  &.builging-built {
+  &.building-built {
     @include themed();
     a {
       color: $theme-color;
     }
   }
 
-  &.builging-not-built {
+  &.building-not-built {
     a,
     .building-time {
       color: $gray;
