@@ -365,7 +365,6 @@ class OrbApp
 
   def run_black_orb_spawner
     begin
-      return
       if @game.black_orbs_below_limit
         orb = @game.spawn_black_orb
         @game.place_at_random orb
