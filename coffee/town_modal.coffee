@@ -9,10 +9,6 @@ class TownModal
     for key, building of town.buildings
       @modal_town.find('.buildings-inner').append(building.card.el)
       @controls.init_building building
-    @inventory_list = []
-    for type, count of town.inventory
-      if count
-        @inventory[type] = 
 
   bind_open_handler: (list) ->
     for el in list
