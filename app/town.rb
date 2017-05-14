@@ -60,8 +60,8 @@ class Town < Unit
   TYPE = :town
   RADIUS = 3
 
-  def initialize(user)
-    super(:town, user)
+  def initialize(x, y, user)
+    super(TYPE, x, y, user)
     @hp = @max_hp = 300
     @damage = 5
     @defence = 50
@@ -187,6 +187,10 @@ class Town < Unit
 
     def has_town? user
       @@units.values.select{|unit| unit.user_id == user.id && unit.type == self::TYPE}.length == 1
+    end
+
+    def has_live_town? user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.alive? && unit.type == self::TYPE}.length == 1
     end
 
     def get_by_user user

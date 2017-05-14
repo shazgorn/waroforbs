@@ -3,7 +3,7 @@ require 'coffee-script'
 
 task default: [:front_restart, :ws_restart]
 
-task :gen_map do
+task :ws_gen_map do
   system('ruby --verbose -wW2 app/ws.rb gen')
 end
 
@@ -22,7 +22,7 @@ task :css do
     Dir.mkdir('css')
   rescue SystemCallError
   end
-  system('scss scss/style.scss css/style.css')
+  system('sh scss.sh')
 end
 
 task :js do
@@ -30,22 +30,9 @@ task :js do
     Dir.mkdir('js')
   rescue SystemCallError
   end
-  game_js = ''
-  file = File.new('js/game.js', 'w')
-  %w[options town_controls controls map units ws app].each do |f|
-    puts f
-    game_js += CoffeeScript.compile File.read('coffee/' + f + '.coffee')
-  end
-  file.write game_js
-  file.close
-  puts 'index'
-  File.open('js/index.js', 'w') do |f|
-    f.write CoffeeScript.compile File.read('coffee/index.coffee')
-  end
+  system('sh coffee.sh')
 end
 
-task front_start: [:js, :css]
-       
 task :front_start do
   system('thin -R config.ru start -C config/thin.yml')
 end

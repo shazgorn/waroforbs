@@ -8,7 +8,6 @@ class Application
     @banners = []
     @options = new Options
     @controls = new Controls this
-    @town_controls = new TownControls this
     @ws = new WS this
     @initialized = false
     @attacking = false
@@ -22,6 +21,7 @@ class Application
     @controls.lock_controls()
 
   unlock_controls: () ->
+    # calc only alive units
     if @initialized and @my_units_ids.length > 0
       @controls.unlock_controls()
 
@@ -34,12 +34,11 @@ class Application
   restart: () ->
     @ws.restart()
 
-  build: (button) ->
-    id = $(button).data('id')
+  build: (id) ->
     @ws.build(id)
 
-  disband: (id) ->
-    @ws.disband(id)
+  dismiss: (id) ->
+    @ws.dismiss(id)
 
   create_random_banner: () ->
     @ws.create_random_banner()
@@ -63,9 +62,10 @@ class Application
     @ws.free_worker(town_id, x, y)
 
   refresh_modals: () ->
-    id = @town_controls.open_building_id
-    if id
-      @town_controls.fill_building_modal(id)
+    # id = @town_controls.open_building_id
+    # if id
+    #   @town_controls.fill_building_modal(id)
+    return
 
   set_active_unit_directly: (unit_id) ->
     @controls.set_active_unit(unit_id)
@@ -80,36 +80,42 @@ class Application
     @map.center_on_hero('unit-' + @active_unit_id)
 
   init_units: (units) ->
-    @map.remove_stale_units(units)
-    @units = {}
-    @my_units = {}
+    # @map.remove_stale_units(units)
+    # @units = {} # models
+    # @my_units = {} # models
     for unit_id, unit_hash of units
       try
-        unit_obj = UnitFactory(unit_hash, @user_id)
-        if unit_obj
-          @units[unit_obj.id] = unit_obj
-          unit_on_map = @map.append(unit_obj)
-          if unit_hash['@user_id'] == @user_id
-            @my_units[unit_obj.id] = unit_obj
-            @controls.unit_info(unit_hash)
-            @bind_select_handler(unit_on_map)
-          unit_obj.init()
+        unit_model = @units[unit_id]
+        is_user_unit = unit_hash['@user_id'] == @user_id
+        if unit_model
+          unit_model.update unit_hash
+        else
+          unit_model = UnitFactory(unit_hash, is_user_unit)
+          if !unit_model.dead
+            unit_model.create_view()
+          @units[unit_id] = unit_model
+        if unit_model.need_to_move
+          @map.appendElementToCell(unit_model.view.element, unit_model.x, unit_model.y)
+          unit_model.need_to_move = false
+        if is_user_unit
+          @my_units[unit_id] = unit_model
       catch Error
         console.log(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
     # delete dead units
-    if @my_units_ids.length == 0
-      @lock_controls()
-    $('.unit-info:not(.unit-info-template)').each((i, el) =>
-      id = $(el).data('id')
-      if $.inArray(id, @my_units_ids) == -1
-        $(el).remove()
-        if id == @active_unit_id
-          @lock_controls()
-    )
+    # if @my_units_ids.length == 0
+    #   @lock_controls()
+    # $('.unit-info:not(.unit-info-template)').each((i, el) =>
+    #   id = $(el).data('id')
+    #   if $.inArray(id, @my_units_ids) == -1
+    #     $(el).remove()
+    #     if id == @active_unit_id
+    #       @lock_controls()
+    # )
     true
 
+  # bind attack handlers
   bind_action_handlers: () ->
     $('.attack-target').removeClass('attack-target').off('click')
     cell = $('#unit-' + @active_unit_id).parent()
@@ -137,28 +143,8 @@ class Application
       @attacking = true
       @ws.attack(@active_unit_id, {id: $(unit).data('id')})
 
-  # select unit or open town modal screen
-  bind_select_handler: (unit) ->
-    $(unit).addClass('select-target').off('click').on('click', () =>
-      @set_active_unit($(unit).data('id'))
-      if $(unit).hasClass('player-town')
-        @town_controls.open_town($(unit).data('id'))
-    )
-
   init_user_controls: (actions) ->
     @controls.init_user_controls(actions)
-
-  init_town_buildings: (buildings) ->
-    @town_controls.init_town_buildings(buildings)
-
-  init_town_controls: (actions) ->
-    @town_controls.init_town_controls(actions)
-
-  init_town_workers: (town) ->
-    @town_controls.init_town_workers(town)
-
-  init_town_inventory: (inventory) ->
-    @town_controls.init_town_inventory(inventory)
 
   log: (data) ->
     log_entry = $(document.createElement('div'))

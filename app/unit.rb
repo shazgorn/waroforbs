@@ -12,14 +12,14 @@ class Unit
 
   # @user User
   # change user_id to user
-  def initialize(type, user = nil)
+  def initialize(type, x, y, user = nil)
     @id = @@id_seq
     @@id_seq += 1
     @type = type
     @user = user
     @dead = false
-    @x = nil
-    @y = nil
+    @x = x
+    @y = y
     @defence = 0
     @ap = @max_ap = 0
     @hp = @max_hp = 1
@@ -75,6 +75,7 @@ class Unit
 
   def die
     @dead = true
+    place(nil, nil)
   end
 
   def dmg
@@ -158,6 +159,10 @@ class Unit
       @@units.values.select{|unit| unit.user_id == user.id}.length > 0
     end
 
+    def has_live_units? user
+      @@units.values.select{|unit| unit.user_id == user.id && unit.alive?}.length > 0
+    end
+
     def get_active_unit user
       begin
         active_unit_id = user.active_unit_id
@@ -180,8 +185,8 @@ class Company < Unit
   BASE_AP = 20
   BASE_DEF = 10
 
-  def initialize(user, banner)
-    super(:company, user)
+  def initialize(x, y, user, banner)
+    super(:company, x, y, user)
     @banner = banner
     @banner.unit = self
     @damage = (BASE_DMG * banner.mod_dmg).round(0)
@@ -230,6 +235,10 @@ class Company < Unit
   class << self
     def has_any? user
       @@units.select{|id, unit| unit.user_id == user.id && unit.type == :company}.length > 0
+    end
+
+    def has_any_live? user
+      @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :company}.length > 0
     end
   end
 

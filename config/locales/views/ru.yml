@@ -13,7 +13,7 @@ ru:
   Options: Опции
   Help: Помощь
   Exit: Выход
-  Disband: Распустить
+  Dismiss: Распустить
   name: имя
   squads: отряды
   Quick actions: Быстрые действия
@@ -30,3 +30,4 @@ ru:
   Inventory: Инвентарь
   Open: Открыть
   Build: Построить
+  Town: Город

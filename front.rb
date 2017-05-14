@@ -51,10 +51,19 @@ Cuba.define do
       render('media', {:body_class => 'media', :title => t('media_title')})
     end
 
-    on 'js', extension('js') do |file|
-      File.open("./js/#{file}.js", 'r') do |f|
-        res['Content-Type'] = 'text/javascript'
-        res.write f.read
+    on 'js' do
+      on extension('js') do |file|
+        File.open("./js/#{file}.js", 'r') do |f|
+          res['Content-Type'] = 'text/javascript'
+          res.write f.read
+        end
+      end
+
+      on extension('map') do |file|
+        File.open("./js/#{file}.map", 'r') do |f|
+          res['Content-Type'] = 'text/plain'
+          res.write f.read
+        end
       end
     end
 

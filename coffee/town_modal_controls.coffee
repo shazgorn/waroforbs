@@ -1,4 +1,6 @@
-class TownControls
+##
+# Modal callbacks and stuff
+class TownModalControls
   constructor: () ->
     _town_controls = this
     _this = this
@@ -99,88 +101,26 @@ class TownControls
         App.add_squad_to_company($(this).data('id'))
       )
 
-  # add building`s blocks and build buttons
-  init_town_buildings: (buildings) ->
-    $('.open-building-screen').remove()
+  ###
+  # Init open, build handlers
+  # @param {array} buildings of Building
+  ###
+  init_building: (building) ->
     _this = this
-    for id, building of buildings
-      $b = $("##{id}")
-      open_building_sel = "open-screen-#{id}"
-      # building container with link, time to build, cost and build button
-      b = $(document.createElement('div'))
-        .attr('id', id)
-        .addClass('open-building-screen')
-        .appendTo('.modal.town .buildings-inner')
-
-      # open building link
-      $open_building = $(document.createElement('a'))
-        .html(building['@name'])
-        .attr('id', open_building_sel)
-        .attr('href', '#')
-        .data('id', id)
-
-      switch building['@status']
-        when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-          b.addClass('building-not-built')
-          $open_building
-            .click((e) ->
-              e.preventDefault()
-            )
-          # building time
-          $(document.createElement('div'))
-            .addClass('building-time')
-            .html(building['@ttb_string'])
-            .appendTo(b)
-
-          $cost_res =
-            $(document.createElement('div'))
-              .addClass('building-cost')
-
-          for res, count of building['@cost_res']
-            if count
-              $(document.createElement('div'))
-                .addClass('cost-res')
-                .addClass('cost-res-' + res)
-                .attr('title', "#{res} #{count}")
-                .html(count)
-                .appendTo($cost_res)
-
-          $cost_res.appendTo(b)
-        when App.building_states['BUILDING_STATE_IN_PROGRESS']
-          b.addClass('building-in-progress')
-          $open_building
-            .click((e) ->
-              e.preventDefault()
-            )
-          # building time
-          $(document.createElement('div'))
-            .addClass('building-time')
-            .html(building['@ttb_string'])
-            .appendTo(b)
-        when App.building_states['BUILDING_STATE_BUILT']
-          b.addClass('building-built')
-          $open_building
-            .click(() ->
-              _this.open_building(this)
-              $('.back-to-town').click(() ->
-                $('.modal.building').hide()
-                $('.modal.town').show()
-              )
-            )
-
-      b.prepend($open_building)
-
-      # build button
-      if building['@status'] == 1
-        $("##{id} button").remove()
-      else if building['@status'] == 0 && $("##{id}").length == 1 &&
-          $("##{id} button").length == 0
-        button = $(document.createElement('button'))
-          .html('Build')
-          .data('id', id)
-          .appendTo("##{id}")
+    switch building.status
+      when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+        building.card.build
           .click(() ->
-            App.build(this)
+            App.build(building.id)
+          )
+      when App.building_states['BUILDING_STATE_BUILT']
+        building.card.open_building
+          .click(() ->
+            _this.open_building(this)
+            $('.back-to-town').click(() ->
+              $('.modal.building').hide()
+              $('.modal.town').show()
+            )
           )
 
   init_town_controls: (actions) ->
@@ -249,20 +189,8 @@ class TownControls
     @draw_town_cells_new(town)
     @bind_actions_cells(town)
 
-  init_town_inventory: (inventory) ->
-    $('.inventory-res').remove()
-    for type, count of inventory
-      if count
-        $(document.createElement('div'))
-          .addClass('inventory-res')
-          .addClass('inventory-res-' + type)
-          .attr('title', type + ' ' + count)
-          .html(count)
-          .appendTo('.town-inventory-inner')
-
   open_town: (id) ->
     @last_town = id
-    $('.modal.town').show()
 
   open_building: (button) ->
     $('.modal').hide()
@@ -290,4 +218,4 @@ class TownControls
 
 
 
-window.TownControls = TownControls
+window.TownModalControls = TownModalControls

@@ -1,3 +1,6 @@
+##
+# Application logs
+
 module Logging
   @logger = nil
 
@@ -10,7 +13,7 @@ module Logging
   def self.logger
     unless @logger
       @logger = Logger.new(Config.get('log'), 'weekly')
-      @logger.level = Logger::INFO
+      @logger.level = Logger::DEBUG
     end
     @logger
   end

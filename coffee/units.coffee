@@ -1,6 +1,18 @@
-# rename 'css_' to 'attr_'
-class Unit
+# - rename 'css_' to 'attr_'
+# - really?
+
+class Model
+  constructor: (hash) ->
+    # view property is a link to view
+    @view = null
+    @controls = null
+
+  update: (hash) ->
+    return
+
+class Unit extends Model
   constructor: (unit) ->
+    super unit
     @_unit = unit
     @id = unit['@id']
     @attr_id = "unit-#{@id}"
@@ -9,52 +21,114 @@ class Unit
     @type = unit['@type']
     @damage = unit['@damage']
     @defence = unit['@defence']
+    @dead = unit['@dead']
+    @hp = unit['@hp']
+    @max_hp = unit['@max_hp']
+    @ap = unit['@ap']
+    @max_ap = unit['@max_ap']
+    @user_id = null
+    @user_name = null
+    if !@dead
+      @need_to_move = true
 
-  # to call after unit initialization
-  init: () ->
-    return
+  update: (unit) ->
+    return if @dead
+    if unit['@dead']
+      @dead = unit['@dead']
+      @need_to_move = false
+      @view.remove_element()
+      if @controls
+        @controls.remove_element()
+      return
+    @need_to_move = !@dead && (@x != unit['@x'] || @y != unit['@y'])
+    if @x != unit['@x']
+      @x = unit['@x']
+      # view.set_x(@x)
+    if @y != unit['@y']
+      @y = unit['@y']
+      # view.set_y(@x)
+    if @ap != unit['@ap']
+      @ap = unit['@ap']
+      # view.set_ap(@ap)
+
 
 class Company extends Unit
   constructor: (unit) ->
     super unit
-    @title = unit['@user_name'] + '(' + unit['@hp'] + ')'
+    @user_id = unit['@user_id']
+    @user_name = unit['@user_name']
+    @update_title(unit)
+
+  update_title: () ->
+    @title = @user_name + '(' + @hp + ')'
+
+  update: (unit) ->
+    super unit
+    @update_title()
 
 class PlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-hero'
     @squads = unit['@squads']
-    @hp = unit['@hp']
-    @ap = unit['@ap']
+
+  create_view: () ->
+    if !@dead
+      @view = new PlayerCompanyView(this)
+      @controls = new PlayerCompanyControlsView(this)
+
+  update: (unit) ->
+    super unit
+    return if @dead
+    if @squads != unit['@squads']
+      @squads = unit['@squads']
+      view.set_squads(@squads)
+    @controls.update(this)
+
 
 class OtherPlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'other-player-hero'
 
+  create_view: () ->
+    if !@dead
+      @view = new OtherPlayerCompanyView(this)
+
 class GreenOrb extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'green-orb'
-    @title = unit['@hp']
-    if unit['@hp'] < 50
+    @title = @hp
+    if @hp < 50
       @css_class += ' orb-sm'
-    else if unit['@hp'] < 100
+    else if @hp < 100
       @css_class += ' orb-md'
     else
       @css_class += ' orb'
+
+  create_view: () ->
+    @view = new GreenOrbView(this)
+
+
 
 class BlackOrb extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'black-orb'
-    @title = unit['@hp']
-    if unit['@hp'] < 500
+    @title = @hp
+    if @hp < 500
       @css_class += ' orb-sm'
-    else if unit['@hp'] < 700
+    else if @hp < 700
       @css_class += ' orb-md'
     else
       @css_class += ' orb'
+
+  create_view: () ->
+    if !@dead
+      @view = new BlackOrbView(this)
+
+
 
 class Town extends Unit
   constructor: (unit) ->
@@ -62,6 +136,9 @@ class Town extends Unit
     @css_class = 'town'
     @title = unit['@user_name'] + ' Town'
 
+##
+# cell in town radius
+# displayed in the town modal window
 class TownCell
   constructor: (id, x, y, town_id) ->
     @id = id
@@ -87,11 +164,18 @@ class TownCell
     else
       App.set_free_worker_to_xy(@town_id, @x, @y)
 
+
 class PlayerTown extends Town
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-town'
     @adj_companies = unit['@adj_companies']
+    @buildings = {}
+    for key, building of unit['@buildings']
+      @buildings[key] = new Building(key, building)
+    @inventory_items = {}
+    for key, inventory_item of unit['@inventory']
+      @inventory_items[key] = new TownInventoryItem(key, inventory_item)
     # id => cell
     @cells = {}
     range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
@@ -115,35 +199,72 @@ class PlayerTown extends Town
       if w['@x'] && w['@y']
         @cells[w['@x'] + '_' + w['@y']].has_worker = true
 
-  init: () ->
-    App.init_town_buildings(@_unit['@buildings'])
-    App.init_town_controls(@_unit['@actions'])
-    App.init_town_workers(this)
-    App.init_town_inventory(@_unit['@inventory'])
+  update: (town) ->
+    super town
+    return if @dead
+    for key, building of @buildings
+      building.update town['@buildings'][key]
+    for key, inventory_item of @inventory_items
+      inventory_item.update town['@inventory'][key]
+
+  create_view: () ->
+    if !@dead
+      @view = new PlayerTownView(this)
+      @controls = new PlayerTownControlsView(this)
+      @modal = new TownModal(this)
+      @modal.bind_open_handler([@view.element, @controls.open])
+
+
+class Building
+  constructor: (key, building) ->
+    @id = key
+    @name = building['@name']
+    @status = building['@status']
+    @ttb_string = building['@ttb_string']
+    @cost_res = building['@cost_res']
+    @card = new BuildingCard(this)
+
+  update: (building) ->
+    @status = building['@status']
+    @ttb_string = building['@ttb_string']
+    @card.update(this)
+
+
+class TownInventoryItem
+  constructor: (key, count) ->
+    @id = key
+    @count = count
+    @view = new TownInventoryItemView(this)
+
+  update: (count) ->
+    if @count != count
+      @count = count
+      @view.update(this)
+
 
 class OtherPlayerTown extends Town
   constructor: (unit) ->
     super unit
 
-UnitFactory = (unit_hash, user_id) ->
-  if !unit_hash['@x']? || !unit_hash['@y']?
-    throw new Error 'Unit is not set on map'
-  if unit_hash?
-    switch unit_hash['@type']
-      when "company"
-        if unit_hash['@user_id']
-          if unit_hash['@user_id'] == user_id
-            unit = new PlayerCompany unit_hash
-          else unit = new OtherPlayerCompany unit_hash
-      when "orb" then unit = new GreenOrb unit_hash
-      when "black_orb" then unit = new BlackOrb unit_hash
-      when "town"
-        if unit_hash['@user_id']
-          if unit_hash['@user_id'] == user_id
-            unit = new PlayerTown unit_hash
-          else
-            unit = new OtherPlayerTown unit_hash
-      else throw new Error 'Unit have no type'
-  unit
+  create_view: () ->
+    if !@dead
+      @view = new OtherPlayerTownView(this)
 
-window.UnitFactory = UnitFactory
+
+window.UnitFactory = (unit_hash, is_user_unit) ->
+  switch unit_hash['@type']
+    when "company"
+      if is_user_unit
+        unit = new PlayerCompany unit_hash
+      else
+        unit = new OtherPlayerCompany unit_hash
+    when "green_orb" then unit = new GreenOrb unit_hash
+    when "black_orb" then unit = new BlackOrb unit_hash
+    when "town"
+      if is_user_unit
+        unit = new PlayerTown unit_hash
+      else
+        unit = new OtherPlayerTown unit_hash
+    else
+      throw new Error 'Unit have no type'
+  unit

@@ -175,37 +175,28 @@ class Map
     else
       App.log({message: 'No position or no unit', type: 'error', time: 'Interface error'})
 
+  appendElementToCell: (element, x, y) ->
+    # append to selector not jQuery object!
+    cell_sel = "#cell_#{x}_#{y}"
+    $cell = $(cell_sel)
+    if $cell.length == 0
+      @addCell(x, y)
+    $(element).appendTo(cell_sel)
+
   # update unit div on map or append a new one
   append: (unit) ->
     $unit = $("#unit-#{unit.id}")
-    # append to selector not jquery object!
-    cell_sel = "#cell_#{unit.x}_#{unit.y}"
-    $cell = $(cell_sel)
-    if $cell.length == 0
-      @addCell(unit.x, unit.y)
     if $unit.length == 0
-      $unit = $(document.createElement('div'))
-        .addClass('unit')
-        .addClass(unit.css_class)
-        .data('id', unit.id)
-        .appendTo(cell_sel)
-      if unit.attr_id
-        $unit.attr('id', unit.attr_id)
-      if unit.squads
-        $(document.createElement('span'))
-          .html(unit.squads)
-          .addClass('player-unit-squad-info')
-          .appendTo($unit)
+
     else if $unit.length == 1
       # unit already on map, update it
+      # add size class for orb (normal, medium, small)
       if $unit.hasClass('green-orb')
         $unit.addClass(unit.css_class)
+      # move unit
       if $unit.parent().data('x') != unit.x ||
           $unit.parent().data('y') != unit.y
         $unit.appendTo(cell_sel)
-      if unit.squads
-        $unit.children('.player-unit-squad-info').html(unit.squads)
-    if unit.title then $unit.attr('title', unit.title)
     $unit
 
 this.Map = Map

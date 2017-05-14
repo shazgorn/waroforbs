@@ -101,7 +101,7 @@ class Barracs < Building
   def initialize
     super
     @name = 'Barracs'
-    @cost_time = 3
+    @cost_time = 600
     @cost_res[:gold] = 20
     @cost_res[:wood] = 5
     @ttb_string = seconds_to_hm @cost_time

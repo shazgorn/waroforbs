@@ -49,56 +49,6 @@ class Controls
   unlock_controls: () ->
     $('#controls-arrows button').prop('disabled', '')
 
-  unit_info: (unit) ->
-    _this = this
-    id = unit['@id']
-    id_attr = 'unit-info-' + id
-    id_sel = '#' + id_attr
-    if $(id_sel).length == 0
-      info = $('.unit-info-template')
-        .clone()
-        .appendTo('#unit-info-list')
-        .removeClass('unit-info-template')
-        .attr('id', id_attr)
-        .data('id', id)
-        .hover(
-          () ->
-            $("#unit-#{id}").addClass('player-unit-hover')
-          ,
-          () ->
-            $("#unit-#{id}").removeClass('player-unit-hover')
-        )
-      if App.active_unit_id == id
-        info.addClass('active-unit-info')
-    
-    $(id_sel).data('id', id)
-    $(id_sel).off('click').on('click', () ->
-      App.set_active_unit($(this).data('id'))
-    )
-    switch unit['@type']
-      when 'company'
-        $(id_sel + ' .unit-name-info').html('C')
-        $(id_sel + ' .unit-squads-info').html(unit['@squads'])
-      when 'town'
-        $(id_sel + ' .unit-name-info').html('T')
-        $(id_sel + ' .unit-action-info').html(
-          $(document.createElement('button'))
-            .html('Open')
-            .data('id', unit['@id'])
-            .click((e) ->
-              App.town_controls.open_town($(this).data('id'))
-            )
-        )
-    $(id_sel + ' .unit-id-info').html(unit['@id'])
-    $(id_sel + ' .unit-hp-info').html(unit['@hp'] + '/' + unit['@max_hp'])
-    $(id_sel + ' .unit-xy-info').html('{' + unit['@x'] + ',' + unit['@y'] + '}')
-    $(id_sel + ' .unit-ap-info').html(unit['@ap'] + '/' + unit['@max_ap'])
-    $(id_sel + ' .unit-dmg-info').html(unit['@damage'])
-    $(id_sel + ' .unit-def-info').html(unit['@defence'])
-    $(id_sel + ' .unit-info-disband').data('id', unit['@id']).click(() ->
-      App.disband($(this).data('id'))
-    )
-
   set_active_unit: (id) ->
     $('.active-unit-info').removeClass('active-unit-info')
     $("#unit-info-#{id}").addClass('active-unit-info')

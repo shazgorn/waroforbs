@@ -21,7 +21,7 @@ class WS
       console.log(e)
     
     @socket.onmessage = (e) ->
-      start = new Date();
+      start_ts = new Date();
       data = JSON.parse(e.data)
       console.log('data:', data)
       if app.initialized || data.data_type == 'init_map'
@@ -67,7 +67,7 @@ class WS
         if data.log
           app.log(data.log)
         app.unlock_controls()
-        console.log('js execution time:', new Date() - start, 'ms')
+        console.log('js execution time:', new Date() - start_ts, 'ms')
 
   move: (unit_id, params) ->
     @socket.send(
@@ -106,12 +106,12 @@ class WS
       })
     )
 
-  disband: (unit_id) ->
+  dismiss: (unit_id) ->
     @socket.send(
       JSON.stringify({
         token: @token,
         unit_id: unit_id,
-        op: 'disband'
+        op: 'dismiss'
       })
     )
 

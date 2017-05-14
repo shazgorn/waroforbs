@@ -24,6 +24,7 @@ class Options
     , false)
     @option('log_height', 5, 'int', (t) ->
       $('#log').height(t.log_height * 20)
+      $('.modal').css('bottom', ((t.log_height + 1) * 20) + 'px')
     , true)
     map_callback = (t) -> App.map.update_size()
     @option('map_height', 13, 'int', map_callback, false)

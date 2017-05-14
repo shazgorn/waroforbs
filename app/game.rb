@@ -38,9 +38,12 @@ class Game
     }
   end
 
+  ##
   # Select and return all units.
   # Select user`s town and select adjacent companies to it (one can add more
   # squads in barracs)
+  # TODO: calc companies only on company move, dead, new town
+
   def all_units(users = {})
     units = Unit.all
     if users.length
@@ -48,10 +51,10 @@ class Game
         user = User.get(id)
         if user
           town = units.values.select{|unit| unit.type == :town && unit.user.id == user.id}.first
-          if town
+          if town && town.alive?
             town.adj_companies = []
             units.each_value{|unit|
-              if unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
+              if unit.alive? && unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
                 town.adj_companies.push(unit.id)
               end
             }
@@ -77,11 +80,18 @@ class Game
   end
 
   ##################### DATA MODIFICATION METHODS  #######################
-  def disband user, id
+  def dismiss user, id
     unit = Unit.get_by_user_id user, id
-    raise OrbError, "No unit to disband" unless unit
-    Unit.delete id
+    raise OrbError, "No unit to dismiss" unless unit
+    unit.die
     recalculate_user_actions user
+  end
+
+  def bury unit
+    unit.die
+    if unit.user
+      recalculate_user_actions unit.user
+    end
   end
 
   ##################### CONSTRUCTORS #####################################
@@ -124,20 +134,22 @@ class Game
     }
   end
 
-  def new_hero user, banner
-    Company.new(user, banner)
+  def new_hero x, y, user, banner
+    Company.new(x, y, user, banner)
   end
 
+  ##
   # Create new random hero for user if it`s his first login
   # or all other heroes and towns are destroyed
+  # raise OrbError otherwise
+
   def new_random_hero user
-    unless Unit.has_units? user
-      banner = Banner.get_first_by_user user
-      hero = new_hero user, banner
-      user.active_unit_id = hero.id
-      place_at_random hero
-      recalculate_user_actions user
-    end
+    raise OrbError, 'User have some live units' if Unit.has_live_units? user
+    banner = Banner.get_first_by_user user
+    xy = get_random_xy
+    hero = new_hero xy[:x], xy[:y], user, banner
+    user.active_unit_id = hero.id
+    recalculate_user_actions user
   end
 
   def create_company user, banner_id=:new
@@ -152,9 +164,8 @@ class Game
       banner = Banner.get_by_id(user, banner_id)
     end
     if empty_cell && banner
-      company = new_hero user, banner
+      company = new_hero empty_cell[:x], empty_cell[:y], user, banner
       user.active_unit_id = company.id
-      company.place empty_cell[:x], empty_cell[:y]
       town.pay_company_price
     end
     company
@@ -173,15 +184,14 @@ class Game
   end
 
   def new_town(user, active_unit_id)
-    unless Town.has_town? user
-      unit = Company.get active_unit_id
-      raise OrbError, "Active unit is nil" unless unit
-      empty_cell = empty_adj_cell unit
-      if empty_cell
-        town = Town.new(user)
-        town.place empty_cell[:x], empty_cell[:y]
-        recalculate_user_actions user
-      end
+    raise OrbError, 'You have one town already' if Town.has_live_town? user
+    logger.debug "User have no town"
+    unit = Company.get active_unit_id
+    raise OrbError, "Active unit is nil" unless unit
+    empty_cell = empty_adj_cell unit
+    if empty_cell
+      Town.new(empty_cell[:x], empty_cell[:y], user)
+      recalculate_user_actions user
     end
   end
 
@@ -240,8 +250,9 @@ class Game
 
   def move_unit_by unit, dx, dy
     raise OrbError, 'Wrong direction' unless @map.d_include?(dx, dy)
-    res = {:log => nil, :moved => false}
     raise OrbError, 'No unit' unless unit
+    raise OrbError, 'Unit is dead and wont go anywhere' if unit.dead?
+    res = {:log => nil, :moved => false}
     new_x = unit.x + dx
     new_y = unit.y + dy
     raise OrbError, 'Out of map' unless @map.has?(new_x, new_y)
@@ -266,16 +277,19 @@ class Game
       dx = Random.rand(-1..1)
       dy = Random.rand(-1..1)
     end while (dx == 0 && dy == 0) || !@map.has?(unit.x + dx, unit.y + dy)
-    # logger.info "random move ##{unit.id} by #{dx}, #{dy}"
+    logger.debug "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
     move_unit_by unit, dx, dy
   end
 
-  def place_at_random unit
+  ##
+  # Get random coordinates not occupied by any unit
+  # return {:x => x, :y => y}
+
+  def get_random_xy
     while true
       xy = @map.get_rand_coords
       if Unit.place_is_empty?(xy[:x], xy[:y])
-        unit.place(xy[:x], xy[:y])
-        break
+        return xy
       end
     end
   end
@@ -307,7 +321,13 @@ class Game
   end
 
   def spawn_black_orb
-    BlackOrb.new
+    xy = get_random_xy
+    BlackOrb.new xy[:x], xy[:y]
+  end
+
+  def spawn_green_orb
+    xy = get_random_xy
+    GreenOrb.new xy[:x], xy[:y]
   end
 
   #################### ATTACK ##################################################
@@ -340,29 +360,26 @@ class Game
     res
   end
 
+  ##
+  # Attack unit by user
   # @param [User] a_user attacker
   # @param [Integer] def_id if of the defender unit
+
   def attack_by_user a_user, active_unit_id, def_id
     a = Unit.get_active_unit a_user
     d = Unit.get def_id
+    raise OrbError, 'Defender is already dead' if d.dead?
     attack a, d
-  end
-
-  def bury(unit)
-    Unit.delete unit.id
-    if unit.user
-      recalculate_user_actions unit.user
-    end
   end
 
   def recalculate_user_actions user
     has_town = Town.has_any? user
-    has_company = Company.has_any? user
+    has_live_company = Company.has_any_live? user
     user.set_action_new_town false
     user.set_action_new_hero false
-    if has_company && !has_town
+    if has_live_company && !has_town
       user.set_action_new_town true
-    elsif !has_company && !has_town
+    elsif !has_live_company && !has_town
       user.set_action_new_hero true
     end
   end

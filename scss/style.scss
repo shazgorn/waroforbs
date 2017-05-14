@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Serif:400,700&subset=cyrillic');
 $cell-dimension: 40px;
 $map-dimension: $cell-dimension * 11;
 $block-dimension: $cell-dimension * 10;
@@ -9,7 +10,7 @@ $orb-md-margin: ($cell-dimension - $orb-md-dimension) / 2;
 $orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
 $button-size: 60px;
 $column-gap: 30px;
-$font-family: Immortal, fantasy;
+$font-family: 'PT Serif', serif;
 $right-col-width: 12rem;
 // colors
 // color of wooden theme
@@ -46,11 +47,6 @@ $white: #fff;
 $modal-width: calc(100% - #{$right-col-width} - 6rem);
 // - 2.5rem for padding + scroll
 $log-width: calc(100% - #{$right-col-width} - 2.5rem);
-
-@font-face {
-  font-family: Immortal;
-  src: url('/fonts/IMMORTAL.ttf');
-}
 
 @mixin clearfix() {
   &::before,
@@ -95,6 +91,12 @@ $log-width: calc(100% - #{$right-col-width} - 2.5rem);
   color: $theme-color;
 }
 
+@mixin themed-2px() {
+  background-color: $theme-bg;
+  border: 2px solid $theme-border;
+  color: $theme-color;
+}
+
 @mixin themed-hovered() {
   @include themed();
   &:hover {
@@ -106,19 +108,22 @@ $log-width: calc(100% - #{$right-col-width} - 2.5rem);
   @include themed-hovered();
   cursor: pointer;
   font-family: $font-family;
+  font-weight: bold;
+  padding: 0 2px;
 }
 
 @mixin big-modal() {
   bottom: 10%;
-  height: 80%;
   overflow-y: auto;
 }
+
 a {
     color: $theme-color;
     &:hover {
 	color: $theme-hover;
     }
 }
+
 body {
   background-color: $black;
   color: $theme-color;
@@ -204,6 +209,8 @@ button {
   }
 
   .unit {
+    background-repeat: no-repeat;
+    background-position: center;
     border: thin solid transparent;
     box-sizing: border-box;
     height: inherit;
@@ -222,7 +229,8 @@ button {
   }
 
   .player-hero {
-    background-image: url('/img/player_hero.png');
+      //background-image: url('/img/player_hero.png');
+    background-image: url('/img/swordsman.png');
   }
 
   .player-unit {
@@ -236,10 +244,12 @@ button {
     }
 
     .player-unit-squad-info {
+      background-color: rgba(200, 0, 0, 0.7);
       bottom: 0;
       color: $white;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: bold;
+      padding: 0 2px;
       position: absolute;
       right: 0;
     }
@@ -362,6 +372,7 @@ button {
 
 .unit-info {
   border: thin solid transparent;
+  font-weight: bold;
   padding: 0 2px;
 
   .unit-name-info {
@@ -386,6 +397,10 @@ button {
     }
   }
 
+  .unit-info-actions {
+    margin: 2px 0;
+  }
+
   &:not(.active-unit-info) > .unit-info-actions {
     display: none;
   }
@@ -394,11 +409,11 @@ button {
     color: $hp-info-color;
   }
 
-  .unit-dmg-info {
+  .unit-damage-info {
     color: $lightgray;
   }
 
-  .unit-def-info {
+  .unit-defence-info {
     color: $blue;
   }
 
@@ -417,7 +432,7 @@ button {
   }
 
   &.active-unit-info {
-    border: thin solid $right-col-border;
+    border-left: thick solid $right-col-border;
   }
 }
 
@@ -639,6 +654,8 @@ button {
   @include clearfix();
   border-bottom: thin solid $wooden-color;
   padding: .5rem;
+  font-size: 120%;
+  font-weight: bold;
 
   .modal-title {
     float: left;
@@ -674,42 +691,62 @@ button {
   .banner-card {
     @include card();
   }
-}
 
+  .buildings-title {
+    font-weight: bold;
+  }
 
-.open-building-screen {
-  border: thin solid $gray;
-  float: left;
-  margin-right: 1rem;
-  min-height: 3rem;
-  padding: .5rem;
-  text-align: center;
-  width: 9rem;
+  .building-card {
+    border: 2px solid $gray;
+    float: left;
+    margin-right: 1rem;
+    min-height: 3rem;
+    padding: .5rem;
+    text-align: center;
+    width: 9rem;
 
-  &.building-built {
-    @include themed();
+    .building-cost {
+      height: 3rem;
+    }
+
+    &.building-built {
+      @include themed-2px();
+      a {
+	color: $theme-color;
+      }
+    }
+
+    &:not(.building-not-built) {
+      .build-button, .building-cost {
+	display: none;
+      }
+    }
+    
+    &.building-not-built {
+      a.open-building,
+      .building-time {
+	color: $gray;
+      }
+    }
+
+    &.building-in-progress {
+      a,
+      .building-time {
+	color: $gray;
+	font-style: italic;
+      }
+    }
+
+    &.building-built {
+      .building-time {
+	display: none;
+      }
+    }
+
     a {
-      color: $theme-color;
+      display: block;
+      text-decoration-line: unset;
     }
-  }
-
-  &.building-not-built {
-    a,
-    .building-time {
-      color: $gray;
-    }
-  }
-
-  &.building-in-progress {
-    a,
-    .building-time {
-      color: $gray;
-      font-style: italic;
-    }
-  }
-
-  a {
-    display: block;
-    text-decoration-line: unset;
   }
 }
+

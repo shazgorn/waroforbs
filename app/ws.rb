@@ -149,8 +149,8 @@ class OrbApp
                 if params['dx'].to_i && params['dy'].to_i
                   begin
                     res = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
-                    log = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
-                    log_entry = Log.push user, log, op
+                    log_msg = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
+                    log_entry = Log.push user, log_msg, op
                     dispatch_units({
                                      user.id => {
                                        :active_unit_id => user.active_unit_id,
@@ -158,9 +158,8 @@ class OrbApp
                                        :log => log_entry
                                      }
                                    })
-                  rescue OrbError => log_str
-                    log = log_str
-                    log_entry = Log.push user, log, :error
+                  rescue OrbError => log_msg
+                    log_entry = Log.push user, log_msg, :error
                     dispatch_units({user.id => {:log => log_entry}})
                   end
                 else
@@ -186,37 +185,40 @@ class OrbApp
                     :d_id => params['id'],
                     :log => log_entry
                   }
-                  # your hero has been killed
                   set_def_data users, res
                   dispatch_units(users)
-                rescue OrbError => log_str
-                  log_entry = Log.push user, log_str, :error
+                rescue OrbError => log_msg
+                  log_entry = Log.push user, log_msg, :error
                   dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
                 end
               when :new_hero
-                @game.new_random_hero user
-                log = 'New hero spawned'
-                log_entry = Log.push user, log, op
+                begin
+                  @game.new_random_hero user
+                  log = 'New hero spawned'
+                  log_entry = Log.push user, log, op
+                rescue OrbError => log_msg
+                  log_entry = Log.push user, log_msg, :error
+                end
                 dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :op => op, :log => log_entry}})
               when :new_town
                 begin
                   @game.new_town user, user.active_unit_id
-                  log = 'Town has been settled'
+                  log = 'New town has been settled'
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
                 dispatch_units({user.id => {:log => log_entry}})
-              when :disband
+              when :dismiss
                 unit_id = data['unit_id']
                 begin
-                  @game.disband user, unit_id
-                  log = "Unit ##{unit_id} disbanded"
+                  @game.dismiss user, unit_id
+                  log = "Unit ##{unit_id} dismissed"
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
@@ -233,8 +235,8 @@ class OrbApp
                     log = "#{data['building']} not built"
                   end
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
@@ -244,8 +246,8 @@ class OrbApp
                 begin
                   res = @game.create_random_banner user
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
@@ -282,8 +284,8 @@ class OrbApp
                 begin
                   @game.set_free_worker_to_xy(user, data['town_id'], data['x'], data['y'])
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
@@ -293,8 +295,8 @@ class OrbApp
                 begin
                   @game.free_worker user, data['town_id'], data['x'], data['y']
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
@@ -304,8 +306,8 @@ class OrbApp
                 begin
                   res = @game.add_squad_to_company user, data['town_id'], data['company_id']
                   type = op
-                rescue OrbError => log_str
-                  log = log_str
+                rescue OrbError => log_msg
+                  log = log_msg
                   type = :error
                 end
                 log_entry = Log.push user, log, type
@@ -350,8 +352,7 @@ class OrbApp
       while true
         begin
           if GreenOrb.below_limit?
-            orb = GreenOrb.new
-            @game.place_at_random orb
+            @game.spawn_green_orb
             logger.debug "spawn green orb (%d)" % GreenOrb.length
             dispatch_units
           end
@@ -367,7 +368,6 @@ class OrbApp
     begin
       if @game.black_orbs_below_limit
         orb = @game.spawn_black_orb
-        @game.place_at_random orb
         speed = Config.get("BLACK_ORB_START_SPEED")
         max_speed = Config.get("BLACK_ORB_MAX_SPEED")
         logger.info "spawn black orb"
