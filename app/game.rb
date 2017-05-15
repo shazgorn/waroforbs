@@ -326,8 +326,12 @@ class Game
   end
 
   def spawn_green_orb
-    xy = get_random_xy
-    GreenOrb.new xy[:x], xy[:y]
+    if GreenOrb.below_limit?
+      xy = get_random_xy
+      GreenOrb.new xy[:x], xy[:y]
+      return true
+    end
+    false
   end
 
   #################### ATTACK ##################################################

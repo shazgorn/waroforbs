@@ -312,7 +312,15 @@ class OrbApp
                 end
                 log_entry = Log.push user, log, type
                 dispatch_units({user.id => {:log => log_entry}})
+              when :new_green_orb
+                if @game.spawn_green_orb
+                  logger.debug "spawn green orb (%d)" % GreenOrb.length
+                  dispatch_units
+                end
               end #case
+            rescue JSON::ParserError => e
+              ex e
+              ws.send "Send me a json will ya?"
             rescue Exception => e
               ex e
             end
@@ -343,23 +351,6 @@ class OrbApp
           ex e
         end
         sleep(3)
-      end
-    end
-  end
-
-  def run_green_orbs_spawner
-    Thread.new do
-      while true
-        begin
-          if GreenOrb.below_limit?
-            @game.spawn_green_orb
-            logger.debug "spawn green orb (%d)" % GreenOrb.length
-            dispatch_units
-          end
-        rescue => e
-          ex e
-        end
-        sleep(1)
       end
     end
   end
@@ -423,7 +414,6 @@ class OrbApp
 end
 
 app = OrbApp.new
-app.run_green_orbs_spawner
 app.run_black_orb_spawner
 app.run_clock
 app.run_ws
