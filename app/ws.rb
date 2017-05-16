@@ -117,7 +117,7 @@ class OrbApp
           end
 
           ws.onerror { |error|
-            ex e
+            ex error
           }
 
           ws.onmessage do |msg, type|
