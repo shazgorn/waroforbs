@@ -313,10 +313,14 @@ class OrbApp
                 log_entry = Log.push user, log, type
                 dispatch_units({user.id => {:log => log_entry}})
               when :new_green_orb
-                if @game.spawn_green_orb
+                begin
+                  @game.spawn_green_orb
                   logger.debug "spawn green orb (%d)" % GreenOrb.length
-                  dispatch_units
+                  log_entry = Log.push user, 'Spawn green orb', op
+                rescue OrbError => log_msg
+                  log_entry = Log.push user, 'Unable to spawn green orb', :error
                 end
+                dispatch_units({user.id => {:log => log_entry}})
               end #case
             rescue JSON::ParserError => e
               ex e

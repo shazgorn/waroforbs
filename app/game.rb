@@ -326,12 +326,9 @@ class Game
   end
 
   def spawn_green_orb
-    if GreenOrb.below_limit?
-      xy = get_random_xy
-      GreenOrb.new xy[:x], xy[:y]
-      return true
-    end
-    false
+    raise OrbError, 'Too many green orbs' unless GreenOrb.below_limit?
+    xy = get_random_xy
+    GreenOrb.new xy[:x], xy[:y]
   end
 
   #################### ATTACK ##################################################
