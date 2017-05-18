@@ -1,4 +1,5 @@
 require 'json'
+require 'thread'
 require 'websocket-eventmachine-client'
 
 EM.run do
@@ -9,33 +10,37 @@ EM.run do
 
   USER_NAME = 'bot_client' + ARGV[0]
 
-  f = Fiber.new do |ws|
-    ws.send({token: USER_NAME, op: 'init'}.to_json)
-    msg = Fiber.yield
-
-    data = JSON.parse(msg)
-    units = data["units"]
-    units.select!{|key, value| value.has_key?('@user_name') && value['@user_name'] == USER_NAME}
-    loop do
-      units.each {|k, v|
-        if v.has_key?('@user_name') && v['@user_name'] == USER_NAME
-          id = v['@id']
-          ws.send({token: USER_NAME, op: 'move', unit_id: id, params: {dx: -1, dy: -1}}.to_json)
-          Fiber.yield
-        end
-      }
-    end
-  end
+  m = Mutex.new
 
   ws.onopen do
     puts 'Connected'
-    f.resume(ws)
+    ws.send({token: USER_NAME, op: 'init'}.to_json)
   end
 
   ws.onmessage do |msg, type|
-    puts "Received message: #{msg} #{type}"
-    sleep(DELAY)
-    f.resume(msg)
+    # puts "Received message: #{msg} #{type}"
+    unless m.locked?
+      Thread.new {
+        puts "Thread start"
+        m.lock
+        sleep(DELAY)
+        dx = Random.rand(-1..1)
+        dy = Random.rand(-1..1)
+        puts "#{dx} #{dy}"
+        data = JSON.parse(msg)
+        units = data["units"]
+        units.select!{|key, value| value.has_key?('@user_name') && value['@user_name'] == USER_NAME}
+        units.each {|k, v|
+          if v.has_key?('@user_name') && v['@user_name'] == USER_NAME
+            id = v['@id']
+            p id
+            ws.send({token: USER_NAME, op: 'move', unit_id: id, params: {dx: dx, dy: dy}}.to_json)
+          end
+        }
+        puts "message has been sent"
+        m.unlock
+      }
+    end
   end
 
   ws.onclose do |code, reason|
