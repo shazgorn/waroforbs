@@ -5,12 +5,10 @@ require 'websocket-eventmachine-client'
 EM.run do
 
   ws = WebSocket::EventMachine::Client.connect(:uri => 'ws://0.0.0.0:9293')
-
-  DELAY = 1
+  m = Mutex.new
 
   USER_NAME = 'bot_client' + ARGV[0]
-
-  m = Mutex.new
+  DELAY = 1
 
   ws.onopen do
     puts 'Connected'
