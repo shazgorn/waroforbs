@@ -42,3 +42,11 @@ task :front_stop do
 end
 
 task front_restart: [:front_stop, :front_start]
+
+task :bots do
+  system('ruby app/cell_bot_client.rb')
+end
+
+task :orbs do
+  system('ruby app/cell_orbs_client.rb')
+end

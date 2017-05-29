@@ -123,7 +123,7 @@ class OrbApp
           ws.onmessage do |msg, type|
             begin
               logger.info "Recieved message: #{msg} #{type}"
-              start = Time.now.to_f
+              @start = Time.now.to_f
               data = JSON.parse(msg)
               token = data['token']
               user = @game.get_user_by_token token
@@ -312,7 +312,7 @@ class OrbApp
                 end
                 log_entry = Log.push user, log, type
                 dispatch_units({user.id => {:log => log_entry}})
-              when :new_green_orb
+              when :spawn_green_orb
                 begin
                   @game.spawn_green_orb
                   logger.debug "spawn green orb (%d)" % GreenOrb.length
@@ -321,6 +321,17 @@ class OrbApp
                   log_entry = Log.push user, 'Unable to spawn green orb', :error
                 end
                 dispatch_units({user.id => {:log => log_entry}})
+              when :spawn_black_orb
+                begin
+                  @game.spawn_black_orb
+                  logger.debug "spawn black orb (%d)" % BlackOrb.length
+                  log_entry = Log.push user, 'Spawn black orb', op
+                rescue OrbError => log_msg
+                  log_entry = Log.push user, 'Unable to spawn black orb', :error
+                end
+                dispatch_units({user.id => {:log => log_entry}})
+              else
+                raise OrbError, 'unknown op'
               end #case
             rescue JSON::ParserError => e
               ex e
@@ -329,8 +340,8 @@ class OrbApp
               ex e
             end
             finish = Time.now.to_f
-            diff = finish - start
-            logger.info "%10.5f" % diff.to_f
+            diff = finish - @start
+            logger.info "end: %10.5f" % diff.to_f
           end
         end
       end # run
@@ -359,44 +370,11 @@ class OrbApp
     end
   end
 
-  def run_black_orb_spawner
-    begin
-      if @game.black_orbs_below_limit
-        orb = @game.spawn_black_orb
-        speed = Config.get("BLACK_ORB_START_SPEED")
-        max_speed = Config.get("BLACK_ORB_MAX_SPEED")
-        logger.info "spawn black orb"
-        dispatch_units
-        Thread.new {
-          begin
-            while true
-              res = @game.attack_adj_cells orb
-              users = {}
-              if res
-                if res[:d_data][:dead]
-                  orb.lvl_up
-                  speed -= 1 if speed > max_speed
-                end
-                logger.debug 'black orb attack'
-                set_def_data users, res
-              else
-                @game.random_move orb
-              end
-              dispatch_units(users)
-              sleep(speed)
-            end
-          rescue => e
-            ex e
-          end
-        }
-      end
-    rescue => e
-      ex e
-    end
-  end
-
   # users_data = {user.id => data, ...}
   def dispatch_units(users_data = {})
+    finish = Time.now.to_f
+    diff = finish - @start
+    logger.info "dispatch: %10.5f" % diff.to_f
     dispatch_changes({:data_type => 'units', :units => @game.all_units(users_data)}, users_data)
   end
 
@@ -404,12 +382,15 @@ class OrbApp
   def dispatch_changes(changes, users_data = {})
     @conn_pool.each_value do |conn|
       unless conn.nil? && conn.has_key?[:user] && conn[:user]
-        changes[:actions] = conn[:user].actions_arr
-        changes[:banners] = Banner.get_by_user(conn[:user])
-        if users_data.has_key?(conn[:user].id)
-          conn[:ws].send JSON.generate(changes.merge(users_data[conn[:user].id]))
-        else
-          conn[:ws].send JSON.generate(changes)
+        # race conditions and stuff
+        unless conn[:user].nil?
+          changes[:actions] = conn[:user].actions_arr
+          changes[:banners] = Banner.get_by_user(conn[:user])
+          if users_data.has_key?(conn[:user].id)
+            conn[:ws].send JSON.generate(changes.merge(users_data[conn[:user].id]))
+          else
+            conn[:ws].send JSON.generate(changes)
+          end
         end
       end
     end
@@ -418,6 +399,5 @@ class OrbApp
 end
 
 app = OrbApp.new
-app.run_black_orb_spawner
 app.run_clock
 app.run_ws
