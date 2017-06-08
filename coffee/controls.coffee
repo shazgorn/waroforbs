@@ -2,17 +2,18 @@ class Controls
   constructor: (app) ->
     _controls = this
 
-    @user_actions =
-      'action_new_hero': {
-        name: 'New hero',
+    @user_actions = []
+
+    @actions = {
+      'new_hero_action': {
         callback: () ->
           App.new_hero()
       },
-      'action_new_town': {
-        name: 'New town',
+      'new_town_action': {
         callback: () ->
           App.new_town()
       }
+    }
 
     controls = {
       7: {arr: '&#8598;', x: -1, y: -1},
@@ -55,19 +56,29 @@ class Controls
     $(".active-player-unit").removeClass('active-player-unit')
     $("#unit-#{id}").addClass('active-player-unit')
 
-  init_user_controls: (actions) ->
-    for id, val of @user_actions
-      $a = $("#user-controls ##{id}")
-      if $.inArray(id, actions) == -1
-        $a.remove()
-      else
-        if $a.length == 0
-          $(document.createElement('button'))
-          .html(val.name)
-          .attr('id', id)
-          .data('id', id)
+  update_actions: (actions) ->
+    for key, action of actions
+      @actions[key].label = action['@label']
+      $a = $("#user-controls ##{key}")
+      if action['@on'] && $a.length == 0
+        $(document.createElement('button'))
+          .html(action['@label'])
+          .attr('id', key)
+          .data('id', key)
           .appendTo('#user-controls')
-          .click(val.callback)
+          .click(@actions[key].callback)
+      else if !action['@on'] && $a.length
+        $a.remove()
+    
+
+  init_user_controls: (actions) ->
+    for key, action of actions
+      @actions[key].label = action['@label']
+    @update_actions actions
+
+  update_user_controls: (actions) ->
+    @update_actions actions
+    
 
 
 window.Controls = Controls

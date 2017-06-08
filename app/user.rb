@@ -6,27 +6,38 @@ class User
   # id -> user
   @@users = {}
 
-  def initialize(login)
+  def initialize login
     @id = @@id_seq
     @@id_seq += 1
     @login = login
     @active_unit_id = nil
-    @actions = {
-      :action_new_town => true,
-      :action_new_hero => false
-    }
+    @actions = {}
+    # init with false, create default hero on later
+    # and switch actions
+    add_action NewTownAction.new false
+    add_action NewHeroAction.new false
   end
 
-  def set_action_new_town value
-    @actions[:action_new_town] = value
+  def add_action action
+    @actions[action.name] = action
   end
 
-  def set_action_new_hero value
-    @actions[:action_new_hero] = value
+  def enable_new_town_action
+    @actions[NewTownAction::NAME].on
+    @actions[NewHeroAction::NAME].off
   end
 
-  def actions_arr
-    @actions.select{|k,v| v == true}.keys
+  def enable_new_hero_action
+    @actions[NewTownAction::NAME].off
+    @actions[NewHeroAction::NAME].on
+  end
+
+  def disable_new_town_action
+    @actions[NewTownAction::NAME].off
+  end
+
+  def disable_new_hero_action
+    @actions[NewHeroAction::NAME].off
   end
 
   class << self

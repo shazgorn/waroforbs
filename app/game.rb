@@ -120,7 +120,7 @@ class Game
       :MAX_CELL_IDX => Map::MAX_CELL_IDX,
       :active_unit_id => user.active_unit_id,
       :user_id => user.id,
-      :actions => user.actions_arr,
+      :actions => user.actions,
       :banners => Banner.get_by_user(user),
       :units => all_units({user.id => {}}),
       :cells => @map.cells,
@@ -376,14 +376,15 @@ class Game
   def recalculate_user_actions user
     has_town = Town.has_any? user
     has_live_company = Company.has_any_live? user
-    user.set_action_new_town false
-    user.set_action_new_hero false
     if has_live_company && !has_town
-      user.set_action_new_town true
+      user.enable_new_town_action
     elsif !has_live_company && !has_town
-      user.set_action_new_hero true
+      user.enable_new_hero_action
+    else
+      user.disable_new_hero_action
+      user.disable_new_town_action
     end
   end
-  
+
 end
 

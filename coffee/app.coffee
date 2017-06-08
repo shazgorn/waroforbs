@@ -146,6 +146,9 @@ class Application
   init_user_controls: (actions) ->
     @controls.init_user_controls(actions)
 
+  update_user_controls: (actions) ->
+    @controls.update_user_controls(actions)
+
   log: (data) ->
     log_entry = $(document.createElement('div'))
       .append($(document.createElement('time')).html(data.time))

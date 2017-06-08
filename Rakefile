@@ -50,3 +50,7 @@ end
 task :orbs do
   system('ruby app/cell_orbs_client.rb')
 end
+
+task :test do
+  system('ruby -Ilib:test test/minitest/test_user.rb')
+end

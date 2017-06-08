@@ -15,6 +15,7 @@ require_relative 'banner'
 require_relative 'unit'
 require_relative 'town'
 require_relative 'orb'
+require_relative 'action'
 require_relative 'user'
 require_relative 'map'
 require_relative 'attack'
@@ -384,7 +385,7 @@ class OrbApp
       unless conn.nil? && conn.has_key?[:user] && conn[:user]
         # race conditions and stuff
         unless conn[:user].nil?
-          changes[:actions] = conn[:user].actions_arr
+          changes[:actions] = conn[:user].actions
           changes[:banners] = Banner.get_by_user(conn[:user])
           if users_data.has_key?(conn[:user].id)
             conn[:ws].send JSON.generate(changes.merge(users_data[conn[:user].id]))

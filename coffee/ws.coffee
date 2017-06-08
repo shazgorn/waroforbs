@@ -40,8 +40,8 @@ class WS
             # App init function calls
             app.init_units data.units
             app.center_on_active()
-            app.set_active_unit_directly(data.active_unit_id)
-            app.init_user_controls(data.actions)
+            app.set_active_unit_directly data.active_unit_id
+            app.init_user_controls data.actions
 
             for l in data.logs
               app.log(l)
@@ -58,7 +58,7 @@ class WS
             app.init_units data.units
             if data.active_unit_id && data.op in ['move', 'new_hero']
               app.set_active_unit data.active_unit_id
-            app.init_user_controls data.actions
+            app.update_user_controls data.actions
             app.refresh_modals()
             app.attacking = false
           when 'error'
