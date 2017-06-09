@@ -25,6 +25,9 @@ class Application
     if @initialized and @my_units_ids.length > 0
       @controls.unlock_controls()
 
+  fetch: () ->
+    @ws.units()
+
   new_hero: () ->
     @ws.new_hero()
 

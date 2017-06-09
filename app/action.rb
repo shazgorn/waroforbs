@@ -9,7 +9,7 @@ class Action < JSONable
     @on = on
   end
 
-  def on
+  def on!
     @on = true
   end
 
@@ -17,7 +17,7 @@ class Action < JSONable
     @on == true
   end
 
-  def off
+  def off!
     @on = false
   end
 

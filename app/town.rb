@@ -1,3 +1,5 @@
+require_relative 'unit'
+
 class Resource
   T = {
     :gold => {

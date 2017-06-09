@@ -23,21 +23,21 @@ class User
   end
 
   def enable_new_town_action
-    @actions[NewTownAction::NAME].on
-    @actions[NewHeroAction::NAME].off
+    @actions[NewTownAction::NAME].on!
+    @actions[NewHeroAction::NAME].off!
   end
 
   def enable_new_hero_action
-    @actions[NewTownAction::NAME].off
-    @actions[NewHeroAction::NAME].on
+    @actions[NewTownAction::NAME].off!
+    @actions[NewHeroAction::NAME].on!
   end
 
   def disable_new_town_action
-    @actions[NewTownAction::NAME].off
+    @actions[NewTownAction::NAME].off!
   end
 
   def disable_new_hero_action
-    @actions[NewHeroAction::NAME].off
+    @actions[NewHeroAction::NAME].off!
   end
 
   class << self

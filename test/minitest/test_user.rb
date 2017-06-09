@@ -18,14 +18,14 @@ class TestUser < Minitest::Test
     assert_equal false, @user.actions[NewHeroAction::NAME].on?
   end
 
-  def test_enable_hero_action
-    @user.enable_hero_action
+  def test_enable_new_hero_action
+    @user.enable_new_hero_action
     assert_equal true, @user.actions[NewTownAction::NAME].off?
     assert_equal true, @user.actions[NewHeroAction::NAME].on?
   end
 
-  def test_enable_town_action
-    @user.enable_town_action
+  def test_enable_new_town_action
+    @user.enable_new_town_action
     assert_equal true, @user.actions[NewTownAction::NAME].on?
     assert_equal true, @user.actions[NewHeroAction::NAME].off?
   end

@@ -1,5 +1,9 @@
 require 'fileutils'
 require 'json'
+require 'yaml'
+
+require_relative 'config'
+require_relative 'logging'
 
 class MapCell < JSONable
   attr_accessor :x, :y, :type, :unit

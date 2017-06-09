@@ -101,7 +101,7 @@ class Barracs < Building
   def initialize
     super
     @name = 'Barracs'
-    @cost_time = 600
+    @cost_time = 60
     @cost_res[:gold] = 20
     @cost_res[:wood] = 5
     @ttb_string = seconds_to_hm @cost_time
@@ -122,7 +122,7 @@ class BannerShop < Building
   def initialize
     super
     @name = 'Banner Shop'
-    @cost_time = 3
+    @cost_time = 30
     @cost_res[:gold] = 10
     @ttb_string = seconds_to_hm @cost_time
   end

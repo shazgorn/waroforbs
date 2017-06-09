@@ -56,20 +56,22 @@ class Controls
     $(".active-player-unit").removeClass('active-player-unit')
     $("#unit-#{id}").addClass('active-player-unit')
 
+  update_action: (key, action) ->
+    @actions[key].label = action['@label']
+    $a = $("#user-controls ##{key}")
+    if action['@on'] && $a.length == 0
+      $(document.createElement('button'))
+        .html(action['@label'])
+        .attr('id', key)
+        .data('id', key)
+        .appendTo('#user-controls')
+        .click(@actions[key].callback)
+    else if !action['@on'] && $a.length
+      $a.remove()
+
   update_actions: (actions) ->
     for key, action of actions
-      @actions[key].label = action['@label']
-      $a = $("#user-controls ##{key}")
-      if action['@on'] && $a.length == 0
-        $(document.createElement('button'))
-          .html(action['@label'])
-          .attr('id', key)
-          .data('id', key)
-          .appendTo('#user-controls')
-          .click(@actions[key].callback)
-      else if !action['@on'] && $a.length
-        $a.remove()
-    
+      @update_action key, action
 
   init_user_controls: (actions) ->
     for key, action of actions
@@ -78,7 +80,5 @@ class Controls
 
   update_user_controls: (actions) ->
     @update_actions actions
-    
-
 
 window.Controls = Controls

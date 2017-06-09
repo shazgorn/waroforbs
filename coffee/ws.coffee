@@ -198,5 +198,12 @@ class WS
       })
     )
 
+  units: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'units'
+      })
+    )
 
 window.WS = WS

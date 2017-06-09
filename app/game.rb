@@ -1,3 +1,7 @@
+require_relative 'banner'
+require_relative 'unit'
+require_relative 'town'
+
 # Game logic, some kind of incubator
 # code from here will be moved to more appropriate places
 # like data storage, attack strategy etc

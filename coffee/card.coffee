@@ -41,6 +41,7 @@ class BuildingCard extends Card
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
         @el
           .addClass('building-in-progress')
+        @start_building_countdown()
       when App.building_states['BUILDING_STATE_BUILT']
         @el
           .addClass('building-built')
@@ -53,6 +54,7 @@ class BuildingCard extends Card
         @el
           .removeClass('building-not-built')
           .addClass('building-in-progress')
+          @start_building_countdown()
         @building_time.html(building.ttb_string)
       when App.building_states['BUILDING_STATE_BUILT']
         @el
@@ -60,5 +62,26 @@ class BuildingCard extends Card
           .removeClass('building-in-progress')
           .addClass('building-built')
 
+  start_building_countdown: () ->
+    clearInterval(@interval)
+    @interval = setInterval(
+      () =>
+        ms = @building_time.html().split(':')
+        m = ms[0] * 1
+        s = ms[1] * 1
+        if s == 0
+          if m == 0
+            clearInterval(@interval)
+            App.fetch()
+            return
+          s = 59
+          m = m - 1
+        else
+          s = s - 1
+        if s < 10
+          s = '0' + s
+        @building_time.html(m + ':' + s)
+      1000
+    )
 
 window.BuildingCard = BuildingCard
