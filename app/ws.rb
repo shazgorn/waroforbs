@@ -6,6 +6,7 @@ require 'fileutils'
 require 'yaml'
 require 'logger'
 
+require_relative 'exception'
 require_relative 'logging'
 require_relative 'log'
 require_relative 'config'
@@ -20,12 +21,6 @@ require_relative 'user'
 require_relative 'map'
 require_relative 'attack'
 require_relative 'game'
-
-class OrbError < RuntimeError
-end
-
-class WrongToken < OrbError
-end
 
 # Class
 class OrbApp
