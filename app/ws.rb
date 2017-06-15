@@ -41,11 +41,6 @@ class OrbApp
     JSON.dump_default_options[:max_nesting] = 10
   end
 
-  def ex(e)
-    logger.error "#{e.class} #{e.message}"
-    logger.error e.backtrace.join("\n")
-  end
-
   def get_conn_by_user user
     @conn_pool.values.select{|conn| conn && conn.has_key?(:user) && conn[:user] == user}.first
   end

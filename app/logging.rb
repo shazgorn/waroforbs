@@ -17,4 +17,9 @@ module Logging
     end
     @logger
   end
+
+  def ex(e)
+    logger.error "#{e.class} #{e.message}"
+    logger.error e.backtrace.join("\n")
+  end
 end
