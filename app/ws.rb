@@ -6,6 +6,8 @@ require 'fileutils'
 require 'yaml'
 require 'logger'
 
+require_relative 'cli'
+require_relative 'tick'
 require_relative 'exception'
 require_relative 'logging'
 require_relative 'log'
@@ -25,43 +27,18 @@ require_relative 'game'
 # Class
 class OrbApp
   include Logging
+  include Cli
+  include Tick
   
   def initialize
-    generate = false
-    ARGV.each{|k|
-      case k
-      when 'gen'
-        generate = true
-      when 'stop'
-        stop
-        exit
-      end
-    }
-    File.open(Config.get('pid'), 'w') {|f|
-      f.write Process.pid
-    }
+    @generate = false
+    check_args
     logger.info "-----------------------------------------"
     logger.info "Create app"
     # conn_pool => {ws.signature => {:ws => ws, :user => user}}
     @conn_pool = {}
-    @game = Game.new(generate)
+    @game = Game.new(@generate)
     JSON.dump_default_options[:max_nesting] = 10
-  end
-
-  def stop
-    if File.exist?(Config.get('pid'))
-      pid = nil
-      File.open(Config.get('pid')) {|file|
-        pid = file.readline.to_i
-      }
-      begin
-        if pid
-          Process.kill("HUP", pid)
-        end
-      rescue Errno::ESRCH => e
-        Logging.logger.info "%s with pid %d" % [e.message, pid]
-      end
-    end
   end
 
   def ex(e)
@@ -351,19 +328,6 @@ class OrbApp
     @game.dump
     logger.info "Good bye!"
     exit
-  end
-
-  def run_clock
-    Thread.new do
-      while true
-        begin
-          @game.tick
-        rescue => e
-          ex e
-        end
-        sleep(3)
-      end
-    end
   end
 
   # users_data = {user.id => data, ...}
