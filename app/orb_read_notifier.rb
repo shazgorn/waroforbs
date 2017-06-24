@@ -1,4 +1,4 @@
-class Tick
+class OrbReadNotifier
   include Celluloid
   include Celluloid::Notifications
 
@@ -9,8 +9,8 @@ class Tick
   def run
     now = Time.now.to_f
     sleep now.ceil - now + 0.001
-    every(3) do
-      publish 'tick'
+    every(1) do 
+      publish 'read_message'
     end
   end
 end

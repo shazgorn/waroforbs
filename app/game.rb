@@ -46,11 +46,11 @@ class Game
   # Select and return all units.
   # Select user`s town and select adjacent companies to it (one can add more
   # squads in barracs)
-  # TODO: calc companies only on company move, dead, new town
+  # TODO: calc adj companies only on company move, dead, new town
 
-  def all_units(users = {})
+  def all_units(token)
     units = Unit.all
-    if users.length
+    if false
       users.each{|id, data|
         user = User.get(id)
         if user
@@ -114,7 +114,8 @@ class Game
     user
   end
 
-  def init_map user
+  def init_map token
+    user = get_user_by_token token
     {
       :map_shift => Map::SHIFT,
       :cell_dim_in_px => Map::CELL_DIM_PX,
