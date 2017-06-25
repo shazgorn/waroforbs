@@ -154,10 +154,10 @@ class Application
 
   log: (data) ->
     log_entry = $(document.createElement('div'))
-      .append($(document.createElement('time')).html(data.time))
-      .append($(document.createElement('span')).html(data.message))
+      .append($(document.createElement('time')).html(data['@time']))
+      .append($(document.createElement('span')).html(data['@message']))
       .prependTo('#log')
-      .addClass(data.type)
+      .addClass(data['@type'])
       .addClass('log-entry')
       .addClass('new-log-entry')
       setTimeout(() ->

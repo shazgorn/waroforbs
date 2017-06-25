@@ -41,34 +41,23 @@ class OrbGameServer
     end
     op =  data['op'].to_sym
     info op
+    log_entry = nil
+    user_data = {
+      token => {
+        :op => op
+      }
+    }
     case op
     when :init
       @game.init_user token
     when :close
 
     when :units
-      
+
     when :move
       params = data['params']
-      if params['dx'].to_i && params['dy'].to_i
-        begin
-          res = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
-          log_msg = "Unit ##{data['unit_id']} moved by #{params['dx'].to_i}, #{params['dy'].to_i} to #{res[:new_x]}, #{res[:new_y]}"
-          log_entry = Log.push user, log_msg, op
-          user_data = {
-            token => {
-              :active_unit_id => user.active_unit_id,
-              :op => op,
-              :log => log_entry
-            }
-          }
-        rescue OrbError => log_msg
-          log_entry = Log.push user, log_msg, :error
-          user_data = {token => {:log => log_entry}}
-        end
-      else
-        dispatch_units
-      end
+      log_entry = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+      user_data[token][:active_unit_id] = user.active_unit_id
     when :attack
       params = data['params']
       begin
@@ -237,6 +226,9 @@ class OrbGameServer
     else
       raise OrbError, 'unknown op'
     end #case
+    if log_entry
+      user_data[token][:log] = log_entry
+    end
     user_data
   end
 

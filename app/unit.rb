@@ -54,7 +54,7 @@ class Unit
       nil
     end
   end
-  
+
   def dead?
     @dead
   end
@@ -131,6 +131,15 @@ class Unit
     end
 
     def get id
+      puts "Unit.get is deprecated"
+      get_by_id id
+    end
+
+    ##
+    # select and return object of Unit class with +id+
+    # return nil if unit is not found
+
+    def get_by_id id
       @@units[id]
     end
 
@@ -173,7 +182,7 @@ class Unit
       end
       unit
     end
-    
+
   end
 
 end
@@ -243,4 +252,3 @@ class Company < Unit
   end
 
 end
-

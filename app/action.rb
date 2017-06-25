@@ -1,3 +1,5 @@
+require_relative 'jsonable'
+
 class Action < JSONable
   @label = 'Default action'
   @name = :default_action

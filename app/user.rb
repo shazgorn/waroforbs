@@ -1,3 +1,5 @@
+require_relative 'action'
+
 class User
   attr_reader :login, :id
   attr_accessor :active_unit_id, :actions

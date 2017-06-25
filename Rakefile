@@ -57,4 +57,5 @@ end
 task :test do
   system('ruby -Ilib:test test/minitest/test_user.rb')
   system('ruby -Ilib:test test/minitest/test_game.rb')
+  system('ruby -Ilib:test test/minitest/test_unit.rb')
 end

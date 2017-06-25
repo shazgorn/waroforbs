@@ -1,3 +1,5 @@
+require_relative 'log_entry'
+require_relative 'log_box'
 require_relative 'banner'
 require_relative 'unit'
 require_relative 'town'
@@ -129,7 +131,7 @@ class Game
       :banners => Banner.get_by_user(user),
       :units => all_units({user.id => {}}),
       :cells => @map.cells,
-      :logs => Log.get_by_user(user),
+      :logs => LogBox.get_by_user(user),
       :TOWN_RADIUS => Town::RADIUS,
       :building_states => {
         :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
@@ -253,27 +255,39 @@ class Game
     :mountain => 3
   }
 
+  ##
+  # unit - Unit
+  # dx - int
+  # dy - int
+
   def move_unit_by unit, dx, dy
-    raise OrbError, 'Wrong direction' unless @map.d_include?(dx, dy)
-    raise OrbError, 'No unit' unless unit
-    raise OrbError, 'Unit is dead and wont go anywhere' if unit.dead?
-    res = {:log => nil, :moved => false}
+    return LogEntry.error 'Wrong direction' unless @map.d_include?(dx, dy)
+    return LogEntry.error 'Unit is dead and wont go anywhere' if unit.dead?
     new_x = unit.x + dx
     new_y = unit.y + dy
-    raise OrbError, 'Out of map' unless @map.has?(new_x, new_y)
+    return LogEntry.error 'Out of map' unless @map.has?(new_x, new_y)
     type = @map.cell_type_at new_x, new_y
     cost = TYPE2COST[type]
-    raise OrbError, 'Not enough AP' unless unit.can_move?(cost)
-    raise OrbError, 'Cell is occupied' unless Unit.place_is_empty?(new_x, new_y)
+    return LogEntry.error 'Not enough AP' unless unit.can_move?(cost)
+    return LogEntry.error 'Cell is occupied' unless Unit.place_is_empty?(new_x, new_y)
     unit.move_to(new_x, new_y, cost)
-    res.merge!({:moved => true, :new_x => new_x, :new_y => new_y})
-    res[:moved] = false
-    res
+    LogEntry.move unit.id, dx, dy, new_x, new_y
   end
 
+  ##
+  # user - User
+  # unit_id - int
+  # dx - int
+  # dy - int
+  # Select unit by id and move it
+  # return log_entry
+
   def move_user_hero_by user, unit_id, dx, dy
-    unit = Unit.get unit_id
-    move_unit_by unit, dx, dy
+    unit = Unit.get_by_id unit_id
+    return LogBox.error user, 'Unit #%d not found' % unit_id unless unit
+    log_entry = move_unit_by unit, dx, dy
+    log_entry.user = user
+    log_entry
   end
 
   def random_move unit
@@ -392,4 +406,3 @@ class Game
   end
 
 end
-
