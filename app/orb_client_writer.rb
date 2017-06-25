@@ -4,7 +4,7 @@ class OrbClientWriter
   include Celluloid::Internals::Logger
 
   attr_writer :token
-  
+
   def initialize(websocket, reader_name)
     @socket = websocket
     @reader_name = reader_name
@@ -20,7 +20,7 @@ class OrbClientWriter
     user_data = args[:user_data]
     res = {
       :units => game.all_units(@token),
-      :data_type => @map_initialized ? 'units' : 'init_map'
+      :data_type => @map_initialized ? 'units' : 'init'
     }
     unless @map_initialized
       res.merge!(game.init_map @token)

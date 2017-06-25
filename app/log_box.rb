@@ -1,3 +1,5 @@
+require_relative 'log_entry'
+
 ##
 # Class for storing user logs
 
@@ -13,12 +15,18 @@ class LogBox
     # to send logs to everybody login messages for example
 
     def push type, message, user
-      push_entry log_entry = LogEntry.new(type, message, user).to_hash
+      log_entry = LogEntry.new(type, message, user)
+      push_entry log_entry
     end
 
     def push_entry log_entry
-      @@logs.push(log_entry.to_hash)
-      log_entry.to_hash
+      @@logs << log_entry
+      log_entry
+    end
+
+    def << log_entry
+      @@logs << log_entry
+      log_entry
     end
 
     def error message, user
@@ -32,8 +40,9 @@ class LogBox
 
     ##
     # Select log entry for +user+
+
     def get_by_user user
-      @@logs.select{ |l| l.user == user }
+      @@logs.select{ |l| l.user.id == user.id }
     end
   end
 end

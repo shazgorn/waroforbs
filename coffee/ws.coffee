@@ -1,6 +1,6 @@
 class WS
   constructor: (app) ->
-    # there are some race conditions when 'ul' will came before 'init_map'
+    # there are some race conditions when 'ul' will came before 'init'
     @initialized = false
     @token = localStorage.getItem('token')
     unless @token then location.pathname = '/'
@@ -19,14 +19,14 @@ class WS
     @socket.onclose = (e) =>
       App.log({message: 'Connection to server has been closed. Please reload page.', type: 'info', time: 'interface'})
       console.log(e)
-    
+
     @socket.onmessage = (e) ->
       start_ts = new Date();
       data = JSON.parse(e.data)
       console.log('data:', data)
-      if app.initialized || data.data_type == 'init_map'
+      if app.initialized || data.data_type == 'init'
         switch data.data_type
-          when 'init_map'
+          when 'init'
             # App init set properties
             app.cells = data.cells
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks, data.cells

@@ -34,19 +34,19 @@ class OrbGameServer
     # keep token, not user, pass token and params to game as message
     token = data['token']
     user = @game.get_user_by_token token
-    # hash of {token => user_data} to be sent to users with units
-    user_data = {}
-    if data.has_key?('unit_id')
-      user.active_unit_id = active_unit_id = data['unit_id'].to_i
-    end
     op =  data['op'].to_sym
     info op
     log_entry = nil
+    # hash of {token => user_data} to be sent to users with units
     user_data = {
       token => {
         :op => op
       }
     }
+    if data.has_key?('unit_id')
+      user.active_unit_id = active_unit_id = data['unit_id'].to_i
+      user_data[token][:active_unit_id] = user.active_unit_id
+    end
     case op
     when :init
       @game.init_user token
@@ -57,7 +57,6 @@ class OrbGameServer
     when :move
       params = data['params']
       log_entry = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
-      user_data[token][:active_unit_id] = user.active_unit_id
     when :attack
       params = data['params']
       begin
@@ -206,14 +205,9 @@ class OrbGameServer
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
     when :spawn_green_orb
-      begin
-        @game.spawn_green_orb
-        debug "spawn green orb (%d)" % GreenOrb.length
-        log_entry = Log.push user, 'Spawn green orb', op
-      rescue OrbError => log_msg
-        log_entry = Log.push user, 'Unable to spawn green orb', :error
-      end
-      dispatch_units({user.id => {:log => log_entry}})
+      log_entry = @game.spawn_green_orb user
+      info "spawn green orb (%d)" % GreenOrb.length
+      log_entry = Log.push user, 'Spawn green orb', op
     when :spawn_black_orb
       begin
         @game.spawn_black_orb

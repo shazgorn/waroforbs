@@ -19,11 +19,11 @@ class OrbsClient
     message = JSON.parse(data)
   end
 
-  def spawn_green_orb
+  def send_spawn_green_orb
     @client.text JSON.dump(:token => @user, :op => 'spawn_green_orb')
   end
 
-  def spawn_black_orb
+  def send_spawn_black_orb
     @client.text JSON.dump(:token => @user, :op => 'spawn_black_orb')
   end
 end
@@ -32,7 +32,7 @@ client = OrbsClient.new
 
 loop do
   sleep(1)
-  client.spawn_green_orb
+  client.send_spawn_green_orb
   sleep(1)
-  client.spawn_black_orb
+  client.send_spawn_black_orb
 end

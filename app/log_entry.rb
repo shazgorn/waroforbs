@@ -2,7 +2,7 @@ require_relative 'jsonable'
 
 class LogEntry < JSONable
 
-  attr_accessor :user
+  attr_accessor :user, :type
 
   def initialize type, message, user = nil
     @message = message
@@ -12,6 +12,10 @@ class LogEntry < JSONable
   end
 
   class << self
+    def ok message
+      self.new :ok, message
+    end
+
     def error message
       self.new :error, message
     end

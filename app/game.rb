@@ -261,6 +261,7 @@ class Game
   # dy - int
 
   def move_unit_by unit, dx, dy
+    return LogEntry.error 'Unit #%d not found' % unit_id unless unit
     return LogEntry.error 'Wrong direction' unless @map.d_include?(dx, dy)
     return LogEntry.error 'Unit is dead and wont go anywhere' if unit.dead?
     new_x = unit.x + dx
@@ -284,9 +285,9 @@ class Game
 
   def move_user_hero_by user, unit_id, dx, dy
     unit = Unit.get_by_id unit_id
-    return LogBox.error user, 'Unit #%d not found' % unit_id unless unit
     log_entry = move_unit_by unit, dx, dy
     log_entry.user = user
+    LogBox << log_entry
     log_entry
   end
 
@@ -344,10 +345,13 @@ class Game
     BlackOrb.new xy[:x], xy[:y]
   end
 
-  def spawn_green_orb
-    raise OrbError, 'Too many green orbs' unless GreenOrb.below_limit?
+  def spawn_green_orb user
+    return LogEntry.error 'Too many green orbs' unless GreenOrb.below_limit?
     xy = get_random_xy
     GreenOrb.new xy[:x], xy[:y]
+    log_entry = LogEntry.ok 'Green orb has been spawned'
+    LogBox << log_entry
+    log_entry
   end
 
   #################### ATTACK ##################################################
