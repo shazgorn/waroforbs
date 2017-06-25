@@ -6,6 +6,8 @@ require 'slim'
 I18n.load_path += Dir['config/locales/views/*.yml']
 I18n.default_locale = :ru
 
+set :public_folder, './static'
+
 helpers do
   def t(key)
     I18n.t key
