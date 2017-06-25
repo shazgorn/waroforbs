@@ -19,3 +19,5 @@ app.yml
 thin.yml
 *.dat
 log/*
+node_modules/*
+static/

@@ -1,4 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=PT+Serif:400,700&subset=cyrillic');
+@font-face {font-family: 'PT Serif';
+	src: url('fonts/ptf55f_w.eot');
+	src: local('PT Serif'), url('fonts/ptf55f_w.eot?#iefix') format('embedded-opentype'), url('fonts/ptf55f_w.woff') format('woff'),url('fonts/ptf55f_w.ttf') format('truetype'), url('fonts/ptf55f_w.svg#PTSerif-Regular') format('svg');}
+
+@font-face {font-family: 'PT Serif';
+	src: url('fonts/ptf75f_w.eot');
+	font-style: normal;
+	font-weight: bold;
+	src: local('PT Serif Bold'), url('fonts/ptf75f_w.eot?#iefix') format('embedded-opentype'), url('fonts/ptf75f_w.woff') format('woff'),url('fonts/ptf75f_w.ttf') format('truetype'), url('fonts/ptf75f_w.svg#PTSerif-Bold') format('svg');}
+
 $cell-dimension: 40px;
 $map-dimension: $cell-dimension * 11;
 $block-dimension: $cell-dimension * 10;

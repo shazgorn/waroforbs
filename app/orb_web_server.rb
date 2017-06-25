@@ -5,7 +5,6 @@ class OrbWebServer < Reel::Server::HTTP
     info "Web server starting on #{host}:#{port}"
     super(host, port, &method(:on_connection))
     @id = 1
-    p self
   end
 
   def on_connection(connection)

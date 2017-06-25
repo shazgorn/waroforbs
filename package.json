@@ -1,0 +1,10 @@
+{
+    "description": "for jquery",
+    "repository":
+    {
+	"type": "git",
+	"url": "https://github.com/shazgorn/waroforbs"
+    },
+    "license": "WTFPL",
+    "README": "README.md"
+}

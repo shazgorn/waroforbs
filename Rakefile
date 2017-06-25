@@ -19,15 +19,18 @@ end
 
 task :css do
   begin
-    Dir.mkdir('css')
+    Dir.mkdir('static/css')
   rescue SystemCallError
   end
   system('sh scss.sh')
 end
 
 task :js do
+  system('npm install jquery')
+  system('cp node_modules/jquery/dist/jquery.min.js static/js/')
+  system('cp node_modules/jquery/dist/jquery.min.map static/js/')
   begin
-    Dir.mkdir('js')
+    Dir.mkdir('static/js')
   rescue SystemCallError
   end
   system('sh coffee.sh')

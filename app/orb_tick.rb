@@ -1,4 +1,4 @@
-class Tick
+class OrbTick
   include Celluloid
   include Celluloid::Notifications
 

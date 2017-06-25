@@ -1,1 +1,1 @@
-coffee -wcm -o js/ coffee/*.coffee
+coffee -wcm -o static/js/ coffee/*.coffee

@@ -35,31 +35,31 @@ class Map
     @cells = {}
     @cells_bg = {
       1 => {
-        :path => "./img/bg_grass_1.png",
+        :path => "./" + Config.get('img_path') + "bg_grass_1.png",
         :type => :grass
       },
       2 => {
-        :path => "./img/bg_grass_2.png",
+        :path => "./" + Config.get('img_path') + "bg_grass_2.png",
         :type => :grass
       },
       3 => {
-        :path => "./img/bg_grass_3.png",
+        :path => "./" + Config.get('img_path') + "bg_grass_3.png",
         :type => :grass
       },
       4 => {
-        :path => "./img/bg_grass_4.png",
+        :path => "./" + Config.get('img_path') + "bg_grass_4.png",
         :type => :grass
       },
       5 => {
-        :path => "./img/bg_tree_on_grass.png",
+        :path => "./" + Config.get('img_path') + "bg_tree_on_grass.png",
         :type => :tree
       },
       6 => {
-        :path => "./img/bg_oak_on_grass_1.png",
+        :path => "./" + Config.get('img_path') + "bg_oak_on_grass_1.png",
         :type => :tree
       },
       7 => {
-        :path => "./img/bg_mountain_on_grass.png",
+        :path => "./" + Config.get('img_path') + "bg_mountain_on_grass.png",
         :type => :mountain
       }
     }
@@ -120,7 +120,7 @@ class Map
         cell_y += 1
       end
       #see map.coffee::addBlocks
-      canvas_path = "./img/bg/bg_#{block_x}_#{block_y}.png"
+      canvas_path = "./" + Config.get('img_path') + "bg/bg_#{block_x}_#{block_y}.png"
       builder << canvas_path
       logger.info "write to #{canvas_path}"
     end

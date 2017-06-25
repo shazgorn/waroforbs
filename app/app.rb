@@ -9,7 +9,6 @@ require 'yaml'
 require 'logger'
 
 require_relative 'cli'
-require_relative 'tick'
 require_relative 'exception'
 require_relative 'logging'
 require_relative 'log'
@@ -29,17 +28,17 @@ require_relative 'orb_game_server'
 require_relative 'orb_client_reader'
 require_relative 'orb_client_writer'
 require_relative 'orb_read_notifier'
-require_relative 'tick'
-require_relative 'orb_web_server'
+require_relative 'orb_tick'
+require_relative 'orb_websockets_server'
 
 puts 'start OrbGameServer'
 OrbGameServer.new
 puts 'start Tick'
-Tick.new
-puts 'start OrbWebServer'
-OrbWebServer.new
+OrbTick.new
 puts 'start OrbReadNotifier'
 OrbReadNotifier.new
+puts 'start OrbWebsocketsServer'
+OrbWebsocketsServer.run
 
 puts 'sleep'
 sleep
