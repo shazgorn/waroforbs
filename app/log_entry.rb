@@ -5,6 +5,14 @@ class LogEntry < JSONable
   attr_accessor :user, :type
   attr_reader :message
 
+  def to_hash
+    {
+      :message => @message,
+      :type => @type,
+      :time => @time
+    }
+  end
+
   def initialize type, message, user = nil
     @message = message
     @type = type
