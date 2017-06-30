@@ -1,3 +1,7 @@
+require_relative 'exception'
+require_relative 'cli'
+require_relative "game"
+
 class OrbGameServer
   include Celluloid
   include Celluloid::Notifications
@@ -20,35 +24,54 @@ class OrbGameServer
 
   def parse_user_data(topic, data)
     user_data = parse_data data
-    info 'data has been parsed'
-    info 'publish units to users'
-    publish "send_units_to_user", {:game => @game, :user_data => user_data}
+    if user_data
+      publish "send_units_to_user", {:game => @game, :user_data => user_data}
+    end
   end
 
   ##
   # +data+ - hash, user request, with token, op, and some params
   # return user_data with log message, op that caused message
   # dispatch and active unit id
+  # use writer id or name as key in user_data, but not token
 
   def parse_data data
+    user_data_key = data['writer_name']
+    unless user_data_key
+      error 'No writer name provided'
+      return nil
+    end
     # keep token, not user, pass token and params to game as message
-    token = data['token']
-    user = @game.get_user_by_token token
-    op =  data['op'].to_sym
-    info op
-    log_entry = nil
-    # hash of {token => user_data} to be sent to users with units
     user_data = {
-      token => {
-        :op => op
+      user_data_key => {
       }
     }
-    if data.has_key?('unit_id')
-      user.active_unit_id = active_unit_id = data['unit_id'].to_i
-      user_data[token][:active_unit_id] = user.active_unit_id
+    token = data['token']
+    unless token
+      err_msg = 'No token'
+      error err_msg
+      user_data[user_data_key][:error] = err_msg
+      return user_data
+    end
+    op =  data['op']
+    unless op
+      err_msg = 'No op'
+      warn err_msg
+      user_data[user_data_key][:error] = err_msg
+      return user_data
+    end
+    op = op.to_sym
+    user_data[user_data_key][:op] = op
+    user_data[user_data_key][:data_type] = 'units'
+    log_entry = nil
+    user = @game.get_user_by_token token
+    if user && data.has_key?('unit_id')
+      # remove duplicates of :active_unit_id setting in user_data?
+      user_data[user_data_key][:active_unit_id] = user.active_unit_id = data['unit_id'].to_i
     end
     case op
-    when :init
+    when :init_map
+      user_data[user_data_key][:data_type] = :init_map
       @game.init_user token
     when :close
 
@@ -62,7 +85,7 @@ class OrbGameServer
       begin
         log = nil
         users = {}
-        res = @game.attack_by_user user, active_unit_id, params['id'].to_i
+        res = @game.attack_by_user user, user.active_unit_id, params['id'].to_i
         log_msg = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
         if res[:a_data][:dead]
           log_msg += '. Your hero has been killed.'
@@ -204,29 +227,25 @@ class OrbGameServer
       end
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
-    when :spawn_green_orb
-      log_entry = @game.spawn_green_orb user
-      info "spawn green orb (%d)" % GreenOrb.length
-      log_entry = Log.push user, 'Spawn green orb', op
-    when :spawn_black_orb
-      begin
-        @game.spawn_black_orb
-        debug "spawn black orb (%d)" % BlackOrb.length
-        log_entry = Log.push user, 'Spawn black orb', op
-      rescue OrbError => log_msg
-        log_entry = Log.push user, 'Unable to spawn black orb', :error
+    when :spawn
+      case data['type'].to_sym
+      when :green
+        log_entry = @game.spawn_green_orb
+      when :black
+        log_entry = @game.spawn_black_orb
+      else
+        log_entry = LogEntry.error 'Unknown orb type'
       end
-      dispatch_units({user.id => {:log => log_entry}})
     else
-      raise OrbError, 'unknown op'
+      log_entry = LogBox.error 'Unknown op', user
     end #case
     if log_entry
-      user_data[token][:log] = log_entry
+      unless log_entry.user
+        log_entry.user = user
+        LogBox << log_entry
+      end
+      user_data[user_data_key][:log] = log_entry
     end
     user_data
-  end
-
-  def notify_action data
-    info 'notify action'
   end
 end

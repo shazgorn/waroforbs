@@ -31,4 +31,7 @@ class TestGame < MiniTest::Test
     @game.spawn_green_orb
     unit = Unit.get_active_unit user
   end
+
+  def test_spawn
+  end
 end

@@ -1,6 +1,6 @@
 class WS
   constructor: (app) ->
-    # there are some race conditions when 'ul' will came before 'init'
+    # there are some race conditions when 'ul' will came before 'init_map'
     @initialized = false
     @token = localStorage.getItem('token')
     unless @token then location.pathname = '/'
@@ -11,7 +11,7 @@ class WS
     )
 
     @socket.onopen = () =>
-      @socket.send(JSON.stringify({token: @token, op: 'init'}))
+      @socket.send(JSON.stringify({token: @token, op: 'init_map'}))
 
     @socket.onerror = (e) =>
       console.log(e)
@@ -24,9 +24,10 @@ class WS
       start_ts = new Date();
       data = JSON.parse(e.data)
       console.log('data:', data)
-      if app.initialized || data.data_type == 'init'
+      console.error('no data_type') unless data.data_type
+      if app.initialized || data.data_type == 'init_map'
         switch data.data_type
-          when 'init'
+          when 'init_map'
             # App init set properties
             app.cells = data.cells
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks, data.cells

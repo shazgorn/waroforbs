@@ -1,4 +1,5 @@
 require_relative 'log_entry'
+require_relative 'exception'
 
 ##
 # Class for storing user logs
@@ -25,6 +26,7 @@ class LogBox
     end
 
     def << log_entry
+      raise OrbError unless log_entry.user
       @@logs << log_entry
       log_entry
     end
@@ -36,6 +38,10 @@ class LogBox
     def move unit_id, dx, dy, new_x, new_y, user
       msg = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
       push user, msg, :move
+    end
+
+    def spawn message, user
+      push_entry LogEntry.spawn message, user
     end
 
     ##

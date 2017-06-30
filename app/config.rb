@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Config
   @@config = nil
   class << self

@@ -500,7 +500,7 @@ button {
     color: pink;
   }
 
-  .new_hero {
+  .spawn, .new_hero {
     color: blue;
   }
 
@@ -730,7 +730,7 @@ button {
 	display: none;
       }
     }
-    
+
     &.building-not-built {
       a.open-building,
       .building-time {
@@ -758,4 +758,3 @@ button {
     }
   }
 }
-

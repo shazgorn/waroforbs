@@ -1,8 +1,13 @@
 require_relative 'log_entry'
 require_relative 'log_box'
+require_relative 'logging'
+require_relative 'orb'
 require_relative 'banner'
 require_relative 'unit'
 require_relative 'town'
+require_relative 'map'
+require_relative 'user'
+require_relative 'building'
 
 # Game logic, some kind of incubator
 # code from here will be moved to more appropriate places
@@ -101,17 +106,23 @@ class Game
   end
 
   ##################### CONSTRUCTORS #####################################
-  # init user
+
+  ## init user
   # If this is a 1st login then new user is created
   # new banner
   # and new hero is placed
+  # Do not return log_entry because or mulitple logs???
+  # return user
+
   def init_user token
     user = get_user_by_token token
     if user.nil?
       user = User.new(token)
+      LogBox.spawn "New user '%s'" % token, user
       @tokens[token] = user.id
       Banner.new user
       new_random_hero user
+      LogBox.spawn 'New hero', user
     end
     user
   end
@@ -341,17 +352,19 @@ class Game
   end
 
   def spawn_black_orb
+    return LogEntry.error 'Too many black orbs' unless BlackOrb.below_limit?
     xy = get_random_xy
     BlackOrb.new xy[:x], xy[:y]
+    info "Spawned black orb (%d)" % BlackOrb.length
+    LogEntry.spawn 'Black orb has been spawned'
   end
 
-  def spawn_green_orb user
+  def spawn_green_orb
     return LogEntry.error 'Too many green orbs' unless GreenOrb.below_limit?
     xy = get_random_xy
     GreenOrb.new xy[:x], xy[:y]
-    log_entry = LogEntry.ok 'Green orb has been spawned'
-    LogBox << log_entry
-    log_entry
+    info "Spawned green orb (%d)" % GreenOrb.length
+    LogEntry.spawn 'Green orb has been spawned'
   end
 
   #################### ATTACK ##################################################

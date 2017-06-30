@@ -1,3 +1,6 @@
+require_relative 'unit'
+require_relative 'config'
+
 ##
 # Abstract class for black and green orbs
 

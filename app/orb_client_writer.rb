@@ -5,31 +5,56 @@ class OrbClientWriter
 
   attr_writer :token
 
-  def initialize(websocket, reader_name)
-    @socket = websocket
-    @reader_name = reader_name
-    @map_initialized = false
+  def initialize(websocket, id)
+    @id = id
+    @websocket = websocket
     @token = nil
     subscribe('send_units_to_user', :send_units)
   end
 
+  def name
+    "writer_{@id}"
+  end
+
+  def make_result args
+    unless args[:user_data]
+      error 'No user_data in args'
+      return
+    end
+    res = {}
+    # this is our guy
+    game = args[:game]
+    if args[:user_data].has_key?(name)
+      user_data = args[:user_data][name]
+      if user_data.has_key?(:error)
+        res[:error] = user_data[:error]
+        return res
+      else
+        res = user_data
+        if user_data[:data_type] == :init_map
+          res.merge!(game.init_map(@token))
+        end
+      end
+    end
+    res[:units] = game.all_units(@token)
+    res
+  end
+
+  ##
+  # args => {:game => game, :user_data => {key => data}}
+  # writer must check the key and send data to to socket on match
+  # data has :op, :log, :token etc
+
   def send_units topic, args
     info 'send_units'
-    return unless @token
-    game = args[:game]
-    user_data = args[:user_data]
-    res = {
-      :units => game.all_units(@token),
-      :data_type => @map_initialized ? 'units' : 'init'
-    }
-    unless @map_initialized
-      res.merge!(game.init_map @token)
-      @map_initialized = true
+    unless @token
+      error 'No token is set in writer ' + name
+      return
     end
-    if user_data.has_key?(@token)
-      res.merge!(user_data[@token])
+    res = make_result args
+    if res
+      @websocket << JSON.generate(res)
     end
-    @socket << JSON.generate(res)
   rescue Reel::SocketError
     info "Time client disconnected"
     terminate
