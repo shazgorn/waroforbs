@@ -1,6 +1,5 @@
 require_relative 'log_entry'
 require_relative 'log_box'
-require_relative 'logging'
 require_relative 'orb'
 require_relative 'banner'
 require_relative 'unit'
@@ -15,13 +14,17 @@ require_relative 'building'
 # dead heroes are dead if they never exists
 # should move unit creation methods to separate class
 class Game
+  include Celluloid
+  include Celluloid::Internals::Logger
+  include Cli
+
   attr_reader :map
   MAX_BANNERS = 3
 
-  include Logging
-
-  def initialize(generate = false)
-    @map = Map.new(generate)
+  def initialize()
+    @generate = false
+    check_args
+    @map = Map.new(@generate)
     # token -> user_id
     @tokens = {}
   end
@@ -79,13 +82,13 @@ class Game
   end
 
   def dump
-    logger.info "Dump data"
+    info "Dump data"
     ts = Time.now.strftime "%Y_%m_%d_%H_%M_%S"
     [User, Unit, Banner].each{|cls|
       path = "data/" + cls.to_s + '_' + ts + '.dat'
       File.open(path, "w") do |file|
         file.print Marshal.dump(cls.all)
-        logger.info cls.to_s + " data saved to %s" % path
+        info cls.to_s + " data saved to %s" % path
       end
     }
   end
@@ -203,7 +206,7 @@ class Game
 
   def new_town(user, active_unit_id)
     raise OrbError, 'You have one town already' if Town.has_live_town? user
-    logger.debug "User have no town"
+    info "User have no town"
     unit = Company.get active_unit_id
     raise OrbError, "Active unit is nil" unless unit
     empty_cell = empty_adj_cell unit
@@ -308,7 +311,7 @@ class Game
       dx = Random.rand(-1..1)
       dy = Random.rand(-1..1)
     end while (dx == 0 && dy == 0) || !@map.has?(unit.x + dx, unit.y + dy)
-    logger.debug "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
+    info "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
     move_unit_by unit, dx, dy
   end
 
@@ -457,8 +460,8 @@ def set_def_data users, res
 end
 
 def save_and_exit
-  logger.info "Terminating..."
-  @game.dump
-  logger.info "Good bye!"
+  info "Terminating..."
+  dump
+  info "Good bye!"
   exit
 end

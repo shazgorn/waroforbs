@@ -7,13 +7,9 @@ class OrbGameServer
   include Celluloid::Notifications
   include Celluloid::Supervision
   include Celluloid::Internals::Logger
-  include Cli
 
   def initialize
-    @generate = false
-    check_args
-    @game = Game.new(@generate)
-    JSON.dump_default_options[:max_nesting] = 10
+    @game = Celluloid::Actor[:game]
     subscribe('new_user_data', :parse_user_data)
     subscribe('tick', :tick)
   end

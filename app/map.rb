@@ -3,7 +3,6 @@ require 'json'
 require 'yaml'
 
 require_relative 'config'
-require_relative 'logging'
 
 class MapCell < JSONable
   attr_accessor :x, :y, :type, :unit
@@ -17,6 +16,7 @@ class MapCell < JSONable
 end
 
 class Map
+  include Celluloid::Internals::Logger
   attr_reader :cells
   attr_accessor :ul
 
@@ -27,8 +27,6 @@ class Map
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
   SHIFT = 1000
-
-  include Logging
 
   def initialize(generate = false)
     @path = './data/map.dat'
@@ -75,15 +73,15 @@ class Map
 
   def generate_map
     start = Time.now.to_f
-    logger.info "Generate map"
+    info "Generate map"
     FileUtils::mkdir_p './img/bg'
     create_canvas_blocks
     finish = Time.now.to_f
     diff = finish - start
-    logger.info "Map generated in %f seconds" % diff.to_f
+    info "Map generated in %f seconds" % diff.to_f
     File.open(@path, "w") do |file|
       file.print Marshal.dump(@cells)
-      logger.info "Map data saved to %s" % @path
+      info "Map data saved to %s" % @path
     end
   end
 
@@ -122,7 +120,7 @@ class Map
       #see map.coffee::addBlocks
       canvas_path = "./" + Config.get('img_path') + "bg/bg_#{block_x}_#{block_y}.png"
       builder << canvas_path
-      logger.info "write to #{canvas_path}"
+      info "write to #{canvas_path}"
     end
   end
 

@@ -1,3 +1,4 @@
+# TODO: drop it
 class OrbReadNotifier
   include Celluloid
   include Celluloid::Notifications
