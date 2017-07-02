@@ -17,10 +17,16 @@ class OrbWebsocketsServer < Reel::Server::HTTP
   end
 
   def handle_websocket(socket)
-    reader = OrbClientReader.new(socket, @websocket_id)
     writer = OrbClientWriter.new(socket, @websocket_id)
+    reader = OrbClientReader.new(socket, @websocket_id)
     Celluloid::Actor[reader.name] = reader
     Celluloid::Actor[writer.name] = writer
+    reader.read_message_from_socket
+    # Celluloid::Supervision::Container.supervise({
+    #                                               as: 'my_game',
+    #                                               type: Game,
+    #                                               args: [{id: @websocket_id}]
+    #                                             })
     @websocket_id += 1
   end
 

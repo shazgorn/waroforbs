@@ -8,7 +8,6 @@ class OrbClientReader
     @websocket = websocket
     @token = nil
     @token_is_set = false
-    subscribe('read_message', :new_message)
   end
 
   def name
@@ -19,7 +18,11 @@ class OrbClientReader
     "writer_{@id}"
   end
 
-  def new_message(topic)
+  def request_layer_name
+    "request_layer_{@id}"
+  end
+
+  def read_message_from_socket
     info 'new_message'
     msg = @websocket.read
     info msg
@@ -32,6 +35,7 @@ class OrbClientReader
     end
     info 'publish_new_user_data'
     publish 'new_user_data', data
+    async.read_message_from_socket
   rescue Reel::SocketError, EOFError
     info "WS client disconnected"
     terminate
