@@ -227,15 +227,8 @@ class OrbGameServer
       end
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
-    when :spawn
-      case data['type'].to_sym
-      when :green
-        log_entry = @game.spawn_green_orb
-      when :black
-        log_entry = @game.spawn_black_orb
-      else
-        log_entry = LogEntry.error 'Unknown orb type'
-      end
+    when :spawn_orb
+      log_entry = @game.spawn_orb data['color'].to_sym
     else
       log_entry = LogBox.error 'Unknown op', user
     end #case

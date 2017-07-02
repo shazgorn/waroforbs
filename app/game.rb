@@ -351,6 +351,18 @@ class Game
     BlackOrb.below_limit?
   end
 
+  def spawn_orb color
+    case color
+    when :black
+      log_entry = spawn_black_orb
+    when :green
+      log_entry = spawn_green_orb
+    else
+      log_entry = LogEntry.error 'Unknown orb type'
+    end
+    log_entry
+  end
+
   def spawn_black_orb
     return LogEntry.error 'Too many black orbs' unless BlackOrb.below_limit?
     xy = get_random_xy
