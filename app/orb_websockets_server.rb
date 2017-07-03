@@ -1,7 +1,9 @@
 # coding: utf-8
 
 class OrbWebsocketsServer < Reel::Server::HTTP
+  include Celluloid::Internals::Logger
   def initialize(host = "0.0.0.0", port = 9293)
+    info 'Starting websocket server'
     @websocket_id = 1
     super(host, port, &method(:on_connection))
   end

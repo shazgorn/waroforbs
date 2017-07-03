@@ -27,10 +27,8 @@ require_relative 'game'
 JSON.dump_default_options[:max_nesting] = 10
 Game.supervise as: :game
 
-puts 'start Tick'
 OrbTick.new
 
-puts 'start OrbWebsocketsServer'
 OrbWebsocketsServer.run
 
 puts 'sleep'

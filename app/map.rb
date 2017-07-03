@@ -87,9 +87,12 @@ class Map
 
   # generate map blocks
   def create_canvas_blocks(size = BLOCKS_IN_MAP_DIM)
+    threads = []
     size.times do |block_x|
       size.times do |block_y|
-        create_canvas_block(block_x, block_y)
+        threads << Thread.new {
+          create_canvas_block(block_x, block_y)
+        }
       end
     end
   end
