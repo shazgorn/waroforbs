@@ -16,6 +16,7 @@ require_relative 'cli'
 # should move unit creation methods to separate class
 class Game
   include Celluloid
+  include Celluloid::Notifications
   include Celluloid::Internals::Logger
   include Cli
 
@@ -28,6 +29,7 @@ class Game
     @map = Map.new(@generate)
     # token -> user_id
     @tokens = {}
+    subscribe('tick', :tick)
   end
 
   ############ DATA SELECTION METHODS ########################
