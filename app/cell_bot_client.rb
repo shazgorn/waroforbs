@@ -15,7 +15,7 @@ class BotClient
   end
 
   def on_open
-    @client.text JSON.dump(:token => @user, :op => "init")
+    @client.text JSON.dump({:token => @user, :op => "init_map"})
   end
 
   def on_message(data)

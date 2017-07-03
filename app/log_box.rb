@@ -26,7 +26,7 @@ class LogBox
     end
 
     def << log_entry
-      raise OrbError unless log_entry.user
+      raise OrbError, 'No user in log_entry' unless log_entry.user
       @@logs << log_entry
       log_entry
     end

@@ -51,7 +51,7 @@ task :bots do
 end
 
 task :orbs do
-  system('ruby app/cell_orbs_client.rb')
+  system('ruby app/orbs_spawner.rb')
 end
 
 task :test do
@@ -60,4 +60,5 @@ task :test do
   system('ruby -Ilib:test test/minitest/test_user.rb')
   system('ruby -Ilib:test test/minitest/test_game.rb')
   system('ruby -Ilib:test test/minitest/test_orb_game_server.rb')
+  system('bin/rspec --format doc')
 end

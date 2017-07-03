@@ -12,7 +12,7 @@ class OrbsClient
   end
 
   def on_open
-    @client.text JSON.dump({:token => @user, :op => "init"})
+    @client.text JSON.dump({:token => @user, :op => "init_map"})
   end
 
   def on_message(data)
@@ -29,13 +29,14 @@ class OrbsClient
 end
 
 client = OrbsClient.new
+client.send_spawn_green_orb
 
-loop do
-  sleep(1)
-  client.send_spawn_green_orb
-  # sleep(1)
-  # client.send_spawn_black_orb
-end
+# loop do
+#   sleep(1)
+#   client.send_spawn_green_orb
+#   sleep(1)
+#   client.send_spawn_black_orb
+# end
 
   # def run_black_orb_spawner
   #   begin

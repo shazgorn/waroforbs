@@ -37,7 +37,7 @@ class OrbWebsocketsServer < Reel::Server::HTTP
     supervisor = RequestLayer.supervise({as: request_name})
     Celluloid::Actor[reader_name] = reader
     Celluloid::Actor[writer_name] = writer
-    reader.read_message_from_socket
+    reader.async.read_message_from_socket
     @websocket_id += 1
   end
 

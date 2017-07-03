@@ -223,7 +223,7 @@ class RequestLayer
       log_entry = LogBox.error 'Unknown op', user
     end #case
     if log_entry
-      unless log_entry.user
+      if log_entry.user
         log_entry.user = user
         LogBox << log_entry
       end
