@@ -20,18 +20,24 @@ class OrbWebsocketsServer < Reel::Server::HTTP
     "writer_#{id}"
   end
 
+  def reader_name id
+    "reader_#{id}"
+  end
+
+  def request_name id
+    "request_#{id}"
+  end
+
   def handle_websocket(socket)
-    writer = OrbClientWriter.new(socket, @websocket_id)
-    reader = OrbClientReader.new(socket, @websocket_id)
-    supervisor = RequestLayer.supervise({as: reader.request_layer_name, args: [{id: @websocket_id}]})
-    Celluloid::Actor[reader.name] = reader
-    Celluloid::Actor[writer.name] = writer
+    writer_name = writer_name(@websocket_id)
+    reader_name = reader_name(@websocket_id)
+    request_name = request_name(@websocket_id)
+    writer = OrbClientWriter.new(socket, writer_name)
+    reader = OrbClientReader.new(socket, writer_name, reader_name, request_name)
+    supervisor = RequestLayer.supervise({as: request_name})
+    Celluloid::Actor[reader_name] = reader
+    Celluloid::Actor[writer_name] = writer
     reader.read_message_from_socket
-    # Celluloid::Supervision::Container.supervise({
-    #                                               as: 'my_game',
-    #                                               type: Game,
-    #                                               args: [{id: @websocket_id}]
-    #                                             })
     @websocket_id += 1
   end
 

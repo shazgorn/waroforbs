@@ -5,15 +5,11 @@ class OrbClientWriter
 
   attr_writer :token
 
-  def initialize(websocket, id)
-    @id = id
+  def initialize(websocket, name)
+    @name = name
     @websocket = websocket
     @token = nil
     subscribe('send_units_to_user', :send_units)
-  end
-
-  def name
-    "writer_{@id}"
   end
 
   def make_result args
@@ -24,8 +20,8 @@ class OrbClientWriter
     res = {}
     # this is our guy
     game = args[:game]
-    if args[:user_data].has_key?(name)
-      user_data = args[:user_data][name]
+    if args[:user_data].has_key?(@name)
+      user_data = args[:user_data][@name]
       if user_data.has_key?(:error)
         res[:error] = user_data[:error]
         return res
@@ -48,7 +44,7 @@ class OrbClientWriter
   def send_units topic, args
     info 'send_units'
     unless @token
-      error 'No token is set in writer ' + name
+      error 'No token is set in writer ' + @name
       return
     end
     res = make_result args

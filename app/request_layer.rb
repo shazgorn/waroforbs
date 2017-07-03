@@ -8,15 +8,10 @@ class RequestLayer
   include Celluloid::Internals::Logger
   include Celluloid::Notifications
   
-  def initialize(id)
-    @id = id
+  def initialize
     @game = Celluloid::Actor[:game]
   end
-
-  def name
-    "request_layer_{@id}"
-  end
-
+  
   def parse_user_data(data)
     user_data = parse_data data
     if user_data
