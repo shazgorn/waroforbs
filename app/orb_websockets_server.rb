@@ -16,9 +16,14 @@ class OrbWebsocketsServer < Reel::Server::HTTP
     end
   end
 
+  def writer_name id
+    "writer_#{id}"
+  end
+
   def handle_websocket(socket)
     writer = OrbClientWriter.new(socket, @websocket_id)
     reader = OrbClientReader.new(socket, @websocket_id)
+    supervisor = RequestLayer.supervise({as: reader.request_layer_name, args: [{id: @websocket_id}]})
     Celluloid::Actor[reader.name] = reader
     Celluloid::Actor[writer.name] = writer
     reader.read_message_from_socket

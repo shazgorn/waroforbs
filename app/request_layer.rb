@@ -1,24 +1,23 @@
 require_relative 'exception'
-require_relative 'cli'
-require_relative "game"
 
-class OrbGameServer
+##
+# Process request object and pass it to the game actor
+
+class RequestLayer
   include Celluloid
-  include Celluloid::Notifications
-  include Celluloid::Supervision
   include Celluloid::Internals::Logger
-
-  def initialize
+  include Celluloid::Notifications
+  
+  def initialize(id)
+    @id = id
     @game = Celluloid::Actor[:game]
-    subscribe('new_user_data', :parse_user_data)
-    subscribe('tick', :tick)
   end
 
-  def tick topic
-    @game.tick
+  def name
+    "request_layer_{@id}"
   end
 
-  def parse_user_data(topic, data)
+  def parse_user_data(data)
     user_data = parse_data data
     if user_data
       publish "send_units_to_user", {:game => @game, :user_data => user_data}

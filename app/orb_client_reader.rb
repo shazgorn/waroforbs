@@ -30,11 +30,10 @@ class OrbClientReader
     data['writer_name'] = writer_name
     @token = data['token']
     unless @token_is_set
-      Celluloid::Actor[writer_name].token = @token
+      Actor[writer_name].token = @token
       @token_is_set = true
     end
-    info 'publish_new_user_data'
-    publish 'new_user_data', data
+    Actor[request_layer_name].parse_user_data(data)
     async.read_message_from_socket
   rescue Reel::SocketError, EOFError
     info "WS client disconnected"

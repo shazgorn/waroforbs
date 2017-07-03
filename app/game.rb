@@ -7,6 +7,7 @@ require_relative 'town'
 require_relative 'map'
 require_relative 'user'
 require_relative 'building'
+require_relative 'cli'
 
 # Game logic, some kind of incubator
 # code from here will be moved to more appropriate places
@@ -344,7 +345,7 @@ class Game
   def restart(token)
   end
 
-  def tick
+  def tick(topic)
     Unit.all.values.each{|unit|
       unit.tick
     }
