@@ -26,7 +26,7 @@ class OrbClientReader
     Actor[@request_layer_name].parse_user_data(data)
     async.read_message_from_socket
   rescue Reel::SocketError, EOFError
-    info "WS client disconnected"
+    info "WS client disconnected #{@name}"
     terminate
   end
 end

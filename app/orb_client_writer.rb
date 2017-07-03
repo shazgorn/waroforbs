@@ -31,8 +31,10 @@ class OrbClientWriter
           res.merge!(game.init_map(@token))
         end
       end
+      res[:units] = game.all_units(@token)
+    else
+      res = {:units => game.all_units(@token), :data_type => :units}
     end
-    res[:units] = game.all_units(@token)
     res
   end
 
@@ -52,7 +54,7 @@ class OrbClientWriter
       @websocket << JSON.generate(res)
     end
   rescue Reel::SocketError
-    info "Time client disconnected"
+    info "#{@name} disconnected"
     terminate
   end
 end

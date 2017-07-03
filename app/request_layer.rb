@@ -52,7 +52,7 @@ class RequestLayer
     end
     op = op.to_sym
     user_data[user_data_key][:op] = op
-    user_data[user_data_key][:data_type] = 'units'
+    user_data[user_data_key][:data_type] = :units
     log_entry = nil
     user = @game.get_user_by_token token
     if user && data.has_key?('unit_id')
