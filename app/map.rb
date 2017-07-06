@@ -1,3 +1,4 @@
+require 'celluloid/current'
 require 'fileutils'
 require 'json'
 require 'yaml'
@@ -90,9 +91,7 @@ class Map
     threads = []
     size.times do |block_x|
       size.times do |block_y|
-        threads << Thread.new {
-          create_canvas_block(block_x, block_y)
-        }
+        create_canvas_block(block_x, block_y)
       end
     end
   end

@@ -44,7 +44,6 @@ class OrbClientWriter
   # data has :op, :log, :token etc
 
   def send_units topic, args
-    info 'send_units'
     unless @token
       error 'No token is set in writer ' + @name
       return

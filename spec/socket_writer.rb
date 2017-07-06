@@ -1,6 +1,6 @@
 require 'celluloid/current'
 require 'reel'
-require 'orb_client_writer'
+require 'socket_writer'
 
 class DumbSocket
   def read
@@ -15,12 +15,12 @@ end
 RSpec.describe OrbClientWriter, "testing" do
   around do |ex|
     Celluloid.boot
+    Game.supervise as: :game
     ex.run
     Celluloid.shutdown
   end
 
-  let (:id) { 1 }
-  let (:writer) { OrbClientWriter.new DumbSocket.new, id }
+  let (:writer) { OrbClientWriter.new DumbSocket.new, 'writer_1' }
   let (:game) { Game.new }
   let (:token) { 'test_user' }
 
@@ -45,7 +45,7 @@ RSpec.describe OrbClientWriter, "testing" do
       expect(res[:error]).to eq error_msg
     end
 
-    fit 'is init_map' do
+    it 'is init_map' do
       game.init_user token
       res = writer.make_result({:game => game, :user_data => {writer.name => {:data_type => :init_map}} })
       expect(res).to_not be_nil

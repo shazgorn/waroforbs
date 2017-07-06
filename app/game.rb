@@ -9,11 +9,13 @@ require_relative 'user'
 require_relative 'building'
 require_relative 'cli'
 
+##
 # Game logic, some kind of incubator
 # code from here will be moved to more appropriate places
 # like data storage, attack strategy etc
 # dead heroes are dead if they never exists
 # should move unit creation methods to separate class
+
 class Game
   include Celluloid
   include Celluloid::Notifications
@@ -24,6 +26,7 @@ class Game
   MAX_BANNERS = 3
 
   def initialize()
+    info 'Starting game'
     @generate = false
     check_args
     @map = Map.new(@generate)
@@ -34,12 +37,7 @@ class Game
 
   ############ DATA SELECTION METHODS ########################
   def get_user_by_token token
-    begin
-      user = User.get @tokens[token]
-    rescue
-      user = nil
-    end
-    user
+    User.get @tokens[token]
   end
 
   def all_units_for_all units

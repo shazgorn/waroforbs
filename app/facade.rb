@@ -3,19 +3,15 @@ require_relative 'exception'
 ##
 # Process request object and pass it to the game actor
 
-class RequestLayer
+class Facade
   include Celluloid
   include Celluloid::Internals::Logger
   include Celluloid::Notifications
-  
-  def initialize
-    @game = Celluloid::Actor[:game]
-  end
-  
+
   def parse_user_data(data)
     user_data = parse_data data
     if user_data
-      publish "send_units_to_user", {:game => @game, :user_data => user_data}
+      publish "send_units_to_user", {:game => Celluloid::Actor[:game], :user_data => user_data}
     end
   end
 
@@ -54,7 +50,7 @@ class RequestLayer
     user_data[user_data_key][:op] = op
     user_data[user_data_key][:data_type] = :units
     log_entry = nil
-    user = @game.get_user_by_token token
+    user = Celluloid::Actor[:game].get_user_by_token token
     if user && data.has_key?('unit_id')
       # remove duplicates of :active_unit_id setting in user_data?
       user_data[user_data_key][:active_unit_id] = user.active_unit_id = data['unit_id'].to_i
@@ -62,20 +58,20 @@ class RequestLayer
     case op
     when :init_map
       user_data[user_data_key][:data_type] = :init_map
-      @game.init_user token
+      Celluloid::Actor[:game].init_user token
     when :close
 
     when :units
 
     when :move
       params = data['params']
-      log_entry = @game.move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+      log_entry = Celluloid::Actor[:game].move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
     when :attack
       params = data['params']
       begin
         log = nil
         users = {}
-        res = @game.attack_by_user user, user.active_unit_id, params['id'].to_i
+        res = Celluloid::Actor[:game].attack_by_user user, user.active_unit_id, params['id'].to_i
         log_msg = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
         if res[:a_data][:dead]
           log_msg += '. Your hero has been killed.'
@@ -98,7 +94,7 @@ class RequestLayer
       end
     when :new_hero
       begin
-        @game.new_random_hero user
+        Celluloid::Actor[:game].new_random_hero user
         log = 'New hero spawned'
         log_entry = Log.push user, log, op
       rescue OrbError => log_msg
@@ -107,7 +103,7 @@ class RequestLayer
       dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :op => op, :log => log_entry}})
     when :new_town
       begin
-        @game.new_town user, user.active_unit_id
+        Celluloid::Actor[:game].new_town user, user.active_unit_id
         log = 'New town has been settled'
         type = op
       rescue OrbError => log_msg
@@ -119,7 +115,7 @@ class RequestLayer
     when :dismiss
       unit_id = data['unit_id']
       begin
-        @game.dismiss user, unit_id
+        Celluloid::Actor[:game].dismiss user, unit_id
         log = "Unit ##{unit_id} dismissed"
         type = op
       rescue OrbError => log_msg
@@ -129,11 +125,11 @@ class RequestLayer
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
     when :restart
-      @game.restart token
+      Celluloid::Actor[:game].restart token
       dispatch_units
     when :build
       begin
-        res = @game.build user, data['building'].to_sym
+        res = Celluloid::Actor[:game].build user, data['building'].to_sym
         if res
           log = "#{data['building']} building in progress"
         else
@@ -149,7 +145,7 @@ class RequestLayer
     when :create_random_banner
       log = "Banner bought"
       begin
-        res = @game.create_random_banner user
+        res = Celluloid::Actor[:game].create_random_banner user
         type = op
       rescue OrbError => log_msg
         log = log_msg
@@ -158,7 +154,7 @@ class RequestLayer
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
     when :delete_banner
-      res = @game.delete_banner user, data['banner_id']
+      res = Celluloid::Actor[:game].delete_banner user, data['banner_id']
       if res
         log = "Banner deleted"
       else
@@ -167,7 +163,7 @@ class RequestLayer
       log_entry = Log.push user, log, op
       dispatch_units({user.id => {:log => log_entry}})
     when :create_default_company
-      res = @game.create_company user, :new
+      res = Celluloid::Actor[:game].create_company user, :new
       if res.nil?
         log = "Unable to create more companies. Limit reached or no banner is available."
       else
@@ -176,7 +172,7 @@ class RequestLayer
       log_entry = Log.push user, log, op
       dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
     when :create_company_from_banner
-      res = @game.create_company user, data['banner_id']
+      res = Celluloid::Actor[:game].create_company user, data['banner_id']
       if res.nil?
         log = "Unable to create Company"
       else
@@ -187,7 +183,7 @@ class RequestLayer
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin
-        @game.set_free_worker_to_xy(user, data['town_id'], data['x'], data['y'])
+        Celluloid::Actor[:game].set_free_worker_to_xy(user, data['town_id'], data['x'], data['y'])
         type = op
       rescue OrbError => log_msg
         log = log_msg
@@ -198,7 +194,7 @@ class RequestLayer
     when :free_worker
       log = "Set worker free on #{data['x']}, #{data['y']}"
       begin
-        @game.free_worker user, data['town_id'], data['x'], data['y']
+        Celluloid::Actor[:game].free_worker user, data['town_id'], data['x'], data['y']
         type = op
       rescue OrbError => log_msg
         log = log_msg
@@ -209,7 +205,7 @@ class RequestLayer
     when :add_squad_to_company
       log = "Squad added"
       begin
-        res = @game.add_squad_to_company user, data['town_id'], data['company_id']
+        res = Celluloid::Actor[:game].add_squad_to_company user, data['town_id'], data['company_id']
         type = op
       rescue OrbError => log_msg
         log = log_msg
@@ -218,7 +214,7 @@ class RequestLayer
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
     when :spawn_orb
-      log_entry = @game.spawn_orb data['color'].to_sym
+      log_entry = Celluloid::Actor[:game].spawn_orb data['color'].to_sym
     else
       log_entry = LogBox.error 'Unknown op', user
     end #case
