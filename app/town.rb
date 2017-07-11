@@ -75,8 +75,7 @@ class Town < Unit
     @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
     @buildings = {
       #:tavern => Tavern.new,
-      :barracs => Barracs.new,
-      :banner_shop => BannerShop.new
+      :barracs => Barracs.new
     }
     @actions = []
     @adj_companies = []
@@ -147,12 +146,6 @@ class Town < Unit
     false
   end
 
-  def can_buy_banner?
-    raise OrbError, 'Banner shop is not built' unless @buildings[:banner_shop].built?
-    raise OrbError, 'Not enough gold to buy banner' unless @inventory[:gold] >= BannerShop::BANNER_COST
-    true
-  end
-
   def can_form_company?
     raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
     raise OrbError, 'Not enough gold to form company' unless @inventory[:gold] >= Barracs::COMPANY_COST
@@ -163,10 +156,6 @@ class Town < Unit
     raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
     raise OrbError, 'Not enough gold to add squad' unless @inventory[:gold] >= Barracs::SQUAD_COST
     true
-  end
-
-  def pay_banner_price
-    @inventory[:gold] -= BannerShop::BANNER_COST
   end
 
   def pay_company_price

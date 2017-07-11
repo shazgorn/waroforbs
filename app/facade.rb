@@ -142,37 +142,17 @@ class Facade
       end
       log_entry = Log.push user, log, type
       dispatch_units({user.id => {:log => log_entry}})
-    when :create_random_banner
-      log = "Banner bought"
-      begin
-        res = Celluloid::Actor[:game].create_random_banner user
-        type = op
-      rescue OrbError => log_msg
-        log = log_msg
-        type = :error
-      end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
-    when :delete_banner
-      res = Celluloid::Actor[:game].delete_banner user, data['banner_id']
-      if res
-        log = "Banner deleted"
-      else
-        log = "Unable to delete banner"
-      end
-      log_entry = Log.push user, log, op
-      dispatch_units({user.id => {:log => log_entry}})
     when :create_default_company
       res = Celluloid::Actor[:game].create_company user, :new
       if res.nil?
-        log = "Unable to create more companies. Limit reached or no banner is available."
+        log = "Unable to create more companies. Limit reached."
       else
         log = "Company created"
       end
       log_entry = Log.push user, log, op
       dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
-    when :create_company_from_banner
-      res = Celluloid::Actor[:game].create_company user, data['banner_id']
+    when :create_company
+      res = Celluloid::Actor[:game].create_company user
       if res.nil?
         log = "Unable to create Company"
       else

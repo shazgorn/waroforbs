@@ -33,7 +33,6 @@ class WS
             app.map = new Map data.cell_dim_in_px, data.block_dim_in_px, data.block_dim_in_cells, data.map_dim_in_blocks, data.cells
             app.active_unit_id = data.active_unit_id
             app.user_id = data.user_id
-            app.banners = data.banners
             app.building_states = data.building_states
             app.TOWN_RADIUS = data.TOWN_RADIUS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
@@ -55,7 +54,6 @@ class WS
                 app.map.dmg(data.ca_dmg, data.dmg, data.d_id, data.a_id, 789, 123)
               else
                 app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id, 123, 789)
-            app.banners = data.banners
             app.init_units data.units
             if data.active_unit_id && data.op in ['move', 'new_hero']
               app.set_active_unit data.active_unit_id
@@ -125,23 +123,6 @@ class WS
       })
     )
 
-  create_random_banner: () ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'create_random_banner'
-      })
-    )
-
-  delete_banner: (banner_id) ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'delete_banner',
-        banner_id: banner_id
-      })
-    )
-
   create_default_company: () ->
     @socket.send(
       JSON.stringify({
@@ -150,12 +131,11 @@ class WS
       })
     )
 
-  create_company_from_banner: (banner_id) ->
+  create_company: () ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'create_company_from_banner',
-        banner_id: banner_id
+        op: 'create_company'
       })
     )
 

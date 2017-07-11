@@ -115,15 +115,3 @@ class Barracs < Building
     end
   end
 end
-
-class BannerShop < Building
-  BANNER_COST = 10
-
-  def initialize
-    super
-    @name = 'Banner Shop'
-    @cost_time = 30
-    @cost_res[:gold] = 10
-    @ttb_string = seconds_to_hm @cost_time
-  end
-end

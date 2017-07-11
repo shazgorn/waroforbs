@@ -1,7 +1,6 @@
 require_relative 'log_entry'
 require_relative 'log_box'
 require_relative 'orb'
-require_relative 'banner'
 require_relative 'unit'
 require_relative 'town'
 require_relative 'map'
@@ -23,7 +22,6 @@ class Game
   include Cli
 
   attr_reader :map
-  MAX_BANNERS = 3
 
   def initialize()
     info 'Starting game'
@@ -85,7 +83,7 @@ class Game
   def dump
     info "Dump data"
     ts = Time.now.strftime "%Y_%m_%d_%H_%M_%S"
-    [User, Unit, Banner].each{|cls|
+    [User, Unit].each{|cls|
       path = "data/" + cls.to_s + '_' + ts + '.dat'
       File.open(path, "w") do |file|
         file.print Marshal.dump(cls.all)
@@ -113,7 +111,6 @@ class Game
 
   ## init user
   # If this is a 1st login then new user is created
-  # new banner
   # and new hero is placed
   # Do not return log_entry because or mulitple logs???
   # return user
@@ -124,7 +121,6 @@ class Game
       user = User.new(token)
       LogBox.spawn "New user '%s'" % token, user
       @tokens[token] = user.id
-      Banner.new user
       new_random_hero user
       LogBox.spawn 'New hero', user
     end
@@ -143,7 +139,6 @@ class Game
       :active_unit_id => user.active_unit_id,
       :user_id => user.id,
       :actions => user.actions,
-      :banners => Banner.get_by_user(user),
       :units => all_units({user.id => {}}),
       :cells => @map.cells,
       :logs => LogBox.get_by_user(user),
@@ -156,8 +151,8 @@ class Game
     }
   end
 
-  def new_hero x, y, user, banner
-    Company.new(x, y, user, banner)
+  def new_hero(x, y, user)
+    Company.new(x, y, user)
   end
 
   ##
@@ -167,26 +162,20 @@ class Game
 
   def new_random_hero user
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
-    banner = Banner.get_first_by_user user
     xy = get_random_xy
-    hero = new_hero xy[:x], xy[:y], user, banner
+    hero = new_hero(xy[:x], xy[:y], user)
     user.active_unit_id = hero.id
     recalculate_user_actions user
   end
 
-  def create_company user, banner_id=:new
+  def create_company(user)
     town = Town.get_by_user(user)
     raise OrbError, 'User have no town' if town.nil?
     town.can_form_company?
     company = nil
     empty_cell = empty_adj_cell(town)
-    if banner_id == :new
-      banner = Banner.get_first_free_by_user(user)
-    else
-      banner = Banner.get_by_id(user, banner_id)
-    end
-    if empty_cell && banner
-      company = new_hero empty_cell[:x], empty_cell[:y], user, banner
+    if empty_cell
+      company = new_hero(empty_cell[:x], empty_cell[:y], user)
       user.active_unit_id = company.id
       town.pay_company_price
     end
@@ -222,19 +211,6 @@ class Game
     town = Town.get_by_user user
     raise OrbError, 'User have no town' if town.nil?
     town.build building_id
-  end
-
-  def create_random_banner user
-    town = Town.get_by_user user
-    raise OrbError, 'No user town' unless town
-    raise OrbError, 'Banners limit reached. No more than three banners allowed' unless Banner.get_count_by_user(user) < MAX_BANNERS
-    raise OrbError, 'Unable to bought banner. Not enough gold or Banner shop is not built' unless town.can_buy_banner?
-    town.pay_banner_price
-    Banner.new user
-  end
-
-  def delete_banner(user, banner_id)
-    Banner.delete user, banner_id
   end
 
   TER2RES = {

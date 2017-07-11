@@ -5,7 +5,6 @@ class Application
     @units = {}
     @my_units_ids = []
     @my_units = {}
-    @banners = []
     @options = new Options
     @controls = new Controls this
     @ws = new WS this
@@ -43,20 +42,14 @@ class Application
   dismiss: (id) ->
     @ws.dismiss(id)
 
-  create_random_banner: () ->
-    @ws.create_random_banner()
-
   create_default_company: () ->
     @ws.create_default_company()
 
-  create_company_from_banner: (banner_id) ->
-    @ws.create_company_from_banner(banner_id)
+  create_company: () ->
+    @ws.create_company()
 
   add_squad_to_company: (company_id) ->
     @ws.add_squad_to_company(company_id, @town_controls.last_town)
-
-  delete_banner: (banner_id) ->
-    @ws.delete_banner(banner_id)
 
   set_free_worker_to_xy: (town_id, x, y) ->
     @ws.set_free_worker_to_xy(town_id, x, y)

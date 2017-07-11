@@ -34,8 +34,6 @@ class Unit
           hash[:@user_name] = @user.login
           hash[:@user_id] = @user.id
         end
-      elsif var == :@banner
-        # id?
       else
         hash[var] = self.instance_variable_get var
       end
@@ -194,22 +192,19 @@ class Company < Unit
   BASE_AP = 20
   BASE_DEF = 10
 
-  def initialize(x, y, user, banner)
+  def initialize(x, y, user)
     super(:company, x, y, user)
-    @banner = banner
-    @banner.unit = self
-    @damage = (BASE_DMG * banner.mod_dmg).round(0)
-    @defence = (BASE_DEF * banner.mod_def).round(0)
+    @damage = BASE_DMG
+    @defence = BASE_DEF
     # @hp - hp of 1st squad in line
-    @hp = @max_hp = (BASE_HP * banner.mod_max_hp).round(0)
-    @ap = @max_ap = (BASE_AP * banner.mod_max_ap).round(0)
+    @hp = @max_hp = BASE_HP
+    @ap = @max_ap = BASE_AP
     # each company starts with one squad
     @squads = 1
   end
 
   def die
     super
-    @banner.unit = nil
   end
 
   def add_squad

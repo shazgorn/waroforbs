@@ -14,50 +14,12 @@ class TownModalControls
           app.create_default_company()
       }
     @buildings =
-      'banner_shop': {
-        name: 'Banner Shop',
-        callback: () ->
-          # clean up
-          $('.modal-body .modal-building-inner *').remove()
-          $('.modal-body .modal-building-actions-inner *').remove()
-
-          # fill up
-          for banner in App.banners
-            b = _town_controls.banner_card(banner, 'Banner')
-            if !banner['@unit_id']
-              $(document.createElement('button'))
-                .data('id', banner['@id'])
-                .html('Delete')
-                .appendTo(b)
-                .click(() ->
-                  App.delete_banner($(this).data('id'))
-                )
-
-          # actions
-          $(document.createElement('button'))
-            .html('Create random banner 10 gold')
-            .appendTo('.modal.building .modal-building-actions-inner')
-            .click(() ->
-              App.create_random_banner()
-            )
-      },
       'barracs': {
         name: 'Barracs',
         callback: () ->
           # clean up
-          $('.banner-card').remove()
           $('.modal-body .modal-building-inner *').remove()
           $('.modal-body .modal-building-actions-inner *').remove()
-
-          #fill up
-          for banner in App.banners
-            if banner['@unit_id'] == null
-              b = _town_controls.banner_card(banner, 'Create company')
-              b
-                .addClass('pointer')
-                .click(() ->
-                  App.create_company_from_banner($(this).data('id'))
-                )
 
           # actions
           $(document.createElement('button'))
@@ -202,20 +164,5 @@ class TownModalControls
 
   fill_building_modal: (id) ->
     @buildings[id].callback()
-
-  banner_card: (banner, title) ->
-    $(document.createElement('div'))
-      .addClass('banner-card')
-      .data('id', banner['@id'])
-      .attr('title', title)
-      .html("Banner ##{banner['@id']} <br>\
-      dmg: #{banner['@mod_dmg']} <br> \
-      def: #{banner['@mod_def']} <br> \
-      hp: #{banner['@mod_max_hp']} <br>\
-      ap: #{banner['@mod_max_ap']} <br>\
-      unit_id: #{banner['@unit_id']}")
-      .appendTo('.modal.building .modal-building-inner')
-
-
 
 window.TownModalControls = TownModalControls
