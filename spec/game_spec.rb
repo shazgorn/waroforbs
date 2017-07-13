@@ -16,11 +16,16 @@ RSpec.describe Game, "testing" do
   end
 
   it 'is initializing user' do
-    user = Celluloid::Actor[:game].init_user token
+    user = Celluloid::Actor[:game].init_user(token)
     expect(user.class).to eq(User)
     expect(User.all.size).to eq(1)
-    user = Celluloid::Actor[:game].init_user token
+    user = Celluloid::Actor[:game].init_user(token)
     expect(user.class).to eq(User)
     expect(User.all.size).to eq(1)
+  end
+
+  it 'attack' do
+    attacker = Celluloid::Actor[:game].init_user 'attacker'
+    defender = Celluloid::Actor[:game].init_user 'attacker'
   end
 end

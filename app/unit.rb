@@ -181,6 +181,10 @@ class Unit
       unit
     end
 
+    def drop_all
+      @@units = {}
+    end
+
   end
 
 end

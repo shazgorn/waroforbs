@@ -69,8 +69,6 @@ class Facade
     when :attack
       params = data['params']
       begin
-        log = nil
-        users = {}
         res = Celluloid::Actor[:game].attack_by_user user, user.active_unit_id, params['id'].to_i
         log_msg = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
         if res[:a_data][:dead]

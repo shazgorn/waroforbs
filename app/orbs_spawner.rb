@@ -7,6 +7,7 @@ class OrbsClient
   include Celluloid::Internals::Logger
 
   def initialize()
+    info 'initialize client'
     @client = Celluloid::WebSocket::Client.new('ws://0.0.0.0:9293/', current_actor)
     @user = 'orbs_client'
   end
@@ -20,6 +21,7 @@ class OrbsClient
   end
 
   def send_spawn_green_orb
+    info 'spawn green orb'
     @client.text JSON.dump({:token => @user, :op => 'spawn_orb', :color => 'green'})
   end
 
@@ -30,8 +32,8 @@ end
 
 client = OrbsClient.new
 client.send_spawn_green_orb
-sleep(1)
-client.send_spawn_green_orb
+#sleep(1)
+#client.send_spawn_green_orb
 
 # loop do
 #   sleep(1)

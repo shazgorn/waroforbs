@@ -28,6 +28,8 @@ class Game
     @generate = false
     check_args
     @map = Map.new(@generate)
+    Unit.drop_all
+    User.drop_all
     # token -> user_id
     @tokens = {}
     subscribe('tick', :tick)

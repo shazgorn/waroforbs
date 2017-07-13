@@ -55,6 +55,10 @@ class User
     def all
       @@users
     end
+
+    def drop_all
+      @@users = {}
+    end
   end
 end
 
