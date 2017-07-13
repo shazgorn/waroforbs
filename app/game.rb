@@ -1,7 +1,8 @@
 require_relative 'log_entry'
 require_relative 'log_box'
 require_relative 'orb'
-require_relative 'unit'
+require 'unit'
+require 'infantry'
 require_relative 'town'
 require_relative 'map'
 require_relative 'user'
@@ -154,7 +155,7 @@ class Game
   end
 
   def new_hero(x, y, user)
-    Company.new(x, y, user)
+    Infantry.new(x, y, user)
   end
 
   ##
@@ -188,18 +189,18 @@ class Game
     town = Town.get_by_user(user)
     raise OrbError, 'User have no town' if town.nil?
     if town.can_add_squad?
-      company = Company.get company_id
-      raise OrbError, 'No company' unless company
-      raise OrbError, 'Company must be near town' unless @map.adj_cells?(town.x, town.y, company.x, company.y)
+      infantry = Infantry.get company_id
+      raise OrbError, 'No company' unless infantry
+      raise OrbError, 'Infantry must be near town' unless @map.adj_cells?(town.x, town.y, infantry.x, infantry.y)
       town.pay_squad_price()
-      company.add_squad()
+      infantry.add_squad()
     end
   end
 
   def new_town(user, active_unit_id)
     raise OrbError, 'You have one town already' if Town.has_live_town? user
     info "User have no town"
-    unit = Company.get active_unit_id
+    unit = Infantry.get active_unit_id
     raise OrbError, "Active unit is nil" unless unit
     empty_cell = empty_adj_cell unit
     if empty_cell
@@ -405,7 +406,7 @@ class Game
 
   def recalculate_user_actions user
     has_town = Town.has_any? user
-    has_live_company = Company.has_any_live? user
+    has_live_company = Infantry.has_any_live? user
     if has_live_company && !has_town
       user.enable_new_town_action
     elsif !has_live_company && !has_town

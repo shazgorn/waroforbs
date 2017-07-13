@@ -1,4 +1,4 @@
-require_relative 'unit'
+require 'unit'
 
 class Resource
   T = {

@@ -1,20 +1,20 @@
 require 'fileutils'
 require 'coffee-script'
 
-task default: [:front_restart, :ws_restart]
+task default: [:app]
 
 task :ws_gen_map do
   system('ruby --verbose -wW2 app/ws.rb gen')
 end
 
-task ws_restart: [:ws_stop, :ws_start]
+# task ws_restart: [:ws_stop, :ws_start]
 
-task :ws_stop do
-  system('ruby --verbose -wW2 app/ws.rb stop')
-end
+# task :ws_stop do
+#   system('ruby --verbose -wW2 app/ws.rb stop')
+# end
 
-task ws_start: [:ws_stop] do
-  system('ruby --verbose -wW2 app/ws.rb')
+task :app do
+  system('ruby --verbose -wW2 -I app -I app/model app/app.rb')
 end
 
 task :css do

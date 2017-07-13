@@ -145,16 +145,16 @@ class Facade
       if res.nil?
         log = "Unable to create more companies. Limit reached."
       else
-        log = "Company created"
+        log = "Infantry created"
       end
       log_entry = Log.push user, log, op
       dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
     when :create_company
       res = Celluloid::Actor[:game].create_company user
       if res.nil?
-        log = "Unable to create Company"
+        log = "Unable to create Infantry"
       else
-        log = "Company created"
+        log = "Infantry created"
       end
       log_entry = Log.push user, log, op
       dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
