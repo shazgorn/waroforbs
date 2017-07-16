@@ -5,9 +5,9 @@ class Controls
     @user_actions = []
 
     @actions = {
-      'new_hero_action': {
+      'new_random_infantry_action': {
         callback: () ->
-          App.new_hero()
+          App.new_random_infantry()
       },
       'new_town_action': {
         callback: () ->

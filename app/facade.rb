@@ -1,4 +1,4 @@
-require_relative 'exception'
+require 'exception'
 
 ##
 # Process request object and pass it to the game actor
@@ -90,10 +90,10 @@ class Facade
         log_entry = Log.push user, log_msg, :error
         dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
       end
-    when :new_hero
+    when :new_random_infantry
       begin
-        Celluloid::Actor[:game].new_random_hero user
-        log = 'New hero spawned'
+        Celluloid::Actor[:game].new_random_infantry(user)
+        log = 'New infantry unit spawned'
         log_entry = Log.push user, log, op
       rescue OrbError => log_msg
         log_entry = Log.push user, log_msg, :error

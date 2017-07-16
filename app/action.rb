@@ -1,4 +1,4 @@
-require_relative 'jsonable'
+require 'jsonable'
 
 class Action < JSONable
   @label = 'Default action'
@@ -37,11 +37,11 @@ class NewTownAction < Action
   end
 end
 
-class NewHeroAction < Action
-  NAME = :new_hero_action
+class NewRandomInfantryAction < Action
+  NAME = :new_random_infantry_action
   def initialize(on)
     super(on)
     @name = NAME
-    @label = 'New hero'
+    @label = 'New random infantry'
   end
 end

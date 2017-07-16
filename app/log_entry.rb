@@ -1,4 +1,4 @@
-require_relative 'jsonable'
+require 'jsonable'
 
 class LogEntry < JSONable
 

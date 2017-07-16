@@ -27,8 +27,8 @@ class Application
   fetch: () ->
     @ws.units()
 
-  new_hero: () ->
-    @ws.new_hero()
+  new_random_infantry: () ->
+    @ws.new_random_infantry()
 
   new_town: () ->
     @ws.new_town(@active_unit_id)

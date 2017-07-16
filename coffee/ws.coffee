@@ -55,7 +55,7 @@ class WS
               else
                 app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id, 123, 789)
             app.init_units data.units
-            if data.active_unit_id && data.op in ['move', 'new_hero']
+            if data.active_unit_id && data.op in ['move', 'new_random_infantry']
               app.set_active_unit data.active_unit_id
             app.update_user_controls data.actions
             app.refresh_modals()
@@ -88,11 +88,11 @@ class WS
       })
     )
 
-  new_hero: () ->
+  new_random_infantry: () ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'new_hero'
+        op: 'new_random_infantry'
       })
     )
 

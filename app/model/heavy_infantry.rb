@@ -1,6 +1,6 @@
-require 'unit'
+require 'squad'
 
-class Infantry < Unit
+class HeavyInfantry < Squad
   MAX_SQUADS = 10
   BASE_DMG = 30
   BASE_HP = 50

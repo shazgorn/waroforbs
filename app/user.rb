@@ -1,4 +1,4 @@
-require_relative 'action'
+require 'action'
 
 class User
   attr_reader :login, :id
@@ -17,7 +17,7 @@ class User
     # init with false, create default hero on later
     # and switch actions
     add_action NewTownAction.new false
-    add_action NewHeroAction.new false
+    add_action NewRandomInfantryAction.new false
   end
 
   def add_action action
@@ -26,20 +26,20 @@ class User
 
   def enable_new_town_action
     @actions[NewTownAction::NAME].on!
-    @actions[NewHeroAction::NAME].off!
+    @actions[NewRandomInfantryAction::NAME].off!
   end
 
-  def enable_new_hero_action
+  def enable_new_random_infantry_action
     @actions[NewTownAction::NAME].off!
-    @actions[NewHeroAction::NAME].on!
+    @actions[NewRandomInfantryAction::NAME].on!
   end
 
   def disable_new_town_action
     @actions[NewTownAction::NAME].off!
   end
 
-  def disable_new_hero_action
-    @actions[NewHeroAction::NAME].off!
+  def disable_new_random_infantry_action
+    @actions[NewRandomInfantryAction::NAME].off!
   end
 
   class << self

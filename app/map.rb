@@ -3,7 +3,7 @@ require 'fileutils'
 require 'json'
 require 'yaml'
 
-require_relative 'config'
+require 'config'
 
 class MapCell < JSONable
   attr_accessor :x, :y, :type, :unit
@@ -88,7 +88,6 @@ class Map
 
   # generate map blocks
   def create_canvas_blocks(size = BLOCKS_IN_MAP_DIM)
-    threads = []
     size.times do |block_x|
       size.times do |block_y|
         create_canvas_block(block_x, block_y)

@@ -1,5 +1,5 @@
 require 'unit'
-require_relative 'config'
+require 'config'
 
 ##
 # Abstract class for black and green orbs

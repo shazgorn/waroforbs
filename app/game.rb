@@ -1,13 +1,13 @@
-require_relative 'log_entry'
-require_relative 'log_box'
-require_relative 'orb'
+require 'log_entry'
+require 'log_box'
+require 'orb'
 require 'unit'
-require 'infantry'
-require_relative 'town'
-require_relative 'map'
-require_relative 'user'
-require_relative 'building'
-require_relative 'cli'
+require 'heavy_infantry'
+require 'town'
+require 'map'
+require 'user'
+require 'building'
+require 'cli'
 
 ##
 # Game logic, some kind of incubator
@@ -124,7 +124,7 @@ class Game
       user = User.new(token)
       LogBox.spawn "New user '%s'" % token, user
       @tokens[token] = user.id
-      new_random_hero user
+      new_random_infantry(user)
       LogBox.spawn 'New hero', user
     end
     user
@@ -154,19 +154,15 @@ class Game
     }
   end
 
-  def new_hero(x, y, user)
-    Infantry.new(x, y, user)
-  end
-
   ##
-  # Create new random hero for user if it`s his first login
+  # Create new random infantry unit for user if it`s his first login
   # or all other heroes and towns are destroyed
   # raise OrbError otherwise
 
-  def new_random_hero user
+  def new_random_infantry(user)
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
-    hero = new_hero(xy[:x], xy[:y], user)
+    hero = HeavyInfantry.new(xy[:x], xy[:y], user)
     user.active_unit_id = hero.id
     recalculate_user_actions user
   end
@@ -178,24 +174,24 @@ class Game
     company = nil
     empty_cell = empty_adj_cell(town)
     if empty_cell
-      company = new_hero(empty_cell[:x], empty_cell[:y], user)
+      company = HeavyInfantry.new(empty_cell[:x], empty_cell[:y], user)
       user.active_unit_id = company.id
       town.pay_company_price
     end
     company
   end
 
-  def add_squad_to_company user, town_id, company_id
-    town = Town.get_by_user(user)
-    raise OrbError, 'User have no town' if town.nil?
-    if town.can_add_squad?
-      infantry = Infantry.get company_id
-      raise OrbError, 'No company' unless infantry
-      raise OrbError, 'Infantry must be near town' unless @map.adj_cells?(town.x, town.y, infantry.x, infantry.y)
-      town.pay_squad_price()
-      infantry.add_squad()
-    end
-  end
+  # def add_life_to_squad(user, town_id, squad_id)
+  #   town = Town.get_by_user(user)
+  #   raise OrbError, 'User have no town' if town.nil?
+  #   if town.can_fill_squad?
+  #     infantry = Infantry.get company_id
+  #     raise OrbError, 'No company' unless infantry
+  #     raise OrbError, 'Infantry must be near town' unless @map.adj_cells?(town.x, town.y, infantry.x, infantry.y)
+  #     town.pay_squad_price()
+  #     infantry.add_squad()
+  #   end
+  # end
 
   def new_town(user, active_unit_id)
     raise OrbError, 'You have one town already' if Town.has_live_town? user
@@ -406,13 +402,13 @@ class Game
 
   def recalculate_user_actions user
     has_town = Town.has_any? user
-    has_live_company = Infantry.has_any_live? user
+    has_live_company = HeavyInfantry.has_any_live? user
     if has_live_company && !has_town
       user.enable_new_town_action
     elsif !has_live_company && !has_town
-      user.enable_new_hero_action
+      user.enable_new_random_infantry_action
     else
-      user.disable_new_hero_action
+      user.disable_new_random_infantry_action
       user.disable_new_town_action
     end
   end

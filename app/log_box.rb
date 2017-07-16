@@ -1,5 +1,5 @@
-require_relative 'log_entry'
-require_relative 'exception'
+require 'log_entry'
+require 'exception'
 
 ##
 # Class for storing user logs
