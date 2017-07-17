@@ -50,7 +50,7 @@ class Facade
     user_data[user_data_key][:op] = op
     user_data[user_data_key][:data_type] = :units
     log_entry = nil
-    user = Celluloid::Actor[:game].get_user_by_token token
+    user = Celluloid::Actor[:game].get_user_by_token(token)
     if user && data.has_key?('unit_id')
       # remove duplicates of :active_unit_id setting in user_data?
       user_data[user_data_key][:active_unit_id] = user.active_unit_id = data['unit_id'].to_i
@@ -69,7 +69,7 @@ class Facade
     when :attack
       params = data['params']
       begin
-        res = Celluloid::Actor[:game].attack_by_user user, user.active_unit_id, params['id'].to_i
+        res = Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, params['id'].to_i)
         log_msg = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
         if res[:a_data][:dead]
           log_msg += '. Your hero has been killed.'

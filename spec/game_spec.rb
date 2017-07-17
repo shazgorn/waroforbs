@@ -24,8 +24,10 @@ RSpec.describe Game, "testing" do
     expect(User.all.size).to eq(1)
   end
 
-  it 'attack' do
-    attacker = Celluloid::Actor[:game].init_user 'attacker'
-    defender = Celluloid::Actor[:game].init_user 'attacker'
+  fit 'attack' do
+    a_user = User.new('attacker')
+    a = HeavyInfantry.new(1, 1, a_user)
+    d_user = User.new('defender')
+    d = HeavyInfantry.new(2, 2, d_user)
   end
 end

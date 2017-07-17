@@ -37,8 +37,8 @@ class Game
   end
 
   ############ DATA SELECTION METHODS ########################
-  def get_user_by_token token
-    User.get @tokens[token]
+  def get_user_by_token(token)
+    User.get(@tokens[token])
   end
 
   def all_units_for_all units
@@ -118,14 +118,14 @@ class Game
   # Do not return log_entry because or mulitple logs???
   # return user
 
-  def init_user token
-    user = get_user_by_token token
+  def init_user(token)
+    user = get_user_by_token(token)
     if user.nil?
       user = User.new(token)
       LogBox.spawn "New user '%s'" % token, user
       @tokens[token] = user.id
       new_random_infantry(user)
-      LogBox.spawn 'New hero', user
+      LogBox.spawn('New hero', user)
     end
     user
   end
@@ -375,7 +375,9 @@ class Game
     nil
   end
 
+  ##
   # a - attacker unit, d - defender unit
+
   def attack a, d
     raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
     res = Attack.attack a, d
