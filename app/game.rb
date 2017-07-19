@@ -8,6 +8,8 @@ require 'map'
 require 'user'
 require 'building'
 require 'cli'
+require 'squad_attack'
+require 'attack'
 
 ##
 # Game logic, some kind of incubator
@@ -378,7 +380,7 @@ class Game
   ##
   # a - attacker unit, d - defender unit
 
-  def attack a, d
+  def attack(a, d)
     raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
     res = Attack.attack a, d
     if res[:a_data][:dead]

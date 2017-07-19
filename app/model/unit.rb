@@ -2,9 +2,10 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y
+  attr_reader :id, :type, :user, :x, :y, :life
 
   ATTACK_COST = 1
+  MAX_LIFE = 15
 
   @@id_seq = 1
   # id -> unit
@@ -24,8 +25,33 @@ class Unit
     @ap = @max_ap = 0
     @hp = @max_hp = 1
     @@units[@id] = self
-    @life = 15
+    @life = MAX_LIFE
     @wounds = 0
+  end
+
+  def kills
+    MAX_LIFE - @life - @wounds
+  end
+
+  def kill
+    if @life > 0
+      @life -= 1
+      check_life()
+    end
+  end
+
+  def wound
+    if @life > 0
+      @life -= 1
+      @wounds += 1
+      check_life()
+    end
+  end
+
+  def check_life()
+    if @life == 0
+      die
+    end
   end
 
   def to_hash()
