@@ -70,11 +70,12 @@ class Facade
       params = data['params']
       begin
         res = Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, params['id'].to_i)
-        log_msg = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
-        if res[:a_data][:dead]
-          log_msg += '. Your hero has been killed.'
+        if res[:error]
+          LogBox.error(res[:error])
+        else
+          LogBox.attack(res, user)
+          LogBox.defence(res, user)
         end
-        log_entry = Log.push user, log_msg, op
         users[user.id] = {
           :active_unit_id => user.active_unit_id,
           :dmg => res[:a_data][:dmg],

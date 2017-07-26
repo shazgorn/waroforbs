@@ -38,4 +38,8 @@ RSpec.describe Facade, "#parse_data" do
     expect(user_data[writer_name][:error]).to be_nil
     expect(user_data[writer_name][:data_type]).to eq(:init_map)
   end
+
+  it "attacks" do
+    
+  end
 end

@@ -15,12 +15,12 @@ class LogBox
     # There are must be some 'system' or 'all' or 'broadcast' type
     # to send logs to everybody login messages for example
 
-    def push type, message, user
+    def push(type, message, user)
       log_entry = LogEntry.new(type, message, user)
-      push_entry log_entry
+      push_entry(log_entry)
     end
 
-    def push_entry log_entry
+    def push_entry(log_entry)
       @@logs << log_entry
       log_entry
     end
@@ -31,23 +31,31 @@ class LogBox
       log_entry
     end
 
-    def error message, user
-      push_entry LogEntry.error message, user
+    def error(message, user)
+      push_entry(LogEntry.error(message, user))
     end
 
-    def move unit_id, dx, dy, new_x, new_y, user
+    def move(unit_id, dx, dy, new_x, new_y, user)
       msg = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
-      push user, msg, :move
+      push(user, msg, :move)
     end
 
-    def spawn message, user
-      push_entry LogEntry.spawn message, user
+    def spawn(message, user)
+      push_entry(LogEntry.spawn(message, user))
+    end
+
+    def attack(res, user)
+      push_entry(LogEntry.attack(res, user))
+    end
+
+    def defence(res, user)
+      push_entry(LogEntry.defence(res, user))
     end
 
     ##
     # Select log entry for +user+
 
-    def get_by_user user
+    def get_by_user(user)
       @@logs.select{ |l| l.user.id == user.id }
     end
   end

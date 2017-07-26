@@ -31,9 +31,9 @@ class OrbsClient
 end
 
 client = OrbsClient.new
-client.send_spawn_green_orb
-#sleep(1)
-#client.send_spawn_green_orb
+# client.send_spawn_green_orb
+# sleep(1)
+# client.send_spawn_green_orb
 
 # loop do
 #   sleep(1)

@@ -8,7 +8,7 @@ RSpec.describe SquadAttack, "is attacking" do
     Celluloid.shutdown
   end
 
-  fit 'attack times' do
+  it 'attack times' do
     a_user = User.new('attacker')
     a = HeavyInfantry.new(1, 1, a_user)
     d_user = User.new('defender')
@@ -18,6 +18,5 @@ RSpec.describe SquadAttack, "is attacking" do
     res = SquadAttack.attack_times(a, d)
     res = SquadAttack.attack_times(a, d)
     res = SquadAttack.attack_times(a, d)
-    p d
   end
 end

@@ -105,10 +105,9 @@ class Game
     recalculate_user_actions user
   end
 
-  def bury unit
-    unit.die
+  def bury(unit)
     if unit.user
-      recalculate_user_actions unit.user
+      recalculate_user_actions(unit.user)
     end
   end
 
@@ -381,12 +380,12 @@ class Game
   # a - attacker unit, d - defender unit
 
   def attack(a, d)
-    raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
-    res = Attack.attack a, d
-    if res[:a_data][:dead]
+    return raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
+    res = SquadAttack.attack a, d
+    if a.dead?
       bury(a)
     end
-    if res[:d_data][:dead]
+    if d.dead?
       bury(d)
     end
     res
@@ -397,11 +396,13 @@ class Game
   # @param [User] a_user attacker
   # @param [Integer] def_id if of the defender unit
 
-  def attack_by_user a_user, active_unit_id, def_id
-    a = Unit.get_active_unit a_user
-    d = Unit.get def_id
-    raise OrbError, 'Defender is already dead' if d.dead?
-    attack a, d
+  def attack_by_user(a_user, a_id, def_id)
+    a = Unit.get_by_id(a_id)
+    return {:error => 'Wrong attacker id'} if a.nil? || a.user != a_user
+    d = Unit.get_by_id(def_id)
+    return {:error => 'Defender not found'} if d.nil?
+    return {:error => 'Defender is already dead'} if d.dead?
+    attack(a, d)
   end
 
   def recalculate_user_actions user
@@ -427,11 +428,6 @@ end
 
 def set_def_data users, res
   if res.has_key?(:d_user) && res[:d_user]
-    log_msg = "damage taken ca_dmg: %d, damage dealt dmg: %d" % [res[:d_data][:ca_dmg], res[:d_data][:dmg]]
-    if res[:d_data][:dead]
-      log_msg += '. Your hero has been killed.'
-    end
-    log_entry = Log.push res[:d_user], log_msg, :attack
     if user_online?(res[:d_user])
       users[res[:d_user].id] = res[:d_data]
       users[res[:d_user].id][:log] = log_entry

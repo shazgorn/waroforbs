@@ -156,11 +156,6 @@ class Unit
       @@units.length
     end
 
-    def get id
-      puts "Unit.get is deprecated"
-      get_by_id id
-    end
-
     ##
     # select and return object of Unit class with +id+
     # return nil if unit is not found
