@@ -169,7 +169,7 @@ class Game
     hero = HeavyInfantry.new(xy[:x], xy[:y], user)
     log_entry = LogBox.spawn('New infantry unit spawned', user)
     user.active_unit_id = hero.id
-    recalculate_user_actions user
+    recalculate_user_actions(user)
     log_entry
   end
 

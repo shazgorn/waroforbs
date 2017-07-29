@@ -1,4 +1,4 @@
-class OrbClientWriter
+class SocketWriter
   include Celluloid
   include Celluloid::Notifications
   include Celluloid::Internals::Logger
@@ -12,7 +12,7 @@ class OrbClientWriter
     subscribe('send_units_to_user', :send_units)
   end
 
-  def make_result args
+  def make_result(args)
     unless args[:user_data]
       error 'No user_data in args'
       return
@@ -21,8 +21,9 @@ class OrbClientWriter
     # this is our guy
     game = args[:game]
     if args[:user_data].has_key?(@name)
+      # user specific data
       user_data = args[:user_data][@name]
-      if user_data.has_key?(:error)
+      if user_data[:error]
         res[:error] = user_data[:error]
         return res
       else
@@ -33,7 +34,11 @@ class OrbClientWriter
       end
       res[:units] = game.all_units(@token)
     else
-      res = {:units => game.all_units(@token), :data_type => :units}
+      # everyone else
+      res = {
+        :units => game.all_units(@token),
+        :data_type => :units
+      }
     end
     res
   end
@@ -43,12 +48,12 @@ class OrbClientWriter
   # writer must check the key and send data to to socket on match
   # data has :op, :log, :token etc
 
-  def send_units topic, args
+  def send_units(topic, args)
     unless @token
       error 'No token is set in writer ' + @name
       return
     end
-    res = make_result args
+    res = make_result(args)
     if res
       @websocket << JSON.generate(res)
     end

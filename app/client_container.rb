@@ -9,8 +9,8 @@ class ClientContainer
     @writer_name = writer_name(@websocket_id)
     @reader_name = reader_name(@websocket_id)
     @facade_name = facade_name(@websocket_id)
-    writer = OrbClientWriter.new(socket, @writer_name)
-    reader = OrbClientReader.new(socket, @writer_name, @reader_name, @facade_name)
+    writer = SocketWriter.new(socket, @writer_name)
+    reader = SocketReader.new(socket, @writer_name, @reader_name, @facade_name)
     link reader
     # @fsupervisor = Facade.supervise({as: facade_name})
     Celluloid::Actor[@facade_name] = Facade.new

@@ -12,7 +12,7 @@ class DumbSocket
   end
 end
 
-RSpec.describe OrbClientWriter, "testing" do
+RSpec.describe SocketWriter, "testing" do
   around do |ex|
     Celluloid.boot
     Celluloid::Actor[:game] = Game.new(true)
@@ -20,7 +20,8 @@ RSpec.describe OrbClientWriter, "testing" do
     Celluloid.shutdown
   end
 
-  let (:writer) { OrbClientWriter.new DumbSocket.new, 'writer_1' }
+  let (:writer_name) { 'writer_1' }
+  let (:writer) { SocketWriter.new(DumbSocket.new, writer_name) }
   let (:game) { Game.new }
   let (:token) { 'test_user' }
 
@@ -41,16 +42,17 @@ RSpec.describe OrbClientWriter, "testing" do
 
     it 'handles errors' do
       error_msg = 'I`m an error'
-      res = writer.make_result({:game => game, :user_data => {writer.name => {:error => error_msg}} })
-      expect(res[:error]).to eq error_msg
+      res = writer.make_result({:game => game, :user_data => {writer_name => {:error => error_msg}} })
+      expect(res[:error]).to eq(error_msg)
     end
 
     it 'is init_map' do
       game.init_user token
-      res = writer.make_result({:game => game, :user_data => {writer.name => {:data_type => :init_map}} })
+      res = writer.make_result({:game => game, :user_data => {writer_name => {:data_type => :init_map}} })
       expect(res).to_not be_nil
       expect(res[:data_type]).to eq(:init_map)
       expect(res[:units]).to be_a(Hash)
+      expect(res[:actions]).to be_a(Hash)
     end
   end
 end

@@ -1,4 +1,4 @@
-class OrbClientReader
+class SocketReader
   include Celluloid
   include Celluloid::Notifications
   include Celluloid::Internals::Logger
