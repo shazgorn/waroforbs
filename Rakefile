@@ -47,7 +47,7 @@ end
 task front_restart: [:front_stop, :front_start]
 
 task :bots do
-  system('ruby app/cell_bot_client.rb')
+  system('ruby app/bot/cell_bot_client.rb')
 end
 
 task :orbs do
