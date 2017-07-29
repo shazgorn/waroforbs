@@ -51,7 +51,7 @@ task :bots do
 end
 
 task :orbs do
-  system('ruby app/orbs_spawner.rb')
+  system('ruby app/bot/orbs_spawner.rb')
 end
 
 task :test do

@@ -2,6 +2,10 @@ require 'celluloid/current'
 require 'celluloid/websocket/client'
 require 'json'
 
+##
+# HeavyLoad tester
+# Spawn multiple bots and move their units every sec
+
 class BotClient
   include Celluloid
 

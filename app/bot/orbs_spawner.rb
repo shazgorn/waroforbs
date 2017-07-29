@@ -2,6 +2,9 @@ require 'celluloid/current'
 require 'celluloid/websocket/client'
 require 'json'
 
+##
+# Dummy bot for testing purposes
+
 class OrbsClient
   include Celluloid
   include Celluloid::Internals::Logger
@@ -18,6 +21,7 @@ class OrbsClient
 
   def on_message(data)
     message = JSON.parse(data)
+    p message
   end
 
   def send_spawn_green_orb
