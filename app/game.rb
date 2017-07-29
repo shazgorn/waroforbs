@@ -130,7 +130,6 @@ class Game
       LogBox.spawn "New user '%s'" % token, user
       @tokens[token] = user.id
       new_random_infantry(user)
-      LogBox.spawn('New hero', user)
     end
     user
   end
@@ -168,8 +167,10 @@ class Game
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
     hero = HeavyInfantry.new(xy[:x], xy[:y], user)
+    log_entry = LogBox.spawn('New infantry unit spawned', user)
     user.active_unit_id = hero.id
     recalculate_user_actions user
+    log_entry
   end
 
   def create_company(user)

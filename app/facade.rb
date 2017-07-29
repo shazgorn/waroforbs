@@ -80,37 +80,26 @@ class Facade
       log_entry = Celluloid::Actor[:game].move_user_hero_by(user, data['unit_id'], params['dx'].to_i, params['dy'].to_i)
     when :attack
       params = data['params']
-      begin
-        res = Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, params['id'].to_i)
-        if res[:error]
-          log_entry = LogBox.error(res[:error], user)
-        else
-          log_entry = LogBox.attack(res, user)
-          # LogBox.defence(res, defender)
-          user_data[user_data_key].merge!(res)
-        end
-        user_data[user_data_key][:log] = log_entry
-        # set_def_data users, res
+      res = Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, params['id'].to_i)
+      if res[:error]
+        log_entry = LogBox.error(res[:error], user)
+      else
+        log_entry = LogBox.attack(res, user)
+        # LogBox.defence(res, defender)
+        user_data[user_data_key].merge!(res)
       end
+      user_data[user_data_key][:log] = log_entry
+      # set_def_data users, res
     when :new_random_infantry
-      begin
-        Celluloid::Actor[:game].new_random_infantry(user)
-        log = 'New infantry unit spawned'
-        log_entry = Log.push user, log, op
-      rescue OrbError => log_msg
-        log_entry = Log.push user, log_msg, :error
-      end
-    when :new_town
-      begin
-        Celluloid::Actor[:game].new_town user, user.active_unit_id
-        log = 'New town has been settled'
-        type = op
-      rescue OrbError => log_msg
-        log = log_msg
-        type = :error
-      end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
+      log_entry = Celluloid::Actor[:game].new_random_infantry(user)
+    # when :new_town
+    #   begin
+    #     Celluloid::Actor[:game].new_town user, user.active_unit_id
+    #     log = 'New town has been settled'
+    #     type = op
+    #   end
+    #   log_entry = Log.push user, log, type
+    #   dispatch_units({user.id => {:log => log_entry}})
     when :dismiss
       unit_id = data['unit_id']
       begin

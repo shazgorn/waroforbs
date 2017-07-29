@@ -12,16 +12,23 @@ class OrbsClient
   def initialize()
     info 'initialize client'
     @client = Celluloid::WebSocket::Client.new('ws://0.0.0.0:9293/', current_actor)
+    @message = {}
     @user = 'orbs_client'
   end
 
   def on_open
-    @client.text JSON.dump({:token => @user, :op => "init_map"})
+    @client.text(JSON.dump({:token => @user, :op => "init_map"}))
   end
 
   def on_message(data)
-    message = JSON.parse(data)
-    p message
+    @message = JSON.parse(data)
+  end
+
+  def spawn_infantry_if_dead
+    if @message && @message['actions']['new_random_infantry_action']['@on']
+      info 'spawn infantry'
+      @client.text(JSON.dump({:token => @user, :op => "new_random_infantry"}))
+    end
   end
 
   def send_spawn_green_orb
@@ -30,11 +37,14 @@ class OrbsClient
   end
 
   def send_spawn_black_orb
+    info 'spawn black orb'
     @client.text JSON.dump({:token => @user, :op => 'spawn_orb', :color => 'black'})
   end
 end
 
 client = OrbsClient.new
+sleep(1)
+client.spawn_infantry_if_dead
 # client.send_spawn_green_orb
 # sleep(1)
 # client.send_spawn_green_orb

@@ -49,7 +49,6 @@ class WS
             # App init finished
             app.initialized = true
           when 'units'
-            console.log(data.op)
             if data.op == "attack"
               if data.defender
                 app.map.dmg(data.d_dmg.wounds, data.d_dmg.kills, data.a_dmg.wounds, data.a_dmg.kills, data.d_id, data.a_id, 789, 123)
