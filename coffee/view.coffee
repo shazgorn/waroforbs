@@ -28,26 +28,27 @@ class UnitView extends View
 class CompanyView extends UnitView
   constructor: (unit_model) ->
     super unit_model
+    @life_el = $(document.createElement('span'))
+        .html(unit_model.life)
+        .appendTo(@element)
+
+  set_life: (life) ->
+    @life_el.html(life)
 
 class PlayerCompanyView extends CompanyView
   constructor: (unit_model) ->
     super unit_model
-    @squads_el = $(document.createElement('span'))
-        .html(unit_model.squads)
-        .addClass('player-unit-squad-info')
-        .appendTo(@element)
+    @life_el.addClass('player-unit-life-info')
     @element
       .addClass('select-target')
       .on('click', () =>
         App.set_active_unit(unit_model.id)
       )
 
-  set_squads: (squads) ->
-    @squads_el.html(squads)
-
 class OtherPlayerCompanyView extends CompanyView
   constructor: (unit_model) ->
     super unit_model
+    @life_el.addClass('other-player-unit-life-info')
 
 class OrbView extends UnitView
   constructor: (unit_model) ->
@@ -94,9 +95,9 @@ class ControlsView
         )
     @name = @info.find('.unit-name-info')
     @actions = @info.find('.unit-action-info')
-    @squads = @info.find('.unit-squads-info')
+    @life = @info.find('.unit-life-info')
     @id = @info.find('.unit-id-info')
-    @hp = @info.find('.unit-hp-info')
+    @life = @info.find('.unit-life-info')
     @xy = @info.find('.unit-xy-info')
     @ap = @info.find('.unit-ap-info')
     @dmg = @info.find('.unit-damage-info')
@@ -124,7 +125,7 @@ class ControlsView
       @info.remove()
       return
       
-    @hp.html(unit.hp)
+    @life.html(unit.life)
     @xy.html(unit.xy)
     @ap.html(unit.ap)
     @dmg.html(unit.damage)
@@ -137,7 +138,7 @@ class PlayerCompanyControlsView extends ControlsView
 
   update: (unit) ->
     super unit
-    @squads.html(unit.squads)
+    @life.html(unit.life)
 
 class PlayerTownControlsView extends ControlsView
   constructor: (unit) ->

@@ -120,12 +120,21 @@ class Map
     for id, cell of cells
       @addCell(cell['@x'], cell['@y'])
 
-  applyDmgTo: (cell, dmg, type, timeout) ->
+  applyDmgTo: (cell, wounds, kills, type, timeout) ->
     d = $(document.createElement('span'))
-      .html(dmg)
       .addClass('dmg')
       .addClass('dmg-start')
       .addClass("#{type}-dmg-start")
+      .append(
+        $(document.createElement('span'))
+        .addClass('wounds')
+        .html(wounds)
+      )
+      .append(
+        $(document.createElement('span'))
+        .addClass('kills')
+        .html(kills)
+      )
       .appendTo(cell)
 
     ###
@@ -140,9 +149,9 @@ class Map
       setTimeout((() -> d.remove()), 1234)
     , timeout)
 
-  dmg: (dmg, ca_dmg, a_id, d_id, a_delay, d_delay) ->
-    @applyDmgTo($("#unit-#{d_id}").parent(), dmg,    'def', a_delay)
-    @applyDmgTo($("#unit-#{a_id}").parent(), ca_dmg, 'att', d_delay)
+  dmg: (a_wounds, a_kills, d_wounds, d_kills, a_id, d_id, a_delay, d_delay) ->
+    @applyDmgTo($("#unit-#{d_id}").parent(), d_wounds, d_kills,    'def', a_delay)
+    @applyDmgTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 'att', d_delay)
 
   remove_units: () ->
     $('.unit').remove()

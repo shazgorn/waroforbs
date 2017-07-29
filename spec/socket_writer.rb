@@ -15,7 +15,7 @@ end
 RSpec.describe OrbClientWriter, "testing" do
   around do |ex|
     Celluloid.boot
-    Game.supervise as: :game
+    Celluloid::Actor[:game] = Game.new(true)
     ex.run
     Celluloid.shutdown
   end

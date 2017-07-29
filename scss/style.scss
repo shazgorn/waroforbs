@@ -1,12 +1,12 @@
 @font-face {font-family: 'PT Serif';
-	src: url('fonts/ptf55f_w.eot');
-	src: local('PT Serif'), url('fonts/ptf55f_w.eot?#iefix') format('embedded-opentype'), url('fonts/ptf55f_w.woff') format('woff'),url('fonts/ptf55f_w.ttf') format('truetype'), url('fonts/ptf55f_w.svg#PTSerif-Regular') format('svg');}
+	    src: url('/fonts/PTF55F_W.eot');
+	    src: local('PT Serif'), url('/fonts/PTF55F_W.eot?#iefix') format('embedded-opentype'), url('/fonts/PTF55F_W.woff') format('woff'),url('/fonts/PTF55F_W.ttf') format('truetype'), url('/fonts/PTF55F_W.svg#PTSerif-Regular') format('svg');}
 
 @font-face {font-family: 'PT Serif';
-	src: url('fonts/ptf75f_w.eot');
-	font-style: normal;
-	font-weight: bold;
-	src: local('PT Serif Bold'), url('fonts/ptf75f_w.eot?#iefix') format('embedded-opentype'), url('fonts/ptf75f_w.woff') format('woff'),url('fonts/ptf75f_w.ttf') format('truetype'), url('fonts/ptf75f_w.svg#PTSerif-Bold') format('svg');}
+	    src: url('/fonts/PTF75F_W.eot');
+	    font-style: normal;
+	    font-weight: bold;
+	    src: local('PT Serif Bold'), url('/fonts/PTF75F_W.eot?#iefix') format('embedded-opentype'), url('/fonts/PTF75F_W.woff') format('woff'),url('/fonts/PTF75F_W.ttf') format('truetype'), url('/fonts/PTF75F_W.svg#PTSerif-Bold') format('svg');}
 
 $cell-dimension: 40px;
 $map-dimension: $cell-dimension * 11;
@@ -25,7 +25,7 @@ $right-col-width: 12rem;
 // color of wooden theme
 $wooden-color: #963;
 // color of wood
-$hp-info-color: #e60000;
+$life-info-color: #e60000;
 $sienna: #a0522d;
 $wood-color: $sienna;
 $hover-hero-color: #66a3ff;
@@ -127,10 +127,10 @@ $log-width: calc(100% - #{$right-col-width} - 2.5rem);
 }
 
 a {
-    color: $theme-color;
-    &:hover {
-	color: $theme-hover;
-    }
+  color: $theme-color;
+  &:hover {
+    color: $theme-hover;
+  }
 }
 
 body {
@@ -238,7 +238,7 @@ button {
   }
 
   .player-hero {
-      //background-image: url('/img/player_hero.png');
+    //background-image: url('/img/player_hero.png');
     background-image: url('/img/swordsman.png');
   }
 
@@ -251,17 +251,24 @@ button {
     &.active-player-unit {
       border: thin solid $active-hero-color;
     }
+  }
 
-    .player-unit-squad-info {
-      background-color: rgba(200, 0, 0, 0.7);
-      bottom: 0;
-      color: $white;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 0 2px;
-      position: absolute;
-      right: 0;
-    }
+  .player-unit-life-info, .other-player-unit-life-info {
+    bottom: 0;
+    color: $white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 0 2px;
+    position: absolute;
+    right: 0;
+  }
+
+  .player-unit-life-info {
+    background-color: rgba(200, 0, 0, 0.7);
+  }
+
+  .other-player-unit-life-info {
+    background-color: rgba(0, 0, 200, 0.7);
   }
 
   .other-player-hero {
@@ -306,6 +313,14 @@ button {
     width: $orb-sm-dimension;
   }
 
+  .wounds {
+    color: $yellow;
+  }
+
+  .kills {
+    color: $red;
+  }
+
   .dmg {
     font-weight: bold;
     left: 4px;
@@ -322,21 +337,21 @@ button {
     top: -30px;
   }
 
-  .def-dmg-start {
-    color: $red;
-  }
+  // .def-dmg-start {
+  //   color: $red;
+  // }
 
-  .def-dmg-end {
-    color: $yellow;
-  }
+  // .def-dmg-end {
+  //   color: $yellow;
+  // }
 
-  .att-dmg-start {
-    color: $blue;
-  }
+  // .att-dmg-start {
+  //   color: $blue;
+  // }
 
-  .att-dmg-end {
-    color: $aqua;
-  }
+  // .att-dmg-end {
+  //   color: $aqua;
+  // }
 }
 
 #right-col {
@@ -414,8 +429,8 @@ button {
     display: none;
   }
 
-  .unit-hp-info {
-    color: $hp-info-color;
+  .unit-life-info {
+    color: $life-info-color;
   }
 
   .unit-damage-info {
@@ -428,10 +443,6 @@ button {
 
   .unit-ap-info {
     color: $orange;
-  }
-
-  .unit-squads-info {
-    color: $limegreen;
   }
 
   &:hover {

@@ -3,7 +3,7 @@ require 'game'
 RSpec.describe SquadAttack, "is attacking" do
   around do |ex|
     Celluloid.boot
-    Celluloid::Actor[:game] = Game.new
+    Celluloid::Actor[:game] = Game.new(true)
     ex.run
     Celluloid.shutdown
   end

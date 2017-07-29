@@ -64,7 +64,6 @@ class Town < Unit
 
   def initialize(x, y, user)
     super(TYPE, x, y, user)
-    @hp = @max_hp = 300
     @damage = 5
     @defence = 50
     @inventory = {

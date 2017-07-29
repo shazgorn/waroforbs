@@ -35,17 +35,17 @@ class LogEntry < JSONable
     end
 
     def attack(res, user = nil)
-      message = "damage dealt dmg: %d, damage taken ca_dmg: %d" % [res[:a_data][:dmg], res[:a_data][:ca_dmg]]
-      if res[:a_data][:dead]
-        message += '. Your hero has been killed.'
+      message = "Damage dealt: %d, %d. Damage taken: %d, %d." % [res[:d_dmg][:wounds], res[:d_dmg][:kills], res[:a_dmg][:wounds], res[:a_dmg][:kills]]
+      if res[:d_dmg][:dead]
+        message += ' Your hero has been killed.'
       end
       self.new(:attack, message, user)
     end
 
     def defence(res, user = nil)
-      message = "damage taken ca_dmg: %d, damage dealt dmg: %d" % [res[:d_data][:ca_dmg], res[:d_data][:dmg]]
-      if res[:d_data][:dead]
-        message += '. Your hero has been killed.'
+      message = "Damage taken: %d, %d. Damage dealt: %d, %d" % [res[:a_dmg][:wounds], res[:a_dmg][:kills], res[:d_dmg][:wounds], res[:d_dmg][:kills]]
+      if res[:a_dmg][:dead]
+        message += ' Your hero has been killed.'
       end
       self.new(:defence, message, user)
     end

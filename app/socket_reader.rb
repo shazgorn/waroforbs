@@ -3,6 +3,8 @@ class OrbClientReader
   include Celluloid::Notifications
   include Celluloid::Internals::Logger
 
+  finalizer :my_finalizer
+
   def initialize(websocket, writer_name, reader_name, facade_name)
     @websocket = websocket
     @writer_name = writer_name
@@ -30,5 +32,9 @@ class OrbClientReader
   rescue Reel::SocketError, EOFError
     info "WS client disconnected #{@name}"
     terminate
+  end
+
+  def my_finalizer
+    puts 'final'
   end
 end

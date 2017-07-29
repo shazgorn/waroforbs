@@ -23,7 +23,6 @@ class Unit
     @y = y
     @defence = 0
     @ap = @max_ap = 0
-    @hp = @max_hp = 1
     @@units[@id] = self
     @life = MAX_LIFE
     @wounds = 0
@@ -55,18 +54,18 @@ class Unit
   end
 
   def to_hash()
-    hash = {}
-    self.instance_variables.each do |var|
-      if var == :@user
-        if @user
-          hash[:@user_name] = @user.login
-          hash[:@user_id] = @user.id
-        end
-      else
-        hash[var] = self.instance_variable_get var
-      end
-    end
-    hash
+    {
+      'id' => @id,
+      'type' => @type,
+      'x' => @x,
+      'y' => @y,
+      'ap' => @ap,
+      'life' => @life,
+      'dead' => @dead,
+      'defence' => @defence,
+      'user_name' => @user.login,
+      'user_id' => @user.id
+    }
   end
 
   def to_json(generator = JSON.generator)
@@ -87,16 +86,6 @@ class Unit
 
   def alive?
     !dead?
-  end
-
-  def take_dmg(income_dmg)
-    reduced_dmg = income_dmg - @defence
-    reduced_dmg = 1 if reduced_dmg < 1
-    @hp -= reduced_dmg
-    if @hp <= 0
-      die
-    end
-    reduced_dmg
   end
 
   def die
@@ -131,19 +120,12 @@ class Unit
   # game loop function called every `n` seconds
   def tick
     restore_ap
-    restore_hp
   end
 
   # restore some amount of @ap per tick
   def restore_ap
     if @ap <= @max_ap - 1
       @ap += 1
-    end
-  end
-
-  def restore_hp
-    if @hp <= @max_hp - 1
-      @hp += 1
     end
   end
 

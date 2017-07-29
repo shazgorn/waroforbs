@@ -3,10 +3,27 @@ require "celluloid/current"
 require 'game'
 require 'facade'
 
+module AttackHelpers
+  def facade_attack(token, id)
+    facade.parse_data({
+                        'writer_name' => 'attacker',
+                        'token' => token,
+                        'op' => 'attack',
+                        'params' => {
+                          'id' => id
+                        }
+                      })
+  end
+end
+
+RSpec.configure do |c|
+  c.include AttackHelpers
+end
+
 RSpec.describe Facade, "#parse_data" do
   around do |ex|
     Celluloid.boot
-    Celluloid::Actor[:game] = Game.new
+    Celluloid::Actor[:game] = Game.new(true)
     ex.run
     Celluloid.shutdown
   end
@@ -39,7 +56,27 @@ RSpec.describe Facade, "#parse_data" do
     expect(user_data[writer_name][:data_type]).to eq(:init_map)
   end
 
-  it "attacks" do
-    
+  it 'user attack' do
+    att_token = 'attacker_token'
+    def_token = 'defender_token'
+    facade.parse_data({
+                        'writer_name' => 'attacker',
+                        'token' => att_token,
+                        'op' => 'init_map'
+                      })
+    facade.parse_data({
+                        'writer_name' => 'defender',
+                        'token' => def_token,
+                        'op' => 'init_map'
+                      })
+    a_user = Celluloid::Actor[:game].get_user_by_token(att_token)
+    d_user = Celluloid::Actor[:game].get_user_by_token(def_token)
+    a = Unit.get_by_id(a_user.active_unit_id)
+    a.move_to(1, 1, 0)
+    d = Unit.get_by_id(d_user.active_unit_id)
+    d.move_to(2, 2, 0)
+    10.times do
+      facade_attack(att_token, d.id)
+    end
   end
 end

@@ -14,18 +14,16 @@ class Unit extends Model
   constructor: (unit) ->
     super unit
     @_unit = unit
-    @id = unit['@id']
+    @id = unit.id
     @attr_id = "unit-#{@id}"
-    @x = unit['@x']
-    @y = unit['@y']
-    @type = unit['@type']
-    @damage = unit['@damage']
-    @defence = unit['@defence']
-    @dead = unit['@dead']
-    @hp = unit['@hp']
-    @max_hp = unit['@max_hp']
-    @ap = unit['@ap']
-    @max_ap = unit['@max_ap']
+    @x = unit.x
+    @y = unit.y
+    @type = unit.type
+    @damage = unit.damage
+    @defence = unit.defence
+    @dead = unit.dead
+    @life = unit.life
+    @ap = unit.ap
     @user_id = null
     @user_name = null
     if !@dead
@@ -33,34 +31,34 @@ class Unit extends Model
 
   update: (unit) ->
     return if @dead
-    if unit['@dead']
-      @dead = unit['@dead']
+    if unit.dead
+      @dead = unit.dead
       @need_to_move = false
       @view.remove_element()
       if @controls
         @controls.remove_element()
       return
-    @need_to_move = !@dead && (@x != unit['@x'] || @y != unit['@y'])
-    if @x != unit['@x']
-      @x = unit['@x']
+    @need_to_move = !@dead && (@x != unit.x || @y != unit.y)
+    if @x != unit.x
+      @x = unit.x
       # view.set_x(@x)
-    if @y != unit['@y']
-      @y = unit['@y']
+    if @y != unit.y
+      @y = unit.y
       # view.set_y(@x)
-    if @ap != unit['@ap']
-      @ap = unit['@ap']
+    if @ap != unit.ap
+      @ap = unit.ap
       # view.set_ap(@ap)
 
 
 class Company extends Unit
   constructor: (unit) ->
     super unit
-    @user_id = unit['@user_id']
-    @user_name = unit['@user_name']
+    @user_id = unit.user_id
+    @user_name = unit.user_name
     @update_title(unit)
 
   update_title: () ->
-    @title = @user_name + '(' + @hp + ')'
+    @title = @user_name
 
   update: (unit) ->
     super unit
@@ -70,7 +68,7 @@ class PlayerCompany extends Company
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-hero'
-    @squads = unit['@squads']
+    @life = unit.life
 
   create_view: () ->
     if !@dead
@@ -80,9 +78,9 @@ class PlayerCompany extends Company
   update: (unit) ->
     super unit
     return if @dead
-    if @squads != unit['@squads']
-      @squads = unit['@squads']
-      view.set_squads(@squads)
+    if @life != unit.life
+      @life = unit.life
+      @view.set_life(@life)
     @controls.update(this)
 
 
@@ -95,14 +93,21 @@ class OtherPlayerCompany extends Company
     if !@dead
       @view = new OtherPlayerCompanyView(this)
 
+  update: (unit) ->
+    super unit
+    return if @dead
+    if @life != unit.life
+      @life = unit.life
+      @view.set_life(@life)
+
 class GreenOrb extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'green-orb'
-    @title = @hp
-    if @hp < 50
+    @title = @life
+    if @life < 50
       @css_class += ' orb-sm'
-    else if @hp < 100
+    else if @life < 100
       @css_class += ' orb-md'
     else
       @css_class += ' orb'
@@ -116,10 +121,10 @@ class BlackOrb extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'black-orb'
-    @title = @hp
-    if @hp < 500
+    @title = @life
+    if @life < 500
       @css_class += ' orb-sm'
-    else if @hp < 700
+    else if @life < 700
       @css_class += ' orb-md'
     else
       @css_class += ' orb'
@@ -134,7 +139,7 @@ class Town extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'town'
-    @title = unit['@user_name'] + ' Town'
+    @title = unit.user_name + ' Town'
 
 ##
 # cell in town radius
@@ -252,7 +257,7 @@ class OtherPlayerTown extends Town
 
 
 window.UnitFactory = (unit_hash, is_user_unit) ->
-  switch unit_hash['@type']
+  switch unit_hash.type
     when "company"
       if is_user_unit
         unit = new PlayerCompany unit_hash

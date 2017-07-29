@@ -3,7 +3,7 @@ require 'game'
 RSpec.describe Game, "testing" do
   around do |ex|
     Celluloid.boot
-    Celluloid::Actor[:game] = Game.new
+    Celluloid::Actor[:game] = Game.new(true)
     ex.run
     Celluloid.shutdown
   end
@@ -29,7 +29,7 @@ RSpec.describe Game, "testing" do
     a = HeavyInfantry.new(1, 1, a_user)
     d_user = User.new('defender')
     d = HeavyInfantry.new(2, 2, d_user)
-    res = Celluloid::Actor[:game].attack(a, d)
+    Celluloid::Actor[:game].attack(a, d)
   end
 
   it 'user attack' do
@@ -42,7 +42,7 @@ RSpec.describe Game, "testing" do
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, 0)
     expect(res[:error]).to eq('Defender not found')
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, d.id)
-    expect(res[:a_res][:wounds]).to eq(3)
-    expect(res[:d_res][:wounds]).to eq(2)
+    expect(res[:d_dmg][:wounds]).to eq(3)
+    expect(res[:a_dmg][:wounds]).to eq(2)
   end
 end

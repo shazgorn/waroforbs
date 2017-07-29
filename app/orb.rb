@@ -7,9 +7,8 @@ require 'config'
 class Orb < Unit
   LIMIT = 1
 
-  def initialize(type, x, y, hp, damage, defence)
+  def initialize(type, x, y, damage, defence)
     super(type, x, y)
-    @max_hp = @hp = hp
     @damage = damage
     @defence = defence
   end
@@ -53,7 +52,7 @@ class BlackOrb < Orb
       TYPE,
       x,
       y,
-      Config.get("BLACK_ORB_START_HP"),
+      Config.get("BLACK_ORB_START_LIFE"),
       Config.get("BLACK_ORB_START_DAMAGE"),
       Config.get("BLACK_ORB_START_DEFENCE")
     )
@@ -66,6 +65,6 @@ class BlackOrb < Orb
   def lvl_up
     @damage += 1
     @defence += 1
-    @max_hp += 1
+    @life += 1
   end
 end

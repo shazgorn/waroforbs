@@ -21,7 +21,7 @@ class Facade
   # dispatch and active unit id
   # use writer id or name as key in user_data, but not token
 
-  def parse_data data
+  def parse_data(data)
     user_data_key = data['writer_name']
     unless user_data_key
       error 'No writer name provided'
@@ -55,41 +55,42 @@ class Facade
       # remove duplicates of :active_unit_id setting in user_data?
       user_data[user_data_key][:active_unit_id] = user.active_unit_id = data['unit_id'].to_i
     end
+    make_action_on_op(op, user, data, user_data, user_data_key, token)
+    if log_entry
+      if log_entry.user
+        log_entry.user = user
+        LogBox << log_entry
+      end
+      user_data[user_data_key][:log] = log_entry
+    end
+    user_data
+  end
+
+  def make_action_on_op(op, user, data, user_data, user_data_key, token)
     case op
     when :init_map
       user_data[user_data_key][:data_type] = :init_map
-      Celluloid::Actor[:game].init_user token
+      Celluloid::Actor[:game].init_user(token)
     when :close
 
     when :units
 
     when :move
       params = data['params']
-      log_entry = Celluloid::Actor[:game].move_user_hero_by user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+      log_entry = Celluloid::Actor[:game].move_user_hero_by(user, data['unit_id'], params['dx'].to_i, params['dy'].to_i)
     when :attack
       params = data['params']
       begin
         res = Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, params['id'].to_i)
         if res[:error]
-          LogBox.error(res[:error])
+          log_entry = LogBox.error(res[:error], user)
         else
-          LogBox.attack(res, user)
-          LogBox.defence(res, user)
+          log_entry = LogBox.attack(res, user)
+          # LogBox.defence(res, defender)
+          user_data[user_data_key].merge!(res)
         end
-        users[user.id] = {
-          :active_unit_id => user.active_unit_id,
-          :dmg => res[:a_data][:dmg],
-          :ca_dmg => res[:a_data][:ca_dmg],
-          :a_id => user.active_unit_id,
-          :dead => res[:a_data][:dead],
-          :d_id => params['id'],
-          :log => log_entry
-        }
-        set_def_data users, res
-        dispatch_units(users)
-      rescue OrbError => log_msg
-        log_entry = Log.push user, log_msg, :error
-        dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
+        user_data[user_data_key][:log] = log_entry
+        # set_def_data users, res
       end
     when :new_random_infantry
       begin
@@ -99,7 +100,6 @@ class Facade
       rescue OrbError => log_msg
         log_entry = Log.push user, log_msg, :error
       end
-      dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :op => op, :log => log_entry}})
     when :new_town
       begin
         Celluloid::Actor[:game].new_town user, user.active_unit_id
@@ -196,14 +196,6 @@ class Facade
       log_entry = Celluloid::Actor[:game].spawn_orb data['color'].to_sym
     else
       log_entry = LogBox.error 'Unknown op', user
-    end #case
-    if log_entry
-      if log_entry.user
-        log_entry.user = user
-        LogBox << log_entry
-      end
-      user_data[user_data_key][:log] = log_entry
     end
-    user_data
   end
 end

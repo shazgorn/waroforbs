@@ -24,18 +24,22 @@ class Game
   include Celluloid::Internals::Logger
   include Cli
 
-  attr_reader :map
+  attr_reader :map, :tokens
 
-  def initialize()
+  def initialize(drop = false)
     info 'Starting game'
     @generate = false
     check_args
     @map = Map.new(@generate)
-    Unit.drop_all
-    User.drop_all
     # token -> user_id
     @tokens = {}
+    drop_all if drop
     subscribe('tick', :tick)
+  end
+
+  def drop_all
+    Unit.drop_all
+    User.drop_all
   end
 
   ############ DATA SELECTION METHODS ########################
@@ -131,8 +135,8 @@ class Game
     user
   end
 
-  def init_map token
-    user = get_user_by_token token
+  def init_map(token)
+    user = get_user_by_token(token)
     {
       :map_shift => Map::SHIFT,
       :cell_dim_in_px => Map::CELL_DIM_PX,
@@ -251,19 +255,19 @@ class Game
   # dx - int
   # dy - int
 
-  def move_unit_by unit, dx, dy
+  def move_unit_by(unit, dx, dy)
     return LogEntry.error 'Unit #%d not found' % unit_id unless unit
     return LogEntry.error 'Wrong direction' unless @map.d_include?(dx, dy)
     return LogEntry.error 'Unit is dead and wont go anywhere' if unit.dead?
     new_x = unit.x + dx
     new_y = unit.y + dy
     return LogEntry.error 'Out of map' unless @map.has?(new_x, new_y)
-    type = @map.cell_type_at new_x, new_y
+    type = @map.cell_type_at(new_x, new_y)
     cost = TYPE2COST[type]
     return LogEntry.error 'Not enough AP' unless unit.can_move?(cost)
     return LogEntry.error 'Cell is occupied' unless Unit.place_is_empty?(new_x, new_y)
     unit.move_to(new_x, new_y, cost)
-    LogEntry.move unit.id, dx, dy, new_x, new_y
+    LogEntry.move(unit.id, dx, dy, new_x, new_y)
   end
 
   ##
@@ -274,22 +278,22 @@ class Game
   # Select unit by id and move it
   # return log_entry
 
-  def move_user_hero_by user, unit_id, dx, dy
-    unit = Unit.get_by_id unit_id
-    log_entry = move_unit_by unit, dx, dy
+  def move_user_hero_by(user, unit_id, dx, dy)
+    unit = Unit.get_by_id(unit_id)
+    log_entry = move_unit_by(unit, dx, dy)
     log_entry.user = user
     LogBox << log_entry
     log_entry
   end
 
-  def random_move unit
+  def random_move(unit)
     dx = dy = 0
     begin
       dx = Random.rand(-1..1)
       dy = Random.rand(-1..1)
     end while (dx == 0 && dy == 0) || !@map.has?(unit.x + dx, unit.y + dy)
     info "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
-    move_unit_by unit, dx, dy
+    move_unit_by(unit, dx, dy)
   end
 
   ##
@@ -381,7 +385,7 @@ class Game
 
   def attack(a, d)
     return raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
-    res = SquadAttack.attack a, d
+    res = SquadAttack.attack(a, d)
     if a.dead?
       bury(a)
     end

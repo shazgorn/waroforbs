@@ -14,16 +14,16 @@ class WS
       @socket.send(JSON.stringify({token: @token, op: 'init_map'}))
 
     @socket.onerror = (e) =>
-      console.log(e)
+      console.error(e)
 
     @socket.onclose = (e) =>
       App.log({message: 'Connection to server has been closed. Please reload page.', type: 'info', time: 'interface'})
-      console.log(e)
+      console.info(e)
 
     @socket.onmessage = (e) ->
       start_ts = new Date();
       data = JSON.parse(e.data)
-      console.log('data:', data)
+      console.info('data:', data)
       console.error('no data_type') unless data.data_type
       if app.initialized || data.data_type == 'init_map'
         switch data.data_type
@@ -49,11 +49,12 @@ class WS
             # App init finished
             app.initialized = true
           when 'units'
-            if data.dmg
+            console.log(data.op)
+            if data.op == "attack"
               if data.defender
-                app.map.dmg(data.ca_dmg, data.dmg, data.d_id, data.a_id, 789, 123)
+                app.map.dmg(data.d_dmg.wounds, data.d_dmg.kills, data.a_dmg.wounds, data.a_dmg.kills, data.d_id, data.a_id, 789, 123)
               else
-                app.map.dmg(data.dmg, data.ca_dmg, data.a_id, data.d_id, 123, 789)
+                app.map.dmg(data.a_dmg.wounds, data.a_dmg.kills, data.d_dmg.wounds, data.d_dmg.kills, data.a_id, data.d_id, 123, 789)
             app.init_units data.units
             if data.active_unit_id && data.op in ['move', 'new_random_infantry']
               app.set_active_unit data.active_unit_id
@@ -66,7 +67,7 @@ class WS
         if data.log
           app.log(data.log)
         app.unlock_controls()
-        console.log('js execution time:', new Date() - start_ts, 'ms')
+        console.info('js execution time:', new Date() - start_ts, 'ms')
 
   move: (unit_id, params) ->
     @socket.send(

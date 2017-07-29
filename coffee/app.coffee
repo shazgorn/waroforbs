@@ -82,7 +82,7 @@ class Application
     for unit_id, unit_hash of units
       try
         unit_model = @units[unit_id]
-        is_user_unit = unit_hash['@user_id'] == @user_id
+        is_user_unit = unit_hash.user_id == @user_id
         if unit_model
           unit_model.update unit_hash
         else
@@ -96,7 +96,7 @@ class Application
         if is_user_unit
           @my_units[unit_id] = unit_model
       catch Error
-        console.log(Error)
+        console.error(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
     # delete dead units

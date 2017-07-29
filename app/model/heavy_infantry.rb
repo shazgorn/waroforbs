@@ -3,7 +3,6 @@ require 'squad'
 class HeavyInfantry < Squad
   MAX_SQUADS = 10
   BASE_DMG = 30
-  BASE_HP = 50
   BASE_AP = 20
   BASE_DEF = 10
 
@@ -11,8 +10,6 @@ class HeavyInfantry < Squad
     super(:company, x, y, user)
     @damage = BASE_DMG
     @defence = BASE_DEF
-    # @hp - hp of 1st squad in line
-    @hp = @max_hp = BASE_HP
     @ap = @max_ap = BASE_AP
     # each company starts with one squad
     @squads = 1
@@ -25,26 +22,6 @@ class HeavyInfantry < Squad
   def add_squad
     raise OrbError, 'Unable to add squad. Squads limit reached' unless @squads < MAX_SQUADS
     @squads += 1
-  end
-
-  def take_dmg(income_dmg)
-    total_hp = @max_hp * (@squads - 1) + @hp
-    reduced_dmg = income_dmg - (@defence * @squads)
-    reduced_dmg = 1 if reduced_dmg < 1
-    total_hp -= reduced_dmg
-    if total_hp <= 0
-      die()
-    else
-      @squads = total_hp / @max_hp
-      modulus = total_hp % @max_hp
-      if modulus > 0
-        @squads += 1
-        @hp = modulus
-      else
-        @hp = @max_hp
-      end
-    end
-    reduced_dmg
   end
 
   def dmg
