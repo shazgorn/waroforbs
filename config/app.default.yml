@@ -1,5 +1,5 @@
 ws_host: 0.0.0.0
-ws_port: 8081
+ws_port: 9293
 log: log/app.log
 pid: tmp/pids/app.pid
 BLOCKS_IN_MAP_DIM: 1
