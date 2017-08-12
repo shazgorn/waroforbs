@@ -2,7 +2,7 @@
 
 class OrbWebsocketsServer < Reel::Server::HTTP
   include Celluloid::Internals::Logger
-  def initialize(host = "0.0.0.0", port = 9293)
+  def initialize(host = Config.get('ws_host'), port = Config.get('ws_port'))
     info 'Starting websocket server'
     @websocket_id = 1
     super(host, port, &method(:on_connection))

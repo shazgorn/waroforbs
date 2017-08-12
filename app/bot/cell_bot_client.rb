@@ -12,7 +12,10 @@ class BotClient
   @@user_id = 1
 
   def initialize()
-    @client = Celluloid::WebSocket::Client.new('ws://0.0.0.0:9293/', current_actor)
+    @client = Celluloid::WebSocket::Client.new(
+      'ws://' + Config.get('ws_host') + ':' + Config.get('ws_port') + '/',
+      current_actor
+    )
     @user = 'bot_' + @@user_id.to_s
     @@user_id += 1
     @unit_id = nil

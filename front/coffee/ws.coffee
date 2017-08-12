@@ -4,7 +4,7 @@ class WS
     @initialized = false
     @token = localStorage.getItem('token')
     unless @token then location.pathname = '/'
-    @socket = new WebSocket 'ws://' + location.hostname + ':9293'
+    @socket = new WebSocket 'ws://' + location.hostname + ':' + ws_port
     $(window).on('beforeunload', () =>
       @socket.send(JSON.stringify({token: @token, op: 'close'}))
       @socket.close()

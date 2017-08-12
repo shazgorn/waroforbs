@@ -11,7 +11,10 @@ class OrbsClient
 
   def initialize()
     info 'initialize client'
-    @client = Celluloid::WebSocket::Client.new('ws://0.0.0.0:9293/', current_actor)
+    @client = Celluloid::WebSocket::Client.new(
+      'ws://' + Config.get('ws_host') + ':' + Config.get('ws_port') + '/',
+      current_actor
+    )
     @message = {}
     @user = 'orbs_client'
   end
