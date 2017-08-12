@@ -20,9 +20,9 @@ thin.yml
 *.dat
 log/*
 node_modules/*
-static/css/*
-static/js/*
-static/img/bg/*
+*/static/css/*
+*/static/js/*
+*/static/img/bg/*
 .bundle/
 bin/
 spec/examples.txt

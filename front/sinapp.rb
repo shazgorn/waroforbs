@@ -1,16 +1,20 @@
 # coding: utf-8
+
 require 'sinatra'
+require 'i18n'
 require 'i18n'
 require 'slim'
 
-I18n.load_path += Dir['config/locales/views/*.yml']
+# I18n.load_path += Dir['config/locales/views/*.yml']
+# I18n.load_path += Dir['front/config/locales/views/*.yml']
+I18n.load_path = Dir[File.join(settings.root, 'config/locales/views', '*.yml')]
 I18n.default_locale = :ru
 
-set :public_folder, './static'
+set :public_folder, './front/static'
 
 helpers do
   def t(key)
-    I18n.t key
+    I18n.t(key)
   end
 end
 

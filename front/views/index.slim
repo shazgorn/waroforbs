@@ -1,16 +1,16 @@
 h1 War of Orbs
-h2 browser_mmorts
+h2 = t('browser_mmorts')
 
 form.login-form action="/login" method="post" id="login-form"
-  label for="login" form_login
+  label for="login" = t('form_login')
   div
     input.text type="text" name="login" id="login" required="required" placeholder=t('login_placeholder')
   div
     input.submit type="submit" value=t('log_in')
 
 div
-  a href="/about" about
+  a href="/about" = t('about')
   | &nbsp;
-  a href="/media" media
+  a href="/media" = t('media')
 
 script src="/js/index.js"

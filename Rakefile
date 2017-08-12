@@ -1,38 +1,44 @@
 require 'fileutils'
-require 'coffee-script'
+
+def init_map
+  system('ruby --verbose -wW2 -I app -I app/model app/generate_map.rb')
+end
+
+def watch_scss
+  system('scss --watch scss/style.scss:static/css/style.css')
+end
+
+def watch_coffee
+  system('coffee -wcm -o static/js/ coffee/*.coffee')
+end
 
 task default: [:app]
 
-task :ws_gen_map do
-  system('ruby --verbose -wW2 app/ws.rb gen')
+task :init do
+  FileUtils.mkdir_p('static/img/bg')
+  init_map
+  FileUtils.mkdir_p('static/css')
+  system('scss scss/style.scss:static/css/style.css')
+  FileUtils.mkdir_p('static/js')
+  system('npm install jquery')
+  system('cp node_modules/jquery/dist/jquery.min.js static/js/')
+  system('cp node_modules/jquery/dist/jquery.min.map static/js/')
+  system('coffee -cm -o static/js/ coffee/*.coffee')
 end
 
-# task ws_restart: [:ws_stop, :ws_start]
-
-# task :ws_stop do
-#   system('ruby --verbose -wW2 app/ws.rb stop')
-# end
+task :map do
+  init_map
+end
 
 task :app do
   system('ruby --verbose -wW2 -I app -I app/model app/app.rb')
 end
 
 task :css do
-  begin
-    Dir.mkdir('static/css')
-  rescue SystemCallError
-  end
   system('sh scss.sh')
 end
 
 task :js do
-  system('npm install jquery')
-  system('cp node_modules/jquery/dist/jquery.min.js static/js/')
-  system('cp node_modules/jquery/dist/jquery.min.map static/js/')
-  begin
-    Dir.mkdir('static/js')
-  rescue SystemCallError
-  end
   system('sh coffee.sh')
 end
 

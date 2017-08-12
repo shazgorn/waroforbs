@@ -2,8 +2,10 @@ require 'celluloid/current'
 require 'fileutils'
 require 'json'
 require 'yaml'
+require 'mini_magick'
 
 require 'config'
+require 'jsonable'
 
 class MapCell < JSONable
   attr_accessor :x, :y, :type, :unit
@@ -30,7 +32,7 @@ class Map
   SHIFT = 1000
 
   def initialize(generate = false)
-    @path = './data/map.dat'
+    @data_path = './data/map.dat'
     @cells = {}
     @cells_bg = {
       1 => {
@@ -64,10 +66,10 @@ class Map
     }
     JSON.dump_default_options[:max_nesting] = 10
     JSON.load_default_options[:max_nesting] = 10
-    if generate || !File.exist?(@path)
+    if generate || !File.exist?(@data_path)
       generate_map
     else
-      file = File.open(@path, "r")
+      file = File.open(@data_path, "r")
       @cells = Marshal.load(file)
     end
   end
@@ -75,14 +77,13 @@ class Map
   def generate_map
     start = Time.now.to_f
     info "Generate map"
-    FileUtils::mkdir_p './img/bg'
     create_canvas_blocks
     finish = Time.now.to_f
     diff = finish - start
     info "Map generated in %f seconds" % diff.to_f
-    File.open(@path, "w") do |file|
+    File.open(@data_path, "w") do |file|
       file.print Marshal.dump(@cells)
-      info "Map data saved to %s" % @path
+      info "Map data saved to %s" % @data_path
     end
   end
 
