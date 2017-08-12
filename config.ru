@@ -1,3 +1,2 @@
-require "./front"
-
-run(Cuba)
+require "./front/sinapp"
+run Sinatra::Application
