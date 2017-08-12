@@ -1,13 +1,13 @@
 host: 0.0.0.0
-port: 9293
+port: 8080
 log: log/app.log
 pid: tmp/pids/app.pid
-BLOCKS_IN_MAP_DIM: 5
+BLOCKS_IN_MAP_DIM: 1
 GREEN_ORB_PER_BLOCK: 1
-BLACK_ORB_LIMIT: 1
+BLACK_ORB_LIMIT: 0
 BLACK_ORB_START_SPEED: 60
 BLACK_ORB_MAX_SPEED: 60
 BLACK_ORB_START_HP: 1000
 BLACK_ORB_START_DAMAGE: 100
 BLACK_ORB_START_DEFENCE: 10
-img_path: static/img/
+img_path: front/static/img/
