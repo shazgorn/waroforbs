@@ -43,11 +43,11 @@ task :ws_restart do
 end
 
 task :css do
-  system('sh scss.sh')
+  watch_scss
 end
 
 task :js do
-  system('sh coffee.sh')
+  watch_coffee
 end
 
 task :front_start do
