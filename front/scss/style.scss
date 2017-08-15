@@ -175,17 +175,29 @@ button {
   width: 100%;
 }
 
+.block-bottom {
+  border-bottom: thick solid $wooden-color;
+}
+
+.block-left {
+  border-left: thick solid $wooden-color;
+}
+
+.block-right {
+  border-right: thick solid $wooden-color;
+}
+
+.block-top {
+  border-top: thick solid $wooden-color;
+}
+
 #map {
   background-color: $black;
-  border: thin solid $theme-border;
-  height: $map-dimension;
+  border: 0;
+  height: 100%;
   overflow: hidden;
   position: absolute;
-  width: $map-dimension;
-
-  &.fullscreen {
-    border: 0;
-  }
+  width: 100%;
 
   &.bordered-cells .cell {
     border-bottom: thin dashed $darkolivegreen;

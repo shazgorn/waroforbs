@@ -2,12 +2,6 @@ class Map
   constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells,
   @map_dim_in_blocks, cells) ->
     this_obj = this
-
-    if App.options.fullscreen
-      @set_fullscreen()
-    else
-      @remove_fullscreen()
-
     #this.initTooltip()
     this.addBlocks()
     if App.options.all_cells
@@ -16,13 +10,6 @@ class Map
 
   update_size: () ->
     @set_size(App.options.map_height, App.options.map_width)
-
-  set_fullscreen: () ->
-    $('#map').height('100%').width('100%').addClass('fullscreen')
-
-  remove_fullscreen: () ->
-    $('#map').removeClass('fullscreen')
-    @update_size()
 
   set_size: (height, width) ->
     $('#map').height(height * @cell_dim_in_px).width(width * @cell_dim_in_px)
@@ -86,7 +73,7 @@ class Map
   addBlocks: () ->
     for block_x in [0..@map_dim_in_blocks-1]
       for block_y in [0..@map_dim_in_blocks-1]
-        $(document.createElement('div'))
+        b = $(document.createElement('div'))
           .attr('id', "block_#{block_x}_#{block_y}")
           .addClass('block')
           # see Map::create_canvas_blocks
@@ -94,6 +81,14 @@ class Map
           .css('left', "#{block_x * @block_dim_in_px}px")
           .css('top', "#{block_y * @block_dim_in_px}px")
           .appendTo('#blocks')
+        if block_y == 0
+          b.addClass('block-top')
+        if block_y == @map_dim_in_blocks-1
+          b.addClass('block-bottom')
+        if block_x == 0
+          b.addClass('block-left')
+        if block_x == @map_dim_in_blocks-1
+          b.addClass('block-right')
 
   addCell: (x, y) ->
     block_x = x // @block_dim_in_cells
@@ -173,9 +168,8 @@ class Map
       map = $("#map")
       bias_top = (map.height() - @cell_dim_in_px) / 2
       bias_left = (map.width() - @cell_dim_in_px) / 2
-      if App.options.fullscreen
-        bias_top -= $('#log').height() / 2
-        bias_left -= $('#right-col').width() / 2
+      bias_top -= $('#log').height() / 2
+      bias_left -= $('#right-col').width() / 2
       top = block_pos.top + cell_pos.top - bias_top
       left = block_pos.left + cell_pos.left - bias_left
       $('#blocks')

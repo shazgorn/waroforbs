@@ -10,18 +10,6 @@ class Options
   init_options: () ->
     _this = this
     @bind()
-
-    @option('fullscreen', false, 'bool', (t) ->
-      if t.fullscreen
-        t.disable('map_height')
-        t.disable('map_width')
-        App.map.set_fullscreen()
-      else
-        t.enable('map_height')
-        t.enable('map_width')
-        App.map.remove_fullscreen()
-      App.center_on_active()
-    , false)
     @option('log_height', 5, 'int', (t) ->
       $('#log').height(t.log_height * 20)
       $('.modal').css('bottom', ((t.log_height + 1) * 20) + 'px')
