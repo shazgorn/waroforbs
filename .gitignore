@@ -17,6 +17,7 @@ config.yml
 *.log
 app.yml
 thin.yml
+ws_thin.yml
 *.dat
 log/*
 node_modules/*

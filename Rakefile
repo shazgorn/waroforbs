@@ -30,8 +30,16 @@ task :map do
   init_map
 end
 
-task :app do
-  system('ruby --verbose -wW2 -I app -I app/model app/app.rb')
+task :ws_start do
+  system('thin -R ws_config.ru start -C config/ws_thin.yml')
+end
+
+task :ws_stop do
+  system('thin -R ws_config.ru stop -C config/ws_thin.yml')
+end
+
+task :ws_restart do
+  system('thin -R ws_config.ru restart -C config/ws_thin.yml')
 end
 
 task :css do
