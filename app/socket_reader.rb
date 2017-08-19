@@ -29,12 +29,12 @@ class SocketReader
     end
     Actor[@facade_name].parse_user_data(data)
     async.read_message_from_socket
-  rescue Reel::SocketError, EOFError
-    info "WS client disconnected #{@name}"
-    terminate
+  # rescue Reel::SocketError, EOFError
+  #   info "WS client disconnected from reader #{@name}"
+  #   terminate
   end
 
   def my_finalizer
-    puts 'final'
+    info "Reader #{@name} final"
   end
 end

@@ -6,6 +6,7 @@ class WS
     unless @token then location.pathname = '/'
     @socket = new WebSocket 'ws://' + location.hostname + ':' + ws_port
     $(window).on('beforeunload', () =>
+      console.info('close socket before unload')
       @socket.send(JSON.stringify({token: @token, op: 'close'}))
       @socket.close()
     )

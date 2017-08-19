@@ -3,6 +3,8 @@ class SocketWriter
   include Celluloid::Notifications
   include Celluloid::Internals::Logger
 
+  finalizer :my_finalizer
+
   attr_writer :token
 
   def initialize(websocket, name)
@@ -57,8 +59,12 @@ class SocketWriter
     if res
       @websocket << JSON.generate(res)
     end
-  rescue Reel::SocketError
-    info "#{@name} disconnected"
-    terminate
+  # rescue Reel::SocketError
+  #   info "Ws client disconnected from #{@name} "
+  #   terminate
+  end
+
+  def my_finalizer
+    info "Writer #{@name} final"
   end
 end
