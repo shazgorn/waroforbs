@@ -24,12 +24,17 @@ require 'orb_tick'
 require 'orb_websockets_server'
 require 'game'
 
-JSON.dump_default_options[:max_nesting] = 10
-Game.supervise({as: :game})
+begin
+  JSON.dump_default_options[:max_nesting] = 10
+  game_supervisor = Game.supervise({as: :game})
 
-OrbTick.new
+  OrbTick.new
 
-OrbWebsocketsServer.run
-
-puts 'sleep'
-sleep
+  OrbWebsocketsServer.run
+  puts 'sleep'
+  sleep
+rescue Interrupt => e
+  puts "Shutting down by #{e.inspect}"
+  game_supervisor.terminate
+  exit
+end

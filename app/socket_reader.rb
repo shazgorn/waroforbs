@@ -15,6 +15,7 @@ class SocketReader
   end
 
   def read_message_from_socket
+    info 'read from socket'
     msg = @websocket.read
     info msg
     data = JSON.parse msg
@@ -29,6 +30,9 @@ class SocketReader
     end
     Actor[@facade_name].parse_user_data(data)
     async.read_message_from_socket
+  rescue IOError
+    info 'Socket closed. Terminate reader'
+    terminate
   # rescue Reel::SocketError, EOFError
   #   info "WS client disconnected from reader #{@name}"
   #   terminate

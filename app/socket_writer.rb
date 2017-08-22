@@ -66,5 +66,6 @@ class SocketWriter
 
   def my_finalizer
     info "Writer #{@name} final"
+    @websocket << JSON.generate({:data_type => :close})
   end
 end

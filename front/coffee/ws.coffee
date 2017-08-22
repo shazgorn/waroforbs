@@ -64,6 +64,9 @@ class WS
           when 'error'
             switch data.error
               when 'wrong_token' then location.pathname = '/'
+          when 'close'
+            console.info('Close socket')
+            App.ws.socket.close()
         if data.log
           app.log(data.log)
         app.unlock_controls()
