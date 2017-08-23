@@ -3,15 +3,16 @@ require 'game'
 RSpec.describe Game, "testing" do
   around do |ex|
     Celluloid.boot
+    Token.drop
     Celluloid::Actor[:game] = Game.new(true)
     ex.run
     Celluloid.shutdown
   end
 
-  let (:token) { 'test_token' }
+  let (:token) { 'test_game_token' }
 
   it 'getting no user by token' do
-    user = Celluloid::Actor[:game].get_user_by_token token
+    user = Celluloid::Actor[:game].get_user_by_token(token)
     expect(user).to be_nil
   end
 

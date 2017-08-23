@@ -10,6 +10,7 @@ require 'building'
 require 'cli'
 require 'squad_attack'
 require 'attack'
+require 'token'
 
 ##
 # Game logic, some kind of incubator
@@ -24,15 +25,13 @@ class Game
   include Celluloid::Internals::Logger
   include Cli
 
-  attr_reader :map, :tokens
+  attr_reader :map
 
   def initialize(drop = false)
     info 'Starting game'
     @generate = false
     check_args
     @map = Map.new(@generate)
-    # token -> user_id
-    @tokens = {}
     drop_all if drop
     subscribe('tick', :tick)
   end
@@ -44,7 +43,7 @@ class Game
 
   ############ DATA SELECTION METHODS ########################
   def get_user_by_token(token)
-    User.get(@tokens[token])
+    Token.get_user(token)
   end
 
   def all_units_for_all units
@@ -127,9 +126,11 @@ class Game
     user = get_user_by_token(token)
     if user.nil?
       user = User.new(token)
-      LogBox.spawn "New user '%s'" % token, user
-      @tokens[token] = user.id
+      LogBox.spawn("New user '%s' created" % token, user)
+      Token.set(token, user)
       new_random_infantry(user)
+    else
+      LogBox.spawn("User '%s' logged in" % token, user)
     end
     user
   end
@@ -257,16 +258,16 @@ class Game
   # dy - int
 
   def move_unit_by(unit, dx, dy)
-    return LogEntry.error 'Unit #%d not found' % unit_id unless unit
-    return LogEntry.error 'Wrong direction' unless @map.d_include?(dx, dy)
-    return LogEntry.error 'Unit is dead and wont go anywhere' if unit.dead?
+    return LogEntry.error('Unit #%d not found' % unit_id) unless unit
+    return LogEntry.error('Wrong direction') unless @map.d_include?(dx, dy)
+    return LogEntry.error('Unit is dead and wont go anywhere') if unit.dead?
     new_x = unit.x + dx
     new_y = unit.y + dy
-    return LogEntry.error 'Out of map' unless @map.has?(new_x, new_y)
+    return LogEntry.error('Out of map') unless @map.has?(new_x, new_y)
     type = @map.cell_type_at(new_x, new_y)
     cost = TYPE2COST[type]
-    return LogEntry.error 'Not enough AP' unless unit.can_move?(cost)
-    return LogEntry.error 'Cell is occupied' unless Unit.place_is_empty?(new_x, new_y)
+    return LogEntry.error('Not enough AP') unless unit.can_move?(cost)
+    return LogEntry.error('Cell is occupied') unless Unit.place_is_empty?(new_x, new_y)
     unit.move_to(new_x, new_y, cost)
     LogEntry.move(unit.id, dx, dy, new_x, new_y)
   end
