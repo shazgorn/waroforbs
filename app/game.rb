@@ -46,6 +46,10 @@ class Game
     Token.get_user(token)
   end
 
+  def get_current_logs_by_user(user)
+    LogBox.get_current_by_user(user)
+  end
+
   def all_units_for_all units
     units.each_value{|unit|
       if unit.type == :town
@@ -284,7 +288,7 @@ class Game
     unit = Unit.get_by_id(unit_id)
     log_entry = move_unit_by(unit, dx, dy)
     log_entry.user = user
-    LogBox << log_entry
+    LogBox.push_entry(log_entry)
     log_entry
   end
 

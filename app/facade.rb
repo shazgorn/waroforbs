@@ -49,20 +49,12 @@ class Facade
     op = op.to_sym
     user_data[user_data_key][:op] = op
     user_data[user_data_key][:data_type] = :units
-    log_entry = nil
     user = Celluloid::Actor[:game].get_user_by_token(token)
     if user && data.has_key?('unit_id')
       # remove duplicates of :active_unit_id setting in user_data?
       user_data[user_data_key][:active_unit_id] = user.active_unit_id = data['unit_id'].to_i
     end
     make_action_on_op(op, user, data, user_data, user_data_key, token)
-    if log_entry
-      if log_entry.user
-        log_entry.user = user
-        LogBox << log_entry
-      end
-      user_data[user_data_key][:log] = log_entry
-    end
     if user
       user_data[user_data_key][:actions] = user.actions
     end
@@ -80,21 +72,24 @@ class Facade
 
     when :move
       params = data['params']
-      log_entry = Celluloid::Actor[:game].move_user_hero_by(user, data['unit_id'], params['dx'].to_i, params['dy'].to_i)
+      Celluloid::Actor[:game].move_user_hero_by(
+        user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
+      )
     when :attack
       params = data['params']
-      res = Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, params['id'].to_i)
+      res = Celluloid::Actor[:game].attack_by_user(
+        user, user.active_unit_id, params['id'].to_i
+      )
       if res[:error]
-        log_entry = LogBox.error(res[:error], user)
+        LogBox.error(res[:error], user)
       else
-        log_entry = LogBox.attack(res, user)
+        LogBox.attack(res, user)
         # LogBox.defence(res, defender)
         user_data[user_data_key].merge!(res)
       end
-      user_data[user_data_key][:log] = log_entry
       # set_def_data users, res
     when :new_random_infantry
-      log_entry = Celluloid::Actor[:game].new_random_infantry(user)
+      Celluloid::Actor[:game].new_random_infantry(user)
       user_data[user_data_key][:active_unit_id] = user.active_unit_id
     # when :new_town
     #   begin
@@ -102,8 +97,7 @@ class Facade
     #     log = 'New town has been settled'
     #     type = op
     #   end
-    #   log_entry = Log.push user, log, type
-    #   dispatch_units({user.id => {:log => log_entry}})
+    #   Log.push user, log, type
     when :dismiss
       unit_id = data['unit_id']
       begin
@@ -114,8 +108,7 @@ class Facade
         log = log_msg
         type = :error
       end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
+      Log.push(type, log, user)
     when :restart
       Celluloid::Actor[:game].restart token
       dispatch_units
@@ -132,8 +125,7 @@ class Facade
         log = log_msg
         type = :error
       end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
+      Log.push(type, log, user)
     when :create_default_company
       res = Celluloid::Actor[:game].create_company user, :new
       if res.nil?
@@ -141,8 +133,7 @@ class Facade
       else
         log = "Infantry created"
       end
-      log_entry = Log.push user, log, op
-      dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
+      Log.push user, log, op
     when :create_company
       res = Celluloid::Actor[:game].create_company user
       if res.nil?
@@ -150,8 +141,7 @@ class Facade
       else
         log = "Infantry created"
       end
-      log_entry = Log.push user, log, op
-      dispatch_units({user.id => {:active_unit_id => user.active_unit_id, :log => log_entry}})
+      Log.push user, log, op
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin
@@ -161,8 +151,7 @@ class Facade
         log = log_msg
         type = :error
       end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
+      Log.push user, log, type
     when :free_worker
       log = "Set worker free on #{data['x']}, #{data['y']}"
       begin
@@ -172,8 +161,7 @@ class Facade
         log = log_msg
         type = :error
       end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
+      Log.push user, log, type
     when :add_squad_to_company
       log = "Squad added"
       begin
@@ -183,12 +171,11 @@ class Facade
         log = log_msg
         type = :error
       end
-      log_entry = Log.push user, log, type
-      dispatch_units({user.id => {:log => log_entry}})
+      Log.push user, log, type
     when :spawn_orb
-      log_entry = Celluloid::Actor[:game].spawn_orb data['color'].to_sym
+      Celluloid::Actor[:game].spawn_orb data['color'].to_sym
     else
-      log_entry = LogBox.error 'Unknown op', user
+      LogBox.error('Unknown op', user)
     end
   end
 end

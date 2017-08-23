@@ -6,6 +6,7 @@ require 'exception'
 
 class LogBox
   @@logs = []
+  @@tmp_logs = {}
 
   class << self
 
@@ -21,13 +22,12 @@ class LogBox
     end
 
     def push_entry(log_entry)
-      @@logs << log_entry
-      log_entry
-    end
-
-    def << log_entry
       raise OrbError, 'No user in log_entry' unless log_entry.user
       @@logs << log_entry
+      unless @@tmp_logs.key?(@@tmp_logs[log_entry.user.id])
+        @@tmp_logs[log_entry.user.id] = []
+      end
+      @@tmp_logs[log_entry.user.id] << log_entry
       log_entry
     end
 
@@ -37,7 +37,7 @@ class LogBox
 
     def move(unit_id, dx, dy, new_x, new_y, user)
       msg = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
-      push(user, msg, :move)
+      push(:move, msg, user)
     end
 
     def spawn(message, user)
@@ -57,6 +57,16 @@ class LogBox
 
     def get_by_user(user)
       @@logs.select{ |l| l.user.id == user.id }
+    end
+
+    ##
+    # Get logs for current request
+    #
+
+    def get_current_by_user(user)
+      logs = @@tmp_logs[user.id]
+      @@tmp_logs.delete(user.id)
+      logs
     end
   end
 end

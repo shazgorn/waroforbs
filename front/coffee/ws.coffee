@@ -27,6 +27,9 @@ class WS
       console.info('data:', data)
       console.error('no data_type') unless data.data_type
       if app.initialized || data.data_type == 'init_map'
+        if data.logs
+          for l in data.logs
+            app.log(l)
         switch data.data_type
           when 'init_map'
             # App init set properties
@@ -43,9 +46,6 @@ class WS
             app.center_on_active()
             app.set_active_unit_directly data.active_unit_id
             app.init_user_controls data.actions
-
-            for l in data.logs
-              app.log(l)
 
             # App init finished
             app.initialized = true
@@ -67,8 +67,6 @@ class WS
           when 'close'
             console.info('Close socket')
             App.ws.socket.close()
-        if data.log
-          app.log(data.log)
         app.unlock_controls()
         console.info('js execution time:', new Date() - start_ts, 'ms')
 

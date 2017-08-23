@@ -32,6 +32,9 @@ class SocketWriter
         res = user_data
         if user_data[:data_type] == :init_map
           res.merge!(game.init_map(@token))
+        else
+          user = game.get_user_by_token(@token)
+          res[:logs] = game.get_current_logs_by_user(user)
         end
       end
       res[:units] = game.all_units(@token)
