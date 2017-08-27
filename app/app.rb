@@ -1,11 +1,11 @@
 require 'celluloid/current'
 require 'reel'
-
+require 'i18n'
 require 'pp'
 require 'json'
 require 'mini_magick'
 require 'fileutils'
-require 'logger'
+# require 'logger'
 
 require 'exception'
 require 'config'
@@ -27,6 +27,9 @@ require 'game'
 begin
   JSON.dump_default_options[:max_nesting] = 10
   game_supervisor = Game.supervise({as: :game})
+
+  I18n.load_path = Dir[File.join('app/locales', '*.yml')]
+  I18n.default_locale = :ru
 
   OrbTick.new
 

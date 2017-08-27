@@ -1,0 +1,14 @@
+en:
+  Default action: "default action"
+  New town: "New town"
+  New random infantry: "new random infantry"
+  log_entry_cell_occupied: 'Cell is occupied'
+  log_entry_move: "Unit #%{unit_id} moved by %{dx}, %{dy} to %{new_x}:%{new_y}"
+  log_entry_new_infantry: 'New infantry unit spawned'
+  log_entry_new_user: 'New user %{user} created'
+  log_entry_not_enough_ap: 'Not enough AP'
+  log_entry_out_of_map: 'Out of map'
+  log_entry_user_logged_in: 'User %{user} logged in'
+  log_entry_unit_dead: 'Unit is dead and wont go anywhere'
+  log_entry_unit_not_found: 'Unit #%{unit_id} not found'
+  log_entry_wrong_direction: 'Wrong direction'

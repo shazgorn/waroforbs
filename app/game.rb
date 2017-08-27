@@ -130,11 +130,11 @@ class Game
     user = get_user_by_token(token)
     if user.nil?
       user = User.new(token)
-      LogBox.spawn("New user '%s' created" % token, user)
+      LogBox.spawn(I18n.t('log_entry_new_user', user: user.login), user)
       Token.set(token, user)
       new_random_infantry(user)
     else
-      LogBox.spawn("User '%s' logged in" % token, user)
+      LogBox.spawn(I18n.t('log_entry_user_logged_in', user: user.login), user)
     end
     user
   end
@@ -172,7 +172,7 @@ class Game
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
     hero = HeavyInfantry.new(xy[:x], xy[:y], user)
-    log_entry = LogBox.spawn('New infantry unit spawned', user)
+    log_entry = LogBox.spawn(I18n.t('log_entry_new_infantry'), user)
     user.active_unit_id = hero.id
     recalculate_user_actions(user)
     log_entry
@@ -262,18 +262,18 @@ class Game
   # dy - int
 
   def move_unit_by(unit, dx, dy)
-    return LogEntry.error('Unit #%d not found' % unit_id) unless unit
-    return LogEntry.error('Wrong direction') unless @map.d_include?(dx, dy)
-    return LogEntry.error('Unit is dead and wont go anywhere') if unit.dead?
+    return LogEntry.error(I18n.t('log_entry_unit_not_found', unit_id: unit_id)) unless unit
+    return LogEntry.error(I18n.t('log_entry_wrong_direction')) unless @map.d_include?(dx, dy)
+    return LogEntry.error(I18n.t('log_entry_unit_dead')) if unit.dead?
     new_x = unit.x + dx
     new_y = unit.y + dy
-    return LogEntry.error('Out of map') unless @map.has?(new_x, new_y)
+    return LogEntry.error(I18n.t('log_entry_out_of_map')) unless @map.has?(new_x, new_y)
     type = @map.cell_type_at(new_x, new_y)
     cost = TYPE2COST[type]
-    return LogEntry.error('Not enough AP') unless unit.can_move?(cost)
-    return LogEntry.error('Cell is occupied') unless Unit.place_is_empty?(new_x, new_y)
+    return LogEntry.error(I18n.t('log_entry_not_enough_ap')) unless unit.can_move?(cost)
+    return LogEntry.error(I18n.t('log_entry_cell_occupied')) unless Unit.place_is_empty?(new_x, new_y)
     unit.move_to(new_x, new_y, cost)
-    LogEntry.move(unit.id, dx, dy, new_x, new_y)
+    LogBox.move(unit.id, dx, dy, new_x, new_y, unit.user)
   end
 
   ##
@@ -286,10 +286,7 @@ class Game
 
   def move_user_hero_by(user, unit_id, dx, dy)
     unit = Unit.get_by_id(unit_id)
-    log_entry = move_unit_by(unit, dx, dy)
-    log_entry.user = user
-    LogBox.push_entry(log_entry)
-    log_entry
+    move_unit_by(unit, dx, dy)
   end
 
   def random_move(unit)

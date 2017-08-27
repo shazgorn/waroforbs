@@ -25,8 +25,9 @@ class LogEntry < JSONable
       self.new(:error, message, user)
     end
 
-    def move(unit_id, dx, dy, new_x, new_y, user = nil)
-      message = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
+    def move(unit_id, dx, dy, new_x, new_y, user)
+      message = I18n.t('log_entry_move', unit_id: unit_id, dx: dx, dy: dy, new_x: new_x, new_y: new_y)
+      #message = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
       self.new(:move, message, user)
     end
 

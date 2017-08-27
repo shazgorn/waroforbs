@@ -36,8 +36,7 @@ class LogBox
     end
 
     def move(unit_id, dx, dy, new_x, new_y, user)
-      msg = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
-      push(:move, msg, user)
+      push_entry(LogEntry.move(unit_id, dx, dy, new_x, new_y, user))
     end
 
     def spawn(message, user)

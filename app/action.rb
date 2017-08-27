@@ -1,14 +1,12 @@
 require 'jsonable'
 
 class Action < JSONable
-  @label = 'Default action'
-  @name = :default_action
-  @on = false
-
   attr_reader :name, :on
 
-  def initialize(on)
+  def initialize(on = false)
     @on = on
+    @label = I18n.t('Default action')
+    @name = :default_action
   end
 
   def on!
@@ -33,7 +31,7 @@ class NewTownAction < Action
   def initialize(on)
     super(on)
     @name = NAME
-    @label = 'New town'
+    @label = I18n.t('New town')
   end
 end
 
@@ -42,6 +40,6 @@ class NewRandomInfantryAction < Action
   def initialize(on)
     super(on)
     @name = NAME
-    @label = 'New random infantry'
+    @label = I18n.t('New random infantry')
   end
 end
