@@ -14,7 +14,10 @@ ru:
   Help: Помощь
   Exit: Выход
   Dismiss: Распустить
-  name: имя
+  unit_name_title: Имя
+  unit_life_title: Жизни
+  unit_damage_title: Базовый урон
+  unit_defence_title: Защита
   squads: отряды
   Quick actions: Быстрые действия
   Map height: Высота карты
