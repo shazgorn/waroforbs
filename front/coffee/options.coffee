@@ -1,4 +1,4 @@
-class Options
+class OptionsModal
   constructor: () ->
     @log_height = 100
     @map_height = 13
@@ -96,13 +96,17 @@ class Options
       $('.modal').hide()
       $('.modal.options').show()
     )
+    $('.modal.options .close-modal').on 'click', (event) ->
+      $('.modal').hide()
     $('#open-help').click(() ->
       $('.modal').hide()
       $('.modal.help').show()
     )
+    $('.modal.help .close-modal').on 'click', (event) ->
+      $('.modal').hide()
     $('#exit').click(() ->
       localStorage.setItem('token', '')
       location.pathname = '/'
     )
 
-this.Options = Options
+this.Options = OptionsModal
