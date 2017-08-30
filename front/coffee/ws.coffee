@@ -42,7 +42,7 @@ class WS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
 
             # App init function calls
-            app.init_units data.units
+            app.upcreate_units data.units
             app.center_on_active()
             app.set_active_unit_directly data.active_unit_id
             app.init_user_controls data.actions
@@ -55,7 +55,7 @@ class WS
                 app.map.dmg(data.d_dmg.wounds, data.d_dmg.kills, data.a_dmg.wounds, data.a_dmg.kills, data.d_id, data.a_id, 789, 123)
               else
                 app.map.dmg(data.a_dmg.wounds, data.a_dmg.kills, data.d_dmg.wounds, data.d_dmg.kills, data.a_id, data.d_id, 123, 789)
-            app.init_units data.units
+            app.upcreate_units data.units
             if data.active_unit_id && data.op in ['move', 'new_random_infantry']
               app.set_active_unit data.active_unit_id
             app.update_user_controls data.actions

@@ -75,7 +75,9 @@ class Application
   center_on_active: () ->
     @map.center_on_hero('unit-' + @active_unit_id)
 
-  init_units: (units) ->
+  # update or create units on map
+  upcreate_units: (units) ->
+    console.debug('init units')
     # @map.remove_stale_units(units)
     # @units = {} # models
     # @my_units = {} # models
@@ -113,6 +115,7 @@ class Application
 
   # bind attack handlers
   bind_action_handlers: () ->
+    console.debug('bind action handlers')
     $('.attack-target').removeClass('attack-target').off('click')
     cell = $('#unit-' + @active_unit_id).parent()
     if cell.length == 1
