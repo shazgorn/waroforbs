@@ -1,3 +1,4 @@
+require 'i18n'
 require 'log_entry'
 require 'exception'
 

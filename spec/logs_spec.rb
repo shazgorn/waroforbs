@@ -1,7 +1,12 @@
 require 'log_box'
 
+RSpec.configure do |c|
+  I18n.load_path = Dir[File.join('./app/locales', '*.yml')]
+  I18n.default_locale = :ru
+end
+
 RSpec.describe LogBox, "testing" do
-  fit 'testing request get' do
+  it 'testing request get' do
     user = User.new('test_token')
     LogBox.push(:test, 'Test message', user)
     logs = LogBox.get_current_by_user(user)
