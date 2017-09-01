@@ -56,8 +56,6 @@ class WS
               else
                 app.map.dmg(data.a_dmg.wounds, data.a_dmg.kills, data.d_dmg.wounds, data.d_dmg.kills, data.a_id, data.d_id, 123, 789)
             app.upcreate_units data.units
-            if data.active_unit_id && data.op in ['move', 'new_random_infantry']
-              app.set_active_unit data.active_unit_id
             app.update_user_controls data.actions
             app.refresh_modals()
             app.attacking = false
@@ -67,6 +65,11 @@ class WS
           when 'close'
             console.info('Close socket')
             App.ws.socket.close()
+        if data.active_unit_id
+          if data.active_unit_id != app.active_unit_id
+            app.set_active_unit(data.active_unit_id)
+        if data.op in ['move']
+          app.center_on_active(data.active_unit_id)
         app.unlock_controls()
         console.info('js execution time:', new Date() - start_ts, 'ms')
 
