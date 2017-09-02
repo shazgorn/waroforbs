@@ -7,17 +7,13 @@ class Map
     if App.options.all_cells
       @addAllCells(cells)
     this.initDragHandler()
+    $('#blocks')
+      .width(@block_dim_in_ip * @map_dim_in_blocks)
+      .height(@block_dim_in_ip * @map_dim_in_blocks)
 
-  update_size: () ->
-    @set_size(App.options.map_height, App.options.map_width)
-
-  set_size: (height, width) ->
-    $('#map').height(height * @cell_dim_in_px).width(width * @cell_dim_in_px)
-
-  initTooltip: () ->
-    $('#blocks').mousemove((e) ->
-
-    )
+  # initTooltip: () ->
+  #   $('#blocks').mousemove((e) ->
+  #   )
 
   initDragHandler: () ->
     moving = false
@@ -51,10 +47,14 @@ class Map
             new_x = min_x
           if new_y < min_y
             new_y = min_y
-          $('#blocks').css('top', new_y + 'px').css('left', new_x + 'px')
+          $('#blocks')
+            .width(@block_dim_in_ip * @map_dim_in_blocks)
+            .height(@block_dim_in_ip * @map_dim_in_blocks)
+            .css('top', new_y + 'px')
+            .css('left', new_x + 'px')
         false
     , 10)
-    $('#top-container')
+    $('#blocks')
       .mousemove((e) ->
         ee = e
       )
@@ -66,9 +66,9 @@ class Map
         top = pos.top
         left = pos.left
       )
-      .mouseup(() ->
-        moving = false
-      )
+    $(document).mouseup(() ->
+      moving = false
+    )
 
   addBlocks: () ->
     for block_x in [0..@map_dim_in_blocks-1]
