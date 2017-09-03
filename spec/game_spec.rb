@@ -32,6 +32,10 @@ RSpec.describe Game, "testing" do
     user = Celluloid::Actor[:game].init_user(token)
     unit = Unit.get_by_user(user).first
     Celluloid::Actor[:game].settle_town(user, unit.id)
+    town = Town.get_by_user(user)
+    expect(town.user_id).to eq(user.id)
+    expect(town.x).to eq(unit.x)
+    expect(town.y).to eq(unit.y)
   end
 
   it 'attack' do

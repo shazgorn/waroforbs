@@ -236,11 +236,8 @@ class Game
     info "User have no town"
     unit = HeavyInfantry.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
-    empty_cell = empty_adj_cell unit
-    if empty_cell
-      Town.new(empty_cell[:x], empty_cell[:y], user)
-      recalculate_user_actions user
-    end
+    Town.new(unit.x, unit.y, user)
+    recalculate_user_actions user
     LogBox.spawn(I18n.t('log_entry_settle_town'), user)
   end
 

@@ -488,22 +488,18 @@ button {
 }
 
 .inventory-item-settlers {
-  @include inventory-item();
   background-image: url('/img/settlers.png');
 }
 
 .inventory-item-gold {
-  @include inventory-item();
   background-image: url('/img/gold.png');
 }
 
 .inventory-item-wood {
-  @include inventory-item();
   background-image: url('/img/wood.png');
 }
 
 .inventory-item-empty {
-  @include inventory-item();
 }
 
 #controls-arrows {
