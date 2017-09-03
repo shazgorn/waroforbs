@@ -2,7 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y, :life
+  attr_reader :id, :type, :user, :x, :y, :life, :inventory
 
   ATTACK_COST = 1
   MAX_LIFE = 15
@@ -26,6 +26,12 @@ class Unit
     @@units[@id] = self
     @life = MAX_LIFE
     @wounds = 0
+    @inventory = {
+      :gold => 0,
+      :wood => 0,
+      :stone => 0,
+      :settlers => 0
+    }
   end
 
   def kills
@@ -63,8 +69,9 @@ class Unit
       'life' => @life,
       'dead' => @dead,
       'defence' => @defence,
+      'inventory' => @inventory,
       'user_name' => @user.login,
-      'user_id' => @user.id
+      'user_id' => @user.id,
     }
   end
 
@@ -129,6 +136,21 @@ class Unit
     end
   end
 
+  def give_res(res, q)
+    unless @inventory.key? res
+      @inventory[res] = 0
+    end
+    @inventory[res] += q
+  end
+
+  def take_res(res, q)
+    unless @inventory.key? res
+      @inventory[res] = 0
+    end
+    # add some checks
+    @inventory[res] -= q
+  end
+
   class << self
     def all
       @@units
@@ -146,6 +168,10 @@ class Unit
       @@units[id]
     end
 
+    def get_by_user(user)
+      @@units.values.select{|unit| unit.user_id == user.id}
+    end
+
     def get_by_user_id user, id
       unit = @@units[id]
       return unit if unit.user && unit.user_id == user.id
@@ -156,6 +182,7 @@ class Unit
     end
 
     def select_active_unit user
+      # active ?
       @@units.values.select{|unit| unit.user_id == user.id && unit.type == :company}.first
     end
 

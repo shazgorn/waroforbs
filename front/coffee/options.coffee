@@ -14,9 +14,6 @@ class OptionsModal
       $('#log').height(t.log_height * 20)
       $('.modal').css('bottom', ((t.log_height + 1) * 20) + 'px')
     , true)
-    map_callback = (t) -> App.map.update_size()
-    @option('map_height', 13, 'int', map_callback, false)
-    @option('map_width', 13, 'int', map_callback, false)
     @option('all_cells', false, 'bool', null, false)
     @option('show_grid', false, 'bool', (t) ->
       if t.show_grid

@@ -12,3 +12,12 @@ ru:
   log_entry_unit_dead: 'Юнит мертв и никуда не пойдет'
   log_entry_unit_not_found: 'Юнит #%{unit_id} не найден'
   log_entry_wrong_direction: 'Неправильное направление'
+  res_gold_title: Золото
+  res_gold_description: На золото можно покупать всякое
+  res_wood_title: Древесина
+  res_wood_description: Используется в строительстве
+  res_stone_title: Камень
+  res_stone_description: Используется в строительстве
+  res_settlers_title: Поселенцы
+  res_settlers_description: С их помощью, можно основать поселение
+  res_settlers_action_label: Основать

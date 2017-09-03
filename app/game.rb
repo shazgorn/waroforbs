@@ -132,7 +132,10 @@ class Game
       user = User.new(token)
       LogBox.spawn(I18n.t('log_entry_new_user', user: user.login), user)
       Token.set(token, user)
-      new_random_infantry(user)
+      unit = new_random_infantry(user)
+      unit.give_res(:settlers, 1)
+      unit.give_res(:gold, 10)
+      unit.give_res(:wood, 7)
     else
       LogBox.spawn(I18n.t('log_entry_user_logged_in', user: user.login), user)
     end
@@ -154,6 +157,29 @@ class Game
       :units => all_units({user.id => {}}),
       :cells => @map.cells,
       :logs => LogBox.get_by_user(user),
+      :resource_info => {
+        :gold => {
+          :title => I18n.t('res_gold_title'),
+          :description => I18n.t('res_gold_description'),
+          :action => false
+        },
+        :wood => {
+          :title => I18n.t('res_wood_title'),
+          :description => I18n.t('res_wood_description'),
+          :action => false
+        },
+        :stone => {
+          :title => I18n.t('res_stone_title'),
+          :description => I18n.t('res_stone_description'),
+          :action => false
+        },
+        :settlers => {
+          :title => I18n.t('res_settlers_title'),
+          :description => I18n.t('res_settlers_description'),
+          :action => true,
+          :action_label => I18n.t('res_settlers_action_label')
+        }
+      },
       :TOWN_RADIUS => Town::RADIUS,
       :building_states => {
         :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
@@ -165,17 +191,17 @@ class Game
 
   ##
   # Create new random infantry unit for user if it`s his first login
-  # or all other heroes and towns are destroyed
+  # or all other units and towns are destroyed
   # raise OrbError otherwise
 
   def new_random_infantry(user)
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
-    hero = HeavyInfantry.new(xy[:x], xy[:y], user)
+    unit = HeavyInfantry.new(xy[:x], xy[:y], user)
     log_entry = LogBox.spawn(I18n.t('log_entry_new_infantry'), user)
-    user.active_unit_id = hero.id
+    user.active_unit_id = unit.id
     recalculate_user_actions(user)
-    log_entry
+    unit
   end
 
   def create_company(user)

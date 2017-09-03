@@ -102,17 +102,25 @@ class ControlsView
     @ap = @info.find('.unit-ap-info')
     @dmg = @info.find('.unit-damage-info')
     @def = @info.find('.unit-defence-info')
+    @inventory = @info.find('.unit-inventory-info')
+    @inventory_item_description = @info.find('.unit-inventory-item-description-info')
     @dismiss = @info.find('.unit-info-dismiss')
     @dismiss.data('id', unit.id).click(() ->
       App.dismiss($(this).data('id'))
     )
     if App.active_unit_id == unit.id
       @info.addClass('active-unit-info')
-    
+
     @info.off('click').on('click', () ->
       App.set_active_unit(unit.id)
     )
     @id.html(unit.id)
+    filled_slots = 0
+    for res, q of unit.inventory
+      @create_res(res, q) if q
+      filled_slots++ if q > 0
+    for f in [filled_slots+1..5]
+      @create_empty_res()
     @update(unit)
 
   remove_element: () ->
@@ -124,12 +132,50 @@ class ControlsView
     if unit.dead
       @info.remove()
       return
-      
     @life.html(unit.life)
     @xy.html(unit.xy)
     @ap.html(unit.ap)
     @dmg.html(unit.damage)
     @def.html(unit.defence)
+    if @descriptionShown
+      @inventory_item_description.html('')
+      @descriptionShown = false
+
+  create_res: (res, q) ->
+    $(document.createElement('div'))
+      .html(
+        $(document.createElement('div'))
+          .addClass('inventory-item-q')
+          .html(q)
+      )
+      .attr('title', App.resource_info[res].title + ' ' + q)
+      .addClass('inventory-item')
+      .addClass('inventory-item-' + res)
+      .appendTo(@inventory)
+      .click((e) =>
+        e.preventDefault();
+        @inventory_item_description.html(App.resource_info[res].description)
+        if App.resource_info[res].action
+          $(document.createElement('button'))
+            .html(App.resource_info[res].action_label)
+            .appendTo(@inventory_item_description)
+            .click(() ->
+              console.log('settle the town')
+            )
+        @descriptionShown = true
+      )
+
+  create_empty_res: () ->
+    $(document.createElement('div'))
+      .addClass('inventory-item')
+      .addClass('inventory-item-empty')
+      .appendTo(@inventory)
+
+  remove_res: (res) ->
+    @inventory.children('.' + 'inventory-item-' + res).remove()
+
+  update_res: (res, q) ->
+    @inventory.children('.' + 'inventory-item-' + res).html(q)
 
 class PlayerCompanyControlsView extends ControlsView
   constructor: (unit) ->

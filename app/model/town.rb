@@ -66,11 +66,6 @@ class Town < Unit
     super(TYPE, x, y, user)
     @damage = 5
     @defence = 50
-    @inventory = {
-      :gold => 1000,
-      :wood => 50,
-      :stone => 0
-    }
     @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
     @buildings = {
       #:tavern => Tavern.new,
@@ -78,6 +73,9 @@ class Town < Unit
     }
     @actions = []
     @adj_companies = []
+    # start capital for testing
+    @inventory[:gold] = 1000
+    @inventory[:wood] = 50
   end
 
   def tick

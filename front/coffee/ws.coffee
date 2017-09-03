@@ -22,7 +22,7 @@ class WS
       console.info(e)
 
     @socket.onmessage = (e) ->
-      start_ts = new Date();
+      console.time('execution')
       data = JSON.parse(e.data)
       console.info('data:', data)
       console.error('no data_type') unless data.data_type
@@ -38,6 +38,7 @@ class WS
             app.active_unit_id = data.active_unit_id
             app.user_id = data.user_id
             app.building_states = data.building_states
+            app.resource_info = data.resource_info
             app.TOWN_RADIUS = data.TOWN_RADIUS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
 
@@ -71,7 +72,7 @@ class WS
         if data.op in ['move']
           app.center_on_active(data.active_unit_id)
         app.unlock_controls()
-        console.info('js execution time:', new Date() - start_ts, 'ms')
+        console.timeEnd('execution')
 
   move: (unit_id, params) ->
     @socket.send(

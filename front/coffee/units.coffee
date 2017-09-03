@@ -24,6 +24,7 @@ class Unit extends Model
     @dead = unit.dead
     @life = unit.life
     @ap = unit.ap
+    @inventory =  unit.inventory
     @user_id = null
     @user_name = null
     if !@dead
@@ -48,7 +49,19 @@ class Unit extends Model
     if @ap != unit.ap
       @ap = unit.ap
       # view.set_ap(@ap)
-
+    s = 0
+    for res, q of unit.inventory
+      if @inventory[res] > 0 && q == 0
+        @controls.remove_res(res)
+      else if @inventory[res] == 0 && q > 0
+        @controls.create_res(res, q)
+      else if @inventory[res] != q
+        @controls.update_res(res, q)
+      @inventory[res] = q
+      if @inventory[res] > 0
+        s++
+    for empty in [s..5]
+      @controls.create_empty_res
 
 class Company extends Unit
   constructor: (unit) ->

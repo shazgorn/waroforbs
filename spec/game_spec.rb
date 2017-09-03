@@ -23,6 +23,9 @@ RSpec.describe Game, "testing" do
     user = Celluloid::Actor[:game].init_user(token)
     expect(user.class).to eq(User)
     expect(User.all.size).to eq(1)
+    units = Unit.get_by_user(user)
+    expect(units.size).to eq(1)
+    expect(units.first.inventory[:settlers]).to eq(1)
   end
 
   it 'attack' do

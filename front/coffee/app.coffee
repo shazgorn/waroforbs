@@ -67,7 +67,6 @@ class Application
     @controls.set_active_unit(unit_id)
 
   set_active_unit: (unit_id) ->
-    console.debug('set active unit')
     @active_unit_id = unit_id
     @controls.set_active_unit(@active_unit_id)
     @center_on_active()
@@ -78,7 +77,6 @@ class Application
 
   # update or create units on map
   upcreate_units: (units) ->
-    console.debug('upcreate units')
     # @map.remove_stale_units(units)
     # @units = {} # models
     # @my_units = {} # models
@@ -116,7 +114,6 @@ class Application
 
   # bind attack handlers
   bind_action_handlers: () ->
-    console.debug('bind action handlers')
     $('.attack-target').removeClass('attack-target').off('click')
     cell = $('#unit-' + @active_unit_id).parent()
     if cell.length == 1

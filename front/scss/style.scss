@@ -20,7 +20,7 @@ $orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
 $button-size: 60px;
 $column-gap: 30px;
 $font-family: 'PT Serif', serif;
-$right-col-width: 12rem;
+$right-col-width: 250px;
 // colors
 // color of wooden theme
 $wooden-color: #963;
@@ -466,6 +466,44 @@ button {
   &.active-unit-info {
     border-left: thick solid $right-col-border;
   }
+}
+
+.unit-inventory-info {
+  height: 60px;
+}
+
+.inventory-item {
+  border: 2px solid $wooden-color;
+  float: left;
+  height: 40px;
+  width: 40px;
+}
+
+.inventory-item-q {
+  height: 10px;
+  position: relative;
+  text-align: center;
+  top: 40px;
+  width: 40px;
+}
+
+.inventory-item-settlers {
+  @include inventory-item();
+  background-image: url('/img/settlers.png');
+}
+
+.inventory-item-gold {
+  @include inventory-item();
+  background-image: url('/img/gold.png');
+}
+
+.inventory-item-wood {
+  @include inventory-item();
+  background-image: url('/img/wood.png');
+}
+
+.inventory-item-empty {
+  @include inventory-item();
 }
 
 #controls-arrows {
