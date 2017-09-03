@@ -230,16 +230,18 @@ class Game
   #   end
   # end
 
-  def new_town(user, active_unit_id)
+  def settle_town(user, active_unit_id)
+    # replace with action check ?
     raise OrbError, 'You have one town already' if Town.has_live_town? user
     info "User have no town"
-    unit = Infantry.get active_unit_id
+    unit = HeavyInfantry.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
     empty_cell = empty_adj_cell unit
     if empty_cell
       Town.new(empty_cell[:x], empty_cell[:y], user)
       recalculate_user_actions user
     end
+    LogBox.spawn(I18n.t('log_entry_settle_town'), user)
   end
 
   ##################### TOWN / BUILDINGS ACTIONS #################################

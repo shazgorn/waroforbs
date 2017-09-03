@@ -8,6 +8,7 @@ ru:
   log_entry_new_user: 'Новый пользователь %{user} создан'
   log_entry_not_enough_ap: 'Не хватает AP'
   log_entry_out_of_map: 'За пределами карты'
+  log_entry_settle_town: Город основан
   log_entry_user_logged_in: 'Пользователь %{user} вошел'
   log_entry_unit_dead: 'Юнит мертв и никуда не пойдет'
   log_entry_unit_not_found: 'Юнит #%{unit_id} не найден'

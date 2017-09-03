@@ -8,6 +8,7 @@ en:
   log_entry_new_user: 'New user %{user} created'
   log_entry_not_enough_ap: 'Not enough AP'
   log_entry_out_of_map: 'Out of map'
+  log_entry_settle_town: Town has been settled
   log_entry_user_logged_in: 'User %{user} logged in'
   log_entry_unit_dead: 'Unit is dead and wont go anywhere'
   log_entry_unit_not_found: 'Unit #%{unit_id} not found'

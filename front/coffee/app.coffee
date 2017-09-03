@@ -30,8 +30,8 @@ class Application
   new_random_infantry: () ->
     @ws.new_random_infantry()
 
-  new_town: () ->
-    @ws.new_town(@active_unit_id)
+  settle_town: () ->
+    @ws.settle_town(@active_unit_id)
 
   restart: () ->
     @ws.restart()

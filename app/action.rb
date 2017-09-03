@@ -27,7 +27,7 @@ class Action < JSONable
 end
 
 class NewTownAction < Action
-  NAME = :new_town_action
+  NAME = :settle_town_action
   def initialize(on)
     super(on)
     @name = NAME

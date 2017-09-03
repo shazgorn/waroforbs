@@ -28,6 +28,12 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
+  fit 'settling town' do
+    user = Celluloid::Actor[:game].init_user(token)
+    unit = Unit.get_by_user(user).first
+    Celluloid::Actor[:game].settle_town(user, unit.id)
+  end
+
   it 'attack' do
     a_user = User.new('attacker')
     a = HeavyInfantry.new(1, 1, a_user)

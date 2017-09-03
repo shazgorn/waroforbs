@@ -161,6 +161,7 @@ class ControlsView
             .appendTo(@inventory_item_description)
             .click(() ->
               console.log('settle the town')
+              App.controls.actions.settle_town_action.callback()
             )
         @descriptionShown = true
       )

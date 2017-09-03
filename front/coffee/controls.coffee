@@ -9,9 +9,9 @@ class Controls
         callback: () ->
           App.new_random_infantry()
       },
-      'new_town_action': {
+      'settle_town_action': {
         callback: () ->
-          App.new_town()
+          App.settle_town()
       }
     }
 

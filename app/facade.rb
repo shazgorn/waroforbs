@@ -91,13 +91,8 @@ class Facade
     when :new_random_infantry
       Celluloid::Actor[:game].new_random_infantry(user)
       user_data[user_data_key][:active_unit_id] = user.active_unit_id
-    # when :new_town
-    #   begin
-    #     Celluloid::Actor[:game].new_town user, user.active_unit_id
-    #     log = 'New town has been settled'
-    #     type = op
-    #   end
-    #   Log.push user, log, type
+    when :settle_town
+      Celluloid::Actor[:game].settle_town(user, user.active_unit_id)
     when :dismiss
       unit_id = data['unit_id']
       begin
