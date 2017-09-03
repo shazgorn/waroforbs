@@ -59,12 +59,13 @@ class Map
         ee = e
       )
       .mousedown((e) ->
-        moving = true
-        sx = e.pageX
-        sy = e.pageY
-        pos = $('#blocks').position()
-        top = pos.top
-        left = pos.left
+        if e.button == 0
+          moving = true
+          sx = e.pageX
+          sy = e.pageY
+          pos = $('#blocks').position()
+          top = pos.top
+          left = pos.left
       )
     $(document).mouseup(() ->
       moving = false
