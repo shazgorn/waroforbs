@@ -13,4 +13,5 @@ source "https://rubygems.org" do
   gem 'rspec'
   gem 'celluloid'
   gem 'reel'
+  gem 'capybara-webkit'
 end

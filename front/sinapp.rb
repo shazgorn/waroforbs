@@ -31,3 +31,8 @@ get '/game' do
          :ws_port => Config.get('ws_port')
        }
 end
+
+# coffeescript sources are really fucking stupid
+get '/front/coffee/:file' do
+  redirect "/coffee/#{params['file']}"
+end

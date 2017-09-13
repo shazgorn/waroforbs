@@ -5,11 +5,11 @@ def init_map
 end
 
 def watch_scss
-  system('scss --watch front/scss/style.scss:front/static/css/style.css')
+  system('scss --watch front/static/scss/style.scss:front/static/css/style.css')
 end
 
 def watch_coffee
-  system('coffee -wcm -o front/static/js/ front/coffee/*.coffee')
+  system('coffee -cm -o front/static/js/ front/static/coffee/*.coffee')
 end
 
 task default: [:app]
@@ -18,12 +18,12 @@ task :init do
   FileUtils.mkdir_p('front/static/img/bg')
   init_map
   FileUtils.mkdir_p('front/static/css')
-  system('scss front/scss/style.scss:front/static/css/style.css')
+  system('scss front/static/scss/style.scss:front/static/css/style.css')
   FileUtils.mkdir_p('front/static/js')
   system('npm install jquery')
   system('cp node_modules/jquery/dist/jquery.min.js front/static/js/')
   system('cp node_modules/jquery/dist/jquery.min.map front/static/js/')
-  system('coffee -cm -o front/static/js/ front/coffee/*.coffee')
+  system('coffee -c -o front/static/js/ front/static/coffee/*.coffee')
 end
 
 task :map do
