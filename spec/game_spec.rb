@@ -1,5 +1,15 @@
 require 'game'
 
+RSpec.configure do |c|
+  c.before(:example) {
+    I18n.load_path = Dir[
+      File.join('./app/locales', '*.yml'),
+      File.join('./front/config/locales/views', '*.yml')
+    ]
+    I18n.default_locale = :ru
+  }
+end
+
 RSpec.describe Game, "testing" do
   around do |ex|
     Celluloid.boot
@@ -28,7 +38,7 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  it 'settling town' do
+  fit 'settling town' do
     user = Celluloid::Actor[:game].init_user(token)
     unit = Unit.get_by_user(user).first
     Celluloid::Actor[:game].settle_town(user, unit.id)
@@ -36,6 +46,12 @@ RSpec.describe Game, "testing" do
     expect(town.user_id).to eq(user.id)
     expect(town.x).to eq(unit.x)
     expect(town.y).to eq(unit.y)
+    logs = LogBox.get_current_by_user(user)
+    expect(logs.first.message).to eq(I18n.t('log_entry_settle_town'))
+    expect(unit.inventory[:settlers]).to eq(0)
+    Celluloid::Actor[:game].settle_town(user, unit.id)
+    logs = LogBox.get_current_by_user(user)
+    expect(logs.first.message).to eq(I18n.t('log_entry_already_have_town'))
   end
 
   it 'attack' do

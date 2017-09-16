@@ -232,12 +232,13 @@ class Game
 
   def settle_town(user, active_unit_id)
     # replace with action check ?
-    raise OrbError, 'You have one town already' if Town.has_live_town? user
+    return LogBox.error(I18n.t('log_entry_already_have_town'), user) if Town.has_live_town? user
     info "User have no town"
     unit = HeavyInfantry.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
     Town.new(unit.x, unit.y, user)
     recalculate_user_actions user
+    unit.take_res(:settlers, 1)
     LogBox.spawn(I18n.t('log_entry_settle_town'), user)
   end
 

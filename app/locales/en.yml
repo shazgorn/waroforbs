@@ -2,6 +2,7 @@ en:
   Default action: "default action"
   New town: "New town"
   New random infantry: "new random infantry"
+  log_entry_already_have_town: You already have town
   log_entry_cell_occupied: 'Cell is occupied'
   log_entry_move: "Unit #%{unit_id} moved by %{dx}, %{dy} to %{new_x}:%{new_y}"
   log_entry_new_infantry: 'New infantry unit spawned'

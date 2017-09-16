@@ -2,6 +2,7 @@ ru:
   Default action: "Действие по умолчанию"
   New town: "Основать город"
   New random infantry: "Создать пехоту"
+  log_entry_already_have_town: У Вас уже есть город
   log_entry_cell_occupied: 'Клетка занята'
   log_entry_move: "Юнит #%{unit_id} перемещен %{dx}, %{dy} на %{new_x}:%{new_y}"
   log_entry_new_infantry: 'Новый отряд пехоты создан'

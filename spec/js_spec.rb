@@ -21,7 +21,7 @@ RSpec.configure do |c|
 end
 
 RSpec.describe "building process", :js => true do
-  fit "signs me in" do
+  it "signs me in" do
     visit "/"
     within("#login-form") do
       fill_in 'login', with: 'capybara'
