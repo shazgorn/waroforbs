@@ -2,14 +2,22 @@
 require 'capybara'
 require 'capybara/rspec'
 require 'capybara/webkit'
-
-Capybara.javascript_driver = :webkit
-Capybara.app_host = 'http://0.0.0.0:9292/'
-Capybara.run_server = false
+require 'i18n'
 
 
-RSpec.configure do |config|
-  config.include Capybara::DSL
+
+RSpec.configure do |c|
+  Capybara.javascript_driver = :webkit
+  Capybara.app_host = 'http://0.0.0.0:9292/'
+  Capybara.run_server = false
+  c.include Capybara::DSL
+  c.before(:example) {
+    I18n.load_path = Dir[
+      File.join('./app/locales', '*.yml'),
+      File.join('./front/config/locales/views', '*.yml')
+    ]
+    I18n.default_locale = :ru
+  }
 end
 
 RSpec.describe "building process", :js => true do
@@ -18,10 +26,11 @@ RSpec.describe "building process", :js => true do
     within("#login-form") do
       fill_in 'login', with: 'capybara'
     end
-    click_button "Войти"
-    expect(page).to have_content 'Выход'
+    expect(I18n.t('log_in')).to eq('Войти')
+    click_button I18n.t('log_in')
+    expect(page).to have_content(I18n.t('Exit'))
     find('.inventory-item-settlers').click()
-    expect(page).to have_content 'Основать'
-    click_button 'Основать'
+    expect(page).to have_content(I18n.t('res_settlers_action_label'))
+    click_button(I18n.t('res_settlers_action_label'))
   end
 end
