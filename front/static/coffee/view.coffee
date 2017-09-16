@@ -173,10 +173,10 @@ class ControlsView
       .appendTo(@inventory)
 
   remove_res: (res) ->
-    @inventory.children('.' + 'inventory-item-' + res).remove()
+    @inventory.children('.inventory-item-' + res).remove()
 
   update_res: (res, q) ->
-    @inventory.children('.' + 'inventory-item-' + res).html(q)
+    @inventory.find('.inventory-item-' + res + ' .inventory-item-q').html(q)
 
 class PlayerCompanyControlsView extends ControlsView
   constructor: (unit) ->
