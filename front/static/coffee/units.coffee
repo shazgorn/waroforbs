@@ -49,19 +49,23 @@ class Unit extends Model
     if @ap != unit.ap
       @ap = unit.ap
       # view.set_ap(@ap)
-    s = 0
-    for res, q of unit.inventory
-      if @inventory[res] > 0 && q == 0
-        @controls.remove_res(res)
-      else if @inventory[res] == 0 && q > 0
-        @controls.create_res(res, q)
-      else if @inventory[res] != q
-        @controls.update_res(res, q)
-      @inventory[res] = q
-      if @inventory[res] > 0
-        s++
-    for empty in [s..5]
-      @controls.create_empty_res
+    # controls for my units only
+    if @controls
+      empty_res_to_add = 0
+      max_slots = 5
+      for res, q of unit.inventory
+        if @inventory[res] > 0 && q == 0
+          @controls.remove_res(res)
+          empty_res_to_add++
+        else if @inventory[res] == 0 && q > 0
+          @controls.create_res(res, q)
+          empty_res_to_add--
+        else if @inventory[res] != q
+          @controls.update_res(res, q)
+        @inventory[res] = q
+      if empty_res_to_add
+        for empty in [0...empty_res_to_add]
+          @controls.create_empty_res()
 
 class Company extends Unit
   constructor: (unit) ->

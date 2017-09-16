@@ -24,7 +24,7 @@ RSpec.describe "building process", :js => true do
   it "signs me in" do
     visit "/"
     within("#login-form") do
-      fill_in 'login', with: 'capybara'
+      fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s
     end
     expect(I18n.t('log_in')).to eq('Войти')
     click_button I18n.t('log_in')

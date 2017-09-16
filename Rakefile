@@ -9,7 +9,7 @@ def watch_scss
 end
 
 def watch_coffee
-  system('coffee -cm -o front/static/js/ front/static/coffee/*.coffee')
+  system('coffee -wcm -o front/static/js/ front/static/coffee/*.coffee')
 end
 
 task default: [:app]
