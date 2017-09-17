@@ -476,6 +476,7 @@ button {
   border: 2px solid $wooden-color;
   float: left;
   height: 40px;
+  margin-right: 3px;
   width: 40px;
 }
 
@@ -713,6 +714,24 @@ button {
   &.help {
     @include big-modal();
   }
+}
+
+.town-inventory-inner {
+  @include clearfix();
+  margin-bottom: 10px;
+}
+
+@mixin inventory-item-description() {
+  font-style: italic;
+  font-weight: normal;
+}
+
+.unit-inventory-item-description-info {
+  @include inventory-item-description();
+}
+
+.town-inventory-item-description {
+  @include inventory-item-description();
 }
 
 .modal-top-bar {

@@ -27,8 +27,8 @@ class ControlsView
     @ap = @info.find('.unit-ap-info')
     @dmg = @info.find('.unit-damage-info')
     @def = @info.find('.unit-defence-info')
-    @inventory = @info.find('.unit-inventory-info')
-    @inventory_item_description = @info.find('.unit-inventory-item-description-info')
+    inventory = @info.find('.unit-inventory-info')
+    inventory_item_description = @info.find('.unit-inventory-item-description-info')
     @dismiss = @info.find('.unit-info-dismiss')
     @dismiss.data('id', unit.id).click(() ->
       App.dismiss($(this).data('id'))
@@ -40,7 +40,7 @@ class ControlsView
       App.set_active_unit(unit.id)
     )
     @id.html(unit.id)
-    @inventory_view = new InventoryView(@inventory, unit.inventory)
+    @inventory_view = new InventoryView(inventory, unit.inventory, inventory_item_description)
     @update(unit)
 
   remove_element: () ->
@@ -57,10 +57,6 @@ class ControlsView
     @ap.html(unit.ap)
     @dmg.html(unit.damage)
     @def.html(unit.defence)
-    if @descriptionShown
-      @inventory_item_description.html('')
-      @descriptionShown = false
-
 
 class PlayerCompanyControlsView extends ControlsView
   constructor: (unit) ->

@@ -6,7 +6,8 @@ class TownModal
   constructor: (town) ->
     @modal_town = $('.modal.town')
     @controls = new TownModalControls
-    @inventory_view = new TownInventoryView(@modal_town.find('.town-inventory-inner'), town.inventory)
+    inventory_item_description = @modal_town.find('.town-inventory-item-description')
+    @inventory_view = new TownInventoryView(@modal_town.find('.town-inventory-inner'), town.inventory, inventory_item_description)
     for key, building of town.buildings
       @modal_town.find('.buildings-inner').append(building.card.el)
       @controls.init_building building

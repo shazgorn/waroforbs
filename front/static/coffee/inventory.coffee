@@ -4,7 +4,8 @@
 # @element - DOMElement, container for inventory items
 class InventoryView
   # max_slots may be set by model, more unit lvl - more slots, unclear for now
-  constructor: (@element, new_inventory, @max_slots = 5) ->
+  constructor: (@element, new_inventory, @inventory_item_description, @max_slots = 5) ->
+    @descriptionShown = false
     filled_slots = 0
     for res, q of new_inventory
       @create_res(res, q) if q
@@ -30,6 +31,9 @@ class InventoryView
     if empty_res_to_add
       for empty in [0...empty_res_to_add]
         @create_empty_res()
+    if @descriptionShown
+      @inventory_item_description.html('')
+      @descriptionShown = false
 
   create_res: (res, q) ->
     $(document.createElement('div'))
@@ -74,8 +78,8 @@ class InventoryView
     @element.find('.inventory-item-' + res + ' .inventory-item-q').html(q)
 
 class TownInventoryView extends InventoryView
-  constructor: (@element, new_inventory, @max_slots = 10) ->
-    super @element, new_inventory, @max_slots
+  constructor: (@element, new_inventory, inventory_item_description, @max_slots = 10) ->
+    super @element, new_inventory, inventory_item_description, @max_slots
 
 window.InventoryView = InventoryView
 window.TownInventoryView = TownInventoryView
