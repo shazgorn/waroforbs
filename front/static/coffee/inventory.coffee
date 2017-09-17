@@ -51,6 +51,7 @@ class InventoryView
         @inventory_item_description.html(App.resource_info[res].description)
         if App.resource_info[res].action
           $(document.createElement('button'))
+            .addClass('unit-inventory-item-action')
             .html(App.resource_info[res].action_label)
             .appendTo(@inventory_item_description)
             .click(() ->
