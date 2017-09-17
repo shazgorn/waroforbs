@@ -6,16 +6,6 @@
         | X
   .modal-body
     div
-      label for="map_height" = t('Map height')
-      select#map_height
-        - (9..30).step(2) do |i|
-          <option value="#{i}">#{i}</option>
-    div
-      label for="map_width" = t('Map width')
-      select#map_width
-        - (9..50).step(2) do |i|
-          <option value="#{i}">#{i}</option>
-    div
       label for="log_height" = t('Log height, lines')
       select#log_height
         - (0..10).each do |i|
