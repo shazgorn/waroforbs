@@ -723,7 +723,7 @@ button {
 
 .town-inventory-inner {
   @include clearfix();
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 @mixin inventory-item-description() {
