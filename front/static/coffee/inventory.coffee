@@ -1,14 +1,15 @@
 ##
 # Unit inventory in controls block
 # and town
-# inventoryEl - container for inventory items
+# @element - DOMElement, container for inventory items
 class InventoryView
-  constructor: (@inventoryEl, new_inventory) ->
+  # max_slots may be set by model, more unit lvl - more slots, unclear for now
+  constructor: (@element, new_inventory, @max_slots = 5) ->
     filled_slots = 0
     for res, q of new_inventory
       @create_res(res, q) if q
       filled_slots++ if q > 0
-    for f in [filled_slots+1..5]
+    for f in [filled_slots+1..@max_slots]
       @create_empty_res()
 
   ##  
@@ -17,9 +18,6 @@ class InventoryView
   # new_inventory - unit inventory
   sync_resources: (old_inventory, new_inventory) ->
     empty_res_to_add = 0
-    max_slots = 5
-    console.log(old_inventory);
-    console.log(new_inventory);
     for res, q of new_inventory
       if old_inventory[res] > 0 && q == 0
         @remove_res(res)
@@ -43,7 +41,7 @@ class InventoryView
       .attr('title', App.resource_info[res].title + ' ' + q)
       .addClass('inventory-item')
       .addClass('inventory-item-' + res)
-      .appendTo(@inventoryEl)
+      .appendTo(@element)
       .click((e) =>
         e.preventDefault();
         @inventory_item_description.html(App.resource_info[res].description)
@@ -58,21 +56,26 @@ class InventoryView
         @descriptionShown = true
       )
 
-  create_empty_res: () ->
+  create_empty_res: ->
     $(document.createElement('div'))
       .addClass('inventory-item')
       .addClass('inventory-item-empty')
-      .appendTo(@inventoryEl)
+      .appendTo(@element)
 
   ##
   # res - resource name
   remove_res: (res) ->
-    @inventoryEl.children('.inventory-item-' + res).remove()
+    @element.children('.inventory-item-' + res).remove()
 
   ##
   # res - resource name
   # q - resource quantity
   update_res: (res, q) ->
-    @inventoryEl.find('.inventory-item-' + res + ' .inventory-item-q').html(q)
+    @element.find('.inventory-item-' + res + ' .inventory-item-q').html(q)
+
+class TownInventoryView extends InventoryView
+  constructor: (@element, new_inventory, @max_slots = 10) ->
+    super @element, new_inventory, @max_slots
 
 window.InventoryView = InventoryView
+window.TownInventoryView = TownInventoryView

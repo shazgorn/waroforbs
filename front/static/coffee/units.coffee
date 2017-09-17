@@ -51,6 +51,8 @@ class Unit extends Model
       # view.set_ap(@ap)
     if @controls
       @controls.inventory_view.sync_resources(@inventory, unit.inventory)
+    if @modal
+      @modal.inventory_view.sync_resources(@inventory, unit.inventory)
     for res, q of unit.inventory
       @inventory[res] = q
 
@@ -182,9 +184,6 @@ class PlayerTown extends Town
     @buildings = {}
     for key, building of unit['@buildings']
       @buildings[key] = new Building(key, building)
-    @inventory_items = {}
-    for key, inventory_item of unit['@inventory']
-      @inventory_items[key] = new TownInventoryItem(key, inventory_item)
     # id => cell
     @cells = {}
     range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
@@ -213,8 +212,6 @@ class PlayerTown extends Town
     return if @dead
     for key, building of @buildings
       building.update town['@buildings'][key]
-    for key, inventory_item of @inventory_items
-      inventory_item.update town['@inventory'][key]
 
   create_view: () ->
     if !@dead
@@ -237,18 +234,6 @@ class Building
     @status = building['@status']
     @ttb_string = building['@ttb_string']
     @card.update(this)
-
-
-class TownInventoryItem
-  constructor: (key, count) ->
-    @id = key
-    @count = count
-    @view = new TownInventoryItemView(this)
-
-  update: (count) ->
-    if @count != count
-      @count = count
-      @view.update(this)
 
 
 class OtherPlayerTown extends Town
