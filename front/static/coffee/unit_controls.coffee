@@ -53,7 +53,7 @@ class ControlsView
       @info.remove()
       return
     @life.html(unit.life)
-    @xy.html(unit.xy)
+    @xy.html(unit.x + ',' + unit.y)
     @ap.html(unit.ap)
     @dmg.html(unit.damage)
     @def.html(unit.defence)
