@@ -75,3 +75,8 @@ Run websockets server as `rake front_start`. Webserver will be started as daemon
 Run websockets server as `rake ws_start` if map was generated in previous run
 
 Go to http://0.0.0.0:9292/
+
+Install for tests
+```
+gem 'capybara-webkit'
+```
