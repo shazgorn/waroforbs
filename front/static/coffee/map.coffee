@@ -74,22 +74,27 @@ class Map
   addBlocks: () ->
     for block_x in [0..@map_dim_in_blocks-1]
       for block_y in [0..@map_dim_in_blocks-1]
+        blockClass = 'block'
+        top_pos = block_y * @block_dim_in_px
+        left_pos = block_x * @block_dim_in_px
+        if block_y == 0
+          blockClass += ' block-top'
+          top_pos -= 5
+        if block_y == @map_dim_in_blocks-1
+          blockClass += ' block-bottom'
+        if block_x == 0
+          blockClass += ' block-left'
+          left_pos -= 5
+        if block_x == @map_dim_in_blocks-1
+          blockClass += ' block-right'
         b = $(document.createElement('div'))
           .attr('id', "block_#{block_x}_#{block_y}")
-          .addClass('block')
+          .addClass(blockClass)
           # see Map::create_canvas_blocks
           .css('background-image', "url(img/bg/bg_#{block_x}_#{block_y}.png)")
-          .css('left', "#{block_x * @block_dim_in_px}px")
-          .css('top', "#{block_y * @block_dim_in_px}px")
+          .css('left', "#{left_pos}px")
+          .css('top', "#{top_pos}px")
           .appendTo('#blocks')
-        if block_y == 0
-          b.addClass('block-top')
-        if block_y == @map_dim_in_blocks-1
-          b.addClass('block-bottom')
-        if block_x == 0
-          b.addClass('block-left')
-        if block_x == @map_dim_in_blocks-1
-          b.addClass('block-right')
 
   addCell: (x, y) ->
     block_x = x // @block_dim_in_cells
