@@ -8,7 +8,7 @@
 	    font-weight: bold;
 	    src: local('PT Serif Bold'), url('/fonts/PTF75F_W.eot?#iefix') format('embedded-opentype'), url('/fonts/PTF75F_W.woff') format('woff'),url('/fonts/PTF75F_W.ttf') format('truetype'), url('/fonts/PTF75F_W.svg#PTSerif-Bold') format('svg');}
 
-$cell-dimension: 40px;
+$cell-dimension: 32px;
 $map-dimension: $cell-dimension * 11;
 $block-dimension: $cell-dimension * 10;
 $orb-dimension: 36px;
@@ -20,7 +20,7 @@ $orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
 $button-size: 60px;
 $column-gap: 30px;
 $font-family: 'PT Serif', serif;
-$right-col-width: 250px;
+$right-col-width: 220px;
 // colors
 // color of wooden theme
 $wooden-color: #963;
@@ -176,19 +176,19 @@ button {
 }
 
 .block-bottom {
-  border-bottom: thick solid $wooden-color;
+  border-bottom: 5px solid $wooden-color;
 }
 
 .block-left {
-  border-left: thick solid $wooden-color;
+  border-left: 5px solid $wooden-color;
 }
 
 .block-right {
-  border-right: thick solid $wooden-color;
+  border-right: 5px solid $wooden-color;
 }
 
 .block-top {
-  border-top: thick solid $wooden-color;
+  border-top: 5px solid $wooden-color;
 }
 
 #map {
@@ -266,11 +266,11 @@ button {
   }
 
   .player-unit-life-info, .other-player-unit-life-info {
-    bottom: -10px;
+    bottom: -14px;
     color: $white;
     font-size: 10px;
     font-weight: bold;
-    left: 10px;
+    left: 8px;
     padding: 0 2px;
     position: absolute;
   }
@@ -475,9 +475,9 @@ button {
 .inventory-item {
   border: 2px solid $wooden-color;
   float: left;
-  height: 40px;
+  height: $cell-dimension;
   margin-right: 3px;
-  width: 40px;
+  width: $cell-dimension;
 }
 
 .unit-inventory-item-action {
@@ -489,8 +489,8 @@ button {
   height: 10px;
   position: relative;
   text-align: center;
-  top: 40px;
-  width: 40px;
+  top: $cell-dimension;
+  width: $cell-dimension;
 }
 
 .inventory-item-settlers {

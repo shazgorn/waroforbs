@@ -23,9 +23,9 @@ class Map
   attr_reader :cells
   attr_accessor :ul
 
-  CELL_DIM_PX = 40
-  BLOCK_DIM = 10
-  BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM
+  CELL_DIM_PX = 32 # how may pixels in one cell (one side)
+  BLOCK_DIM = 10 # how many cells in block (one side)
+  BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM # how many pixels in one block (one side)
   BLOCKS_IN_MAP_DIM = Config.get('BLOCKS_IN_MAP_DIM')
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
   MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
@@ -36,31 +36,31 @@ class Map
     @cells = {}
     @cells_bg = {
       1 => {
-        :path => "./" + Config.get('img_path') + "bg_grass_1.png",
+        :path => "./" + Config.get('img_path') + "grass.png",
         :type => :grass
       },
       2 => {
-        :path => "./" + Config.get('img_path') + "bg_grass_2.png",
+        :path => "./" + Config.get('img_path') + "grass.png",
         :type => :grass
       },
       3 => {
-        :path => "./" + Config.get('img_path') + "bg_grass_3.png",
+        :path => "./" + Config.get('img_path') + "grass.png",
         :type => :grass
       },
       4 => {
-        :path => "./" + Config.get('img_path') + "bg_grass_4.png",
+        :path => "./" + Config.get('img_path') + "grass.png",
         :type => :grass
       },
       5 => {
-        :path => "./" + Config.get('img_path') + "bg_tree_on_grass.png",
+        :path => "./" + Config.get('img_path') + "oak.png",
         :type => :tree
       },
       6 => {
-        :path => "./" + Config.get('img_path') + "bg_oak_on_grass_1.png",
+        :path => "./" + Config.get('img_path') + "betula.png",
         :type => :tree
       },
       7 => {
-        :path => "./" + Config.get('img_path') + "bg_mountain_on_grass.png",
+        :path => "./" + Config.get('img_path') + "picea.png",
         :type => :mountain
       }
     }
@@ -106,12 +106,11 @@ class Map
         cell_x = block_x * BLOCK_DIM
         while canvas_x < canvas_dim
           map_cell = MapCell.new(cell_x, cell_y)
-          n = Random.rand 10
+          n = Random.rand 20
           n = 1 unless @cells_bg.has_key?(n)
           cell_bg = @cells_bg[n]
           map_cell.type = cell_bg[:type]
           builder << cell_bg[:path]
-          # canvas.store_pixels(canvas_x, canvas_y, CELL_DIM_PX, CELL_DIM_PX, cell_bg[:pixels])
           @cells["#{cell_x}_#{cell_y}"] = map_cell
           canvas_x += cell_dim_px
           cell_x += 1
