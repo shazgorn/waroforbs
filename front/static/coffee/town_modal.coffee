@@ -3,6 +3,8 @@
 # and fill it with buildings, inventory, quick actions
 # This class will replace TownControls because of bad naming and coding
 class TownModal
+  ##
+  # @param {PlayerTown} town
   constructor: (town) ->
     @modal_town = $('.modal.town')
     @controls = new TownModalControls
@@ -10,7 +12,6 @@ class TownModal
     @inventory_view = new TownInventoryView(@modal_town.find('.town-inventory-inner'), town.inventory, inventory_item_description)
     for key, building of town.buildings
       @modal_town.find('.buildings-inner').append(building.card.el)
-      @controls.init_building building
 
   bind_open_handler: (list) ->
     for el in list

@@ -49,7 +49,7 @@ Install bundler - gem manager
 Install required gems via bundler
 
 ```
-bundler install
+bundler install --with=test
 ```
 
 Copy default configs

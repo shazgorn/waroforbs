@@ -1,7 +1,14 @@
+##
+# There can be more cards but for now it is just building`s base class
 class Card
   constructor: () ->
     return
 
+##
+# Card - some entity in modal window
+# In this case it is building box in the town screen
+# Created when new building model is fetched, updated when building model has been changed, etc
+# Extract(remove) building related logic from TownModalControls and leave rendering tasks only.
 class BuildingCard extends Card
   ###
   # @param {Building} building

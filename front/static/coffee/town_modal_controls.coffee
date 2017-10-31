@@ -15,7 +15,6 @@ class TownModalControls
       }
     @buildings =
       'barracs': {
-        name: 'Barracs',
         callback: () ->
           # clean up
           $('.modal-body .modal-building-inner *').remove()
@@ -70,11 +69,6 @@ class TownModalControls
   init_building: (building) ->
     _this = this
     switch building.status
-      when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-        building.card.build
-          .click(() ->
-            App.build(building.id)
-          )
       when App.building_states['BUILDING_STATE_BUILT']
         building.card.open_building
           .click(() ->

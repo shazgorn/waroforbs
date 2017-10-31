@@ -11,6 +11,7 @@ ru:
   log_entry_out_of_map: 'За пределами карты'
   log_entry_settle_town: Город основан
   log_entry_user_logged_in: 'Пользователь %{user} вошел'
+  log_entry_user_has_no_town: 'У пользователя нет города'
   log_entry_unit_dead: 'Юнит мертв и никуда не пойдет'
   log_entry_unit_not_found: 'Юнит #%{unit_id} не найден'
   log_entry_wrong_direction: 'Неправильное направление'
@@ -23,3 +24,5 @@ ru:
   res_settlers_title: Поселенцы
   res_settlers_description: С их помощью, можно основать поселение
   res_settlers_action_label: Основать
+  Barracs: Казармы
+  Tavern: Таверна

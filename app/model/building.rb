@@ -90,7 +90,7 @@ end
 class Tavern < Building
   def initialize
     super
-    @name = 'Tavern'
+    @name = I18n.t('Tavern')
   end
 end
 
@@ -100,7 +100,7 @@ class Barracs < Building
 
   def initialize
     super
-    @name = 'Barracs'
+    @name = I18n.t('Barracs')
     @cost_time = 60
     @cost_res[:gold] = 20
     @cost_res[:wood] = 5

@@ -13,4 +13,8 @@ source "https://rubygems.org" do
   gem 'rspec'
   gem 'celluloid'
   gem 'reel'
+  group :test do
+    gem 'capybara'
+    gem 'capybara-webkit'
+  end
 end

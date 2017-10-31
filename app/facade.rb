@@ -108,19 +108,7 @@ class Facade
       Celluloid::Actor[:game].restart token
       dispatch_units
     when :build
-      begin
-        res = Celluloid::Actor[:game].build user, data['building'].to_sym
-        if res
-          log = "#{data['building']} building in progress"
-        else
-          log = "#{data['building']} not built"
-        end
-        type = op
-      rescue OrbError => log_msg
-        log = log_msg
-        type = :error
-      end
-      Log.push(type, log, user)
+      Celluloid::Actor[:game].build(user, data['building'].to_sym)
     when :create_default_company
       res = Celluloid::Actor[:game].create_company user, :new
       if res.nil?

@@ -180,9 +180,9 @@ class PlayerTown extends Town
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-town'
-    @adj_companies = unit['@adj_companies']
+    @adj_companies = unit['adj_companies']
     @buildings = {}
-    for key, building of unit['@buildings']
+    for key, building of unit['buildings']
       @buildings[key] = new Building(key, building)
     # id => cell
     @cells = {}
@@ -202,7 +202,7 @@ class PlayerTown extends Town
           cell.html = '&nbsp;'
           cell.title = 'Hic sunt dracones'
         @cells[id] = cell
-    @workers = unit['@workers']
+    @workers = unit['workers']
     for id, w of @workers
       if w['@x'] && w['@y']
         @cells[w['@x'] + '_' + w['@y']].has_worker = true
@@ -211,7 +211,7 @@ class PlayerTown extends Town
     super town
     return if @dead
     for key, building of @buildings
-      building.update town['@buildings'][key]
+      building.update town['buildings'][key]
 
   create_view: () ->
     if !@dead

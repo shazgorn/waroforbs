@@ -78,6 +78,16 @@ class Town < Unit
     @inventory[:wood] = 50
   end
 
+  def to_hash
+    hash = super
+    hash.merge!(
+      {
+        :buildings => @buildings
+      }
+    )
+    hash
+  end
+
   def tick
     super
     @workers.each{|worker|

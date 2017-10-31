@@ -4,8 +4,6 @@ require 'capybara/rspec'
 require 'capybara/webkit'
 require 'i18n'
 
-
-
 RSpec.configure do |c|
   Capybara.javascript_driver = :webkit
   Capybara.app_host = 'http://0.0.0.0:9292/'
@@ -20,11 +18,11 @@ RSpec.configure do |c|
   }
 end
 
-RSpec.describe "building process", :js => true do
-  it "signs me in" do
+RSpec.describe "Gaming process", :js => true do
+  it "is playing" do
     visit "/"
     within("#login-form") do
-      fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s
+      fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s
     end
     expect(I18n.t('log_in')).to eq('Войти')
     click_button I18n.t('log_in')
@@ -32,5 +30,9 @@ RSpec.describe "building process", :js => true do
     find('.inventory-item-settlers').click()
     expect(page).to have_content(I18n.t('res_settlers_action_label'))
     click_button(I18n.t('res_settlers_action_label'))
+    find('#unit-info-list > .unit-info:last-of-type').click()
+    click_button('Open') # not a bug for now
+    expect(page).to have_content(I18n.t('Barracs'))
+    find('#barracs .build-button').click()
   end
 end

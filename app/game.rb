@@ -243,10 +243,10 @@ class Game
   end
 
   ##################### TOWN / BUILDINGS ACTIONS #################################
-  def build user, building_id
+  def build(user, building_id)
     town = Town.get_by_user user
-    raise OrbError, 'User have no town' if town.nil?
-    town.build building_id
+    return LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
+    town.build(building_id)
   end
 
   TER2RES = {
