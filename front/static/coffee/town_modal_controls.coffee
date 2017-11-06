@@ -7,12 +7,6 @@ class TownModalControls
 
     @open_building_id = null
     @last_town = null
-    @town_actions =
-      'create_default_company': {
-        name: 'Create company',
-        callback: () ->
-          App.create_default_company()
-      }
     @buildings =
       'barracs': {
         callback: () ->
@@ -82,21 +76,6 @@ class TownModalControls
       $('.modal.building').hide()
       $('.modal.town').show()
     )
-
-  init_town_controls: (actions) ->
-    for action in actions
-      action_val = @town_actions[action]
-      $a = $(".town .modal-town-actions-inner ##{action}")
-      if $a.length == 0
-        b = $(document.createElement('button'))
-          .html(action_val.name)
-          .attr('id', action)
-          .data('id', action)
-          .appendTo('.town .modal-town-actions-inner')
-          .click(() ->
-            action_val.callback this
-          )
-    # delete old actions
 
   create_cell: (cell) ->
     $(document.createElement('div'))
