@@ -97,10 +97,8 @@ class Facade
       Celluloid::Actor[:game].build(user, data['building'].to_sym)
     when :spawn_orb
       Celluloid::Actor[:game].spawn_orb data['color'].to_sym
-    when :create_default_company
-      Celluloid::Actor[:game].create_company user
-    when :create_company
-      Celluloid::Actor[:game].create_company user
+    when :hire_infantry
+      Celluloid::Actor[:game].hire_infantry user
     when :dismiss
       unit_id = data['unit_id']
       begin

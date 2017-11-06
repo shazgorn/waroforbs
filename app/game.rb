@@ -204,7 +204,7 @@ class Game
     unit
   end
 
-  def create_company(user)
+  def hire_infantry(user)
     town = Town.get_by_user(user)
     LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
     unless town.has_build_barracs?

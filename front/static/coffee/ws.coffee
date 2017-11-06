@@ -129,19 +129,11 @@ class WS
       })
     )
 
-  create_default_company: () ->
+  hire_infantry: () ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'create_default_company'
-      })
-    )
-
-  create_company: () ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'create_company'
+        op: 'hire_infantry'
       })
     )
 

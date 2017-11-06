@@ -42,11 +42,8 @@ class Application
   dismiss: (id) ->
     @ws.dismiss(id)
 
-  create_default_company: () ->
-    @ws.create_default_company()
-
-  create_company: () ->
-    @ws.create_company()
+  hire_infantry: () ->
+    @ws.hire_infantry()
 
   add_squad_to_company: (company_id) ->
     @ws.add_squad_to_company(company_id, @town_controls.last_town)

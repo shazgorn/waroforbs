@@ -117,7 +117,7 @@ class Barracs < Building
 
   def actions
     if built?
-      [:create_default_company]
+      [:hire_infantry]
     else
       []
     end

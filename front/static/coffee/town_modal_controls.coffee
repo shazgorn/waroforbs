@@ -7,6 +7,7 @@ class TownModalControls
 
     @open_building_id = null
     @last_town = null
+    # fill in building modal
     @buildings =
       'barracs': {
         callback: () ->
@@ -16,45 +17,45 @@ class TownModalControls
 
           # actions
           $(document.createElement('button'))
-            .html('Create company')
+            .html('Hire infantry')
             .appendTo('.modal.building .modal-building-actions-inner')
             .click(() ->
-              App.create_default_company()
+              App.hire_infantry()
             )
 
           $(document.createElement('div'))
             .addClass('modal-building-fill')
             .appendTo('.modal.building .modal-building-inner')
 
-          last_town = App.units[_this.last_town]
-          if last_town
-            for company_id in last_town.adj_companies
-              create_company_card(App.my_units[company_id])
+          # last_town = App.units[_this.last_town]
+          # if last_town
+          #   for company_id in last_town.adj_companies
+          #     create_company_card(App.my_units[company_id])
       }
     $('.close-modal').click(() ->
       @open_building_id = null
       $('.modal').hide()
     )
 
-  create_company_card: (company) ->
-    $(document.createElement('div'))
-      .addClass('company-card')
-      .addClass('pointer')
-      .data('id', company.id)
-      .attr('title', 'Add squad')
-      .html("\
-      Company ##{company.id} <br> \
-      x,y: #{company.x},#{company.y}<br> \
-      damage: #{company.damage} <br>\
-      defence: #{company.defence} <br>\
-      hp: #{company.hp} <br>\
-      ap: #{company.ap} <br>\
-      squads: #{company.squads}\
-      ")
-      .appendTo('.modal.building .modal-building-fill')
-      .click(() ->
-        App.add_squad_to_company($(this).data('id'))
-      )
+  # create_company_card: (company) ->
+  #   $(document.createElement('div'))
+  #     .addClass('company-card')
+  #     .addClass('pointer')
+  #     .data('id', company.id)
+  #     .attr('title', 'Add squad')
+  #     .html("\
+  #     Company ##{company.id} <br> \
+  #     x,y: #{company.x},#{company.y}<br> \
+  #     damage: #{company.damage} <br>\
+  #     defence: #{company.defence} <br>\
+  #     hp: #{company.hp} <br>\
+  #     ap: #{company.ap} <br>\
+  #     squads: #{company.squads}\
+  #     ")
+  #     .appendTo('.modal.building .modal-building-fill')
+  #     .click(() ->
+  #       App.add_squad_to_company($(this).data('id'))
+  #     )
 
   ###
   # Init open, build handlers
