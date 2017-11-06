@@ -407,9 +407,25 @@ button {
 }
 
 .unit-info {
-  border: thin solid transparent;
+  border-bottom: thin solid transparent;
+  border-left: thick solid $wooden-color;
+  border-right: thin solid transparent;
+  border-top: thin solid transparent;
   font-weight: bold;
   padding: 0 2px;
+
+  &:hover {
+    background-color: $theme-hover;
+    border-bottom: thin dashed $right-col-border;
+    border-left: thick solid $right-col-border;
+    border-right: thin dashed $right-col-border;
+    border-top: thin dashed $right-col-border;
+    cursor: pointer;
+  }
+
+  &.active-unit-info {
+    border-left: thick solid $right-col-border;
+  }
 
   .unit-name-info {
     font-size: 2rem;
@@ -438,7 +454,7 @@ button {
   }
 
   &:not(.active-unit-info) > .unit-info-actions {
-    display: none;
+    visibility: hidden;
   }
 
   .unit-life-info {
@@ -455,16 +471,6 @@ button {
 
   .unit-ap-info {
     color: $orange;
-  }
-
-  &:hover {
-    background-color: $theme-hover;
-    border: thin dashed $right-col-border;
-    cursor: pointer;
-  }
-
-  &.active-unit-info {
-    border-left: thick solid $right-col-border;
   }
 }
 
