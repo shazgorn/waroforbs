@@ -218,7 +218,7 @@ class PlayerTown extends Town
       @view = new PlayerTownView(this)
       @controls = new PlayerTownControlsView(this)
       @modal = new TownModal(this)
-      @modal.bind_open_handler([@view.element, @controls.open])
+      @modal.bind_open_handler([@view.element])
       for key, building of @buildings
         building.card.set_town_modal(@modal, building)
 

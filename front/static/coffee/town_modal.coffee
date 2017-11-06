@@ -4,6 +4,7 @@
 # This class will replace TownControls because of bad naming and coding
 class TownModal
   ##
+  # @constructor
   # @param {PlayerTown} town
   constructor: (town) ->
     @modal_town = $('.modal.town')
@@ -13,6 +14,9 @@ class TownModal
     for key, building of town.buildings
       @modal_town.find('.buildings-inner').append(building.card.el)
 
+  ##
+  # Open the town modal window by clicking on any element in the 'list'
+  # @param {array} list - of town unit on the map and maybe 'quick open town' buttons
   bind_open_handler: (list) ->
     for el in list
       el.click () =>

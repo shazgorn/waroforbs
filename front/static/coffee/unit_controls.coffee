@@ -71,10 +71,6 @@ class PlayerTownControlsView extends ControlsView
   constructor: (unit) ->
     super unit
     @name.html('T')
-    @open = $(document.createElement('button'))
-        .html('Open')
-        .data('id', unit.id)
-        .appendTo(@actions)
 
 window.PlayerCompanyControlsView = PlayerCompanyControlsView
 window.PlayerTownControlsView = PlayerTownControlsView
