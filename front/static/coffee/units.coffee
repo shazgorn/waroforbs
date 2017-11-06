@@ -219,20 +219,24 @@ class PlayerTown extends Town
       @controls = new PlayerTownControlsView(this)
       @modal = new TownModal(this)
       @modal.bind_open_handler([@view.element, @controls.open])
+      for key, building of @buildings
+        building.card.set_town_modal(@modal, building)
 
 
 class Building
   constructor: (key, building) ->
     @id = key
-    @name = building['@name']
-    @status = building['@status']
-    @ttb_string = building['@ttb_string']
-    @cost_res = building['@cost_res']
-    @card = new BuildingCard(this)
+    @name = building['name']
+    @title = building['title']
+    @status = building['status']
+    @ttb_string = building['ttb_string']
+    @cost_res = building['cost_res']
+    # card in town modal window
+    @card = BuildingCard.create(this)
 
   update: (building) ->
-    @status = building['@status']
-    @ttb_string = building['@ttb_string']
+    @status = building['status']
+    @ttb_string = building['ttb_string']
     @card.update(this)
 
 

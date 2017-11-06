@@ -74,7 +74,7 @@ class Town < Unit
     @actions = []
     @adj_companies = []
     # start capital for testing
-    @inventory[:gold] = 1000
+    @inventory[:gold] = 300
     @inventory[:wood] = 50
   end
 
@@ -153,9 +153,19 @@ class Town < Unit
     false
   end
 
+  def has_build_barracs?
+    @buildings[:barracs].built?
+  end
+
+  def check_company_price
+    @inventory[:gold] >= Barracs::COMPANY_COST
+  end
+
   def can_form_company?
-    raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
-    raise OrbError, 'Not enough gold to form company' unless @inventory[:gold] >= Barracs::COMPANY_COST
+    unless @inventory[:gold] >= Barracs::COMPANY_COST
+      raise OrbError, 'Not enough gold to form company'
+      return false
+    end
     true
   end
 

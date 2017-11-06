@@ -266,11 +266,11 @@ button {
   }
 
   .player-unit-life-info, .other-player-unit-life-info {
-    bottom: -14px;
+    bottom: -2px;
     color: $white;
     font-size: 10px;
     font-weight: bold;
-    left: 8px;
+    right: 0;
     padding: 0 2px;
     position: absolute;
   }

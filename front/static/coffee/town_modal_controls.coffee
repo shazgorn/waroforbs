@@ -11,7 +11,7 @@ class TownModalControls
       'create_default_company': {
         name: 'Create company',
         callback: () ->
-          app.create_default_company()
+          App.create_default_company()
       }
     @buildings =
       'barracs': {
@@ -73,11 +73,15 @@ class TownModalControls
         building.card.open_building
           .click(() ->
             _this.open_building(this)
-            $('.back-to-town').click(() ->
-              $('.modal.building').hide()
-              $('.modal.town').show()
-            )
           )
+
+  ##
+  # Move to BuildingModal(Controls)
+  init_back_to_town_handler: () ->
+    $('.back-to-town').click(() ->
+      $('.modal.building').hide()
+      $('.modal.town').show()
+    )
 
   init_town_controls: (actions) ->
     for action in actions
@@ -148,9 +152,12 @@ class TownModalControls
   open_town: (id) ->
     @last_town = id
 
+  ##
+  # @param {jQuery} button - card.open_building
   open_building: (button) ->
     $('.modal').hide()
     id = $(button).data('id')
+    # separate building modal for each building
     $('.modal.building').show()
     $('.modal.building .modal-title').html(@buildings[id].name)
     @fill_building_modal(id)

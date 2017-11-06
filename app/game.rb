@@ -54,9 +54,9 @@ class Game
     units.each_value{|unit|
       if unit.type == :town
         unit.adj_companies = []
-        units.each_value{|unit2|
-          if unit != unit2 && unit.user && unit.user == unit2.user && @map.adj_cells?(unit.x, unit.y, unit2.x, unit2.y)
-            unit.adj_companies.push(unit2.id)
+        units.each_value{|adj_unit|
+          if adj_unit.alive? && unit != adj_unit && unit.user && unit.user == adj_unit.user && @map.adj_cells?(unit.x, unit.y, adj_unit.x, adj_unit.y)
+            unit.adj_companies.push(adj_unit.id)
           end
         }
       end
@@ -198,7 +198,7 @@ class Game
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
     unit = HeavyInfantry.new(xy[:x], xy[:y], user)
-    log_entry = LogBox.spawn(I18n.t('log_entry_new_infantry'), user)
+    LogBox.spawn(I18n.t('log_entry_new_infantry'), user)
     user.active_unit_id = unit.id
     recalculate_user_actions(user)
     unit
@@ -206,15 +206,28 @@ class Game
 
   def create_company(user)
     town = Town.get_by_user(user)
-    raise OrbError, 'User have no town' if town.nil?
-    town.can_form_company?
-    company = nil
-    empty_cell = empty_adj_cell(town)
-    if empty_cell
-      company = HeavyInfantry.new(empty_cell[:x], empty_cell[:y], user)
-      user.active_unit_id = company.id
-      town.pay_company_price
+    LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
+    unless town.has_build_barracs?
+      LogBox.error(I18n.t('log_entry_barracs_not_build'), user)
+      return
     end
+    if HeavyInfantry.count(user) > Config.get('HEAVY_INFANTRY_LIMIT')
+      LogBox.error(I18n.t('log_entry_company_limit_reached', limit: Config.get('HEAVY_INFANTRY_LIMIT')), user)
+      return
+    end
+    unless town.check_company_price
+      LogBox.error(I18n.t('log_entry_company_not_enough_res'), user)
+      return
+    end
+    empty_cell = empty_adj_cell(town)
+    unless empty_cell
+      LogBox.error(I18n.t("log_entry_company_no_free_cells"), user)
+      return
+    end
+    town.pay_company_price
+    company = HeavyInfantry.new(empty_cell[:x], empty_cell[:y], user)
+    user.active_unit_id = company.id
+    LogBox.spawn(I18n.t("log_entry_new_infantry"), user)
     company
   end
 

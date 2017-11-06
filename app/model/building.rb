@@ -23,6 +23,35 @@ class Building
     @finish_time = nil
   end
 
+  def to_hash()
+    if in_progress?
+      if Time.now() > @finish_time
+        @status = STATE_BUILT
+        @finish_time = nil
+        @start_time = nil
+        @ttb = nil
+      else
+        @ttb = (@finish_time - Time.now()).round(0)
+        @ttb_string = seconds_to_hm @ttb
+      end
+    end
+    hash = {
+      'cost_res' => @cost_res,
+      'cost_time' => @cost_time,
+      'finish_time' => @finish_time,
+      'name' => @name,
+      'title' => @title,
+      'start_time' => @start_time,
+      'status' => @status,
+      'ttb' => @ttb,
+      'ttb_string' => @ttb_string,
+    }
+  end
+
+  def to_json(generator = JSON.generator)
+    to_hash().to_json
+  end
+
   def build
     raise OrbError, 'Building already in progress' if @status == STATE_IN_PROGRESS
     @status = STATE_IN_PROGRESS
@@ -62,35 +91,13 @@ class Building
     end
     "#{minutes}:#{seconds}"
   end
-
-  def to_hash()
-    if in_progress?
-      if Time.now() > @finish_time
-        @status = STATE_BUILT
-        @finish_time = nil
-        @start_time = nil
-        @ttb = nil
-      else
-        @ttb = (@finish_time - Time.now()).round(0)
-        @ttb_string = seconds_to_hm @ttb
-      end
-    end
-    hash = {}
-    self.instance_variables.each do |var|
-      hash[var] = self.instance_variable_get var
-    end
-    hash
-  end
-
-  def to_json(generator = JSON.generator)
-    to_hash().to_json
-  end
 end
 
 class Tavern < Building
   def initialize
     super
-    @name = I18n.t('Tavern')
+    @name = 'tavern'
+    @title = I18n.t('Tavern')
   end
 end
 
@@ -100,8 +107,9 @@ class Barracs < Building
 
   def initialize
     super
-    @name = I18n.t('Barracs')
-    @cost_time = 60
+    @name = 'barracs'
+    @title = I18n.t('Barracs')
+    @cost_time = 6
     @cost_res[:gold] = 20
     @cost_res[:wood] = 5
     @ttb_string = seconds_to_hm @cost_time

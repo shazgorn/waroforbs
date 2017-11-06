@@ -93,6 +93,14 @@ class Facade
       user_data[user_data_key][:active_unit_id] = user.active_unit_id
     when :settle_town
       Celluloid::Actor[:game].settle_town(user, user.active_unit_id)
+    when :build
+      Celluloid::Actor[:game].build(user, data['building'].to_sym)
+    when :spawn_orb
+      Celluloid::Actor[:game].spawn_orb data['color'].to_sym
+    when :create_default_company
+      Celluloid::Actor[:game].create_company user
+    when :create_company
+      Celluloid::Actor[:game].create_company user
     when :dismiss
       unit_id = data['unit_id']
       begin
@@ -107,24 +115,6 @@ class Facade
     when :restart
       Celluloid::Actor[:game].restart token
       dispatch_units
-    when :build
-      Celluloid::Actor[:game].build(user, data['building'].to_sym)
-    when :create_default_company
-      res = Celluloid::Actor[:game].create_company user, :new
-      if res.nil?
-        log = "Unable to create more companies. Limit reached."
-      else
-        log = "Infantry created"
-      end
-      Log.push user, log, op
-    when :create_company
-      res = Celluloid::Actor[:game].create_company user
-      if res.nil?
-        log = "Unable to create Infantry"
-      else
-        log = "Infantry created"
-      end
-      Log.push user, log, op
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin
@@ -155,8 +145,6 @@ class Facade
         type = :error
       end
       Log.push user, log, type
-    when :spawn_orb
-      Celluloid::Actor[:game].spawn_orb data['color'].to_sym
     else
       LogBox.error('Unknown op', user)
     end

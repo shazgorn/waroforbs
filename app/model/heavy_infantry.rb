@@ -1,6 +1,6 @@
-require 'squad'
+require 'unit'
 
-class HeavyInfantry < Squad
+class HeavyInfantry < Unit
   MAX_SQUADS = 10
   BASE_DMG = 30
   BASE_AP = 20
@@ -35,6 +35,10 @@ class HeavyInfantry < Squad
 
     def has_any_live? user
       @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :company}.length > 0
+    end
+
+    def count user
+      @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :company}.length
     end
   end
 
