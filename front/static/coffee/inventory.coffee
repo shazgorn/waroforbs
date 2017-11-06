@@ -76,7 +76,10 @@ class InventoryView
   # res - resource name
   # q - resource quantity
   update_res: (res, q) ->
-    @element.find('.inventory-item-' + res + ' .inventory-item-q').html(q)
+    @element
+      .find('.inventory-item-' + res)
+      .attr('title', App.resource_info[res].title + ' ' + q)
+      .find('.inventory-item-q').html(q)
 
 class TownInventoryView extends InventoryView
   constructor: (@element, new_inventory, inventory_item_description, @max_slots = 10) ->
