@@ -2,6 +2,7 @@ ru:
   Default action: Действие по умолчанию
   New town: Основать город
   New random infantry: Создать пехоту
+  Hire infantry: Нанять пехоту
   log_entry_already_have_town: У Вас уже есть город
   log_entry_barracs_not_build: Казармы не построены
   log_entry_cell_occupied: Клетка занята

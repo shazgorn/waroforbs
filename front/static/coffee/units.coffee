@@ -182,8 +182,10 @@ class PlayerTown extends Town
     @css_class = 'player-unit player-town'
     @adj_companies = unit['adj_companies']
     @buildings = {}
+    @buildings_cards = {}
     for key, building of unit['buildings']
       @buildings[key] = new Building(key, building)
+      @buildings_cards[key] = new BuildingCard.create(building)
     # id => cell
     @cells = {}
     range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
@@ -211,7 +213,9 @@ class PlayerTown extends Town
     super town
     return if @dead
     for key, building of @buildings
-      building.update town['buildings'][key]
+      building.update(town['buildings'][key])
+    for key, building_card of @buildings_cards
+      building_card.update(town['buildings'][key])
 
   create_view: () ->
     if !@dead
@@ -219,8 +223,8 @@ class PlayerTown extends Town
       @controls = new PlayerTownControlsView(this)
       @modal = new TownModal(this)
       @modal.bind_open_handler([@view.element])
-      for key, building of @buildings
-        building.card.set_town_modal(@modal, building)
+      for key, building_card of @buildings_cards
+        building_card.set_town_modal(@modal, @buildings[key])
 
 
 class Building
@@ -231,13 +235,11 @@ class Building
     @status = building['status']
     @ttb_string = building['ttb_string']
     @cost_res = building['cost_res']
-    # card in town modal window
-    @card = BuildingCard.create(this)
+    @actions = building['actions']
 
   update: (building) ->
     @status = building['status']
     @ttb_string = building['ttb_string']
-    @card.update(this)
 
 
 class OtherPlayerTown extends Town

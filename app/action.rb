@@ -9,6 +9,18 @@ class Action < JSONable
     @name = :default_action
   end
 
+  def to_hash()
+    {
+      'on' => @on,
+      'label' => @label,
+      'name' => @name
+    }
+  end
+
+  def to_json(generator = JSON.generator)
+    to_hash().to_json
+  end
+
   def on!
     @on = true
   end
@@ -41,5 +53,14 @@ class NewRandomInfantryAction < Action
     super(on)
     @name = NAME
     @label = I18n.t('New random infantry')
+  end
+end
+
+class HireInfantryAction < Action
+  NAME = 'hire_infantry_action'
+  def initialize(on)
+    super(on)
+    @name = NAME
+    @label = I18n.t('Hire infantry')
   end
 end

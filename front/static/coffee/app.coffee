@@ -54,12 +54,6 @@ class Application
   free_worker: (town_id, x, y) ->
     @ws.free_worker(town_id, x, y)
 
-  refresh_modals: () ->
-    # id = @town_controls.open_building_id
-    # if id
-    #   @town_controls.fill_building_modal(id)
-    return
-
   set_active_unit_directly: (unit_id) ->
     @controls.set_active_unit(unit_id)
 

@@ -58,7 +58,6 @@ class WS
                 app.map.dmg(data.a_dmg.wounds, data.a_dmg.kills, data.d_dmg.wounds, data.d_dmg.kills, data.a_id, data.d_id, 123, 789)
             app.upcreate_units data.units
             app.update_user_controls data.actions
-            app.refresh_modals()
             app.attacking = false
           when 'error'
             switch data.error

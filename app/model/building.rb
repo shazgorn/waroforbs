@@ -45,6 +45,7 @@ class Building
       'status' => @status,
       'ttb' => @ttb,
       'ttb_string' => @ttb_string,
+      'actions' => actions
     }
   end
 
@@ -117,9 +118,9 @@ class Barracs < Building
 
   def actions
     if built?
-      [:hire_infantry]
+      [HireInfantryAction.new(true)]
     else
-      []
+      [HireInfantryAction.new(false)]
     end
   end
 end

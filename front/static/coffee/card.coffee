@@ -21,14 +21,16 @@ class BuildingCard extends Card
   ###
   constructor: (building) ->
     @town_modal = null
+    @title = building.title
+    @actions = building.actions
     # building container(card) with link, time to build, cost and build button
     @el = $('.building-card-template')
       .clone()
       .attr('id', building.id)
       .removeClass('building-card-template')
     # open building link
-    @open_building = @el.find('.open-building')
-      .html(building.title)
+    @open_building_button = @el.find('.open-building')
+      .html(@title)
       .attr('id', "open-screen-#{building.id}")
       .data('id', building.id)
     @building_time = @el.find('.building-time')
@@ -61,6 +63,7 @@ class BuildingCard extends Card
           .addClass('building-built')
 
   update: (building) ->
+    @actions = building.actions
     switch building.status
       when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
         return
@@ -78,20 +81,20 @@ class BuildingCard extends Card
         if @town_modal
           @init_open_handler()
 
-  init_open_handler: () ->
-    @el
-      .click(() =>
-        @town_modal.controls.open_building(@open_building)
-        @town_modal.controls.init_back_to_town_handler()
-      )
-
   ##
   # @param {TownModal} modal
+  # @param {object} building
   set_town_modal: (modal, building) ->
     _this = this
     @town_modal = modal
     if building.status == App.building_states['BUILDING_STATE_BUILT']
       @init_open_handler()
+
+  init_open_handler: () ->
+    @el
+      .click(() =>
+        @open_building()
+      )
 
   start_building_countdown: () ->
     clearInterval(@interval)
@@ -117,6 +120,18 @@ class BuildingCard extends Card
 
 class BarracsCard extends BuildingCard
   open_building: () ->
-    console.log('open barracs')
+    # clean up
+    $('.modal-body .modal-building-inner *').remove()
+    $('.modal-body .modal-building-actions-inner *').remove()
+    $('.modal.town .modal-title').html('Town - ' + @title)
+    console.log(@actions)
+    for i, action of @actions
+      console.log(action)
+      $(document.createElement('button'))
+        .html(action.label)
+        .appendTo('.modal.town .modal-building-actions-inner')
+        .click(() =>
+          App.hire_infantry()
+        )
 
 window.BuildingCard = BuildingCard

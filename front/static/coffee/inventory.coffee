@@ -15,8 +15,8 @@ class InventoryView
 
   ##  
   # Update
-  # old_inventory - inventory in model
-  # new_inventory - unit inventory
+  # @param {array} old_inventory - inventory in model
+  # @param {array} new_inventory - unit inventory
   sync_resources: (old_inventory, new_inventory) ->
     empty_res_to_add = 0
     for res, q of new_inventory
@@ -35,6 +35,9 @@ class InventoryView
       @inventory_item_description.html('')
       @descriptionShown = false
 
+  ##
+  # @param {string} res
+  # @param {int} q
   create_res: (res, q) ->
     $(document.createElement('div'))
       .html(
@@ -68,13 +71,13 @@ class InventoryView
       .appendTo(@element)
 
   ##
-  # res - resource name
+  # @param {string} res - resource name
   remove_res: (res) ->
     @element.children('.inventory-item-' + res).remove()
 
   ##
-  # res - resource name
-  # q - resource quantity
+  # @param {string} res - resource name
+  # @param {int} q - resource quantity
   update_res: (res, q) ->
     @element
       .find('.inventory-item-' + res)

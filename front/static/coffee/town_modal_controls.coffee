@@ -11,21 +11,9 @@ class TownModalControls
     @buildings =
       'barracs': {
         callback: () ->
-          # clean up
-          $('.modal-body .modal-building-inner *').remove()
-          $('.modal-body .modal-building-actions-inner *').remove()
-
-          # actions
-          $(document.createElement('button'))
-            .html('Hire infantry')
-            .appendTo('.modal.building .modal-building-actions-inner')
-            .click(() ->
-              App.hire_infantry()
-            )
-
-          $(document.createElement('div'))
-            .addClass('modal-building-fill')
-            .appendTo('.modal.building .modal-building-inner')
+          # $(document.createElement('div'))
+          #   .addClass('modal-building-fill')
+          #   .appendTo('.modal.town .modal-building-inner')
 
           # last_town = App.units[_this.last_town]
           # if last_town
@@ -56,27 +44,6 @@ class TownModalControls
   #     .click(() ->
   #       App.add_squad_to_company($(this).data('id'))
   #     )
-
-  ###
-  # Init open, build handlers
-  # @param {array} buildings of Building
-  ###
-  init_building: (building) ->
-    _this = this
-    switch building.status
-      when App.building_states['BUILDING_STATE_BUILT']
-        building.card.open_building
-          .click(() ->
-            _this.open_building(this)
-          )
-
-  ##
-  # Move to BuildingModal(Controls)
-  init_back_to_town_handler: () ->
-    $('.back-to-town').click(() ->
-      $('.modal.building').hide()
-      $('.modal.town').show()
-    )
 
   create_cell: (cell) ->
     $(document.createElement('div'))
@@ -134,16 +101,9 @@ class TownModalControls
 
   ##
   # @param {jQuery} button - card.open_building
-  open_building: (button) ->
-    $('.modal').hide()
+  open_building: (button, title, actions) ->
     id = $(button).data('id')
-    # separate building modal for each building
-    $('.modal.building').show()
-    $('.modal.building .modal-title').html(@buildings[id].name)
-    @fill_building_modal(id)
-    @open_building_id = id
-
-  fill_building_modal: (id) ->
     @buildings[id].callback()
+    @open_building_id = id
 
 window.TownModalControls = TownModalControls
