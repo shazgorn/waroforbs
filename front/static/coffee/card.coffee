@@ -21,6 +21,7 @@ class BuildingCard extends Card
   ###
   constructor: (building) ->
     @town_modal = null
+    @name = building.name
     @title = building.title
     @actions = building.actions
     # building container(card) with link, time to build, cost and build button
@@ -49,8 +50,8 @@ class BuildingCard extends Card
     switch building.status
       when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
         @build
-          .click(() ->
-            App.build(building.id)
+          .click(() =>
+            App.build(@name)
           )
         @el
           .addClass('building-not-built')
