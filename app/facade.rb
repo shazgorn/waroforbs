@@ -83,8 +83,6 @@ class Facade
       if res[:error]
         LogBox.error(res[:error], user)
       else
-        LogBox.attack(res, user)
-        # LogBox.defence(res, defender)
         user_data[user_data_key].merge!(res)
       end
       # set_def_data users, res

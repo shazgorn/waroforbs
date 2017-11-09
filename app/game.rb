@@ -47,6 +47,7 @@ class Game
   end
 
   def get_current_logs_by_user(user)
+    # TODO: should dispatch all buffer logs but not the current one only
     LogBox.get_current_by_user(user)
   end
 
@@ -426,8 +427,11 @@ class Game
   # a - attacker unit, d - defender unit
 
   def attack(a, d)
-    return raise OrbError, 'Not enough ap to attack' unless a.can_move?(Unit::ATTACK_COST)
     res = SquadAttack.attack(a, d)
+    LogBox.attack(res, a.user)
+    if d.user
+      LogBox.defence(res, d.user)
+    end
     if a.dead?
       bury(a)
     end
@@ -444,10 +448,11 @@ class Game
 
   def attack_by_user(a_user, a_id, def_id)
     a = Unit.get_by_id(a_id)
-    return {:error => 'Wrong attacker id'} if a.nil? || a.user != a_user
+    return LogBox.error(I18n.t('Wrong attacker id'), a_user) if a.nil? || a.user != a_user
     d = Unit.get_by_id(def_id)
-    return {:error => 'Defender not found'} if d.nil?
-    return {:error => 'Defender is already dead'} if d.dead?
+    return LogBox.error(I18n.t('Not enough ap to attack'), a_user) unless a.can_move?(Unit::ATTACK_COST)
+    return LogBox.error(I18n.t('Defender not found'), a_user) if d.nil?
+    return LogBox.error(I18n.t('Defender is already dead'), a_user) if d.dead?
     attack(a, d)
   end
 

@@ -7,7 +7,8 @@ require 'exception'
 
 class LogBox
   @@logs = []
-  @@tmp_logs = {}
+  # buffer for current request
+  @@unread_logs = {}
 
   class << self
 
@@ -25,10 +26,10 @@ class LogBox
     def push_entry(log_entry)
       raise OrbError, 'No user in log_entry' unless log_entry.user
       @@logs << log_entry
-      unless @@tmp_logs.key?(@@tmp_logs[log_entry.user.id])
-        @@tmp_logs[log_entry.user.id] = []
+      unless @@unread_logs.key?(log_entry.user.id)
+        @@unread_logs[log_entry.user.id] = []
       end
-      @@tmp_logs[log_entry.user.id] << log_entry
+      @@unread_logs[log_entry.user.id] << log_entry
       log_entry
     end
 
@@ -60,12 +61,12 @@ class LogBox
     end
 
     ##
-    # Get logs for current request
+    # Get logs for current request (buffer)
     #
 
     def get_current_by_user(user)
-      logs = @@tmp_logs[user.id]
-      @@tmp_logs.delete(user.id)
+      logs = @@unread_logs[user.id]
+      @@unread_logs.delete(user.id)
       logs
     end
   end
