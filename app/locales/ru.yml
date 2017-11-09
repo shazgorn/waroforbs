@@ -9,6 +9,9 @@ ru:
   log_entry_company_limit_reached: 'Невозможно создать юнит. Максимум %{limit} юнитов.'
   log_entry_company_no_free_cells: Нет свободных клеток для юнита
   log_entry_company_not_enough_res: Не хватает ресурсов
+  log_entry_damage_dealt: 'Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}. Урона получено (ранено, убито): %{a_wounds}, %{a_kills}'
+  log_entry_damage_taken: 'Урона получено (ранено, убито): %{a_wounds}, %{a_kills}. Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}.'
+  log_entry_unit_killed: Ваш юнит погиб
   log_entry_move: "Юнит #%{unit_id} перемещен %{dx}, %{dy} на %{new_x}:%{new_y}"
   log_entry_new_infantry: Новый отряд пехоты создан
   log_entry_new_user: 'Новый пользователь %{user} создан'

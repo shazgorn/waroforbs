@@ -27,7 +27,6 @@ class LogEntry < JSONable
 
     def move(unit_id, dx, dy, new_x, new_y, user)
       message = I18n.t('log_entry_move', unit_id: unit_id, dx: dx, dy: dy, new_x: new_x, new_y: new_y)
-      #message = "Unit #%d moved by %d, %d to %d:%d" % [unit_id, dx, dy, new_x, new_y]
       self.new(:move, message, user)
     end
 
@@ -36,17 +35,17 @@ class LogEntry < JSONable
     end
 
     def attack(res, user = nil)
-      message = "Damage dealt: %d, %d. Damage taken: %d, %d." % [res[:d_dmg][:wounds], res[:d_dmg][:kills], res[:a_dmg][:wounds], res[:a_dmg][:kills]]
+      message = I18n.t('log_entry_damage_dealt', d_wounds: res[:d_dmg][:wounds], d_kills: res[:d_dmg][:kills], a_wounds: res[:a_dmg][:wounds], a_kills: res[:a_dmg][:kills])
       if res[:d_dmg][:dead]
-        message += ' Your hero has been killed.'
+        message += ' ' + I18n.t('log_entry_unit_killed')
       end
       self.new(:attack, message, user)
     end
 
     def defence(res, user = nil)
-      message = "Damage taken: %d, %d. Damage dealt: %d, %d" % [res[:a_dmg][:wounds], res[:a_dmg][:kills], res[:d_dmg][:wounds], res[:d_dmg][:kills]]
+      message = I18n.t('log_entry_damage_taken', d_wounds: res[:d_dmg][:wounds], d_kills: res[:d_dmg][:kills], a_wounds: res[:a_dmg][:wounds], a_kills: res[:a_dmg][:kills])
       if res[:a_dmg][:dead]
-        message += ' Your hero has been killed.'
+        message += ' ' + I18n.t('log_entry_unit_killed')
       end
       self.new(:defence, message, user)
     end
