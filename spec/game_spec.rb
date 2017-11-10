@@ -40,18 +40,17 @@ RSpec.describe Game, "testing" do
 
   it 'settling town' do
     user = Celluloid::Actor[:game].init_user(token)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_new_user', user: token))
     unit = Unit.get_by_user(user).first
     Celluloid::Actor[:game].settle_town(user, unit.id)
     town = Town.get_by_user(user)
     expect(town.user_id).to eq(user.id)
     expect(town.x).to eq(unit.x)
     expect(town.y).to eq(unit.y)
-    logs = LogBox.get_current_by_user(user)
-    expect(logs.first.message).to eq(I18n.t('log_entry_settle_town'))
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_settle_town'))
     expect(unit.inventory[:settlers]).to eq(0)
     Celluloid::Actor[:game].settle_town(user, unit.id)
-    logs = LogBox.get_current_by_user(user)
-    expect(logs.first.message).to eq(I18n.t('log_entry_already_have_town'))
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_already_have_town'))
   end
 
   it 'attack' do
@@ -68,9 +67,9 @@ RSpec.describe Game, "testing" do
     d_user = User.new('defender')
     d = HeavyInfantry.new(2, 2, d_user)
     res = Celluloid::Actor[:game].attack_by_user(a_user, 0, d.id)
-    expect(res[:error]).to eq('Wrong attacker id')
+    expect(LogBox.get_current_by_user(a_user).first.message).to eq(I18n.t('log_entry_wrong_attacker_id'))
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, 0)
-    expect(res[:error]).to eq('Defender not found')
+    expect(LogBox.get_current_by_user(a_user).first.message).to eq(I18n.t('log_entry_defender_not_found'))
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, d.id)
     expect(res[:d_dmg][:wounds]).to eq(3)
     expect(res[:a_dmg][:wounds]).to eq(2)

@@ -448,11 +448,11 @@ class Game
 
   def attack_by_user(a_user, a_id, def_id)
     a = Unit.get_by_id(a_id)
-    return LogBox.error(I18n.t('Wrong attacker id'), a_user) if a.nil? || a.user != a_user
+    return LogBox.error(I18n.t('log_entry_wrong_attacker_id'), a_user) if a.nil? || a.user != a_user
     d = Unit.get_by_id(def_id)
-    return LogBox.error(I18n.t('Not enough ap to attack'), a_user) unless a.can_move?(Unit::ATTACK_COST)
-    return LogBox.error(I18n.t('Defender not found'), a_user) if d.nil?
-    return LogBox.error(I18n.t('Defender is already dead'), a_user) if d.dead?
+    return LogBox.error(I18n.t('log_entry_not_enough_ap'), a_user) unless a.can_move?(Unit::ATTACK_COST)
+    return LogBox.error(I18n.t('log_entry_defender_not_found'), a_user) if d.nil?
+    return LogBox.error(I18n.t('log_entry_defender_already_dead'), a_user) if d.dead?
     attack(a, d)
   end
 

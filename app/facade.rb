@@ -80,12 +80,13 @@ class Facade
       res = Celluloid::Actor[:game].attack_by_user(
         user, user.active_unit_id, params['id'].to_i
       )
-      if res[:error]
-        LogBox.error(res[:error], user)
-      else
+      # if res[:error]
+      #   LogBox.error(res[:error], user)
+      # else
+      if res
         user_data[user_data_key].merge!(res)
       end
-      # set_def_data users, res
+      # TODO: set_def_data users, res
     when :new_random_infantry
       Celluloid::Actor[:game].new_random_infantry(user)
       user_data[user_data_key][:active_unit_id] = user.active_unit_id

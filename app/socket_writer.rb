@@ -40,9 +40,12 @@ class SocketWriter
       res[:units] = game.all_units(@token)
     else
       # everyone else
+      other_user = game.get_user_by_token(@token)
       res = {
         :units => game.all_units(@token),
-        :data_type => :units
+        :data_type => :units,
+        :logs => game.get_current_logs_by_user(other_user),
+        # attack info
       }
     end
     res

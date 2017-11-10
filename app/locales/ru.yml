@@ -11,6 +11,8 @@ ru:
   log_entry_company_not_enough_res: Не хватает ресурсов
   log_entry_damage_dealt: 'Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}. Урона получено (ранено, убито): %{a_wounds}, %{a_kills}'
   log_entry_damage_taken: 'Урона получено (ранено, убито): %{a_wounds}, %{a_kills}. Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}.'
+  log_entry_defender_not_found: Нет юнюта для атаки
+  log_entry_defender_already_dead: Атакуемый юнит уже мертв
   log_entry_unit_killed: Ваш юнит погиб
   log_entry_move: "Юнит #%{unit_id} перемещен %{dx}, %{dy} на %{new_x}:%{new_y}"
   log_entry_new_infantry: Новый отряд пехоты создан
@@ -23,6 +25,7 @@ ru:
   log_entry_unit_dead: Юнит мертв и никуда не пойдет
   log_entry_unit_not_found: 'Юнит #%{unit_id} не найден'
   log_entry_wrong_direction: Неправильное направление
+  log_entry_wrong_attacker_id: Неправильный id атакующего
   res_gold_title: Золото
   res_gold_description: На золото можно покупать всякое
   res_wood_title: Древесина
