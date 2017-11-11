@@ -80,13 +80,9 @@ class Facade
       res = Celluloid::Actor[:game].attack_by_user(
         user, user.active_unit_id, params['id'].to_i
       )
-      # if res[:error]
-      #   LogBox.error(res[:error], user)
-      # else
       if res
         user_data[user_data_key].merge!(res)
       end
-      # TODO: set_def_data users, res
     when :new_random_infantry
       Celluloid::Actor[:game].new_random_infantry(user)
       user_data[user_data_key][:active_unit_id] = user.active_unit_id
@@ -100,18 +96,10 @@ class Facade
       Celluloid::Actor[:game].hire_infantry user
     when :dismiss
       unit_id = data['unit_id']
-      begin
-        Celluloid::Actor[:game].dismiss user, unit_id
-        log = "Unit ##{unit_id} dismissed"
-        type = op
-      rescue OrbError => log_msg
-        log = log_msg
-        type = :error
-      end
-      Log.push(type, log, user)
+      Celluloid::Actor[:game].dismiss user, unit_id
     when :restart
       Celluloid::Actor[:game].restart token
-      dispatch_units
+      # dispatch_units
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin

@@ -106,11 +106,18 @@ class Game
   end
 
   ##################### DATA MODIFICATION METHODS  #######################
-  def dismiss user, id
-    unit = Unit.get_by_user_id user, id
-    raise OrbError, "No unit to dismiss" unless unit
-    unit.die
-    recalculate_user_actions user
+  ##
+  # dismiss - delete unit like it never exists
+  # +user+ User
+  # +unit_id+ int
+
+  def dismiss(user, unit_id)
+    unit = Unit.get_by_user_id(user, unit_id)
+    user.active_unit_id = nil
+    return LogBox.error(I18n.t('log_entry_no_unit_to_dismiss'), user) unless unit
+    Unit.delete(unit.id)
+    LogBox.spawn(I18n.t('log_entry_unit_dismissed', unit_id: unit_id), user)
+    recalculate_user_actions(user)
   end
 
   def bury(unit)
@@ -302,16 +309,15 @@ class Game
   # dy - int
 
   def move_unit_by(unit, dx, dy)
-    return LogEntry.error(I18n.t('log_entry_unit_not_found', unit_id: unit_id)) unless unit
-    return LogEntry.error(I18n.t('log_entry_wrong_direction')) unless @map.d_include?(dx, dy)
-    return LogEntry.error(I18n.t('log_entry_unit_dead')) if unit.dead?
+    return LogBox.error(I18n.t('log_entry_wrong_direction'), unit.user) unless @map.d_include?(dx, dy)
+    return LogBox.error(I18n.t('log_entry_unit_dead'), unit.user) if unit.dead?
     new_x = unit.x + dx
     new_y = unit.y + dy
-    return LogEntry.error(I18n.t('log_entry_out_of_map')) unless @map.has?(new_x, new_y)
+    return LogBox.error(I18n.t('log_entry_out_of_map'), unit.user) unless @map.has?(new_x, new_y)
+    return LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user) unless Unit.place_is_empty?(new_x, new_y)
     type = @map.cell_type_at(new_x, new_y)
     cost = TYPE2COST[type]
-    return LogEntry.error(I18n.t('log_entry_not_enough_ap')) unless unit.can_move?(cost)
-    return LogEntry.error(I18n.t('log_entry_cell_occupied')) unless Unit.place_is_empty?(new_x, new_y)
+    return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
     unit.move_to(new_x, new_y, cost)
     LogBox.move(unit.id, dx, dy, new_x, new_y, unit.user)
   end
@@ -326,9 +332,13 @@ class Game
 
   def move_user_hero_by(user, unit_id, dx, dy)
     unit = Unit.get_by_id(unit_id)
+    return LogBox.error(I18n.t('log_entry_unit_not_found', unit_id: unit_id), user) unless unit
     move_unit_by(unit, dx, dy)
   end
 
+  ##
+  # Orbs moving
+=begin
   def random_move(unit)
     dx = dy = 0
     begin
@@ -338,7 +348,7 @@ class Game
     info "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
     move_unit_by(unit, dx, dy)
   end
-
+=end
   ##
   # Get random coordinates not occupied by any unit
   # return {:x => x, :y => y}
@@ -448,11 +458,23 @@ class Game
 
   def attack_by_user(a_user, a_id, def_id)
     a = Unit.get_by_id(a_id)
-    return LogBox.error(I18n.t('log_entry_wrong_attacker_id'), a_user) if a.nil? || a.user != a_user
+    if a.nil? || a.user != a_user
+      LogBox.error(I18n.t('log_entry_wrong_attacker_id'), a_user)
+      return nil
+    end
     d = Unit.get_by_id(def_id)
-    return LogBox.error(I18n.t('log_entry_not_enough_ap'), a_user) unless a.can_move?(Unit::ATTACK_COST)
-    return LogBox.error(I18n.t('log_entry_defender_not_found'), a_user) if d.nil?
-    return LogBox.error(I18n.t('log_entry_defender_already_dead'), a_user) if d.dead?
+    unless a.can_move?(Unit::ATTACK_COST)
+      LogBox.error(I18n.t('log_entry_not_enough_ap'), a_user)
+      return nil
+    end
+    if d.nil?
+      LogBox.error(I18n.t('log_entry_defender_not_found'), a_user)
+      return nil
+    end
+    if d.dead?
+      LogBox.error(I18n.t('log_entry_defender_already_dead'), a_user)
+      return nil
+    end
     attack(a, d)
   end
 

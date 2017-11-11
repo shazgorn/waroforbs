@@ -28,7 +28,7 @@ class Map
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM # how many pixels in one block (one side)
   BLOCKS_IN_MAP_DIM = Config.get('BLOCKS_IN_MAP_DIM')
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
-  MAP_CELLS_RANGE = (0..MAX_CELL_IDX)
+  MAP_CELLS_RANGE = (1..MAX_CELL_IDX)
   SHIFT = 1000
 
   def initialize(generate = false)
