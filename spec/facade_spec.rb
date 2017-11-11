@@ -79,4 +79,20 @@ RSpec.describe Facade, "#parse_data" do
       facade_attack(att_token, d.id)
     end
   end
+
+  fit 'restart' do
+    token = 'restarter'
+    facade.parse_data({
+                        'writer_name' => token,
+                        'token' => token,
+                        'op' => 'init_map'
+                      })
+    user_data = facade.parse_data({
+                                    'writer_name' => token,
+                                    'token' => token,
+                                    'op' => 'restart'
+                                  })
+    user = Celluloid::Actor[:game].get_user_by_token(token)
+    expect(Unit.get_by_user(user).first.id).to eq(user_data[token][:active_unit_id])
+  end
 end

@@ -56,6 +56,12 @@ class Unit extends Model
     for res, q of unit.inventory
       @inventory[res] = q
 
+  remove: () ->
+    console.log('remove ' + @id)
+    @view.remove_element()
+    if @controls
+        @controls.remove_element()
+
 class Company extends Unit
   constructor: (unit) ->
     super unit

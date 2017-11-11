@@ -38,7 +38,7 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  fit 'is moving' do
+  it 'is moving' do
     user = User.new('mover')
     x = 1
     y = 1
@@ -102,7 +102,15 @@ RSpec.describe Game, "testing" do
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_dismissed', unit_id: hi_id))
     unit = Unit.get_by_user_id(user, hi_id)
     expect(unit).to be_nil
-    # TODO: check actions after implementing restart routine
+  end
+
+  it 'is restart' do
+    user = User.new('dismisser')
+    HeavyInfantry.new(1, 1, user)
+    HeavyInfantry.new(2, 2, user)
+    HeavyInfantry.new(3, 3, user)
+    Celluloid::Actor[:game].restart(user)
+    expect(Unit.get_by_user(user).size).to eq(1)
   end
 
   it 'settling town' do

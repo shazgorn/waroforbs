@@ -66,11 +66,18 @@ class Application
   center_on_active: () ->
     @map.center_on_hero('unit-' + @active_unit_id)
 
+  ##
   # update or create units on map
+  # @param {Object} units - plain objects(hashes) to be transformed into Town, HeavyInfantry etc
   upcreate_units: (units) ->
     # @map.remove_stale_units(units)
     # @units = {} # models
     # @my_units = {} # models
+    # delete deleted, invisible units
+    for unit_id_on_map, unit_on_map of @units
+      unless units[unit_id_on_map]
+        @units[unit_id_on_map].remove()
+        delete @units[unit_id_on_map]
     for unit_id, unit_hash of units
       try
         unit_model = @units[unit_id]
@@ -91,7 +98,6 @@ class Application
         console.error(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
-    # delete dead units
     # if @my_units_ids.length == 0
     #   @lock_controls()
     # $('.unit-info:not(.unit-info-template)').each((i, el) =>

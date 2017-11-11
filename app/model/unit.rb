@@ -168,6 +168,9 @@ class Unit
       @@units[id]
     end
 
+    ##
+    # Get units for user
+
     def get_by_user(user)
       @@units.values.select{|unit| unit.user_id == user.id}
     end
@@ -180,6 +183,12 @@ class Unit
 
     def delete(id)
       @@units.delete(id)
+    end
+
+    def delete_by_user(user)
+      get_by_user(user).each {|unit|
+        delete(unit.id)
+      }
     end
 
     def select_active_unit user

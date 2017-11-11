@@ -19,6 +19,10 @@ class OptionsModal
       else
         $('#map').removeClass("bordered-cells")
     , true)
+    $('#restart').click(() ->
+      $('.modal.options').hide()
+      App.restart()
+    )
 
   option: (key, d, type, callback, trigger) ->
     _this = this

@@ -98,8 +98,8 @@ class Facade
       unit_id = data['unit_id']
       Celluloid::Actor[:game].dismiss user, unit_id
     when :restart
-      Celluloid::Actor[:game].restart token
-      # dispatch_units
+      Celluloid::Actor[:game].restart(user)
+      user_data[user_data_key][:active_unit_id] = user.active_unit_id
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin

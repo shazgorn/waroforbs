@@ -35,7 +35,7 @@ class Building
         @ttb_string = seconds_to_hm @ttb
       end
     end
-    hash = {
+    {
       'cost_res' => @cost_res,
       'cost_time' => @cost_time,
       'finish_time' => @finish_time,

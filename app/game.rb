@@ -140,14 +140,27 @@ class Game
       user = User.new(token)
       LogBox.spawn(I18n.t('log_entry_new_user', user: user.login), user)
       Token.set(token, user)
-      unit = new_random_infantry(user)
-      unit.give_res(:settlers, 1)
-      unit.give_res(:gold, 10)
-      unit.give_res(:wood, 7)
+      start_res_for_user(user)
     else
       LogBox.spawn(I18n.t('log_entry_user_logged_in', user: user.login), user)
     end
     user
+  end
+
+  def restart(user)
+    Unit.delete_by_user(user)
+    start_res_for_user(user)
+  end
+
+  ##
+  # Give starting resources to the +user+
+  # after +user+ init or restart
+
+  def start_res_for_user(user)
+    unit = new_random_infantry(user)
+    unit.give_res(:settlers, 1)
+    unit.give_res(:gold, 10)
+    unit.give_res(:wood, 7)
   end
 
   def init_map(token)
@@ -373,9 +386,6 @@ class Game
       end
     end
     nil
-  end
-
-  def restart(token)
   end
 
   def tick(topic)
