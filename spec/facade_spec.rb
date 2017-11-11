@@ -80,7 +80,7 @@ RSpec.describe Facade, "#parse_data" do
     end
   end
 
-  fit 'restart' do
+  it 'restart' do
     token = 'restarter'
     facade.parse_data({
                         'writer_name' => token,

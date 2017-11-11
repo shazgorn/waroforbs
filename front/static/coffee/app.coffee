@@ -73,9 +73,9 @@ class Application
     # @map.remove_stale_units(units)
     # @units = {} # models
     # @my_units = {} # models
-    # delete deleted, invisible units
+    # delete deleted, invisible units that present in units(new) but absent in @units(present)
     for unit_id_on_map, unit_on_map of @units
-      unless units[unit_id_on_map]
+      if !units[unit_id_on_map] && @units[unit_id_on_map]
         @units[unit_id_on_map].remove()
         delete @units[unit_id_on_map]
     for unit_id, unit_hash of units
