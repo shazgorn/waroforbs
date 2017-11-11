@@ -39,8 +39,8 @@ class Application
   build: (id) ->
     @ws.build(id)
 
-  dismiss: (id) ->
-    @ws.dismiss(id)
+  disband: (id) ->
+    @ws.disband(id)
 
   hire_infantry: () ->
     @ws.hire_infantry()

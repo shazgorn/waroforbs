@@ -107,16 +107,16 @@ class Game
 
   ##################### DATA MODIFICATION METHODS  #######################
   ##
-  # dismiss - delete unit like it never exists
+  # disband - delete unit like it never exists
   # +user+ User
   # +unit_id+ int
 
-  def dismiss(user, unit_id)
+  def disband(user, unit_id)
     unit = Unit.get_by_user_id(user, unit_id)
     user.active_unit_id = nil
-    return LogBox.error(I18n.t('log_entry_no_unit_to_dismiss'), user) unless unit
+    return LogBox.error(I18n.t('log_entry_no_unit_to_disband'), user) unless unit
     Unit.delete(unit.id)
-    LogBox.spawn(I18n.t('log_entry_unit_dismissed', unit_id: unit_id), user)
+    LogBox.spawn(I18n.t('log_entry_unit_disbanded', unit_id: unit_id), user)
     recalculate_user_actions(user)
   end
 

@@ -94,9 +94,9 @@ class Facade
       Celluloid::Actor[:game].spawn_orb data['color'].to_sym
     when :hire_infantry
       Celluloid::Actor[:game].hire_infantry user
-    when :dismiss
+    when :disband
       unit_id = data['unit_id']
-      Celluloid::Actor[:game].dismiss user, unit_id
+      Celluloid::Actor[:game].disband user, unit_id
     when :restart
       Celluloid::Actor[:game].restart(user)
       user_data[user_data_key][:active_unit_id] = user.active_unit_id

@@ -29,9 +29,9 @@ class ControlsView
     @def = @info.find('.unit-defence-info')
     inventory = @info.find('.unit-inventory-info')
     inventory_item_description = @info.find('.unit-inventory-item-description-info')
-    @dismiss = @info.find('.unit-info-dismiss')
-    @dismiss.data('id', unit.id).click(() ->
-      App.dismiss($(this).data('id'))
+    @disband = @info.find('.unit-info-disband')
+    @disband.data('id', unit.id).click(() ->
+      App.disband($(this).data('id'))
     )
     if App.active_unit_id == unit.id
       @info.addClass('active-unit-info')

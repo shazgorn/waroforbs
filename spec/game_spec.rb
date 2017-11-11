@@ -94,18 +94,18 @@ RSpec.describe Game, "testing" do
     expect(res[:a_dmg][:wounds]).to eq(2)
   end
 
-  it 'is dismiss' do
-    user = User.new('dismisser')
+  it 'is disband' do
+    user = User.new('disbander')
     hi = HeavyInfantry.new(1, 1, user)
     hi_id = hi.id
-    Celluloid::Actor[:game].dismiss(user, hi.id)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_dismissed', unit_id: hi_id))
+    Celluloid::Actor[:game].disband(user, hi.id)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_disbanded', unit_id: hi_id))
     unit = Unit.get_by_user_id(user, hi_id)
     expect(unit).to be_nil
   end
 
   it 'is restart' do
-    user = User.new('dismisser')
+    user = User.new('restarter')
     HeavyInfantry.new(1, 1, user)
     HeavyInfantry.new(2, 2, user)
     HeavyInfantry.new(3, 3, user)
