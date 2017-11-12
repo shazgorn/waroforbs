@@ -92,6 +92,16 @@ RSpec.describe Game, "testing" do
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, d.id)
     expect(res[:d_dmg][:wounds]).to eq(3)
     expect(res[:a_dmg][:wounds]).to eq(2)
+    at = HeavyInfantry.new(5, 5, a_user)
+    d_town = Town.new(4, 4, d_user)
+    10.times do
+      res = Celluloid::Actor[:game].attack_by_user(a_user, at.id, d_town.id)
+    end
+    LogBox.get_current_by_user(a_user)
+    Celluloid::Actor[:game].move_user_hero_by(a_user, at.id, -1, -1)
+    LogBox.get_current_by_user(a_user)
+    expect(at.x).to eq(4)
+    expect(at.y).to eq(4)
   end
 
   it 'is disband' do

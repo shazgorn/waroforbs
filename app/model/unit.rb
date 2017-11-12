@@ -197,7 +197,7 @@ class Unit
     end
 
     def place_is_empty?(x, y)
-      @@units.select{|k, unit| unit.x == x && unit.y == y}.length == 0
+      @@units.select{|k, unit| unit.x == x && unit.y == y && unit.alive?}.length == 0
     end
 
     def get_by_xy(x, y)

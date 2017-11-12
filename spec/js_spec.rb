@@ -31,6 +31,8 @@ RSpec.describe "Gaming process", :js => true do
     expect(page).to have_content(I18n.t('res_settlers_action_label'))
     click_button(I18n.t('res_settlers_action_label'))
     find('#unit-info-list > .unit-info:last-of-type').click()
+    find('.player-town').click()
+    find('.modal.town .build-button').click()
     # expect(page).to have_content(I18n.t('Barracs'))
     # find('#barracs .build-button').click()
   end

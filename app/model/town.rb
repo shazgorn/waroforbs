@@ -55,6 +55,8 @@ class TownWorker < JSONable
   end
 end
 
+##
+# SE - single entity
 class Town < Unit
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
@@ -128,12 +130,6 @@ class Town < Unit
 
   def get_free_worker
     @workers.select{|w| w.x == nil && w.y == nil}.first
-  end
-
-  def place(x = nil, y = nil)
-    if @x.nil? && @y.nil?
-      super(x, y)
-    end
   end
 
   def extract_cost cost
