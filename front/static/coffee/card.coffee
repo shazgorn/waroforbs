@@ -27,13 +27,14 @@ class BuildingCard extends Card
     # building container(card) with link, time to build, cost and build button
     @el = $('.building-card-template')
       .clone()
+      .addClass("building-card-#{building.name}")
       .attr('id', building.id)
       .removeClass('building-card-template')
     # open building link
     @open_building_button = @el.find('.open-building')
       .html(@title)
-      .attr('id', "open-screen-#{building.id}")
-      .data('id', building.id)
+      .attr('id', "open-screen-#{building.name}")
+      .data('id', building.name)
     @building_time = @el.find('.building-time')
       .html(building.ttb_string)
     @building_cost = @el.find('.building-cost')
