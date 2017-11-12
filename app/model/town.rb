@@ -83,6 +83,22 @@ class Town < Unit
     @inventory[:wood] = 50
   end
 
+  ##
+  # Destroy all building if town is beign attacked
+  # TODO: log building destruction
+  # TODO: destory one building per attack, before inflicting wounds
+
+  def wound
+    @buildings.each_value{|building|
+      if building.built?
+        # puts 'destroy ' + building.name
+        building.destroy
+        break
+      end
+    }
+    super
+  end
+
   def to_hash
     hash = super
     hash.merge!(
@@ -141,7 +157,8 @@ class Town < Unit
     }
   end
 
-  def build building_id
+  def build(building_id)
+    raise OrbError, "Unknown building #{building_id}" unless @buildings[building_id]
     building = @buildings[building_id]
     raise OrbError, 'Not enough resources' unless building.enough_resources?(@inventory)
     extract_cost building.cost_res

@@ -5,7 +5,6 @@ class TownModalControls
     _town_controls = this
     _this = this
 
-    @open_building_id = null
     @last_town = null
     # fill in building modal
     @buildings =
@@ -21,7 +20,6 @@ class TownModalControls
           #     create_company_card(App.my_units[company_id])
       }
     $('.close-modal').click(() ->
-      @open_building_id = null
       $('.modal').hide()
     )
 
@@ -98,12 +96,5 @@ class TownModalControls
 
   open_town: (id) ->
     @last_town = id
-
-  ##
-  # @param {jQuery} button - card.open_building
-  open_building: (button, title, actions) ->
-    id = $(button).data('id')
-    @buildings[id].callback()
-    @open_building_id = id
 
 window.TownModalControls = TownModalControls

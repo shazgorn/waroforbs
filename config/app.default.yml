@@ -12,3 +12,8 @@ BLACK_ORB_START_DAMAGE: 100
 BLACK_ORB_START_DEFENCE: 10
 img_path: front/static/img/
 HEAVY_INFANTRY_LIMIT: 10
+barracs:
+  cost_time: 60
+  cost_res:
+    gold: 20
+    wood: 5

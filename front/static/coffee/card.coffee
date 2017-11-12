@@ -68,6 +68,15 @@ class BuildingCard extends Card
     @actions = building.actions
     switch building.status
       when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+        @el
+          .removeClass('building-in-progress')
+          .removeClass('building-built')
+          .addClass('building-not-built')
+        @building_time = @el.find('.building-time')
+          .html(building.ttb_string)
+        @close_building()
+        if @town_modal
+          @remove_open_handler()
         return
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
         @el
@@ -97,6 +106,10 @@ class BuildingCard extends Card
       .click(() =>
         @open_building()
       )
+
+  remove_open_handler: () ->
+    @el
+      .off('click')
 
   start_building_countdown: () ->
     clearInterval(@interval)
@@ -135,5 +148,13 @@ class BarracsCard extends BuildingCard
         .click(() =>
           App.hire_infantry()
         )
+
+  ##
+  # TODO: Add close button
+
+  close_building: () ->
+    $('.modal-body .modal-building-inner *').remove()
+    $('.modal-body .modal-building-actions-inner *').remove()
+    $('.modal.town .modal-title').html('Town')
 
 window.BuildingCard = BuildingCard

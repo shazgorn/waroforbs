@@ -8,6 +8,7 @@ RSpec.configure do |c|
   Capybara.javascript_driver = :webkit
   Capybara.app_host = 'http://0.0.0.0:9292/'
   Capybara.run_server = false
+  c.include TimeHelper
   c.include Capybara::DSL
   c.before(:example) {
     I18n.load_path = Dir[
@@ -34,8 +35,9 @@ RSpec.describe "Gaming process", :js => true do
     find('.player-town').click()
     expect(page).to have_content(I18n.t('Barracs'))
     find('.modal.town .building-card-barracs .build-button').click()
-    expect(find('.modal.town .building-in-progress .building-time').text).to eq("0:06")
-    sleep(10)
+    barracs_time_cost = Config.get('barracs')['cost_time']
+    expect(find('.modal.town .building-in-progress .building-time').text).to eq(seconds_to_hm(barracs_time_cost))
+    sleep(barracs_time_cost)
     find('.modal.town .building-built #open-screen-barracs').click()
   end
 end

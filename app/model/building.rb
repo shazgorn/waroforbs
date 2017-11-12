@@ -1,12 +1,16 @@
+require 'time_helper'
+
 # status = 0 can be built
 # status = 1 in progress
 # status = 2 already build
 class Building
-  attr_reader :cost_res
+  include TimeHelper
 
-  STATE_CAN_BE_BUILT = 0
-  STATE_IN_PROGRESS = 1
-  STATE_BUILT = 2
+  attr_reader :cost_res, :name
+
+  STATE_CAN_BE_BUILT = 1
+  STATE_IN_PROGRESS = 2
+  STATE_BUILT = 3
 
   def initialize
     @status = STATE_CAN_BE_BUILT
@@ -24,17 +28,7 @@ class Building
   end
 
   def to_hash()
-    if in_progress?
-      if Time.now() > @finish_time
-        @status = STATE_BUILT
-        @finish_time = nil
-        @start_time = nil
-        @ttb = nil
-      else
-        @ttb = (@finish_time - Time.now()).round(0)
-        @ttb_string = seconds_to_hm @ttb
-      end
-    end
+    check_build
     {
       'cost_res' => @cost_res,
       'cost_time' => @cost_time,
@@ -53,16 +47,6 @@ class Building
     to_hash().to_json
   end
 
-  def build
-    raise OrbError, 'Building already in progress' if @status == STATE_IN_PROGRESS
-    @status = STATE_IN_PROGRESS
-    if @cost_time
-      @start_time = Time.now()
-      @finish_time = @start_time + @cost_time
-    end
-    true
-  end
-
   def enough_resources? avail_resources
     @cost_res.each{|res_name, res_count|
       if res_count > 0 && (!avail_resources.has_key?(res_name) || avail_resources[res_name] < res_count)
@@ -72,7 +56,51 @@ class Building
     true
   end
 
+  ##
+  # Start construction
+
+  def build
+    raise OrbError, 'Building already in progress' if @status == STATE_IN_PROGRESS
+    check_build
+    @status = STATE_IN_PROGRESS
+    if @cost_time
+      @start_time = Time.now()
+      @finish_time = @start_time + @cost_time
+      update_ttb
+    end
+    true
+  end
+
+  ##
+  # Check if building status can be set to STATE_BUILT from STATE_IN_PROGRESS
+  # should be used on every read action
+
+  def check_build
+    case @status
+    when STATE_CAN_BE_BUILT
+      @cost_time = Config.get(@name)['cost_time']
+      @cost_res[:gold] = Config.get(@name)['cost_res']['gold']
+      @cost_res[:wood] = Config.get(@name)['cost_res']['wood']
+      @ttb_string = seconds_to_hm @cost_time
+    when STATE_IN_PROGRESS
+      if Time.now() > @finish_time
+        @status = STATE_BUILT
+        @finish_time = nil
+        @start_time = nil
+        @ttb = nil
+      else
+        update_ttb
+      end
+    end
+  end
+
+  def update_ttb
+    @ttb = (@finish_time - Time.now()).round(0)
+    @ttb_string = seconds_to_hm @ttb
+  end
+
   def built?
+    check_build
     @status == STATE_BUILT
   end
 
@@ -80,17 +108,12 @@ class Building
     @status == STATE_IN_PROGRESS
   end
 
-  def actions
-    []
+  def destroy
+    @status = STATE_CAN_BE_BUILT
   end
 
-  def seconds_to_hm t
-    minutes = (t / 60).round(0)
-    seconds = t % 60
-    if seconds < 10
-      seconds = "0#{seconds}"
-    end
-    "#{minutes}:#{seconds}"
+  def actions
+    []
   end
 end
 
@@ -110,10 +133,6 @@ class Barracs < Building
     super
     @name = 'barracs'
     @title = I18n.t('Barracs')
-    @cost_time = 6
-    @cost_res[:gold] = 20
-    @cost_res[:wood] = 5
-    @ttb_string = seconds_to_hm @cost_time
   end
 
   def actions

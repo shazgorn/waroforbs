@@ -38,4 +38,12 @@ RSpec.describe Unit, "testing" do
     expect(town.life).to eq(Unit::MAX_LIFE - 1)
     expect(town.wounds).to eq(1)
   end
+
+  it 'is destroying building' do
+    user = User.new('destroyer')
+    town = Town.new(5, 5, user)
+    town.build :barracs
+    sleep(Config.get('barracs')['cost_time'] + 2)
+    town.kill
+  end
 end

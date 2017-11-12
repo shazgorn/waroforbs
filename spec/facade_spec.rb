@@ -1,4 +1,4 @@
-require "celluloid/current"
+require 'celluloid/current'
 
 require 'game'
 require 'facade'
