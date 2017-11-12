@@ -29,4 +29,8 @@ class TownModal
   update: (town) ->
     return
 
+  clean_up: () ->
+    @modal_town.find('.buildings-inner *').remove()
+    @modal_town.find('.town-inventory-inner *').remove()
+
 window.TownModal = TownModal

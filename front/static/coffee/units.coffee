@@ -60,7 +60,7 @@ class Unit extends Model
     console.log('remove ' + @id)
     @view.remove_element()
     if @controls
-        @controls.remove_element()
+      @controls.remove_element()
 
 class Company extends Unit
   constructor: (unit) ->
@@ -232,6 +232,9 @@ class PlayerTown extends Town
       for key, building_card of @buildings_cards
         building_card.set_town_modal(@modal, @buildings[key])
 
+  remove: () ->
+    super
+    @modal.clean_up()
 
 class Building
   constructor: (key, building) ->
