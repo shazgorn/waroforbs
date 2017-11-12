@@ -2,7 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y, :life, :inventory
+  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory
 
   ATTACK_COST = 1
   MAX_LIFE = 15
@@ -43,6 +43,7 @@ class Unit
       @life -= 1
       check_life()
     end
+    true
   end
 
   def wound
@@ -51,6 +52,7 @@ class Unit
       @wounds += 1
       check_life()
     end
+    true
   end
 
   def check_life()
@@ -67,6 +69,7 @@ class Unit
       'y' => @y,
       'ap' => @ap,
       'life' => @life,
+      'wounds' => @wounds,
       'dead' => @dead,
       'defence' => @defence,
       'inventory' => @inventory,

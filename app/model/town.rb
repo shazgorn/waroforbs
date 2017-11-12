@@ -1,4 +1,5 @@
 require 'unit'
+require 'single_entity'
 
 class Resource
   T = {
@@ -58,6 +59,8 @@ end
 ##
 # SE - single entity
 class Town < Unit
+  include SingleEntity
+
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
 

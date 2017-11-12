@@ -26,8 +26,12 @@ class SquadAttack
       a.life.times {|n|
         prob = rand(100)
         if prob < 6
-          d.kill
-          kills += 1
+          # for SE kills became wounds
+          if d.kill
+            kills += 1
+          else
+            wounds += 1
+          end
         elsif prob < 25
           d.wound
           wounds += 1

@@ -26,4 +26,16 @@ RSpec.describe Unit, "testing" do
     expect(town.y).to be_nil
     expect(town.dead?).to be true
   end
+
+  it 'is killing me and wound SingleEntity' do
+    user = User.new('killer')
+    hi = HeavyInfantry.new(2, 2, user)
+    hi.kill
+    expect(hi.life).to eq(Unit::MAX_LIFE - 1)
+    expect(hi.wounds).to eq(0)
+    town = Town.new(3, 3, user)
+    town.kill
+    expect(town.life).to eq(Unit::MAX_LIFE - 1)
+    expect(town.wounds).to eq(1)
+  end
 end
