@@ -23,6 +23,7 @@ class Unit extends Model
     @defence = unit.defence
     @dead = unit.dead
     @life = unit.life
+    @wounds = unit.wounds
     @name = unit.name
     @ap = unit.ap
     @inventory =  unit.inventory
@@ -95,6 +96,8 @@ class PlayerCompany extends Company
     if @life != unit.life
       @life = unit.life
       @view.set_life(@life)
+    if @wounds != unit.wounds
+      @wounds = unit.wounds
     @controls.update(this)
 
 
@@ -255,7 +258,7 @@ class Building
 class OtherPlayerTown extends Town
   constructor: (unit) ->
     super unit
-     @title = unit.name + ' [' + unit.user_name + ']'
+    @title = unit.name + ' [' + unit.user_name + ']'
 
   create_view: () ->
     if !@dead

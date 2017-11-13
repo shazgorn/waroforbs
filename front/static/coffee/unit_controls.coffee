@@ -23,6 +23,7 @@ class ControlsView
     @life = @info.find('.unit-life-info')
     @id = @info.find('.unit-id-info')
     @life = @info.find('.unit-life-info')
+    @wounds = @info.find('.unit-wounds-info')
     @xy = @info.find('.unit-xy-info')
     @ap = @info.find('.unit-ap-info')
     @dmg = @info.find('.unit-damage-info')
@@ -53,6 +54,7 @@ class ControlsView
       @info.remove()
       return
     @life.html(unit.life)
+    @wounds.html(unit.wounds)
     @xy.html(unit.x + ',' + unit.y)
     @ap.html(unit.ap)
     @dmg.html(unit.damage)
@@ -63,10 +65,6 @@ class PlayerCompanyControlsView extends ControlsView
     super unit
     @name.html(unit.name)
     @name.attr('title', unit.name)
-
-  update: (unit) ->
-    super unit
-    @life.html(unit.life)
 
 class PlayerTownControlsView extends ControlsView
   constructor: (unit) ->
