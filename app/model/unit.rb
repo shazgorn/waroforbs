@@ -26,6 +26,7 @@ class Unit
     @@units[@id] = self
     @life = MAX_LIFE
     @wounds = 0
+    @name = nil
     @inventory = {
       :gold => 0,
       :wood => 0,
@@ -65,6 +66,7 @@ class Unit
     {
       'id' => @id,
       'type' => @type,
+      'name' => @name,
       'x' => @x,
       'y' => @y,
       'ap' => @ap,

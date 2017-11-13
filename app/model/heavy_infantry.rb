@@ -13,6 +13,7 @@ class HeavyInfantry < Unit
     @ap = @max_ap = BASE_AP
     # each company starts with one squad
     @squads = 1
+    @name = I18n.t('Heavy Infantry')
   end
 
   def die

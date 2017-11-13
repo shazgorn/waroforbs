@@ -23,6 +23,7 @@ class Unit extends Model
     @defence = unit.defence
     @dead = unit.dead
     @life = unit.life
+    @name = unit.name
     @ap = unit.ap
     @inventory =  unit.inventory
     @user_id = null
@@ -81,6 +82,7 @@ class PlayerCompany extends Company
     super unit
     @css_class = 'player-unit player-hero'
     @life = unit.life
+    @title = unit.name
 
   create_view: () ->
     if !@dead
@@ -128,7 +130,6 @@ class GreenOrb extends Unit
     @view = new GreenOrbView(this)
 
 
-
 class BlackOrb extends Unit
   constructor: (unit) ->
     super unit
@@ -151,7 +152,7 @@ class Town extends Unit
   constructor: (unit) ->
     super unit
     @css_class = 'town'
-    @title = unit.user_name + ' Town'
+    @title = unit.name
 
 ##
 # cell in town radius
@@ -254,6 +255,7 @@ class Building
 class OtherPlayerTown extends Town
   constructor: (unit) ->
     super unit
+     @title = unit.name + ' [' + unit.user_name + ']'
 
   create_view: () ->
     if !@dead

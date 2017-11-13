@@ -138,10 +138,8 @@ class BarracsCard extends BuildingCard
     # clean up
     $('.modal-body .modal-building-inner *').remove()
     $('.modal-body .modal-building-actions-inner *').remove()
-    $('.modal.town .modal-title').html('Town - ' + @title)
-    console.log(@actions)
+    $('.modal.town .modal-title').html(@town_modal.name + ' - ' + @title)
     for i, action of @actions
-      console.log(action)
       $(document.createElement('button'))
         .html(action.label)
         .appendTo('.modal.town .modal-building-actions-inner')
@@ -155,6 +153,7 @@ class BarracsCard extends BuildingCard
   close_building: () ->
     $('.modal-body .modal-building-inner *').remove()
     $('.modal-body .modal-building-actions-inner *').remove()
-    $('.modal.town .modal-title').html('Town')
+    if @town_modal
+      @town_modal.restore_title
 
 window.BuildingCard = BuildingCard

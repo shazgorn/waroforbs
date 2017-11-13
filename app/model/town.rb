@@ -81,6 +81,7 @@ class Town < Unit
     # start capital for testing
     @inventory[:gold] = 300
     @inventory[:wood] = 50
+    @name = I18n.t('Town')
   end
 
   ##

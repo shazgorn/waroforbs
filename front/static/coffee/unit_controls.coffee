@@ -61,7 +61,8 @@ class ControlsView
 class PlayerCompanyControlsView extends ControlsView
   constructor: (unit) ->
     super unit
-    @name.html('C')
+    @name.html(unit.name)
+    @name.attr('title', unit.name)
 
   update: (unit) ->
     super unit
@@ -70,7 +71,8 @@ class PlayerCompanyControlsView extends ControlsView
 class PlayerTownControlsView extends ControlsView
   constructor: (unit) ->
     super unit
-    @name.html('T')
+    @name.html(unit.name)
+    @name.attr('title', unit.name)
 
 window.PlayerCompanyControlsView = PlayerCompanyControlsView
 window.PlayerTownControlsView = PlayerTownControlsView

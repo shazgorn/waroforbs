@@ -7,16 +7,16 @@ class TownModal
   # @constructor
   # @param {PlayerTown} town
   constructor: (town) ->
-    @modal_town = $('.modal.town')
+    @el = $('.modal.town')
     # towns name, will be set by player someday
-    @title = 'Town'
-    @modal_town.find('.modal-title').html(@title)
+    @name = town.name
+    @el.find('.modal-title').html(@name)
     @controls = new TownModalControls
-    inventory_item_description = @modal_town.find('.town-inventory-item-description')
-    @inventory_view = new TownInventoryView(@modal_town.find('.town-inventory-inner'), town.inventory, inventory_item_description)
+    inventory_item_description = @el.find('.town-inventory-item-description')
+    @inventory_view = new TownInventoryView(@el.find('.town-inventory-inner'), town.inventory, inventory_item_description)
     @buildings_cards = town.buildings_cards
     for key, building_card of @buildings_cards
-      @modal_town.find('.buildings-inner').append(building_card.el)
+      @el.find('.buildings-inner').append(building_card.el)
 
   ##
   # Open the town modal window by clicking on any element in the 'list'
@@ -24,13 +24,19 @@ class TownModal
   bind_open_handler: (list) ->
     for el in list
       el.click () =>
-        @modal_town.show()
+        @el.show()
 
   update: (town) ->
     return
+    # if town.name != @name
+    #   @title = town.title
+    #   @el.find('.modal-title').html(@name)
 
   clean_up: () ->
-    @modal_town.find('.buildings-inner *').remove()
-    @modal_town.find('.town-inventory-inner *').remove()
+    @el.find('.buildings-inner *').remove()
+    @el.find('.town-inventory-inner *').remove()
+
+  restore_title: () ->
+    $('.modal.town .modal-title').html(@name)
 
 window.TownModal = TownModal
