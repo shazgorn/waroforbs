@@ -432,13 +432,19 @@ button {
     content: '#';
   }
 
+  .unit-name-info {
+    width: 100%;
+
+    input {
+      float: left;
+      height: 16px;
+      width: 160px;
+    }
+  }
+
   .unit-info-row {
     div {
       display: inline-block;
-    }
-
-    .unit-name-info {
-      width: 100%;
     }
 
     div:nth-of-type(1) {
@@ -539,6 +545,19 @@ button {
     }
   }
 }
+
+.ok-button {
+  background: url('/img/ok.png');
+  height: 20px;
+  width: 20px;
+}
+
+.cancel-button {
+  background: url('/img/cancel.png');
+  height: 20px;
+  width: 20px;
+}
+
 
 #log {
   background-color: $theme-color;

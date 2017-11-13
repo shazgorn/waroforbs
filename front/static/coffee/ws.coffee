@@ -119,6 +119,16 @@ class WS
       })
     )
 
+  rename_unit: (unit_id, name) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        unit_id: unit_id,
+        unit_name: name,
+        op: 'rename_unit'
+      })
+    )
+
   build: (id) ->
     @socket.send(
       JSON.stringify({

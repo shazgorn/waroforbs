@@ -42,6 +42,9 @@ class Application
   disband: (id) ->
     @ws.disband(id)
 
+  rename_unit: (id, name) ->
+    @ws.rename_unit(id, name)
+
   hire_infantry: () ->
     @ws.hire_infantry()
 

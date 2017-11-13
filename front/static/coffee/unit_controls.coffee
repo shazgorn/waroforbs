@@ -60,17 +60,62 @@ class ControlsView
     @dmg.html(unit.damage)
     @def.html(unit.defence)
 
-class PlayerCompanyControlsView extends ControlsView
+class PlayerControlsView extends ControlsView
+  rename: (unit_id, new_name) ->
+    @name.html(new_name)
+    App.rename_unit(unit_id, new_name)
+
   constructor: (unit) ->
     super unit
     @name.html(unit.name)
+    @name.dblclick(() =>
+      @name.html('')
+      @name.append(
+        input = $(document.createElement('input'))
+          .attr('type', 'text')
+          .addClass('text')
+          .css('width', '160px')
+          .css('height', '16px') # 20px - 4px
+          .css('float', 'left')
+          .attr('name', 'edit-unit-name')
+          .attr('id', 'edit-unit-name')
+          .prop('readonly', false)
+          .val(unit.name)
+      )
+      input
+        .focus()
+        .keypress((e) =>
+          console.log(e)
+          if e.which == 13
+            @rename(unit.id, input.val())
+        )
+      @name.append(
+        $(document.createElement('button'))
+          .addClass('ok-button')
+          .html('')
+          .click(() =>
+            @rename(unit.id, input.val())
+          )
+      )
+      @name.append(
+        $(document.createElement('button'))
+          .addClass('cancel-button')
+          .html('')
+          .click(() =>
+            @name.html(unit.name)
+          )
+      )
+    )
     @name.attr('title', unit.name)
 
-class PlayerTownControlsView extends ControlsView
+class PlayerCompanyControlsView extends PlayerControlsView
   constructor: (unit) ->
     super unit
-    @name.html(unit.name)
-    @name.attr('title', unit.name)
+
+class PlayerTownControlsView extends PlayerControlsView
+  constructor: (unit) ->
+    super unit
+
 
 window.PlayerCompanyControlsView = PlayerCompanyControlsView
 window.PlayerTownControlsView = PlayerTownControlsView

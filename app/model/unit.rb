@@ -3,6 +3,7 @@
 # for selecting units of specific type
 class Unit
   attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory
+  attr_accessor :name
 
   ATTACK_COST = 1
   MAX_LIFE = 15

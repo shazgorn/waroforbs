@@ -51,6 +51,8 @@ class Unit extends Model
     if @ap != unit.ap
       @ap = unit.ap
       # view.set_ap(@ap)
+    if @name != unit.name
+      @name = unit.name
     if @controls
       @controls.inventory_view.sync_resources(@inventory, unit.inventory)
     if @modal

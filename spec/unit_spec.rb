@@ -46,4 +46,10 @@ RSpec.describe Unit, "testing" do
     sleep(Config.get('barracs')['cost_time'] + 2)
     town.kill
   end
+
+  it 'is renaming unit' do
+    user = User.new('renamer')
+    h = HeavyInfantry.new(5, 5, user)
+    h.name = 'new name'
+  end
 end

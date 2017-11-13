@@ -100,6 +100,8 @@ class Facade
     when :restart
       Celluloid::Actor[:game].restart(user)
       user_data[user_data_key][:active_unit_id] = user.active_unit_id
+    when :rename_unit
+      Celluloid::Actor[:game].rename_unit(user, data['unit_id'], data['unit_name'])
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin

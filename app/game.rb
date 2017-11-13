@@ -120,6 +120,13 @@ class Game
     recalculate_user_actions(user)
   end
 
+  def rename_unit(user, unit_id, unit_name)
+    unit = Unit.get_by_user_id(user, unit_id)
+    old_name = unit.name
+    unit.name = unit_name
+    LogBox.spawn(I18n.t('log_entry_unit_renamed', old_name: old_name, new_name: unit_name), user)
+  end
+
   def bury(unit)
     if unit.user
       recalculate_user_actions(unit.user)

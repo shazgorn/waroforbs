@@ -114,6 +114,16 @@ RSpec.describe Game, "testing" do
     expect(unit).to be_nil
   end
 
+  it 'is renaming unit' do
+    user = User.new('disbander')
+    hi = HeavyInfantry.new(1, 1, user)
+    old_name = hi.name
+    hi_id = hi.id
+    new_name = 'New name'
+    Celluloid::Actor[:game].rename_unit(user, hi.id, new_name)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_renamed', old_name: old_name, new_name: new_name))
+  end
+
   it 'is restart' do
     user = User.new('restarter')
     HeavyInfantry.new(1, 1, user)
