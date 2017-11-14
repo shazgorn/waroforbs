@@ -31,6 +31,7 @@ RSpec.describe "Gaming process", :js => true do
     expect(page).to have_content(I18n.t('Exit'))
     sleep(1) # wait init_map
     expect(find('#user-info-nickname-info').text).to eq(login)
+    expect(find('#user-info-glory-info').text).to eq("#{Config.get('START_GLORY')}/#{Config.get('START_MAX_GLORY')}")
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
     # TODO: move starter unit type to Config
     expect(unit_name).to eq(I18n.t('Heavy Infantry'))

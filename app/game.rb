@@ -182,6 +182,8 @@ class Game
       :active_unit_id => user.active_unit_id,
       :user_id => user.id,
       :user_name => user.login,
+      :user_glory => user.glory,
+      :user_max_glory => user.max_glory,
       :actions => user.actions,
       :units => all_units({user.id => {}}),
       :cells => @map.cells,

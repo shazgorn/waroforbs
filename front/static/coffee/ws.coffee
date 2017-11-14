@@ -42,6 +42,7 @@ class WS
             app.TOWN_RADIUS = data.TOWN_RADIUS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
             $('#user-info-nickname-info').html(data.user_name)
+            $('#user-info-glory-info').html("#{data.user_glory}/#{data.user_max_glory}")
 
             # App init function calls
             app.upcreate_units(data.units)

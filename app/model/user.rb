@@ -1,7 +1,7 @@
 require 'action'
 
 class User
-  attr_reader :login, :id
+  attr_reader :login, :id, :glory, :max_glory
   attr_accessor :active_unit_id, :actions
 
   @@id_seq = 1
@@ -14,6 +14,8 @@ class User
     @login = login
     @active_unit_id = nil
     @actions = {}
+    @glory = Config.get('START_GLORY')
+    @max_glory = Config.get('START_MAX_GLORY')
     # init with false, create default hero on later
     # and switch actions
     add_action NewTownAction.new false
