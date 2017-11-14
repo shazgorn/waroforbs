@@ -367,6 +367,16 @@ button {
   // }
 }
 
+.user-info-nickname-info {
+  color: red;
+  float: right;
+}
+
+.user-info-glory-info {
+  color: cyan;
+  float: right;
+}
+
 #right-col {
   @include themed();
   height: 100%;

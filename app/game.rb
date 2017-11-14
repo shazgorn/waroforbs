@@ -181,6 +181,7 @@ class Game
       :MAX_CELL_IDX => Map::MAX_CELL_IDX,
       :active_unit_id => user.active_unit_id,
       :user_id => user.id,
+      :user_name => user.login,
       :actions => user.actions,
       :units => all_units({user.id => {}}),
       :cells => @map.cells,

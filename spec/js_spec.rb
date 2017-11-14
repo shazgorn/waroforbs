@@ -20,14 +20,17 @@ RSpec.configure do |c|
 end
 
 RSpec.describe "Gaming process", :js => true do
-  it "is playing" do
+  fit "is playing" do
     visit "/"
+    login = 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s
     within("#login-form") do
-      fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s
+      fill_in 'login', with: login
     end
     expect(I18n.t('log_in')).to eq('Войти')
     click_button I18n.t('log_in')
     expect(page).to have_content(I18n.t('Exit'))
+    sleep(1) # wait init_map
+    expect(find('#user-info-nickname-info').text).to eq(login)
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
     # TODO: move starter unit type to Config
     expect(unit_name).to eq(I18n.t('Heavy Infantry'))
