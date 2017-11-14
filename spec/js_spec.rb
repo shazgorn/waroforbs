@@ -20,7 +20,7 @@ RSpec.configure do |c|
 end
 
 RSpec.describe "Gaming process", :js => true do
-  fit "is playing" do
+  it "is playing" do
     visit "/"
     within("#login-form") do
       fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s
@@ -47,6 +47,7 @@ RSpec.describe "Gaming process", :js => true do
   end
 
   it "is building" do
+    # TODO: move login to helper
     visit "/"
     within("#login-form") do
       fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s

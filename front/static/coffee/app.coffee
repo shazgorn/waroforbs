@@ -48,8 +48,8 @@ class Application
   hire_infantry: () ->
     @ws.hire_infantry()
 
-  add_squad_to_company: (company_id) ->
-    @ws.add_squad_to_company(company_id, @town_controls.last_town)
+  add_squad_to_squad: (squad_id) ->
+    @ws.add_squad_to_squad(squad_id, @town_controls.last_town)
 
   set_free_worker_to_xy: (town_id, x, y) ->
     @ws.set_free_worker_to_xy(town_id, x, y)

@@ -21,8 +21,8 @@ class UnitView extends View
       @element = null
 
 ##
-#  TODO: write sane tests. Rename company to squad
-class CompanyView extends UnitView
+#  TODO: write sane tests. Rename squad to squad
+class SquadView extends UnitView
   constructor: (model) ->
     super model
     @life_el = $(document.createElement('span'))
@@ -34,7 +34,7 @@ class CompanyView extends UnitView
       @unit_life = model.life
       @life_el.html(@unit_life)
 
-class PlayerCompanyView extends CompanyView
+class PlayerSquadView extends SquadView
   constructor: (model) ->
     super model
     @life_el.addClass('player-unit-life-info')
@@ -50,7 +50,7 @@ class PlayerCompanyView extends CompanyView
       @unit_title = model.title
       @element.attr('title', @unit_title)
 
-class OtherPlayerCompanyView extends CompanyView
+class OtherPlayerSquadView extends SquadView
   constructor: (model) ->
     super model
     @life_el.addClass('other-player-unit-life-info')
@@ -108,8 +108,8 @@ class TownInventoryItemView extends View
         @el = null
 
 window.TownInventoryItemView = TownInventoryItemView
-window.PlayerCompanyView = PlayerCompanyView
-window.OtherPlayerCompanyView = OtherPlayerCompanyView
+window.PlayerSquadView = PlayerSquadView
+window.OtherPlayerSquadView = OtherPlayerSquadView
 window.PlayerTownView = PlayerTownView
 window.OtherPlayerTownView = OtherPlayerTownView
 window.BlackOrbView = BlackOrbView

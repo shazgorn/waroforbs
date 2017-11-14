@@ -174,26 +174,20 @@ class Town < Unit
     @buildings[:barracs].built?
   end
 
-  def check_company_price
-    @inventory[:gold] >= Barracs::COMPANY_COST
+  def check_squad_price
+    @inventory[:gold] >= Barracs::SQUAD_COST
   end
 
-  def can_form_company?
-    unless @inventory[:gold] >= Barracs::COMPANY_COST
-      raise OrbError, 'Not enough gold to form company'
+  def can_form_squad?
+    unless @inventory[:gold] >= Barracs::SQUAD_COST
+      raise OrbError, 'Not enough gold to form squad'
       return false
     end
     true
   end
 
-  def can_add_squad?
-    raise OrbError, 'Barracs is not built' unless @buildings[:barracs].built?
-    raise OrbError, 'Not enough gold to add squad' unless @inventory[:gold] >= Barracs::SQUAD_COST
-    true
-  end
-
-  def pay_company_price
-    @inventory[:gold] -= Barracs::COMPANY_COST
+  def pay_squad_price
+    @inventory[:gold] -= Barracs::SQUAD_COST
   end
 
   def pay_squad_price

@@ -111,7 +111,7 @@ class PlayerControlsView extends ControlsView
     )
     @name.attr('title', unit.name)
 
-class PlayerCompanyControlsView extends PlayerControlsView
+class PlayerSquadControlsView extends PlayerControlsView
   constructor: (unit) ->
     super unit
 
@@ -120,5 +120,5 @@ class PlayerTownControlsView extends PlayerControlsView
     super unit
 
 
-window.PlayerCompanyControlsView = PlayerCompanyControlsView
+window.PlayerSquadControlsView = PlayerSquadControlsView
 window.PlayerTownControlsView = PlayerTownControlsView

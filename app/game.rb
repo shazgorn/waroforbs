@@ -68,7 +68,7 @@ class Game
   # Select and return all units.
   # Select user`s town and select adjacent companies to it (one can add more
   # squads in barracs)
-  # TODO: calc adj companies only on company move, dead, new town
+  # TODO: calc adj companies only on squad move, dead, new town
 
   def all_units(token)
     units = Unit.all
@@ -240,34 +240,33 @@ class Game
       return
     end
     if HeavyInfantry.count(user) > Config.get('HEAVY_INFANTRY_LIMIT')
-      LogBox.error(I18n.t('log_entry_company_limit_reached', limit: Config.get('HEAVY_INFANTRY_LIMIT')), user)
+      LogBox.error(I18n.t('log_entry_limit_reached', limit: Config.get('HEAVY_INFANTRY_LIMIT')), user)
       return
     end
-    unless town.check_company_price
-      LogBox.error(I18n.t('log_entry_company_not_enough_res'), user)
+    unless town.check_squad_price
+      LogBox.error(I18n.t('log_entry_not_enough_res'), user)
       return
     end
     empty_cell = empty_adj_cell(town)
     unless empty_cell
-      LogBox.error(I18n.t("log_entry_company_no_free_cells"), user)
+      LogBox.error(I18n.t("log_entry_no_free_cells"), user)
       return
     end
-    town.pay_company_price
-    company = HeavyInfantry.new(empty_cell[:x], empty_cell[:y], user)
-    user.active_unit_id = company.id
+    town.pay_squad_price
+    unit = HeavyInfantry.new(empty_cell[:x], empty_cell[:y], user)
+    user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_infantry"), user)
-    company
+    unit
   end
 
-  # def add_life_to_squad(user, town_id, squad_id)
+  # def refill_squad(user, town_id, unit_id)
   #   town = Town.get_by_user(user)
   #   raise OrbError, 'User have no town' if town.nil?
   #   if town.can_fill_squad?
-  #     infantry = Infantry.get company_id
-  #     raise OrbError, 'No company' unless infantry
-  #     raise OrbError, 'Infantry must be near town' unless @map.adj_cells?(town.x, town.y, infantry.x, infantry.y)
+  #     unit = Infantry.get unit_id
+  #     raise OrbError, 'No unit' unless unit
+  #     raise OrbError, 'Unit must be near town' unless @map.adj_cells?(town.x, town.y, unit.x, unit.y)
   #     town.pay_squad_price()
-  #     infantry.add_squad()
   #   end
   # end
 
@@ -497,10 +496,10 @@ class Game
 
   def recalculate_user_actions user
     has_town = Town.has_any? user
-    has_live_company = HeavyInfantry.has_any_live? user
-    if has_live_company && !has_town
+    has_live_squad = HeavyInfantry.has_any_live? user
+    if has_live_squad && !has_town
       user.enable_new_town_action
-    elsif !has_live_company && !has_town
+    elsif !has_live_squad && !has_town
       user.enable_new_random_infantry_action
     else
       user.disable_new_random_infantry_action

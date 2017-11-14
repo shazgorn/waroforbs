@@ -102,6 +102,9 @@ class Facade
       user_data[user_data_key][:active_unit_id] = user.active_unit_id
     when :rename_unit
       Celluloid::Actor[:game].rename_unit(user, data['unit_id'], data['unit_name'])
+    when :refill_squad
+      # TODO: not implemented
+      Celluloid::Actor[:game].refill_squad user, data['town_id'], data['unit_id']
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"
       begin
@@ -116,16 +119,6 @@ class Facade
       log = "Set worker free on #{data['x']}, #{data['y']}"
       begin
         Celluloid::Actor[:game].free_worker user, data['town_id'], data['x'], data['y']
-        type = op
-      rescue OrbError => log_msg
-        log = log_msg
-        type = :error
-      end
-      Log.push user, log, type
-    when :add_squad_to_company
-      log = "Squad added"
-      begin
-        res = Celluloid::Actor[:game].add_squad_to_company user, data['town_id'], data['company_id']
         type = op
       rescue OrbError => log_msg
         log = log_msg

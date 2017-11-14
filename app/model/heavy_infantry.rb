@@ -7,22 +7,15 @@ class HeavyInfantry < Unit
   BASE_DEF = 10
 
   def initialize(x, y, user)
-    super(:company, x, y, user)
+    super(:squad, x, y, user)
     @damage = BASE_DMG
     @defence = BASE_DEF
     @ap = @max_ap = BASE_AP
-    # each company starts with one squad
-    @squads = 1
     @name = I18n.t('Heavy Infantry')
   end
 
   def die
     super
-  end
-
-  def add_squad
-    raise OrbError, 'Unable to add squad. Squads limit reached' unless @squads < MAX_SQUADS
-    @squads += 1
   end
 
   def dmg
@@ -31,15 +24,15 @@ class HeavyInfantry < Unit
 
   class << self
     def has_any? user
-      @@units.select{|id, unit| unit.user_id == user.id && unit.type == :company}.length > 0
+      @@units.select{|id, unit| unit.user_id == user.id && unit.type == :squad}.length > 0
     end
 
     def has_any_live? user
-      @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :company}.length > 0
+      @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :squad}.length > 0
     end
 
     def count user
-      @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :company}.length
+      @@units.select{|id, unit| unit.user_id == user.id && unit.alive? && unit.type == :squad}.length
     end
   end
 

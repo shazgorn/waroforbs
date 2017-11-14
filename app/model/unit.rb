@@ -199,7 +199,7 @@ class Unit
 
     def select_active_unit user
       # active ?
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :company}.first
+      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :squad}.first
     end
 
     def place_is_empty?(x, y)

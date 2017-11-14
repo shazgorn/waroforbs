@@ -6,9 +6,9 @@ ru:
   log_entry_already_have_town: У Вас уже есть город
   log_entry_barracs_not_build: Казармы не построены
   log_entry_cell_occupied: Клетка занята
-  log_entry_company_limit_reached: 'Невозможно создать юнит. Максимум %{limit} юнитов.'
-  log_entry_company_no_free_cells: Нет свободных клеток для юнита
-  log_entry_company_not_enough_res: Не хватает ресурсов
+  log_entry_limit_reached: Невозможно создать юнит. Предел достигнут.
+  log_entry_no_free_cells: Нет свободных клеток для юнита
+  log_entry_not_enough_res: Не хватает ресурсов
   log_entry_damage_dealt: 'Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}. Урона получено (ранено, убито): %{a_wounds}, %{a_kills}'
   log_entry_damage_taken: 'Урона получено (ранено, убито): %{a_wounds}, %{a_kills}. Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}.'
   log_entry_defender_not_found: Нет юнюта для атаки

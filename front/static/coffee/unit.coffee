@@ -70,13 +70,13 @@ class Unit extends Model
     if @controls
       @controls.remove_element()
 
-class Company extends Unit
+class Squad extends Unit
   constructor: (unit) ->
     super unit
     @user_id = unit.user_id
     @user_name = unit.user_name
 
-class PlayerCompany extends Company
+class PlayerSquad extends Squad
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-hero'
@@ -85,8 +85,8 @@ class PlayerCompany extends Company
 
   create_view: () ->
     if !@dead
-      @view = new PlayerCompanyView(this)
-      @controls = new PlayerCompanyControlsView(this)
+      @view = new PlayerSquadView(this)
+      @controls = new PlayerSquadControlsView(this)
 
   update: (unit) ->
     super unit
@@ -100,14 +100,14 @@ class PlayerCompany extends Company
     @controls.update(this)
 
 
-class OtherPlayerCompany extends Company
+class OtherPlayerSquad extends Squad
   constructor: (unit) ->
     super unit
     @css_class = 'other-player-hero'
 
   create_view: () ->
     if !@dead
-      @view = new OtherPlayerCompanyView(this)
+      @view = new OtherPlayerSquadView(this)
 
   update: (unit) ->
     super unit
@@ -265,11 +265,11 @@ class OtherPlayerTown extends Town
 
 window.UnitFactory = (unit_hash, is_user_unit) ->
   switch unit_hash.type
-    when "company"
+    when "squad"
       if is_user_unit
-        unit = new PlayerCompany unit_hash
+        unit = new PlayerSquad unit_hash
       else
-        unit = new OtherPlayerCompany unit_hash
+        unit = new OtherPlayerSquad unit_hash
     when "green_orb" then unit = new GreenOrb unit_hash
     when "black_orb" then unit = new BlackOrb unit_hash
     when "town"
