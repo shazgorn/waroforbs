@@ -1,6 +1,7 @@
 class Application
   constructor: () ->
     @user_id = null
+    @user_name = null
     @active_unit_id = null
     @units = {}
     @my_units_ids = []
@@ -12,6 +13,15 @@ class Application
     @attacking = false
     @cells = null
     @TOWN_RADIUS = null
+    @current_glory = null
+
+  update_user_info: (user_glory, user_max_glory, user_name = null) ->
+    if user_name && user_name != @user_name
+      $('#user-info-nickname-info').html(user_name)
+    new_glory = "#{user_glory}/#{user_max_glory}"
+    if @current_glory != new_glory
+      @current_glory = new_glory
+      $('#user-info-glory-info').html(@current_glory)
 
   move: (params) ->
     @ws.move(@active_unit_id, params)

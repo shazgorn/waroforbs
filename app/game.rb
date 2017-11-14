@@ -398,6 +398,9 @@ class Game
   end
 
   def tick(topic)
+    User.all.values.each{|user|
+      user.tick
+    }
     Unit.all.values.each{|unit|
       unit.tick
     }

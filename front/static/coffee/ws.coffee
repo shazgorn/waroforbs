@@ -41,10 +41,9 @@ class WS
             app.resource_info = data.resource_info
             app.TOWN_RADIUS = data.TOWN_RADIUS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
-            $('#user-info-nickname-info').html(data.user_name)
-            $('#user-info-glory-info').html("#{data.user_glory}/#{data.user_max_glory}")
 
             # App init function calls
+            app.update_user_info(data.user_glory, data.user_max_glory, data.user_name)
             app.upcreate_units(data.units)
             app.center_on_active()
             app.set_active_unit_directly(data.active_unit_id)
@@ -58,6 +57,7 @@ class WS
                 app.map.dmg(data.d_dmg.wounds, data.d_dmg.kills, data.a_dmg.wounds, data.a_dmg.kills, data.d_id, data.a_id, 789, 123)
               else
                 app.map.dmg(data.a_dmg.wounds, data.a_dmg.kills, data.d_dmg.wounds, data.d_dmg.kills, data.a_id, data.d_id, 123, 789)
+            app.update_user_info(data.user_glory, data.user_max_glory)
             app.upcreate_units data.units
             app.update_user_controls data.actions
             app.attacking = false

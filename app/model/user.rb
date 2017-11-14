@@ -22,6 +22,12 @@ class User
     add_action NewRandomInfantryAction.new false
   end
 
+  def tick
+    if @glory < @max_glory
+      @glory += 1
+    end
+  end
+
   def add_action action
     @actions[action.name] = action
   end
