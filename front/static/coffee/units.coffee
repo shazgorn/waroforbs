@@ -1,15 +1,19 @@
 # - rename 'css_' to 'attr_'
 # - really?
+# unit title - title attribute for unit's element on the map, building title is another thing
 
 class Model
   constructor: (hash) ->
     # view property is a link to view
     @view = null
-    @controls = null
+    @controls = null # only player's models has it
 
   update: (hash) ->
     return
 
+##
+# Every unit should have every property no matter player's or not
+# till visibility options arrive
 class Unit extends Model
   constructor: (unit) ->
     super unit
@@ -71,14 +75,6 @@ class Company extends Unit
     super unit
     @user_id = unit.user_id
     @user_name = unit.user_name
-    @update_title(unit)
-
-  update_title: () ->
-    @title = @user_name
-
-  update: (unit) ->
-    super unit
-    @update_title()
 
 class PlayerCompany extends Company
   constructor: (unit) ->
@@ -96,10 +92,11 @@ class PlayerCompany extends Company
     super unit
     return if @dead
     if @life != unit.life
-      @life = unit.life
       @view.set_life(@life)
-    if @wounds != unit.wounds
-      @wounds = unit.wounds
+    @title = unit.name
+    @life = unit.life
+    @wounds = unit.wounds
+    @view.update(this)
     @controls.update(this)
 
 
@@ -150,7 +147,6 @@ class BlackOrb extends Unit
   create_view: () ->
     if !@dead
       @view = new BlackOrbView(this)
-
 
 
 class Town extends Unit

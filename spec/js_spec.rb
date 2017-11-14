@@ -20,7 +20,33 @@ RSpec.configure do |c|
 end
 
 RSpec.describe "Gaming process", :js => true do
-  it "is playing" do
+  fit "is playing" do
+    visit "/"
+    within("#login-form") do
+      fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s
+    end
+    expect(I18n.t('log_in')).to eq('Войти')
+    click_button I18n.t('log_in')
+    expect(page).to have_content(I18n.t('Exit'))
+    unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
+    # TODO: move starter unit type to Config
+    expect(unit_name).to eq(I18n.t('Heavy Infantry'))
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
+    expect(page).to have_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
+    expect(find('#edit-unit-name').value).to eq(unit_name)
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info .cancel-button').click()
+    expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(unit_name)
+    expect(page).to have_no_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
+    new_unit_name = 'New infantry name'
+    fill_in 'edit-unit-name', with: new_unit_name
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info .ok-button').click()
+    expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(new_unit_name)
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info'){|div| expect(div['title']).to eq(new_unit_name)}
+    find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
+  end
+
+  it "is building" do
     visit "/"
     within("#login-form") do
       fill_in 'login', with: 'capybara' + Time.now.hour.to_s + Time.now.min.to_s + Time.now.sec.to_s

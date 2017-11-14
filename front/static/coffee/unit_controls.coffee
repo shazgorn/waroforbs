@@ -19,6 +19,7 @@ class ControlsView
             $("#unit-#{id}").removeClass('player-unit-hover')
         )
     @name = @info.find('.unit-name-info')
+    @name_text = unit.name
     @actions = @info.find('.unit-action-info')
     @life = @info.find('.unit-life-info')
     @id = @info.find('.unit-id-info')
@@ -53,6 +54,10 @@ class ControlsView
     if unit.dead
       @info.remove()
       return
+    if unit.name != @unit_name
+      @unit_name = unit.name
+      @name.attr('title', @unit_name)
+      @name.html(@unit_name)
     @life.html(unit.life)
     @wounds.html(unit.wounds)
     @xy.html(unit.x + ',' + unit.y)
@@ -62,7 +67,6 @@ class ControlsView
 
 class PlayerControlsView extends ControlsView
   rename: (unit_id, new_name) ->
-    @name.html(new_name)
     App.rename_unit(unit_id, new_name)
 
   constructor: (unit) ->
@@ -85,7 +89,6 @@ class PlayerControlsView extends ControlsView
       input
         .focus()
         .keypress((e) =>
-          console.log(e)
           if e.which == 13
             @rename(unit.id, input.val())
         )
