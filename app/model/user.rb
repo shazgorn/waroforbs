@@ -19,6 +19,7 @@ class User
     add_action NewTownAction.new false
     @glory = Config.get('START_GLORY')
     @max_glory = Config.get('START_MAX_GLORY')
+    @next_glory_tick = Time.now.to_i
   end
 
   def reset_glory
@@ -28,7 +29,8 @@ class User
   end
 
   def tick
-    if @glory < @max_glory
+    if @glory < @max_glory && @next_glory_tick < Time.now.to_i
+      @next_glory_tick += 300 - @max_glory + @glory
       @glory += 1
     end
   end
