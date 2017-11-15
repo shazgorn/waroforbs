@@ -158,8 +158,11 @@ class Town < Unit
     }
   end
 
+  ##
+  # +building_id+ - symbol
+
   def build(building_id)
-    raise OrbError, "Unknown building #{building_id}" unless @buildings[building_id]
+    raise OrbError, "Unknown building '#{building_id}'" unless @buildings[building_id]
     building = @buildings[building_id]
     raise OrbError, 'Not enough resources' unless building.enough_resources?(@inventory)
     extract_cost building.cost_res
@@ -174,21 +177,20 @@ class Town < Unit
     @buildings[:barracs].built?
   end
 
-  def check_squad_price
-    @inventory[:gold] >= Barracs::SQUAD_COST
-  end
-
-  def can_form_squad?
-    unless @inventory[:gold] >= Barracs::SQUAD_COST
-      raise OrbError, 'Not enough gold to form squad'
-      return false
-    end
-    true
+  def check_price(cost)
+    res = nil
+    cost.each{|res, value|
+      if value > @inventory[res.to_sym]
+        res += I18n.t('log_entry_not_enough_res', res: res)
+      end
+    }
+    res
   end
 
   def pay_price(cost)
-    cost.each
-    @inventory[:gold] -= Barracs::SQUAD_COST
+    cost.each{|res, value|
+      @inventory[res.to_sym] -= value
+    }
   end
 
   # select actions available based on constructed buildings for town menu

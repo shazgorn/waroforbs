@@ -235,19 +235,27 @@ class Game
     unit
   end
 
-  def hire_squad(user)
+  ##
+  # +user+ User
+  # TODO: add squad type :swordsman
+
+  def hire_squad(user, squad_type = 'swordsman')
     town = Town.get_by_user(user)
-    LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
+    if town.nil?
+      LogBox.error(I18n.t('log_entry_user_has_no_town'), user)
+      return
+    end
     unless town.has_build_barracs?
       LogBox.error(I18n.t('log_entry_barracs_not_build'), user)
       return
     end
-    if user.glory < Config.get('swordsman')['cost_glory']
-      LogBox.error('log_entry_more_glory_required', user)
+    if user.glory < Config.get(squad_type)['cost_glory']
+      LogBox.error(I18n.t('log_entry_more_glory_required'), user)
       return
     end
-    unless town.check_squad_price
-      LogBox.error(I18n.t('log_entry_not_enough_res'), user)
+    cost = Config.get(squad_type)['cost_res']
+    if res = town.check_price(cost)
+      LogBox.error(res, user)
       return
     end
     empty_cell = empty_adj_cell(town)
@@ -255,8 +263,8 @@ class Game
       LogBox.error(I18n.t("log_entry_no_free_cells"), user)
       return
     end
-    town.pay_price(Config.get('swordsman')['cost_res'])
-    user.pay_glory(Config.get('swordsman')['cost_glory'])
+    town.pay_price(cost)
+    user.pay_glory(Config.get(squad_type)['cost_glory'])
     unit = Swordsman.new(empty_cell[:x], empty_cell[:y], user)
     user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_squad"), user)

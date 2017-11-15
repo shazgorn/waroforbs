@@ -114,6 +114,15 @@ RSpec.describe Game, "testing" do
     expect(unit).to be_nil
   end
 
+  fit 'is hiring squad' do
+    user = User.new('hirer')
+    town = Town.new(1, 1, user)
+    town.build(:barracs)
+    sleep(Config.get('barracs')['cost_time'])
+    Celluloid::Actor[:game].hire_squad(user)
+    expect(Unit.get_by_user(user).length).to eq(2)
+  end
+
   it 'is renaming unit' do
     user = User.new('disbander')
     hi = Swordsman.new(1, 1, user)

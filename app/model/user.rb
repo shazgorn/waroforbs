@@ -39,6 +39,10 @@ class User
     @actions[NewTownAction::NAME].off!
   end
 
+  def pay_glory(glory)
+    @glory -= glory
+  end
+
   class << self
     def new login
       user = super login

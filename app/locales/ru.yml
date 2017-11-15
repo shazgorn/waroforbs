@@ -7,7 +7,7 @@ ru:
   log_entry_cell_occupied: Клетка занята
   log_entry_more_glory_required: Нехватает ОС
   log_entry_no_free_cells: Нет свободных клеток для юнита
-  log_entry_not_enough_res: Не хватает ресурсов
+  log_entry_not_enough_res: 'Не хватает ресурсов(%{res})'
   log_entry_damage_dealt: 'Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}. Урона получено (ранено, убито): %{a_wounds}, %{a_kills}'
   log_entry_damage_taken: 'Урона получено (ранено, убито): %{a_wounds}, %{a_kills}. Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}.'
   log_entry_defender_not_found: Нет юнюта для атаки
