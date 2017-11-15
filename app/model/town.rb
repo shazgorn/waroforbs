@@ -2,15 +2,16 @@ require 'unit'
 require 'single_entity'
 
 class Resource
+  # ttc - time to collect
   T = {
     :gold => {
-      :ttc => 20
-    },
-    :wood => {
       :ttc => 10
     },
+    :wood => {
+      :ttc => 30
+    },
     :stone => {
-      :ttc => 15
+      :ttc => 50
     }
   }
 end

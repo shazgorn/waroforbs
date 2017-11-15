@@ -6,7 +6,6 @@ class Unit
   attr_accessor :name
 
   ATTACK_COST = 1
-  MAX_LIFE = 15
 
   @@id_seq = 1
   # id -> unit
@@ -25,7 +24,7 @@ class Unit
     @defence = 0
     @ap = @max_ap = 0
     @@units[@id] = self
-    @life = MAX_LIFE
+    @life = Config.get('MAX_LIFE')
     @wounds = 0
     @name = nil
     @inventory = {
@@ -36,8 +35,12 @@ class Unit
     }
   end
 
+  def strength
+    @life
+  end
+
   def kills
-    MAX_LIFE - @life - @wounds
+    Config.get('MAX_LIFE') - @life - @wounds
   end
 
   def kill

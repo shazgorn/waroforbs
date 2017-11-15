@@ -22,6 +22,7 @@ ru:
   log_entry_settle_town: Город основан
   log_entry_unit_disbanded: 'Юнит %{unit_id} распущен'
   log_entry_unit_killed: Ваш юнит погиб
+  log_entry_unit_lost: Ваш юнит погиб
   log_entry_unit_renamed: 'Юнит переименов из %{old_name} в %{new_name}'
   log_entry_user_logged_in: 'Пользователь %{user} вошел'
   log_entry_user_has_no_town: У пользователя нет города

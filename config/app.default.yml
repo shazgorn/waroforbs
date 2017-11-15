@@ -14,6 +14,7 @@ img_path: front/static/img/
 START_GLORY: 120
 START_MAX_GLORY: 200
 START_UNIT_TYPE: swordsman
+MAX_LIFE: 15
 barracs:
   cost_time: 60
   cost_res:

@@ -469,7 +469,7 @@ class Game
   # a - attacker unit, d - defender unit
 
   def attack(a, d)
-    res = SquadAttack.attack(a, d)
+    res = SquadAttack.new.attack(a, d)
     LogBox.attack(res, a.user)
     if d.user
       LogBox.defence(res, d.user)

@@ -3,4 +3,8 @@ module SingleEntity
     wound
     false
   end
+
+  def strength
+    Config.get('MAX_LIFE')
+  end
 end

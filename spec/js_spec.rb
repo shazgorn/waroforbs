@@ -48,7 +48,7 @@ RSpec.describe "Gaming process", :js => true do
   end
 
   it "is renaming" do
-    login = log_in
+    log_in
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
     expect(unit_name).to eq(I18n.t('Swordsman'))
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
@@ -61,13 +61,14 @@ RSpec.describe "Gaming process", :js => true do
     new_unit_name = 'New squad name'
     fill_in 'edit-unit-name', with: new_unit_name
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .ok-button').click()
+    sleep(1)
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(new_unit_name)
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info'){|div| expect(div['title']).to eq(new_unit_name)}
     find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
   end
 
   it "is restarting" do
-    login = log_in
+    log_in
     find('.inventory-item-settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
     find('.player-town').click()
@@ -83,7 +84,7 @@ RSpec.describe "Gaming process", :js => true do
   end
 
   it "is building" do
-    login = log_in
+    log_in
     find('.inventory-item-settlers').click()
     expect(page).to have_content(I18n.t('res_settlers_action_label'))
     click_button(I18n.t('res_settlers_action_label'))

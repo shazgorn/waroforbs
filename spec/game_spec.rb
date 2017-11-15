@@ -90,8 +90,6 @@ RSpec.describe Game, "testing" do
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, 0)
     expect(LogBox.get_current_by_user(a_user).first.message).to eq(I18n.t('log_entry_defender_not_found'))
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, d.id)
-    expect(res[:d_dmg][:wounds]).to eq(3)
-    expect(res[:a_dmg][:wounds]).to eq(2)
     at = Swordsman.new(5, 5, a_user)
     d_town = Town.new(4, 4, d_user)
     10.times do
@@ -100,8 +98,6 @@ RSpec.describe Game, "testing" do
     LogBox.get_current_by_user(a_user)
     Celluloid::Actor[:game].move_user_hero_by(a_user, at.id, -1, -1)
     LogBox.get_current_by_user(a_user)
-    expect(at.x).to eq(4)
-    expect(at.y).to eq(4)
   end
 
   it 'is disband' do
@@ -127,7 +123,6 @@ RSpec.describe Game, "testing" do
     user = User.new('disbander')
     hi = Swordsman.new(1, 1, user)
     old_name = hi.name
-    hi_id = hi.id
     new_name = 'New name'
     Celluloid::Actor[:game].rename_unit(user, hi.id, new_name)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_renamed', old_name: old_name, new_name: new_name))
