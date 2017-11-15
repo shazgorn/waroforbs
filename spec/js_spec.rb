@@ -16,6 +16,11 @@ module PlayHelper
     expect(page).to have_content(I18n.t('Exit'))
     login
   end
+
+  def restart
+    find('#open-options').click()
+    find('#restart').click()
+  end
 end
 
 RSpec.configure do |c|
@@ -61,7 +66,20 @@ RSpec.describe "Gaming process", :js => true do
     find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
   end
 
-  it "is playing" do
+  it "is restarting" do
+    login = log_in
+    find('.inventory-item-settlers').click()
+    click_button(I18n.t('res_settlers_action_label'))
+    find('.player-town').click()
+    find('.modal.town .building-card-barracs .build-button').click()
+    barracs_time_cost = Config.get('barracs')['cost_time']
+    sleep(barracs_time_cost)
+    find('.modal.town .building-built #open-screen-barracs').click()
+    restart
+    find('.inventory-item-settlers').click()
+    click_button(I18n.t('res_settlers_action_label'))
+    find('.player-town').click()
+    expect(page).to have_no_content(I18n.t('Hire squad'))
   end
 
   it "is building" do

@@ -114,7 +114,7 @@ RSpec.describe Game, "testing" do
     expect(unit).to be_nil
   end
 
-  fit 'is hiring squad' do
+  it 'is hiring squad' do
     user = User.new('hirer')
     town = Town.new(1, 1, user)
     town.build(:barracs)

@@ -80,7 +80,6 @@ class Application
   # update or create units on map
   # @param {Object} units - plain objects(hashes) to be transformed into Town, Squad etc
   upcreate_units: (units) ->
-    # @map.remove_stale_units(units)
     # @units = {} # models
     # @my_units = {} # models
     # delete deleted, invisible units that present in units(new) but absent in @units(present)

@@ -134,10 +134,13 @@ class BuildingCard extends Card
     )
 
 class BarracsCard extends BuildingCard
-  open_building: () ->
-    # clean up
+  remove_building_inner: () ->
     $('.modal-body .modal-building-inner *').remove()
     $('.modal-body .modal-building-actions-inner *').remove()
+
+  open_building: () ->
+    # clean up
+    @remove_building_inner()
     $('.modal.town .modal-title').html(@town_modal.name + ' - ' + @title)
     for i, action of @actions
       $(document.createElement('button'))
@@ -151,8 +154,7 @@ class BarracsCard extends BuildingCard
   # TODO: Add close button
 
   close_building: () ->
-    $('.modal-body .modal-building-inner *').remove()
-    $('.modal-body .modal-building-actions-inner *').remove()
+    @remove_building_inner()
     if @town_modal
       @town_modal.restore_title
 

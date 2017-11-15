@@ -154,18 +154,6 @@ class Map
     @applyDmgTo($("#unit-#{d_id}").parent(), d_wounds, d_kills,    'def', a_delay)
     @applyDmgTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 'att', d_delay)
 
-  remove_units: () ->
-    $('.unit').remove()
-
-  remove_stale_units: (units) ->
-    # keys are strings
-    all_units_ids = (parseInt(id) for id, unit of units)
-    $('.unit').each((i, unit) ->
-      id = $(unit).data('id')
-      if $.inArray(id, all_units_ids) == -1
-        $("#unit-#{id}").remove()
-    )
-
   center_on_hero: (unit_id) ->
     $unit = $("##{unit_id}")
     block_pos = $unit.parent().parent().position()

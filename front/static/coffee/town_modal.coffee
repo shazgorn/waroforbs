@@ -34,6 +34,7 @@ class TownModal
 
   clean_up: () ->
     @el.find('.buildings-inner *').remove()
+    @el.find('.modal-building-actions-inner *').remove()
     @el.find('.town-inventory-inner *').remove()
 
   restore_title: () ->
