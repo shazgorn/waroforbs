@@ -18,10 +18,11 @@ class Application
   update_user_info: (user_glory, user_max_glory, user_name = null) ->
     if user_name && user_name != @user_name
       $('#user-info-nickname-info').html(user_name)
-    new_glory = "#{user_glory}/#{user_max_glory}"
-    if @current_glory != new_glory
-      @current_glory = new_glory
-      $('#user-info-glory-info').html(@current_glory)
+    if user_glory? and user_max_glory?
+      new_glory = "#{user_glory}/#{user_max_glory}"
+      if @current_glory != new_glory
+        @current_glory = new_glory
+        $('#user-info-glory-info').html(@current_glory)
 
   move: (params) ->
     @ws.move(@active_unit_id, params)

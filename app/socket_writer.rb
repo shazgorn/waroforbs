@@ -20,8 +20,8 @@ class SocketWriter
       return
     end
     res = {}
-    # this is our guy
     game = args[:game]
+    # this is our guy. Prepare data for owner of this socket
     if args[:user_data].has_key?(@name)
       # user specific data
       user_data = args[:user_data][@name]
@@ -30,12 +30,14 @@ class SocketWriter
         return res
       else
         res = user_data
+        # user should be inited at this point
+        user = game.get_user_by_token(@token)
         if user_data[:data_type] == :init_map
           res.merge!(game.init_map(@token))
-        else
-          user = game.get_user_by_token(@token)
-          res[:logs] = game.get_current_logs_by_user(user)
         end
+        res[:logs] = game.get_current_logs_by_user(user)
+        res[:user_glory] = user.glory
+        res[:user_max_glory] = user.max_glory
       end
       res[:units] = game.all_units(@token)
     else
