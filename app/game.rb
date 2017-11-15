@@ -157,6 +157,7 @@ class Game
   def restart(user)
     Unit.delete_by_user(user)
     start_res_for_user(user)
+    user.reset_glory
   end
 
   ##

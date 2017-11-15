@@ -14,11 +14,19 @@ class User
     @login = login
     @active_unit_id = nil
     @actions = {}
-    @glory = Config.get('START_GLORY')
-    @max_glory = Config.get('START_MAX_GLORY')
     # init with false, create default hero on later
     # and switch actions
     add_action NewTownAction.new false
+    @glory = 0
+    @max_glory = 0
+    reset_glory
+  end
+
+  def reset_glory
+    if @glory > Config.get('START_GLORY')
+      @glory = Config.get('START_GLORY')
+    end
+    @max_glory = Config.get('START_MAX_GLORY')
   end
 
   def tick
