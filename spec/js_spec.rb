@@ -45,7 +45,7 @@ RSpec.describe "Gaming process", :js => true do
   it "is renaming" do
     login = log_in
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
-    expect(unit_name).to eq(I18n.t('Heavy Infantry'))
+    expect(unit_name).to eq(I18n.t('Swordsman'))
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
     expect(page).to have_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
     expect(find('#edit-unit-name').value).to eq(unit_name)
@@ -53,7 +53,7 @@ RSpec.describe "Gaming process", :js => true do
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(unit_name)
     expect(page).to have_no_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
-    new_unit_name = 'New infantry name'
+    new_unit_name = 'New squad name'
     fill_in 'edit-unit-name', with: new_unit_name
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .ok-button').click()
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(new_unit_name)

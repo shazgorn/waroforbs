@@ -2,7 +2,7 @@ require 'log_entry'
 require 'log_box'
 require 'orb'
 require 'unit'
-require 'heavy_infantry'
+require 'swordsman'
 require 'town'
 require 'map'
 require 'user'
@@ -164,7 +164,7 @@ class Game
   # after +user+ init or restart
 
   def start_res_for_user(user)
-    unit = new_random_infantry(user)
+    unit = new_random_squad(user)
     unit.give_res(:settlers, 1)
     unit.give_res(:gold, 10)
     unit.give_res(:wood, 7)
@@ -221,29 +221,29 @@ class Game
   end
 
   ##
-  # Create new random infantry unit for user if it`s his first login
+  # Create new random squad unit for user if it`s his first login
   # or all other units and towns are destroyed
   # raise OrbError otherwise
 
-  def new_random_infantry(user)
+  def new_random_squad(user)
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
-    unit = HeavyInfantry.new(xy[:x], xy[:y], user)
-    LogBox.spawn(I18n.t('log_entry_new_infantry'), user)
+    unit = Swordsman.new(xy[:x], xy[:y], user)
+    LogBox.spawn(I18n.t('log_entry_new_squad'), user)
     user.active_unit_id = unit.id
     recalculate_user_actions(user)
     unit
   end
 
-  def hire_infantry(user)
+  def hire_squad(user)
     town = Town.get_by_user(user)
     LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
     unless town.has_build_barracs?
       LogBox.error(I18n.t('log_entry_barracs_not_build'), user)
       return
     end
-    if HeavyInfantry.count(user) > Config.get('HEAVY_INFANTRY_LIMIT')
-      LogBox.error(I18n.t('log_entry_limit_reached', limit: Config.get('HEAVY_INFANTRY_LIMIT')), user)
+    if user.glory < Config.get('swordsman')['cost_glory']
+      LogBox.error('log_entry_more_glory_required', user)
       return
     end
     unless town.check_squad_price
@@ -255,10 +255,11 @@ class Game
       LogBox.error(I18n.t("log_entry_no_free_cells"), user)
       return
     end
-    town.pay_squad_price
-    unit = HeavyInfantry.new(empty_cell[:x], empty_cell[:y], user)
+    town.pay_price(Config.get('swordsman')['cost_res'])
+    user.pay_glory(Config.get('swordsman')['cost_glory'])
+    unit = Swordsman.new(empty_cell[:x], empty_cell[:y], user)
     user.active_unit_id = unit.id
-    LogBox.spawn(I18n.t("log_entry_new_infantry"), user)
+    LogBox.spawn(I18n.t("log_entry_new_squad"), user)
     unit
   end
 
@@ -266,7 +267,7 @@ class Game
   #   town = Town.get_by_user(user)
   #   raise OrbError, 'User have no town' if town.nil?
   #   if town.can_fill_squad?
-  #     unit = Infantry.get unit_id
+  #     unit = Squad.get unit_id
   #     raise OrbError, 'No unit' unless unit
   #     raise OrbError, 'Unit must be near town' unless @map.adj_cells?(town.x, town.y, unit.x, unit.y)
   #     town.pay_squad_price()
@@ -277,7 +278,7 @@ class Game
     # replace with action check ?
     return LogBox.error(I18n.t('log_entry_already_have_town'), user) if Town.has_live_town? user
     info "User have no town"
-    unit = HeavyInfantry.get_by_id(active_unit_id)
+    unit = Swordsman.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
     Town.new(unit.x, unit.y, user)
     recalculate_user_actions user
@@ -502,13 +503,11 @@ class Game
 
   def recalculate_user_actions user
     has_town = Town.has_any? user
-    has_live_squad = HeavyInfantry.has_any_live? user
+    has_live_squad = Swordsman.has_any_live? user
     if has_live_squad && !has_town
       user.enable_new_town_action
     elsif !has_live_squad && !has_town
-      user.enable_new_random_infantry_action
     else
-      user.disable_new_random_infantry_action
       user.disable_new_town_action
     end
   end

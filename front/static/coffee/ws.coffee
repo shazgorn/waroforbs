@@ -95,14 +95,6 @@ class WS
       })
     )
 
-  new_random_infantry: () ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'new_random_infantry'
-      })
-    )
-
   settle_town: (unit_id) ->
     @socket.send(
       JSON.stringify({
@@ -140,11 +132,11 @@ class WS
       })
     )
 
-  hire_infantry: () ->
+  hire_squad: () ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'hire_infantry'
+        op: 'hire_squad'
       })
     )
 

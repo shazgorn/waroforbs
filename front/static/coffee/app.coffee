@@ -37,9 +37,6 @@ class Application
   fetch: () ->
     @ws.units()
 
-  new_random_infantry: () ->
-    @ws.new_random_infantry()
-
   settle_town: () ->
     @ws.settle_town(@active_unit_id)
 
@@ -55,8 +52,8 @@ class Application
   rename_unit: (id, name) ->
     @ws.rename_unit(id, name)
 
-  hire_infantry: () ->
-    @ws.hire_infantry()
+  hire_squad: () ->
+    @ws.hire_squad()
 
   add_squad_to_squad: (squad_id) ->
     @ws.add_squad_to_squad(squad_id, @town_controls.last_town)
@@ -81,7 +78,7 @@ class Application
 
   ##
   # update or create units on map
-  # @param {Object} units - plain objects(hashes) to be transformed into Town, HeavyInfantry etc
+  # @param {Object} units - plain objects(hashes) to be transformed into Town, Squad etc
   upcreate_units: (units) ->
     # @map.remove_stale_units(units)
     # @units = {} # models

@@ -46,7 +46,7 @@ class BotClient
         @client.text JSON.dump(:token => @user, :op => 'move', :unit_id => @unit_id, :params => {:dx => dx, :dy => dy})
       end
     else
-      @client.text JSON.dump(:token => @user, :op => 'new_random_infantry')
+      @client.text JSON.dump(:token => @user, :op => 'restart')
     end
   end
 end

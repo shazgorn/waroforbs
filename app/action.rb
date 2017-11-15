@@ -47,20 +47,11 @@ class NewTownAction < Action
   end
 end
 
-class NewRandomInfantryAction < Action
-  NAME = :new_random_infantry_action
+class HireSquadAction < Action
+  NAME = 'hire_squad_action'
   def initialize(on)
     super(on)
     @name = NAME
-    @label = I18n.t('New random infantry')
-  end
-end
-
-class HireInfantryAction < Action
-  NAME = 'hire_infantry_action'
-  def initialize(on)
-    super(on)
-    @name = NAME
-    @label = I18n.t('Hire infantry')
+    @label = I18n.t('Hire squad')
   end
 end

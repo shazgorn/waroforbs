@@ -144,7 +144,7 @@ class BarracsCard extends BuildingCard
         .html(action.label)
         .appendTo('.modal.town .modal-building-actions-inner')
         .click(() =>
-          App.hire_infantry()
+          App.hire_squad()
         )
 
   ##

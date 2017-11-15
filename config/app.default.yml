@@ -11,11 +11,15 @@ BLACK_ORB_START_HP: 1000
 BLACK_ORB_START_DAMAGE: 100
 BLACK_ORB_START_DEFENCE: 10
 img_path: front/static/img/
-HEAVY_INFANTRY_LIMIT: 10
 START_GLORY: 120
 START_MAX_GLORY: 200
+START_UNIT_TYPE: swordsman
 barracs:
   cost_time: 60
   cost_res:
     gold: 20
     wood: 5
+swordsman:
+  cost_res:
+    gold: 10
+  cost_glory: 10

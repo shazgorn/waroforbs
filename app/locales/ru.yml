@@ -1,12 +1,11 @@
 ru:
   Default action: Действие по умолчанию
   New town: Основать город
-  New random infantry: Создать пехоту
-  Hire infantry: Нанять пехоту
+  Hire squad: Нанять отряд
   log_entry_already_have_town: У Вас уже есть город
   log_entry_barracs_not_build: Казармы не построены
   log_entry_cell_occupied: Клетка занята
-  log_entry_limit_reached: Невозможно создать юнит. Предел достигнут.
+  log_entry_more_glory_required: Нехватает ОС
   log_entry_no_free_cells: Нет свободных клеток для юнита
   log_entry_not_enough_res: Не хватает ресурсов
   log_entry_damage_dealt: 'Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}. Урона получено (ранено, убито): %{a_wounds}, %{a_kills}'
@@ -15,7 +14,7 @@ ru:
   log_entry_defender_already_dead: Атакуемый юнит уже мертв
   log_entry_enemy_unit_killed: Вражеский юнит уничтожен
   log_entry_move: "Юнит #%{unit_id} перемещен %{dx}, %{dy} на %{new_x}:%{new_y}"
-  log_entry_new_infantry: Новый отряд пехоты создан
+  log_entry_new_squad: Новый отряд создан
   log_entry_new_user: 'Новый пользователь %{user} создан'
   log_entry_no_unit_to_disband: Юнит для роспуска не найден
   log_entry_not_enough_ap: Не хватает AP
@@ -42,4 +41,4 @@ ru:
   Barracs: Казармы
   Tavern: Таверна
   Town: Город
-  Heavy Infantry: Тяжелая пехота
+  Swordsman: Мечники

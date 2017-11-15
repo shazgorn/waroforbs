@@ -85,17 +85,14 @@ class Facade
       if res
         user_data[user_data_key].merge!(res)
       end
-    when :new_random_infantry
-      Celluloid::Actor[:game].new_random_infantry(user)
-      user_data[user_data_key][:active_unit_id] = user.active_unit_id
     when :settle_town
       Celluloid::Actor[:game].settle_town(user, user.active_unit_id)
     when :build
       Celluloid::Actor[:game].build(user, data['building'].to_sym)
     when :spawn_orb
       Celluloid::Actor[:game].spawn_orb data['color'].to_sym
-    when :hire_infantry
-      Celluloid::Actor[:game].hire_infantry user
+    when :hire_squad
+      Celluloid::Actor[:game].hire_squad user
     when :disband
       unit_id = data['unit_id']
       Celluloid::Actor[:game].disband user, unit_id

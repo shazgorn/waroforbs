@@ -42,7 +42,7 @@ RSpec.describe Game, "testing" do
     user = User.new('mover')
     x = 1
     y = 1
-    unit = HeavyInfantry.new(x, y, user)
+    unit = Swordsman.new(x, y, user)
     Celluloid::Actor[:game].move_user_hero_by(user, 666, -1, -1)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_not_found', unit_id: 666))
     Celluloid::Actor[:game].move_user_hero_by(user, unit.id, 100, -1)
@@ -55,7 +55,7 @@ RSpec.describe Game, "testing" do
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
     x = x + dx
     y = y + dy
-    unit2 = HeavyInfantry.new(3, 3, user)
+    unit2 = Swordsman.new(3, 3, user)
     Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_cell_occupied'))
     unit2.die
@@ -65,7 +65,7 @@ RSpec.describe Game, "testing" do
     Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
     logs = nil
-    HeavyInfantry::BASE_AP.times do
+    Swordsman::BASE_AP.times do
       Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
       logs = LogBox.get_current_by_user(user)
     end
@@ -74,17 +74,17 @@ RSpec.describe Game, "testing" do
 
   it 'attack' do
     a_user = User.new('attacker')
-    a = HeavyInfantry.new(1, 1, a_user)
+    a = Swordsman.new(1, 1, a_user)
     d_user = User.new('defender')
-    d = HeavyInfantry.new(2, 2, d_user)
+    d = Swordsman.new(2, 2, d_user)
     Celluloid::Actor[:game].attack(a, d)
   end
 
   it 'user attack' do
     a_user = User.new('attacker')
-    a = HeavyInfantry.new(1, 1, a_user)
+    a = Swordsman.new(1, 1, a_user)
     d_user = User.new('defender')
-    d = HeavyInfantry.new(2, 2, d_user)
+    d = Swordsman.new(2, 2, d_user)
     res = Celluloid::Actor[:game].attack_by_user(a_user, 0, d.id)
     expect(LogBox.get_current_by_user(a_user).first.message).to eq(I18n.t('log_entry_wrong_attacker_id'))
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, 0)
@@ -92,7 +92,7 @@ RSpec.describe Game, "testing" do
     res = Celluloid::Actor[:game].attack_by_user(a_user, a.id, d.id)
     expect(res[:d_dmg][:wounds]).to eq(3)
     expect(res[:a_dmg][:wounds]).to eq(2)
-    at = HeavyInfantry.new(5, 5, a_user)
+    at = Swordsman.new(5, 5, a_user)
     d_town = Town.new(4, 4, d_user)
     10.times do
       res = Celluloid::Actor[:game].attack_by_user(a_user, at.id, d_town.id)
@@ -106,7 +106,7 @@ RSpec.describe Game, "testing" do
 
   it 'is disband' do
     user = User.new('disbander')
-    hi = HeavyInfantry.new(1, 1, user)
+    hi = Swordsman.new(1, 1, user)
     hi_id = hi.id
     Celluloid::Actor[:game].disband(user, hi.id)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_disbanded', unit_id: hi_id))
@@ -116,7 +116,7 @@ RSpec.describe Game, "testing" do
 
   it 'is renaming unit' do
     user = User.new('disbander')
-    hi = HeavyInfantry.new(1, 1, user)
+    hi = Swordsman.new(1, 1, user)
     old_name = hi.name
     hi_id = hi.id
     new_name = 'New name'
@@ -126,9 +126,9 @@ RSpec.describe Game, "testing" do
 
   it 'is restart' do
     user = User.new('restarter')
-    HeavyInfantry.new(1, 1, user)
-    HeavyInfantry.new(2, 2, user)
-    HeavyInfantry.new(3, 3, user)
+    Swordsman.new(1, 1, user)
+    Swordsman.new(2, 2, user)
+    Swordsman.new(3, 3, user)
     Celluloid::Actor[:game].restart(user)
     expect(Unit.get_by_user(user).size).to eq(1)
   end

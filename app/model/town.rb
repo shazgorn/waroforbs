@@ -186,11 +186,8 @@ class Town < Unit
     true
   end
 
-  def pay_squad_price
-    @inventory[:gold] -= Barracs::SQUAD_COST
-  end
-
-  def pay_squad_price
+  def pay_price(cost)
+    cost.each
     @inventory[:gold] -= Barracs::SQUAD_COST
   end
 

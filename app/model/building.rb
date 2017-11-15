@@ -136,9 +136,9 @@ class Barracs < Building
 
   def actions
     if built?
-      [HireInfantryAction.new(true)]
+      [HireSquadAction.new(true)]
     else
-      [HireInfantryAction.new(false)]
+      [HireSquadAction.new(false)]
     end
   end
 end

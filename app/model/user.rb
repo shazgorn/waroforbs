@@ -19,7 +19,6 @@ class User
     # init with false, create default hero on later
     # and switch actions
     add_action NewTownAction.new false
-    add_action NewRandomInfantryAction.new false
   end
 
   def tick
@@ -34,20 +33,10 @@ class User
 
   def enable_new_town_action
     @actions[NewTownAction::NAME].on!
-    @actions[NewRandomInfantryAction::NAME].off!
-  end
-
-  def enable_new_random_infantry_action
-    @actions[NewTownAction::NAME].off!
-    @actions[NewRandomInfantryAction::NAME].on!
   end
 
   def disable_new_town_action
     @actions[NewTownAction::NAME].off!
-  end
-
-  def disable_new_random_infantry_action
-    @actions[NewRandomInfantryAction::NAME].off!
   end
 
   class << self

@@ -1,6 +1,6 @@
 require 'unit'
 
-class HeavyInfantry < Unit
+class Swordsman < Unit
   MAX_SQUADS = 10
   BASE_DMG = 30
   BASE_AP = 20
@@ -11,7 +11,7 @@ class HeavyInfantry < Unit
     @damage = BASE_DMG
     @defence = BASE_DEF
     @ap = @max_ap = BASE_AP
-    @name = I18n.t('Heavy Infantry')
+    @name = I18n.t(self.class.name)
   end
 
   def die

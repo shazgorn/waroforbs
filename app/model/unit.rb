@@ -1,4 +1,4 @@
-# Use specific type of unit subclass (Infantry, Town etc)
+# Use specific type of unit subclass
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit

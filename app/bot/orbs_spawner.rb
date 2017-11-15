@@ -27,11 +27,8 @@ class OrbsClient
     @message = JSON.parse(data)
   end
 
-  def spawn_infantry_if_dead
-    if @message && @message['actions']['new_random_infantry_action']['@on']
-      info 'spawn infantry'
-      @client.text(JSON.dump({:token => @user, :op => "new_random_infantry"}))
-    end
+  def spawn_squad_if_dead
+    exit
   end
 
   def send_spawn_green_orb
@@ -47,7 +44,7 @@ end
 
 client = OrbsClient.new
 sleep(1)
-client.spawn_infantry_if_dead
+client.spawn_squad_if_dead
 # client.send_spawn_green_orb
 # sleep(1)
 # client.send_spawn_green_orb
