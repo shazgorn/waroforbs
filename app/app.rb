@@ -34,7 +34,7 @@ begin
   OrbTick.new
 
   OrbWebsocketsServer.run
-  puts 'sleep'
+  puts 'Going to sleep'
   sleep
 rescue Interrupt => e
   puts "Shutting down by #{e.inspect}"

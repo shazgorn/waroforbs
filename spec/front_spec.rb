@@ -104,4 +104,8 @@ RSpec.describe "Front tests", :js => true do
     sleep(barracs_time_cost)
     find('.modal.town .building-built #open-screen-barracs').click()
   end
+
+  it "is attacking", :slow => true do
+    page.execute_script("$('body').empty()")
+  end
 end

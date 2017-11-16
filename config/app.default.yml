@@ -15,8 +15,10 @@ START_GLORY: 120
 START_MAX_GLORY: 200
 START_UNIT_TYPE: swordsman
 MAX_LIFE: 15
+DUMMY_LOGIN: dummy
 barracs:
-  cost_time: 60
+  unit: swordsman
+  cost_time: 6
   cost_res:
     gold: 20
     wood: 5
@@ -24,3 +26,5 @@ swordsman:
   cost_res:
     gold: 10
   cost_glory: 10
+unit_class:
+  swordsman: Swordsman

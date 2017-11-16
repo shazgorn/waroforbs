@@ -113,9 +113,11 @@ RSpec.describe Game, "testing" do
   it 'is hiring squad', :slow => true do
     user = User.new('hirer')
     town = Town.new(1, 1, user)
-    town.build(:barracs)
-    sleep(Config.get('barracs')['cost_time'])
-    Celluloid::Actor[:game].hire_squad(user)
+    b_name = 'barracs'
+    town.build(b_name.to_sym)
+    sleep(Config.get(b_name)['cost_time'])
+    expect(Config.get(b_name)['unit']).to eq('swordsman')
+    Celluloid::Actor[:game].hire_squad(user, Config.get(b_name)['unit'])
     expect(Unit.get_by_user(user).length).to eq(2)
   end
 
@@ -150,5 +152,21 @@ RSpec.describe Game, "testing" do
     expect(unit.inventory[:settlers]).to eq(0)
     Celluloid::Actor[:game].settle_town(user, unit.id)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_already_have_town'))
+  end
+
+  it 'testing dummy' do
+    x = 1
+    y = 1
+    unit = Celluloid::Actor[:game].spawn_dummy(x, y)
+    expect(unit.x).to eq(x)
+    expect(unit.x).to eq(y)
+    expect(unit.user.login).to eq(Config.get('DUMMY_LOGIN'))
+    unit = Celluloid::Actor[:game].spawn_dummy(2, 2)
+    x = 2
+    y = 2
+    expect(unit.x).to eq(x)
+    expect(unit.x).to eq(y)
+    expect(unit.user.login).to eq(Config.get('DUMMY_LOGIN'))
+    expect(User.all.length).to eq(1)
   end
 end

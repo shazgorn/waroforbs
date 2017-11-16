@@ -90,9 +90,11 @@ class Facade
     when :build
       Celluloid::Actor[:game].build(user, data['building'].to_sym)
     when :spawn_orb
-      Celluloid::Actor[:game].spawn_orb data['color'].to_sym
+      Celluloid::Actor[:game].spawn_orb(data['color'].to_sym)
+    when :spawn_dummy
+      Celluloid::Actor[:game].spawn_dummy(data['x'], data['y'])
     when :hire_squad
-      Celluloid::Actor[:game].hire_squad user
+      Celluloid::Actor[:game].hire_squad(user, 'swordsman')
     when :disband
       unit_id = data['unit_id']
       Celluloid::Actor[:game].disband user, unit_id
@@ -102,7 +104,7 @@ class Facade
     when :rename_unit
       Celluloid::Actor[:game].rename_unit(user, data['unit_id'], data['unit_name'])
     when :refill_squad
-      # TODO: not implemented
+      # Not implemented!
       Celluloid::Actor[:game].refill_squad user, data['town_id'], data['unit_id']
     when :set_free_worker_to_xy
       log = "Set worker to #{data['x']}, #{data['y']}"

@@ -239,7 +239,7 @@ class Game
   # +user+ User
   # TODO: add squad type :swordsman
 
-  def hire_squad(user, squad_type = 'swordsman')
+  def hire_squad(user, squad_type)
     town = Town.get_by_user(user)
     if town.nil?
       LogBox.error(I18n.t('log_entry_user_has_no_town'), user)
@@ -265,7 +265,7 @@ class Game
     end
     town.pay_price(cost)
     user.pay_glory(Config.get(squad_type)['cost_glory'])
-    unit = Swordsman.new(empty_cell[:x], empty_cell[:y], user)
+    unit = Module.const_get(Config.get('unit_class')[squad_type]).new(empty_cell[:x], empty_cell[:y], user)
     user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_squad"), user)
     unit
@@ -285,7 +285,6 @@ class Game
   def settle_town(user, active_unit_id)
     # replace with action check ?
     return LogBox.error(I18n.t('log_entry_already_have_town'), user) if Town.has_live_town? user
-    info "User have no town"
     unit = Swordsman.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
     Town.new(unit.x, unit.y, user)
@@ -417,6 +416,11 @@ class Game
 
   def black_orbs_below_limit
     BlackOrb.below_limit?
+  end
+
+  def spawn_dummy(x, y)
+    user = User.new(Config.get('DUMMY_LOGIN'))
+    Swordsman.new(x, y, user)
   end
 
   def spawn_orb color

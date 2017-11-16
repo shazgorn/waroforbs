@@ -52,7 +52,10 @@ class User
   end
 
   class << self
-    def new login
+    def new(login)
+      @@users.each{|id, user|
+        return user if user.login == login
+      }
       user = super login
       @@users[user.id] = user
     end
