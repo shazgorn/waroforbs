@@ -15,6 +15,6 @@ source "https://rubygems.org" do
   gem 'reel'
   group :test do
     gem 'capybara'
-    gem 'capybara-webkit'
+    gem 'capybara-webkit', '>=1.14'
   end
 end

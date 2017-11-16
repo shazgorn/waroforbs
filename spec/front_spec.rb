@@ -27,6 +27,7 @@ RSpec.configure do |c|
   Capybara.javascript_driver = :webkit
   Capybara.app_host = 'http://0.0.0.0:9292/'
   Capybara.run_server = false
+  #Capybara.raise_javascript_errors = true
   c.include TimeHelper
   c.include PlayHelper
   c.include Capybara::DSL
@@ -38,6 +39,12 @@ RSpec.configure do |c|
     I18n.default_locale = :ru
   }
 end
+
+Capybara::Webkit.configure do |config|
+  config.allow_url("0.0.0.0")
+  config.raise_javascript_errors = true
+end
+
 
 RSpec.describe "Front tests", :js => true do
   it "is testing user info" do
