@@ -39,7 +39,7 @@ RSpec.configure do |c|
   }
 end
 
-RSpec.describe "Gaming process", :js => true do
+RSpec.describe "Front tests", :js => true do
   it "is testing user info" do
     login = log_in
     sleep(1) # wait init_map
@@ -67,7 +67,7 @@ RSpec.describe "Gaming process", :js => true do
     find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
   end
 
-  it "is restarting" do
+  it "is restarting", :slow => true do
     log_in
     find('.inventory-item-settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
@@ -83,7 +83,7 @@ RSpec.describe "Gaming process", :js => true do
     expect(page).to have_no_content(I18n.t('Hire squad'))
   end
 
-  it "is building" do
+  it "is building", :slow => true do
     log_in
     find('.inventory-item-settlers').click()
     expect(page).to have_content(I18n.t('res_settlers_action_label'))

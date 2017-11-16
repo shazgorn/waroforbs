@@ -69,10 +69,9 @@ task :orbs do
 end
 
 task :test do
-  # system('ruby -Ilib:test test/minitest/test_log_box.rb')
-  # system('ruby -Ilib:test test/minitest/test_unit.rb')
-  # system('ruby -Ilib:test test/minitest/test_user.rb')
-  # system('ruby -Ilib:test test/minitest/test_game.rb')
-  # system('ruby -Ilib:test test/minitest/test_orb_game_server.rb')
   system('bin/rspec --format doc')
+end
+
+task :test_fast do
+  system('bin/rspec --format doc --tag ~js --tag ~slow')
 end

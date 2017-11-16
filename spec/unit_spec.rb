@@ -39,7 +39,7 @@ RSpec.describe Unit, "testing" do
     expect(town.wounds).to eq(1)
   end
 
-  it 'is destroying building' do
+  it 'is destroying building', :slow => true do
     user = User.new('destroyer')
     town = Town.new(5, 5, user)
     town.build :barracs
