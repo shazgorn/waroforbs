@@ -21,7 +21,7 @@ class UnitView extends View
       @element = null
 
 ##
-#  TODO: write sane tests. Rename squad to squad
+#  TODO: write sane tests
 class SquadView extends UnitView
   constructor: (model) ->
     super model

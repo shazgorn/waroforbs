@@ -47,7 +47,6 @@ class Game
   end
 
   def get_current_logs_by_user(user)
-    # TODO: should dispatch all buffer logs but not the current one only
     LogBox.get_current_by_user(user)
   end
 

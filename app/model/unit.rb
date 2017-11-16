@@ -27,6 +27,7 @@ class Unit
     @life = Config.get('MAX_LIFE')
     @wounds = 0
     @name = nil
+    @in_battle = false
     @inventory = {
       :gold => 0,
       :wood => 0,
@@ -44,6 +45,7 @@ class Unit
   end
 
   def kill
+    @in_battle = true
     if @life > 0
       @life -= 1
       check_life()
@@ -52,6 +54,7 @@ class Unit
   end
 
   def wound
+    @in_battle = true
     if @life > 0
       @life -= 1
       @wounds += 1
