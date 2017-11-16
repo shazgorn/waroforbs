@@ -153,12 +153,6 @@ class Town < Unit
     @workers.select{|w| w.x == nil && w.y == nil}.first
   end
 
-  def extract_cost cost
-    cost.each_pair{|res, count|
-      @inventory[res] -= count
-    }
-  end
-
   ##
   # +building_id+ - symbol
 
@@ -166,7 +160,7 @@ class Town < Unit
     raise OrbError, "Unknown building '#{building_id}'" unless @buildings[building_id]
     building = @buildings[building_id]
     raise OrbError, 'Not enough resources' unless building.enough_resources?(@inventory)
-    extract_cost building.cost_res
+    pay_price(building.cost_res)
     if building.build
       update_actions
       return true
@@ -179,13 +173,13 @@ class Town < Unit
   end
 
   def check_price(cost)
-    res = nil
+    msg = nil
     cost.each{|res, value|
       if value > @inventory[res.to_sym]
-        res += I18n.t('log_entry_not_enough_res', res: res)
+        msg += I18n.t('log_entry_not_enough_res', res: res)
       end
     }
-    res
+    msg
   end
 
   def pay_price(cost)
