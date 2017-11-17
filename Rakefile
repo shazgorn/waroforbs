@@ -20,6 +20,7 @@ task :init do
   FileUtils.mkdir_p('front/static/css')
   system('scss front/static/scss/style.scss:front/static/css/style.css')
   FileUtils.mkdir_p('front/static/js')
+  system('npm install coffee-script')
   system('npm install jquery')
   system('cp node_modules/jquery/dist/jquery.min.js front/static/js/')
   system('cp node_modules/jquery/dist/jquery.min.map front/static/js/')
