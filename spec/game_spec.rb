@@ -38,7 +38,7 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  it 'is moving' do
+  fit 'is moving' do
     user = User.new('mover')
     x = 1
     y = 1
@@ -68,6 +68,8 @@ RSpec.describe Game, "testing" do
     Swordsman::BASE_AP.times do
       Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
       logs = LogBox.get_current_by_user(user)
+      dx *= -1
+      dy *= -1
     end
     expect(logs.first.message).to eq(I18n.t('log_entry_not_enough_ap'))
   end
