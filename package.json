@@ -7,6 +7,10 @@
     "license": "WTFPL",
     "README": "README.md",
     "dependencies": {
+        "coffee-script": "^1.12.7",
         "jquery": "^3.2.1"
+    },
+    "devDependencies": {
+        "coffeescript": "^2.0.2"
     }
 }

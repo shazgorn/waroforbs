@@ -1,11 +1,12 @@
 class View
-  constructor: () ->
+  constructor: (model) ->
     # jQuery element object
     @element = null
 
 # update title, because it contains hp and must be updated 'every' time
 class UnitView extends View
   constructor: (model) ->
+    super(model)
     @unit_title = model.title
     @unit_life = model.life
     @element = $(document.createElement('div'))
@@ -86,6 +87,7 @@ class TownInventoryItemView extends View
   # @param {TownInventoryItem} item
   ###
   constructor: (item) ->
+    super(item)
     if item.count
       @create_view(item)
 

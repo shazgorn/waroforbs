@@ -70,9 +70,9 @@ task :orbs do
 end
 
 task :test do
-  system('bin/rspec --format doc')
+  system('rspec --format doc')
 end
 
 task :test_fast do
-  system('bin/rspec --format doc --tag ~js --tag ~slow')
+  system('rspec --format doc --tag ~js --tag ~slow')
 end

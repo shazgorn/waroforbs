@@ -235,7 +235,7 @@ class PlayerTown extends Town
         building_card.set_town_modal(@modal, @buildings[key])
 
   remove: () ->
-    super
+    super()
     @modal.clean_up()
 
 class Building
