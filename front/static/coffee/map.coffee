@@ -72,20 +72,20 @@ class Map
     )
 
   addBlocks: () ->
-    for block_x in [0..@map_dim_in_blocks-1]
-      for block_y in [0..@map_dim_in_blocks-1]
+    for block_x in [1..@map_dim_in_blocks]
+      for block_y in [1..@map_dim_in_blocks]
         blockClass = 'block'
         top_pos = block_y * @block_dim_in_px
         left_pos = block_x * @block_dim_in_px
-        if block_y == 0
+        if block_y == 1
           blockClass += ' block-top'
           top_pos -= 5
-        if block_y == @map_dim_in_blocks-1
+        if block_y == @map_dim_in_blocks
           blockClass += ' block-bottom'
-        if block_x == 0
+        if block_x == 1
           blockClass += ' block-left'
           left_pos -= 5
-        if block_x == @map_dim_in_blocks-1
+        if block_x == @map_dim_in_blocks
           blockClass += ' block-right'
         b = $(document.createElement('div'))
           .attr('id', "block_#{block_x}_#{block_y}")
@@ -97,10 +97,10 @@ class Map
           .appendTo('#blocks')
 
   addCell: (x, y) ->
-    block_x = x // @block_dim_in_cells
-    block_y = y // @block_dim_in_cells
-    left = x % 10 * @cell_dim_in_px
-    top = y % 10 * @cell_dim_in_px
+    block_x = (x - 1) // @block_dim_in_cells + 1
+    block_y = (y - 1) // @block_dim_in_cells + 1
+    left = (x - 1) % 10 * @cell_dim_in_px
+    top = (y - 1) % 10 * @cell_dim_in_px
     mapCell = App.cells[x + '_' + y]
     cell = $(document.createElement('div'))
       .attr('id', "cell_#{x}_#{y}")

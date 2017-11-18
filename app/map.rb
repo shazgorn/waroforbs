@@ -27,7 +27,7 @@ class Map
   BLOCK_DIM = 10 # how many cells in block (one side)
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM # how many pixels in one block (one side)
   BLOCKS_IN_MAP_DIM = Config.get('BLOCKS_IN_MAP_DIM')
-  MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM - 1
+  MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM
   MAP_CELLS_RANGE = (1..MAX_CELL_IDX)
   SHIFT = 1000
 
@@ -89,21 +89,21 @@ class Map
 
   # generate map blocks
   def create_canvas_blocks(size = BLOCKS_IN_MAP_DIM)
-    size.times do |block_x|
-      size.times do |block_y|
+    (1..size).each do |block_x|
+      (1..size).each do |block_y|
         create_canvas_block(block_x, block_y)
       end
     end
   end
-  
+
   def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim_px = CELL_DIM_PX)
     MiniMagick::Tool::Montage.new do |builder|
       builder.geometry "+0+0"
       canvas_y = 0
-      cell_y = block_y * BLOCK_DIM
+      cell_y = ((block_y - 1) * BLOCK_DIM + 1)
       while canvas_y < canvas_dim
         canvas_x = 0
-        cell_x = block_x * BLOCK_DIM
+        cell_x = ((block_x - 1) * BLOCK_DIM + 1)
         while canvas_x < canvas_dim
           map_cell = MapCell.new(cell_x, cell_y)
           n = Random.rand 20
@@ -166,6 +166,7 @@ class Map
 
   def cell_type_at(x, y)
     cell = cell_at(x, y)
+    raise OrbError, "No cell for #{x},#{y}" unless cell
     cell.type
   end
 
