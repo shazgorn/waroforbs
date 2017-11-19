@@ -65,8 +65,6 @@ RSpec.describe "Front tests", :js => true do
       page.execute_script("$('#unit-info-list > .unit-info:first-of-type .unit-name-info').dblclick();")
     end
     expect(page).to have_css('#edit-unit-name')
-    page.save_screenshot('screenshot.png')
-    save_and_open_page
     expect(find('#edit-unit-name').value).to eq(unit_name)
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .cancel-button').click()
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(unit_name)
