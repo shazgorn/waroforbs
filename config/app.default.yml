@@ -3,6 +3,7 @@ ws_port: 9293
 log: log/app.log
 pid: tmp/pids/app.pid
 BLOCKS_IN_MAP_DIM: 1
+BLOCK_DIM: 10
 GREEN_ORB_PER_BLOCK: 1
 BLACK_ORB_LIMIT: 0
 BLACK_ORB_START_SPEED: 60

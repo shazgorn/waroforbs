@@ -27,3 +27,4 @@ node_modules/*
 .bundle/
 bin/
 spec/examples.txt
+capybara-*.html

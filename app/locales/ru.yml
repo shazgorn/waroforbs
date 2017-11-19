@@ -18,6 +18,7 @@ ru:
   log_entry_new_user: 'Новый пользователь %{user} создан'
   log_entry_no_unit_to_disband: Юнит для роспуска не найден
   log_entry_not_enough_ap: Не хватает AP
+  log_entry_no_empty_cells: Нет свободных клеток
   log_entry_out_of_map: За пределами карты
   log_entry_settle_town: Город основан
   log_entry_unit_disbanded: 'Юнит %{unit_id} распущен'

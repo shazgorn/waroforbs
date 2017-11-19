@@ -14,6 +14,7 @@ module PlayHelper
     expect(I18n.t('log_in')).to eq('Войти')
     click_button I18n.t('log_in')
     expect(page).to have_content(I18n.t('Exit'))
+    expect(page).to have_no_content('No position or no unit')
     login
   end
 
@@ -24,7 +25,7 @@ module PlayHelper
 end
 
 RSpec.configure do |c|
-  Capybara.javascript_driver = :webkit
+  Capybara.javascript_driver = :selenium
   Capybara.app_host = 'http://0.0.0.0:9292/'
   Capybara.run_server = false
   #Capybara.raise_javascript_errors = true
@@ -40,10 +41,10 @@ RSpec.configure do |c|
   }
 end
 
-Capybara::Webkit.configure do |config|
-  config.allow_url("0.0.0.0")
-  config.raise_javascript_errors = true
-end
+# Capybara::Webkit.configure do |config|
+#   config.allow_url("0.0.0.0")
+#   config.raise_javascript_errors = true
+# end
 
 
 RSpec.describe "Front tests", :js => true do
@@ -57,14 +58,24 @@ RSpec.describe "Front tests", :js => true do
   it "is renaming" do
     log_in
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
-    expect(unit_name).to eq(I18n.t('Swordsman'))
-    find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
-    expect(page).to have_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
+    expect(unit_name).to eq(I18n.t('Swordsman')) # TODO: get default unit type class
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click
+    # selenium does not support double clicks
+    if Capybara.javascript_driver == :selenium
+      page.execute_script("$('#unit-info-list > .unit-info:first-of-type .unit-name-info').dblclick();")
+    end
+    expect(page).to have_css('#edit-unit-name')
+    page.save_screenshot('screenshot.png')
+    save_and_open_page
     expect(find('#edit-unit-name').value).to eq(unit_name)
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .cancel-button').click()
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(unit_name)
     expect(page).to have_no_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
-    find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click()
+
+    find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click
+    if Capybara.javascript_driver == :selenium
+      page.execute_script("$('#unit-info-list > .unit-info:first-of-type .unit-name-info').dblclick();")
+    end
     new_unit_name = 'New squad name'
     fill_in 'edit-unit-name', with: new_unit_name
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .ok-button').click()
@@ -72,6 +83,13 @@ RSpec.describe "Front tests", :js => true do
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(new_unit_name)
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info'){|div| expect(div['title']).to eq(new_unit_name)}
     find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
+  end
+
+  it "is moving" do
+    log_in
+    find('#control_3').click
+    sleep(1)
+    # TODO: implement me
   end
 
   it "is restarting", :slow => true do
@@ -103,9 +121,5 @@ RSpec.describe "Front tests", :js => true do
     expect(find('.modal.town .building-in-progress .building-time').text).to eq(seconds_to_hm(barracs_time_cost))
     sleep(barracs_time_cost)
     find('.modal.town .building-built #open-screen-barracs').click()
-  end
-
-  it "is attacking", :slow => true do
-    page.execute_script("$('body').empty()")
   end
 end

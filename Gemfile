@@ -4,7 +4,6 @@ source "https://rubygems.org" do
   gem 'mini_magick'
   gem 'thin'
   gem 'sass'
-  gem 'coffee-script'
   gem 'minitest'
   gem 'slim'
   gem 'execjs'
@@ -16,5 +15,6 @@ source "https://rubygems.org" do
   group :test do
     gem 'capybara'
     gem 'capybara-webkit', '>=1.14'
+    gem 'selenium-webdriver'
   end
 end

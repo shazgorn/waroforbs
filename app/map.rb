@@ -24,15 +24,19 @@ class Map
   attr_accessor :ul
 
   CELL_DIM_PX = 32 # how may pixels in one cell (one side)
-  BLOCK_DIM = 10 # how many cells in block (one side)
+  BLOCK_DIM = Config.get('BLOCK_DIM') # how many cells in block (one side)
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM # how many pixels in one block (one side)
   BLOCKS_IN_MAP_DIM = Config.get('BLOCKS_IN_MAP_DIM')
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM
   MAP_CELLS_RANGE = (1..MAX_CELL_IDX)
   SHIFT = 1000
 
-  def initialize(generate = false)
-    @data_path = './data/map.dat'
+  ##
+  # Write test maps to separate files
+  # +generate+ map
+
+  def initialize(generate = false, file_name = 'map')
+    @data_path = "./data/#{file_name}.dat"
     @cells = {}
     @cells_bg = {
       1 => {
@@ -142,8 +146,8 @@ class Map
   end
 
   def get_rand_coords
-    x = Random.rand(MAX_CELL_IDX)
-    y = Random.rand(MAX_CELL_IDX)
+    x = Random.rand(1..MAX_CELL_IDX)
+    y = Random.rand(1..MAX_CELL_IDX)
     {:x => x, :y => y}
   end
 

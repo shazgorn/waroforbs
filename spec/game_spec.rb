@@ -38,7 +38,7 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  fit 'is moving' do
+  it 'is moving' do
     user = User.new('mover')
     x = 1
     y = 1

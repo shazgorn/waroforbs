@@ -170,6 +170,7 @@ class Map
         .css('top', -1 * top + 'px')
         .css('left', -1 * left + 'px')
     else
+      # TODO: translate me
       App.log({message: 'No position or no unit', type: 'error', time: 'Interface error'})
 
   appendElementToCell: (element, x, y) ->

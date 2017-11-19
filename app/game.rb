@@ -228,6 +228,7 @@ class Game
   def new_random_squad(user)
     raise OrbError, 'User have some live units' if Unit.has_live_units? user
     xy = get_random_xy
+    LogBox.spawn(I18n.t('log_entry_no_empty_cells'), user) unless xy
     unit = Swordsman.new(xy[:x], xy[:y], user)
     LogBox.spawn(I18n.t('log_entry_new_squad'), user)
     user.active_unit_id = unit.id
@@ -379,17 +380,19 @@ class Game
     move_unit_by(unit, dx, dy)
   end
 =end
+
   ##
   # Get random coordinates not occupied by any unit
   # return {:x => x, :y => y}
 
   def get_random_xy
-    while true
+    10000.times do
       xy = @map.get_rand_coords
       if Unit.place_is_empty?(xy[:x], xy[:y])
         return xy
       end
     end
+    return nil
   end
 
   def empty_adj_cell unit
@@ -434,6 +437,9 @@ class Game
     end
     log_entry
   end
+
+  ##
+  # merge into one func
 
   def spawn_black_orb
     return LogEntry.error 'Too many black orbs' unless BlackOrb.below_limit?
