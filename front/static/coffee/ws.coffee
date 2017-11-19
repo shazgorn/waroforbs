@@ -54,9 +54,9 @@ class WS
           when 'units'
             if data.op == "attack"
               if data.defender
-                app.map.dmg(data.d_dmg.wounds, data.d_dmg.kills, data.a_dmg.wounds, data.a_dmg.kills, data.d_id, data.a_id, 789, 123)
+                app.map.dmg(data.d_casualties.wounds, data.d_casualties.kills, data.a_casualties.wounds, data.a_casualties.kills, data.d_id, data.a_id, 789, 123)
               else
-                app.map.dmg(data.a_dmg.wounds, data.a_dmg.kills, data.d_dmg.wounds, data.d_dmg.kills, data.a_id, data.d_id, 123, 789)
+                app.map.dmg(data.a_casualties.wounds, data.a_casualties.kills, data.d_casualties.wounds, data.d_casualties.kills, data.a_id, data.d_id, 123, 789)
             app.update_user_info(data.user_glory, data.user_max_glory)
             app.upcreate_units data.units
             app.update_user_controls data.actions
@@ -137,6 +137,16 @@ class WS
       JSON.stringify({
         token: @token,
         op: 'hire_squad'
+      })
+    )
+
+  spawn_dummy_near: (x, y) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'spawn_dummy_near',
+        x: x,
+        y: y
       })
     )
 

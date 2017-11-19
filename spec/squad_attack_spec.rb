@@ -17,13 +17,13 @@ RSpec.describe SquadAttack, "is attacking" do
     d_total_dmg = 0
     7.times {|i|
       res = SquadAttack.new.attack(a, d)
-      a_total_dmg += res[:a_dmg][:kills] + res[:a_dmg][:wounds]
-      if res[:a_dmg][:killed]
+      a_total_dmg += res[:a_casualties][:kills] + res[:a_casualties][:wounds]
+      if res[:a_casualties][:killed]
         expect(a_total_dmg).to eq(Config.get('MAX_LIFE'))
         break
       end
-      d_total_dmg += res[:d_dmg][:kills] + res[:d_dmg][:wounds]
-      if res[:d_dmg][:killed]
+      d_total_dmg += res[:d_casualties][:kills] + res[:d_casualties][:wounds]
+      if res[:d_casualties][:killed]
         expect(d_total_dmg).to eq(Config.get('MAX_LIFE'))
         break
       end

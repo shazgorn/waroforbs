@@ -156,19 +156,26 @@ RSpec.describe Game, "testing" do
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_already_have_town'))
   end
 
+  it 'testing empty adj cell xy' do
+    xy = Celluloid::Actor[:game].empty_adj_cell_xy(5, 5)
+    expect(xy[:x]).to eq(4)
+    expect(xy[:y]).to eq(4)
+  end
+
+  it 'testing empty adj cell near unit' do
+    user = User.new('tester')
+    unit = Swordsman.new(5, 5, user)
+    xy = Celluloid::Actor[:game].empty_adj_cell(unit)
+    expect(xy[:x]).to eq(4)
+    expect(xy[:y]).to eq(4)
+  end
+
   it 'testing dummy' do
-    x = 1
-    y = 1
-    unit = Celluloid::Actor[:game].spawn_dummy(x, y)
-    expect(unit.x).to eq(x)
-    expect(unit.x).to eq(y)
+    x = 3
+    y = 3
+    unit = Celluloid::Actor[:game].spawn_dummy_near(x, y)
+    expect(unit.x).to eq(x - 1)
+    expect(unit.x).to eq(y - 1)
     expect(unit.user.login).to eq(Config.get('DUMMY_LOGIN'))
-    unit = Celluloid::Actor[:game].spawn_dummy(2, 2)
-    x = 2
-    y = 2
-    expect(unit.x).to eq(x)
-    expect(unit.x).to eq(y)
-    expect(unit.user.login).to eq(Config.get('DUMMY_LOGIN'))
-    expect(User.all.length).to eq(1)
   end
 end

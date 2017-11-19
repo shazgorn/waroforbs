@@ -104,6 +104,7 @@ class OtherPlayerSquad extends Squad
   constructor: (unit) ->
     super unit
     @css_class = 'other-player-hero'
+    @title = unit.name + ' [' + unit.user_name + ']'
 
   create_view: () ->
     if !@dead

@@ -395,17 +395,23 @@ class Game
     return nil
   end
 
-  def empty_adj_cell unit
-    (-1..1).each do |x|
-      (-1..1).each do |y|
-        new_x = unit.x + x
-        new_y = unit.y + y
+  ##
+  # return first empty cell coordinates near adjacent to +x+,+y+
+  def empty_adj_cell_xy(x, y)
+    (-1..1).each do |dx|
+      (-1..1).each do |dy|
+        new_x = x + dx
+        new_y = y + dy
         if Unit.place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
           return {:x => new_x, :y => new_y}
         end
       end
     end
     nil
+  end
+
+  def empty_adj_cell unit
+    empty_adj_cell_xy(unit.x, unit.y)
   end
 
   def tick(topic)
@@ -421,9 +427,14 @@ class Game
     BlackOrb.below_limit?
   end
 
-  def spawn_dummy(x, y)
+  def spawn_dummy_near(x, y)
     user = User.new(Config.get('DUMMY_LOGIN'))
-    Swordsman.new(x, y, user)
+    xy = empty_adj_cell_xy(x, y)
+    if xy
+      Swordsman.new(xy[:x], xy[:y], user)
+    else
+      LogBox.error(I18n.t('log_entry_no_empty_cells'), user)
+    end
   end
 
   def spawn_orb color

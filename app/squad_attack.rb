@@ -2,11 +2,11 @@ class SquadAttack
 
   def initialize
     @res = {
-      :a_dmg => {
+      :a_casualties => {
         :kills => 0,
         :wounds => 0
       },
-      :d_dmg => {
+      :d_casualties => {
         :kills => 0,
         :wounds => 0
       }
@@ -19,11 +19,11 @@ class SquadAttack
 
   def attack(a, d)
     srand(0)
-    # d_dmg - damage dealt to defender (casualties)
-    # a_dmg - damage dealt to attacker (casualties)
+    # d_casualties - damage dealt to defender (casualties)
+    # a_casualties - damage dealt to attacker (casualties)
     attack_phase(a, d)
-    @res[:d_dmg][:killed] = d.dead?
-    @res[:a_dmg][:killed] = a.dead?
+    @res[:d_casualties][:killed] = d.dead?
+    @res[:a_casualties][:killed] = a.dead?
     @res[:a_id] = a.id
     @res[:d_id] = d.id
     @res
@@ -34,13 +34,13 @@ class SquadAttack
     d_times = d.strength
     a_times.times{|i|
       return if a.dead? || d.dead?
-      single_attack(d, :d_dmg)
-      single_attack(a, :a_dmg)
+      single_attack(d, :d_casualties)
+      single_attack(a, :a_casualties)
       d_times -= 1 if d_times
     }
     d_times.times{|i|
       return if a.dead? || d.dead?
-      single_attack(a, :a_dmg)
+      single_attack(a, :a_casualties)
     }
   end
 
@@ -60,7 +60,7 @@ class SquadAttack
   end
 
   def roll
-    @prob = rand(100)    
+    @prob = rand(100)
   end
 
   def kill?

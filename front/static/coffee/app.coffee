@@ -56,6 +56,9 @@ class Application
   hire_squad: () ->
     @ws.hire_squad()
 
+  spawn_dummy_near: (x, y) ->
+    @ws.spawn_dummy_near(x, y)
+
   add_squad_to_squad: (squad_id) ->
     @ws.add_squad_to_squad(squad_id, @town_controls.last_town)
 

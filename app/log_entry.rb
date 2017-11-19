@@ -36,11 +36,11 @@ class LogEntry < JSONable
 
     def attack(res, user = nil)
       message = ''
-      if res[:d_dmg][:killed]
+      if res[:d_casualties][:killed]
         message += I18n.t('log_entry_enemy_unit_killed') + '. '
       end
-      message += I18n.t('log_entry_damage_dealt', d_wounds: res[:d_dmg][:wounds], d_kills: res[:d_dmg][:kills], a_wounds: res[:a_dmg][:wounds], a_kills: res[:a_dmg][:kills])
-      if res[:a_dmg][:killed]
+      message += I18n.t('log_entry_damage_dealt', d_wounds: res[:d_casualties][:wounds], d_kills: res[:d_casualties][:kills], a_wounds: res[:a_casualties][:wounds], a_kills: res[:a_casualties][:kills])
+      if res[:a_casualties][:killed]
         message += '. ' + I18n.t('log_entry_unit_lost') + '.'
       end
       self.new(:attack, message, user)
@@ -48,11 +48,11 @@ class LogEntry < JSONable
 
     def defence(res, user = nil)
       message = ''
-      if res[:a_dmg][:killed]
+      if res[:a_casualties][:killed]
         message += I18n.t('log_entry_enemy_unit_killed') + '. '
       end
-      message += I18n.t('log_entry_damage_taken', d_wounds: res[:d_dmg][:wounds], d_kills: res[:d_dmg][:kills], a_wounds: res[:a_dmg][:wounds], a_kills: res[:a_dmg][:kills])
-      if res[:d_dmg][:killed]
+      message += I18n.t('log_entry_damage_taken', d_wounds: res[:d_casualties][:wounds], d_kills: res[:d_casualties][:kills], a_wounds: res[:a_casualties][:wounds], a_kills: res[:a_casualties][:kills])
+      if res[:d_casualties][:killed]
         message += '. ' + I18n.t('log_entry_unit_lost') + '.'
       end
       self.new(:defence, message, user)

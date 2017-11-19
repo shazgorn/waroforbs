@@ -91,8 +91,8 @@ class Facade
       Celluloid::Actor[:game].build(user, data['building'].to_sym)
     when :spawn_orb
       Celluloid::Actor[:game].spawn_orb(data['color'].to_sym)
-    when :spawn_dummy
-      Celluloid::Actor[:game].spawn_dummy(data['x'], data['y'])
+    when :spawn_dummy_near
+      Celluloid::Actor[:game].spawn_dummy_near(data['x'], data['y'])
     when :hire_squad
       Celluloid::Actor[:game].hire_squad(user, 'swordsman')
     when :disband
