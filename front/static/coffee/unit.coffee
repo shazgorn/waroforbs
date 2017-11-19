@@ -193,7 +193,7 @@ class PlayerTown extends Town
     @buildings_cards = {}
     for key, building of unit['buildings']
       @buildings[key] = new Building(key, building)
-      @buildings_cards[key] = new BuildingCard.create(building)
+      @buildings_cards[key] = BuildingCard.create(building)
     # id => cell
     @cells = {}
     range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
