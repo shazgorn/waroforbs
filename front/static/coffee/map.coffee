@@ -101,7 +101,7 @@ class Map
     block_y = (y - 1) // @block_dim_in_cells + 1
     left = (x - 1) % 10 * @cell_dim_in_px
     top = (y - 1) % 10 * @cell_dim_in_px
-    mapCell = App.cells[x + '_' + y]
+    tile = App.cells[x + '_' + y]
     cell = $(document.createElement('div'))
       .attr('id', "cell_#{x}_#{y}")
       .data('x', x)
@@ -110,16 +110,16 @@ class Map
       .css('left', left)
       .css('top', top)
       .appendTo("#block_#{block_x}_#{block_y}")
-    if mapCell
+    if tile
       cell.attr(
         'title',
-        mapCell['@x'] + ',' + mapCell['@y'] + ' ' + mapCell['@type']
+        tile.x + ',' + tile.y + ' ' + tile.title
       )
     cell
 
   addAllCells: (cells) ->
     for id, cell of cells
-      @addCell(cell['@x'], cell['@y'])
+      @addCell(cell.x, cell.y)
 
   applyCasualtiesTo: (cell, wounds, kills, type, timeout) ->
     d = $(document.createElement('span'))

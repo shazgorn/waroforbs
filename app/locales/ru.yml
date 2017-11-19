@@ -2,6 +2,13 @@ ru:
   Default action: Действие по умолчанию
   New town: Основать город
   Hire squad: Нанять отряд
+  Barracs: Казармы
+  Tavern: Таверна
+  Town: Город
+  Swordsman: Мечники
+  grass: Трава
+  tree: Лес
+  mountain: Горы
   log_entry_already_have_town: У Вас уже есть город
   log_entry_barracs_not_build: Казармы не построены
   log_entry_cell_occupied: Клетка занята
@@ -40,7 +47,3 @@ ru:
   res_settlers_title: Поселенцы
   res_settlers_description: С их помощью, можно основать поселение
   res_settlers_action_label: Основать
-  Barracs: Казармы
-  Tavern: Таверна
-  Town: Город
-  Swordsman: Мечники

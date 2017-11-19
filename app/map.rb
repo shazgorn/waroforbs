@@ -5,18 +5,7 @@ require 'yaml'
 require 'mini_magick'
 
 require 'config'
-require 'jsonable'
-
-class MapCell < JSONable
-  attr_accessor :x, :y, :type, :unit
-  def initialize(x = nil, y = nil, type = nil, unit = nil)
-    @x = x
-    @y = y
-    # type - :grass, :tree, etc
-    @type = type
-    @unit = unit
-  end
-end
+require 'map_tile'
 
 class Map
   include Celluloid::Internals::Logger
@@ -109,11 +98,10 @@ class Map
         canvas_x = 0
         cell_x = ((block_x - 1) * BLOCK_DIM + 1)
         while canvas_x < canvas_dim
-          map_cell = MapCell.new(cell_x, cell_y)
           n = Random.rand 20
           n = 1 unless @cells_bg.has_key?(n)
           cell_bg = @cells_bg[n]
-          map_cell.type = cell_bg[:type]
+          map_cell = MapTile.new(cell_x, cell_y, cell_bg[:type])
           builder << cell_bg[:path]
           @cells["#{cell_x}_#{cell_y}"] = map_cell
           canvas_x += cell_dim_px
