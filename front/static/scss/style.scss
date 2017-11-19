@@ -334,7 +334,7 @@ button {
     color: $red;
   }
 
-  .dmg {
+  .casualties {
     font-weight: bold;
     left: 4px;
     position: absolute;
@@ -342,27 +342,27 @@ button {
     z-index: 10;
   }
 
-  .dmg-start {
+  .casualties-start {
     top: -10px;
   }
 
-  .dmg-end {
+  .casualties-end {
     top: -30px;
   }
 
-  // .def-dmg-start {
+  // .defender-casualties-start {
   //   color: $red;
   // }
 
-  // .def-dmg-end {
+  // .defender-casualties-end {
   //   color: $yellow;
   // }
 
-  // .att-dmg-start {
+  // .attacker-casualties-start {
   //   color: $blue;
   // }
 
-  // .att-dmg-end {
+  // .attacker-casualties-end {
   //   color: $aqua;
   // }
 }

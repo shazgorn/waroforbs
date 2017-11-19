@@ -91,8 +91,6 @@ class PlayerSquad extends Squad
   update: (unit) ->
     super unit
     return if @dead
-    if @life != unit.life
-      @view.set_life(@life)
     @title = unit.name
     @life = unit.life
     @wounds = unit.wounds
@@ -115,7 +113,7 @@ class OtherPlayerSquad extends Squad
     return if @dead
     if @life != unit.life
       @life = unit.life
-      @view.set_life(@life)
+    @view.update(this)
 
 class GreenOrb extends Unit
   constructor: (unit) ->

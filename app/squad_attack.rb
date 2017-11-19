@@ -18,7 +18,6 @@ class SquadAttack
   # +d+ - defender Unit
 
   def attack(a, d)
-    srand(0)
     # d_casualties - damage dealt to defender (casualties)
     # a_casualties - damage dealt to attacker (casualties)
     attack_phase(a, d)

@@ -90,6 +90,22 @@ RSpec.describe "Front tests", :js => true do
     # TODO: implement me
   end
 
+  it "is attacking" do
+    log_in
+    xy = find('#unit-info-list > .active-unit-info .unit-xy-info').text.split
+    page.execute_script("App.spawn_dummy_near(#{xy[0]},#{xy[1]});")
+    expect(page).to have_css('.attack-target')
+    defender = first('.attack-target')
+    start_defender_life = defender.find('.other-player-unit-life-info').text.to_i
+    expect(1..Config.get('MAX_LIFE')).to include(start_defender_life)
+    defender.click()
+    defender_wounds = find('.defender-casualties .wounds').text.to_i
+    defender_kills = find('.defender-casualties .kills').text.to_i
+    defender_casualties = defender_wounds + defender_kills
+    defender_life = defender.find('.other-player-unit-life-info').text.to_i
+    expect(start_defender_life - defender_casualties).to eq(defender_life)
+  end
+
   it "is restarting", :slow => true do
     log_in
     find('.inventory-item-settlers').click()

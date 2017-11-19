@@ -121,11 +121,12 @@ class Map
     for id, cell of cells
       @addCell(cell['@x'], cell['@y'])
 
-  applyDmgTo: (cell, wounds, kills, type, timeout) ->
+  applyCasualtiesTo: (cell, wounds, kills, type, timeout) ->
     d = $(document.createElement('span'))
-      .addClass('dmg')
-      .addClass('dmg-start')
-      .addClass("#{type}-dmg-start")
+      .addClass('casualties')
+      .addClass('casualties-start')
+      .addClass("#{type}-casualties")
+      .addClass("#{type}-casualties-start")
       .append(
         $(document.createElement('span'))
         .addClass('wounds')
@@ -143,16 +144,16 @@ class Map
     ###
     setTimeout(() ->
       d
-        .removeClass('dmg-start')
-        .addClass('dmg-end')
-        .removeClass("#{type}-dmg-start")
-        .addClass("#{type}-dmg-end")
+        .removeClass('casualties-start')
+        .addClass('casualties-end')
+        .removeClass("#{type}-casualties-start")
+        .addClass("#{type}-casualties-end")
       setTimeout((() -> d.remove()), 1234)
     , timeout)
 
-  dmg: (a_wounds, a_kills, d_wounds, d_kills, a_id, d_id, a_delay, d_delay) ->
-    @applyDmgTo($("#unit-#{d_id}").parent(), d_wounds, d_kills,    'def', a_delay)
-    @applyDmgTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 'att', d_delay)
+  casualties: (a_wounds, a_kills, d_wounds, d_kills, a_id, d_id, a_delay, d_delay) ->
+    @applyCasualtiesTo($("#unit-#{d_id}").parent(), d_wounds, d_kills, 'defender', a_delay)
+    @applyCasualtiesTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 'attacker', d_delay)
 
   center_on_hero: (unit_id) ->
     $unit = $("##{unit_id}")

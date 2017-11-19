@@ -54,9 +54,9 @@ class WS
           when 'units'
             if data.op == "attack"
               if data.defender
-                app.map.dmg(data.d_casualties.wounds, data.d_casualties.kills, data.a_casualties.wounds, data.a_casualties.kills, data.d_id, data.a_id, 789, 123)
+                app.map.casualties(data.d_casualties.wounds, data.d_casualties.kills, data.a_casualties.wounds, data.a_casualties.kills, data.d_id, data.a_id, 789, 123)
               else
-                app.map.dmg(data.a_casualties.wounds, data.a_casualties.kills, data.d_casualties.wounds, data.d_casualties.kills, data.a_id, data.d_id, 123, 789)
+                app.map.casualties(data.a_casualties.wounds, data.a_casualties.kills, data.d_casualties.wounds, data.d_casualties.kills, data.a_id, data.d_id, 123, 789)
             app.update_user_info(data.user_glory, data.user_max_glory)
             app.upcreate_units data.units
             app.update_user_controls data.actions
