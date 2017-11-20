@@ -251,7 +251,6 @@ button {
   }
 
   .player-hero {
-    //background-image: url('/img/player_hero.png');
     background-image: url('/img/swordsman.png');
   }
 
@@ -263,6 +262,7 @@ button {
 
     &.active-player-unit {
       border: thin solid $active-hero-color;
+      z-index: 10
     }
   }
 

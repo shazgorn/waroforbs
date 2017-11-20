@@ -38,6 +38,7 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
+  # time to split this method?
   it 'is moving' do
     user = User.new('mover')
     x = 1
@@ -64,6 +65,13 @@ RSpec.describe Game, "testing" do
     # can move to 'dead'(unit's) cell
     Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
+    x = x + dx
+    y = y + dy
+    # into the town
+    town = Town.new(x + dx, y + dy, user)
+    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
+    # no fuel
     logs = nil
     Swordsman::BASE_AP.times do
       Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)

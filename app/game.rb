@@ -345,10 +345,13 @@ class Game
     new_x = unit.x + dx
     new_y = unit.y + dy
     return LogBox.error(I18n.t('log_entry_out_of_map'), unit.user) unless @map.has?(new_x, new_y)
-    return LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user) unless Unit.place_is_empty?(new_x, new_y)
     type = @map.cell_type_at(new_x, new_y)
     cost = TYPE2COST[type]
     return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
+    u = Unit.get_by_xy(new_x, new_y)
+    if u && u.alive? && !(u.is_town? && u.user_id == unit.user_id)
+      return LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user)
+    end
     unit.move_to(new_x, new_y, cost)
     LogBox.move(unit.id, dx, dy, new_x, new_y, unit.user)
   end
@@ -397,6 +400,7 @@ class Game
 
   ##
   # return first empty cell coordinates near adjacent to +x+,+y+
+
   def empty_adj_cell_xy(x, y)
     (-1..1).each do |dx|
       (-1..1).each do |dy|

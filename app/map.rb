@@ -119,7 +119,7 @@ class Map
 
   # check if coordinates are valid, alias may be
   def has?(x, y)
-    [x, y].count{|c| (MAP_CELLS_RANGE).include? c} == 2
+    [x, y].count{|c| MAP_CELLS_RANGE.include? c} == 2
   end
 
   alias valid? has?
@@ -158,8 +158,6 @@ class Map
 
   def cell_type_at(x, y)
     cell = cell_at(x, y)
-    raise OrbError, "No cell for #{x},#{y}" unless cell
     cell.type
   end
-
 end

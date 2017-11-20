@@ -130,6 +130,10 @@ class Unit
     @ap >= cost
   end
 
+  def is_town?
+    @type == :town
+  end
+
   def move(cost)
     if @ap >= cost
       @ap -= cost
