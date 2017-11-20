@@ -130,8 +130,15 @@ class Unit
     @ap >= cost
   end
 
-  def is_town?
-    @type == :town
+  ##
+  # If +unit+ can enter into +self+
+
+  def enterable_for(unit)
+    false
+  end
+
+  def not_enterable_for(unit)
+    !enterable_for(unit)
   end
 
   def move(cost)

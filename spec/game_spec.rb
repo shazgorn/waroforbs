@@ -38,48 +38,73 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  # time to split this method?
-  it 'is moving' do
-    user = User.new('mover')
-    x = 1
-    y = 1
-    unit = Swordsman.new(x, y, user)
-    Celluloid::Actor[:game].move_user_hero_by(user, 666, -1, -1)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_not_found', unit_id: 666))
-    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, 100, -1)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_wrong_direction'))
-    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, -1, -1)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_out_of_map'))
-    dx = 1
-    dy = 1
-    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
-    x = x + dx
-    y = y + dy
-    unit2 = Swordsman.new(3, 3, user)
-    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_cell_occupied'))
-    unit2.die
-    Celluloid::Actor[:game].move_user_hero_by(user, unit2.id, dx, dy)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unit_dead'))
-    # can move to 'dead'(unit's) cell
-    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
-    x = x + dx
-    y = y + dy
-    # into the town
-    town = Town.new(x + dx, y + dy, user)
-    Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_move', unit_id: unit.id, dx: dx, dy: dy, new_x: x + dx, new_y: y + dy))
-    # no fuel
-    logs = nil
-    Swordsman::BASE_AP.times do
-      Celluloid::Actor[:game].move_user_hero_by(user, unit.id, dx, dy)
-      logs = LogBox.get_current_by_user(user)
-      dx *= -1
-      dy *= -1
+  context "is moving" do
+    before(:example) do
+      @user = User.new('mover')
+      @x = 5
+      @y = 5
+      @dx = 1
+      @dy = 1
+      @unit = Swordsman.new(@x, @y, @user)
     end
-    expect(logs.first.message).to eq(I18n.t('log_entry_not_enough_ap'))
+
+    it 'is moving nobody' do
+      Celluloid::Actor[:game].move_user_hero_by(@user, 666, -1, -1)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_unit_not_found', unit_id: 666))
+    end
+
+    it 'is moving in wrong direction' do
+      Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, 100, -1)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_wrong_direction'))
+    end
+
+    it 'is out of map' do
+      unit = Swordsman.new(1, 1, @user)
+      Celluloid::Actor[:game].move_user_hero_by(@user, unit.id, -1, -1)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_out_of_map'))
+    end
+
+    it 'success move' do
+      Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: @dx, dy: @dy, new_x: @x + @dx, new_y: @y + @dy))
+    end
+
+    it 'occupy wallstreet' do
+      Swordsman.new(@x + @dx, @y + @dy, @user)
+      Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_cell_occupied'))
+    end
+
+    it 'we are the dead' do
+      unit2 = Swordsman.new(@x + @dx, @y + @dy, @user)
+      unit2.die
+      Celluloid::Actor[:game].move_user_hero_by(@user, unit2.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_unit_dead'))
+    end
+
+    it 'crush the bones!' do
+      Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: @dx, dy: @dy, new_x: @x + @dx, new_y: @y + @dy))
+    end
+
+    it 'into the town' do
+      Town.new(@x + @dx, @y + @dy, @user)
+      Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: @dx, dy: @dy, new_x: @x + @dx, new_y: @y + @dy))
+    end
+
+    it 'no fuel' do
+      dx = @dx
+      dy = @dy
+      logs = nil
+      (Swordsman::BASE_AP + 1).times do
+        Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, dx, dy)
+        logs = LogBox.get_current_by_user(@user)
+        dx *= -1
+        dy *= -1
+      end
+      expect(logs.first.message).to eq(I18n.t('log_entry_not_enough_ap'))
+    end
   end
 
   it 'attack' do

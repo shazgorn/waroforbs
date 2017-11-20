@@ -52,4 +52,11 @@ RSpec.describe Unit, "testing" do
     h = Swordsman.new(5, 5, user)
     h.name = 'new name'
   end
+
+  it 'is enterable' do
+    user = User.new('renamer')
+    unit = Swordsman.new(5, 5, user)
+    town = Town.new(6, 6, user)
+    expect(town.enterable_for(unit)).to be true
+  end
 end

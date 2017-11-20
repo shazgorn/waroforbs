@@ -110,6 +110,7 @@ RSpec.describe "Front tests", :js => true do
     log_in
     find('.inventory-item-settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
+    find('.unit-info:last-of-type').click()
     find('.player-town').click()
     find('.modal.town .building-card-barracs .build-button').click()
     barracs_time_cost = Config.get('barracs')['cost_time']

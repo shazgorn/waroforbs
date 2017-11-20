@@ -349,7 +349,7 @@ class Game
     cost = TYPE2COST[type]
     return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
     u = Unit.get_by_xy(new_x, new_y)
-    if u && u.alive? && !(u.is_town? && u.user_id == unit.user_id)
+    if u && u.alive? && u.not_enterable_for(unit)
       return LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user)
     end
     unit.move_to(new_x, new_y, cost)

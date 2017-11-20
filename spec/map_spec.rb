@@ -3,7 +3,6 @@ require 'map'
 RSpec.describe Map, "testing", :map => true do
   it 'is out of map' do
     map = Map.new(true, 'map_test')
-    blocks = Config.get('BLOCKS_IN_MAP_DIM')
     expect(map.has?(1,1)).to be true
     expect(map.has?(0,0)).to be false
     expect(map.has?(Map::MAX_CELL_IDX, Map::MAX_CELL_IDX)).to be true

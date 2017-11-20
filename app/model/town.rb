@@ -85,6 +85,10 @@ class Town < Unit
     @name = I18n.t('Town')
   end
 
+  def enterable_for(unit)
+    unit.user_id == user_id
+  end
+
   ##
   # Destroy all building if town is beign attacked
   # TODO: log building destruction
