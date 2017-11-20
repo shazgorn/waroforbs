@@ -97,7 +97,9 @@ class PlayerControlsView extends ControlsView
           .addClass('ok-button')
           .html('')
           .click(() =>
-            @rename(unit.id, input.val())
+            new_name = input.val()
+            @name.html(new_name)
+            @rename(unit.id, new_name)
           )
       )
       @name.append(

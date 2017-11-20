@@ -77,7 +77,7 @@ RSpec.describe "Front tests", :js => true do
     new_unit_name = 'New squad name'
     fill_in 'edit-unit-name', with: new_unit_name
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .ok-button').click()
-    sleep(1)
+    expect(page).to have_no_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(new_unit_name)
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info'){|div| expect(div['title']).to eq(new_unit_name)}
     find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
