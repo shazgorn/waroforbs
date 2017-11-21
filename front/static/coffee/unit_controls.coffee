@@ -51,7 +51,7 @@ class ControlsView
       @info = null
 
   update: (unit) ->
-    if unit.dead
+    if unit.dead && @info
       @info.remove()
       return
     if unit.name != @unit_name

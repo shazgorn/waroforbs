@@ -22,22 +22,6 @@ $column-gap: 30px;
 $font-family: 'PT Serif', serif;
 $right-col-width: 230px;
 // colors
-// color of wooden theme
-$wooden-color: #963;
-// color of wood
-$life-info-color: #e60000;
-$sienna: #a0522d;
-$wood-color: $sienna;
-$hover-hero-color: #66a3ff;
-$active-hero-color: #06f;
-$chocolate: #d2691e;
-$right-col-border: $chocolate;
-$saddlebrown: #8b4513;
-$orb-color: #ffc;
-$theme-bg: $saddlebrown;
-$theme-border: $chocolate;
-$theme-color: #ffffe0;
-$theme-hover: $sienna;
 $aqua: #0ff;
 $black: #000;
 $blue: #00f;
@@ -52,6 +36,23 @@ $orange: #ffa500;
 $red: #f00;
 $yellow: #ff0;
 $white: #fff;
+// color of wooden theme
+$wooden-color: #963;
+// color of wood
+$life-info-color: #e60000;
+$wounds-info-color: $yellow;
+$sienna: #a0522d;
+$wood-color: $sienna;
+$hover-hero-color: #66a3ff;
+$active-hero-color: #06f;
+$chocolate: #d2691e;
+$right-col-border: $chocolate;
+$saddlebrown: #8b4513;
+$orb-color: #ffc;
+$theme-bg: $saddlebrown;
+$theme-border: $chocolate;
+$theme-color: #ffffe0;
+$theme-hover: $sienna;
 // 2rem left + 2rem between right col + 2 rem for paddings
 $modal-width: calc(100% - #{$right-col-width} - 6rem);
 // - 2.5rem for padding + scroll
@@ -476,6 +477,10 @@ button {
 
   .unit-life-info {
     color: $life-info-color;
+  }
+
+  .unit-wounds-info {
+    color: $wounds-info-color;
   }
 
   .unit-damage-info {

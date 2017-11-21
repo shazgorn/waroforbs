@@ -147,7 +147,9 @@ class Map
     (-1..1).include?(x1 - x2) && (-1..1).include?(y1 - y2)
   end
 
-  # max distance
+  ##
+  # max distance by any axis
+
   def max_diff(x1, y1, x2, y2)
     [(x1 - x2).abs(), (y1 - y2).abs()].max
   end

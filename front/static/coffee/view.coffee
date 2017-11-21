@@ -15,25 +15,28 @@ class UnitView extends View
         .data('id', model.id)
         .attr('title', model.title)
         .attr('id', model.attr_id)
+    @life_el = $(document.createElement('span'))
+        .html(model.life)
+        .appendTo(@element)
 
   remove_element: () ->
     if @element
       @element.remove()
       @element = null
 
+  update: (model) ->
+    if @unit_life != model.life
+      @unit_life = model.life
+      @life_el.html(@unit_life)
+    if @unit_title != model.title
+      @unit_title = model.title
+      @element.attr('title', @unit_title)
+
 ##
 #  TODO: write sane tests
 class SquadView extends UnitView
   constructor: (model) ->
     super model
-    @life_el = $(document.createElement('span'))
-        .html(model.life)
-        .appendTo(@element)
-
-  update: (model) ->
-    if @unit_life != model.life
-      @unit_life = model.life
-      @life_el.html(@unit_life)
 
 class PlayerSquadView extends SquadView
   constructor: (model) ->
@@ -44,12 +47,6 @@ class PlayerSquadView extends SquadView
       .on('click', () =>
         App.set_active_unit(model.id)
       )
-
-  update: (model) ->
-    super model
-    if @unit_title != model.title
-      @unit_title = model.title
-      @element.attr('title', @unit_title)
 
 class OtherPlayerSquadView extends SquadView
   constructor: (model) ->
@@ -71,6 +68,7 @@ class GreenOrbView extends OrbView
 class PlayerTownView extends UnitView
   constructor: (model) ->
     super model
+    @life_el.addClass('player-unit-life-info')
     @element
       .addClass 'select-target'
       .on('click', () =>
@@ -80,6 +78,7 @@ class PlayerTownView extends UnitView
 class OtherPlayerTownView extends UnitView
   constructor: (model) ->
     super model
+    @life_el.addClass('other-player-unit-life-info')
 
 
 class TownInventoryItemView extends View

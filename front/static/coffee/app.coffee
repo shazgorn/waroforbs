@@ -96,7 +96,9 @@ class Application
         unit_model = @units[unit_id]
         is_user_unit = unit_hash.user_id == @user_id
         if unit_model
-          unit_model.update unit_hash
+          unit_model.update(unit_hash)
+          unit_model.update_view()
+          unit_model.update_controls()
         else
           unit_model = UnitFactory(unit_hash, is_user_unit)
           if !unit_model.dead

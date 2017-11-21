@@ -48,13 +48,10 @@ class Unit extends Model
     @need_to_move = !@dead && (@x != unit.x || @y != unit.y)
     if @x != unit.x
       @x = unit.x
-      # view.set_x(@x)
     if @y != unit.y
       @y = unit.y
-      # view.set_y(@x)
     if @ap != unit.ap
       @ap = unit.ap
-      # view.set_ap(@ap)
     if @name != unit.name
       @name = unit.name
     if @controls
@@ -63,10 +60,20 @@ class Unit extends Model
       @modal.inventory_view.sync_resources(@inventory, unit.inventory)
     for res, q of unit.inventory
       @inventory[res] = q
+    @life = unit.life
+
+  update_view: () ->
+    if @view
+      @view.update(this)
+
+  update_controls: () ->
+    if @controls
+      @controls.update(this)
 
   remove: () ->
     console.log('remove ' + @id)
-    @view.remove_element()
+    if @view
+      @view.remove_element()
     if @controls
       @controls.remove_element()
 
@@ -80,7 +87,6 @@ class PlayerSquad extends Squad
   constructor: (unit) ->
     super unit
     @css_class = 'player-unit player-hero'
-    @life = unit.life
     @title = unit.name
 
   create_view: () ->
@@ -92,11 +98,7 @@ class PlayerSquad extends Squad
     super unit
     return if @dead
     @title = unit.name
-    @life = unit.life
     @wounds = unit.wounds
-    @view.update(this)
-    @controls.update(this)
-
 
 class OtherPlayerSquad extends Squad
   constructor: (unit) ->
@@ -107,46 +109,6 @@ class OtherPlayerSquad extends Squad
   create_view: () ->
     if !@dead
       @view = new OtherPlayerSquadView(this)
-
-  update: (unit) ->
-    super unit
-    return if @dead
-    if @life != unit.life
-      @life = unit.life
-    @view.update(this)
-
-class GreenOrb extends Unit
-  constructor: (unit) ->
-    super unit
-    @css_class = 'green-orb'
-    @title = @life
-    if @life < 50
-      @css_class += ' orb-sm'
-    else if @life < 100
-      @css_class += ' orb-md'
-    else
-      @css_class += ' orb'
-
-  create_view: () ->
-    @view = new GreenOrbView(this)
-
-
-class BlackOrb extends Unit
-  constructor: (unit) ->
-    super unit
-    @css_class = 'black-orb'
-    @title = @life
-    if @life < 500
-      @css_class += ' orb-sm'
-    else if @life < 700
-      @css_class += ' orb-md'
-    else
-      @css_class += ' orb'
-
-  create_view: () ->
-    if !@dead
-      @view = new BlackOrbView(this)
-
 
 class Town extends Unit
   constructor: (unit) ->
@@ -237,6 +199,15 @@ class PlayerTown extends Town
     super()
     @modal.clean_up()
 
+class OtherPlayerTown extends Town
+  constructor: (unit) ->
+    super unit
+    @title = unit.name + ' [' + unit.user_name + ']'
+
+  create_view: () ->
+    if !@dead
+      @view = new OtherPlayerTownView(this)
+
 class Building
   constructor: (key, building) ->
     @id = key
@@ -252,16 +223,6 @@ class Building
     @ttb_string = building['ttb_string']
 
 
-class OtherPlayerTown extends Town
-  constructor: (unit) ->
-    super unit
-    @title = unit.name + ' [' + unit.user_name + ']'
-
-  create_view: () ->
-    if !@dead
-      @view = new OtherPlayerTownView(this)
-
-
 window.UnitFactory = (unit_hash, is_user_unit) ->
   switch unit_hash.type
     when "squad"
@@ -269,8 +230,8 @@ window.UnitFactory = (unit_hash, is_user_unit) ->
         unit = new PlayerSquad unit_hash
       else
         unit = new OtherPlayerSquad unit_hash
-    when "green_orb" then unit = new GreenOrb unit_hash
-    when "black_orb" then unit = new BlackOrb unit_hash
+    # when "green_orb" then unit = new GreenOrb unit_hash
+    # when "black_orb" then unit = new BlackOrb unit_hash
     when "town"
       if is_user_unit
         unit = new PlayerTown unit_hash
