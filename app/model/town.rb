@@ -1,66 +1,13 @@
 require 'unit'
 require 'single_entity'
-
-class Resource
-  # ttc - time to collect
-  T = {
-    :gold => {
-      :ttc => 10
-    },
-    :wood => {
-      :ttc => 30
-    },
-    :stone => {
-      :ttc => 50
-    }
-  }
-end
-
-class TownWorker < JSONable
-  attr_reader :type
-  attr_accessor :x, :y
-
-  def initialize
-    @x = nil
-    @y = nil
-    @type = nil
-    @start_time = nil
-    # time to collect
-    @ttc = nil
-    @finish_time = nil
-    start_default_res_collection
-  end
-
-  def start_default_res_collection
-    start_res_collection :gold
-  end
-
-  def start_res_collection res_type, distance = 1
-    @type = res_type
-    @ttc = Resource::T[@type][:ttc] * distance
-    @start_time = Time.now
-    @finish_time = @start_time + @ttc
-  end
-
-  def clear
-    @x = @y = nil
-    start_default_res_collection
-  end
-
-  # check if it`s time to collect resource
-  def check_res
-    if @finish_time && Time.now > @finish_time
-      @finish_time += @ttc
-      return true
-    end
-    return false
-  end
-end
+require 'transport'
+require 'town_worker'
 
 ##
 # SE - single entity
 class Town < Unit
   include SingleEntity
+  include Transport
 
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
@@ -83,10 +30,6 @@ class Town < Unit
     @inventory[:gold] = 300
     @inventory[:wood] = 50
     @name = I18n.t('Town')
-  end
-
-  def enterable_for(unit)
-    unit.user_id == user_id
   end
 
   ##
