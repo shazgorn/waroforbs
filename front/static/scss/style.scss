@@ -459,15 +459,16 @@ button {
   .unit-info-row {
     div {
       display: inline-block;
+      margin-right: .5rem;
     }
 
-    div:nth-of-type(1) {
-      width: 40%;
-    }
+    /* div:nth-of-type(1) { */
+    /*   width: 40%; */
+    /* } */
 
-    div:nth-of-type(n+2) {
-      width: 30%;
-    }
+    /* div:nth-of-type(n+2) { */
+    /*   width: 30%; */
+    /* } */
   }
 
   .unit-info-actions {

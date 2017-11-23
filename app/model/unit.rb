@@ -80,6 +80,7 @@ class Unit
       'life' => @life,
       'wounds' => @wounds,
       'dead' => @dead,
+      'damage' => @damage,
       'defence' => @defence,
       'inventory' => @inventory,
       'user_name' => @user.login,
