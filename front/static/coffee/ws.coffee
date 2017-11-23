@@ -150,6 +150,16 @@ class WS
       })
     )
 
+  spawn_monolith_near: (x, y) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'spawn_monolith_near',
+        x: x,
+        y: y
+      })
+    )
+
   add_squad_to_squad: (squad_id, town_id) ->
     @socket.send(
       JSON.stringify({

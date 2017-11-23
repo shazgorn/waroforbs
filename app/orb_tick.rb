@@ -8,10 +8,14 @@ class OrbTick
   end
 
   def run
+    @monolith_spawned = false
     info 'Tick started'
     now = Time.now.to_f
     sleep now.ceil - now + 0.001
     every(3) do
+      unless @monolith_spawned
+        publish 'spawn_monolith'
+      end
       publish 'tick'
     end
   end

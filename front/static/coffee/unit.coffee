@@ -15,26 +15,23 @@ class Model
 # Every unit should have every property no matter player's or not
 # till visibility options arrive
 class Unit extends Model
-  constructor: (unit) ->
+  constructor: (unit, @own) ->
     super unit
     @_unit = unit
     @id = unit.id
     @attr_id = "unit-#{@id}"
-    @x = unit.x
-    @y = unit.y
     @type = unit.type
     @damage = unit.damage
     @defence = unit.defence
     @dead = unit.dead
-    @life = unit.life
-    @wounds = unit.wounds
-    @name = unit.name
-    @ap = unit.ap
     @inventory =  unit.inventory
-    @user_id = null
-    @user_name = null
+    @user_id = unit.user_idnull
+    @user_name = unit.user_name
     if !@dead
       @need_to_move = true
+    @title = unit.name
+    unless @own
+      @title += ' [' + unit.user_name + ']'
 
   update: (unit) ->
     return if @dead
@@ -45,30 +42,46 @@ class Unit extends Model
       if @controls
         @controls.remove_element()
       return
-    @need_to_move = !@dead && (@x != unit.x || @y != unit.y)
-    if @x != unit.x
-      @x = unit.x
-    if @y != unit.y
-      @y = unit.y
-    if @ap != unit.ap
-      @ap = unit.ap
-    if @name != unit.name
-      @name = unit.name
+    @need_to_move = (@x != unit.x || @y != unit.y)
+    @x = unit.x
+    @y = unit.y
+    @ap = unit.ap
+    @life = unit.life
+    @wounds = unit.wounds
+    @name = unit.name
+    @adj_companies = unit.adj_companies
     if @controls
       @controls.inventory_view.sync_resources(@inventory, unit.inventory)
     if @modal
       @modal.inventory_view.sync_resources(@inventory, unit.inventory)
     for res, q of unit.inventory
       @inventory[res] = q
-    @life = unit.life
+    if @own
+      @title = unit.name
+    else
+      @title = unit.name + ' [' + unit.user_name + ']'
+
+  create_view: () ->
+    @view = new UnitView(this, @own)
 
   update_view: () ->
     if @view
       @view.update(this)
 
+  create_controls: () ->
+    if @own
+      @controls = new UnitControls(this)
+
   update_controls: () ->
     if @controls
       @controls.update(this)
+
+  create_modal: () ->
+    if @own && @type == 'town'
+      @modal = new TownModal(this)
+      @modal.bind_open_handler([@view.element])
+      for key, building_card of @buildings_cards
+        building_card.set_town_modal(@modal, @buildings[key])
 
   remove: () ->
     console.log('remove ' + @id)
@@ -76,49 +89,50 @@ class Unit extends Model
       @view.remove_element()
     if @controls
       @controls.remove_element()
+    if @modal
+      @modal.clean_up()
 
-class Squad extends Unit
-  constructor: (unit) ->
-    super unit
-    @user_id = unit.user_id
-    @user_name = unit.user_name
+  init_buildings: (unit) ->
+    @buildings = {}
+    @buildings_cards = {}
+    for key, building of unit.buildings
+      @buildings[key] = new Building(key, building)
+      @buildings_cards[key] = BuildingCard.create(building)
+    console.log(@buildings_cards)
 
-class PlayerSquad extends Squad
-  constructor: (unit) ->
-    super unit
-    @css_class = 'player-unit player-hero'
-    @title = unit.name
+  ##
+  # cell in town radius
+  # displayed in the town modal window
+  init_workers: (unit) ->
+    # id => cell
+    @cells = {}
+    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
+    for dy in range
+      for dx in range
+        x = @x + dx
+        y = @y + dy
+        id = "#{x}_#{y}"
+        cell = new TownCell(id, x, y, @id)
+        if App.cells[id]
+          if @x == x && @y == y
+            cell.html = cell.title = cell.type = 'town'
+          else
+            cell.set_type(App.cells[id]['@type'])
+        else
+          cell.html = '&nbsp;'
+          cell.title = 'Hic sunt dracones'
+        @cells[id] = cell
+    @workers = unit['workers']
+    for id, w of @workers
+      if w['@x'] && w['@y']
+        @cells[w['@x'] + '_' + w['@y']].has_worker = true
 
-  create_view: () ->
-    if !@dead
-      @view = new PlayerSquadView(this)
-      @controls = new PlayerSquadControlsView(this)
+  update_buildings: (unit) ->
+    for key, building of @buildings
+      building.update(unit['buildings'][key])
+    for key, building_card of @buildings_cards
+      building_card.update(unit['buildings'][key])
 
-  update: (unit) ->
-    super unit
-    return if @dead
-    @title = unit.name
-    @wounds = unit.wounds
-
-class OtherPlayerSquad extends Squad
-  constructor: (unit) ->
-    super unit
-    @css_class = 'other-player-hero'
-    @title = unit.name + ' [' + unit.user_name + ']'
-
-  create_view: () ->
-    if !@dead
-      @view = new OtherPlayerSquadView(this)
-
-class Town extends Unit
-  constructor: (unit) ->
-    super unit
-    @css_class = 'town'
-    @title = unit.name
-
-##
-# cell in town radius
-# displayed in the town modal window
 class TownCell
   constructor: (id, x, y, town_id) ->
     @id = id
@@ -144,70 +158,6 @@ class TownCell
     else
       App.set_free_worker_to_xy(@town_id, @x, @y)
 
-
-class PlayerTown extends Town
-  constructor: (unit) ->
-    super unit
-    @css_class = 'player-unit player-town'
-    @adj_companies = unit['adj_companies']
-    @buildings = {}
-    @buildings_cards = {}
-    for key, building of unit['buildings']
-      @buildings[key] = new Building(key, building)
-      @buildings_cards[key] = BuildingCard.create(building)
-    # id => cell
-    @cells = {}
-    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
-    for dy in range
-      for dx in range
-        x = @x + dx
-        y = @y + dy
-        id = "#{x}_#{y}"
-        cell = new TownCell(id, x, y, @id)
-        if App.cells[id]
-          if @x == x && @y == y
-            cell.html = cell.title = cell.type = 'town'
-          else
-            cell.set_type(App.cells[id]['@type'])
-        else
-          cell.html = '&nbsp;'
-          cell.title = 'Hic sunt dracones'
-        @cells[id] = cell
-    @workers = unit['workers']
-    for id, w of @workers
-      if w['@x'] && w['@y']
-        @cells[w['@x'] + '_' + w['@y']].has_worker = true
-
-  update: (town) ->
-    super town
-    return if @dead
-    for key, building of @buildings
-      building.update(town['buildings'][key])
-    for key, building_card of @buildings_cards
-      building_card.update(town['buildings'][key])
-
-  create_view: () ->
-    if !@dead
-      @view = new PlayerTownView(this)
-      @controls = new PlayerTownControlsView(this)
-      @modal = new TownModal(this)
-      @modal.bind_open_handler([@view.element])
-      for key, building_card of @buildings_cards
-        building_card.set_town_modal(@modal, @buildings[key])
-
-  remove: () ->
-    super()
-    @modal.clean_up()
-
-class OtherPlayerTown extends Town
-  constructor: (unit) ->
-    super unit
-    @title = unit.name + ' [' + unit.user_name + ']'
-
-  create_view: () ->
-    if !@dead
-      @view = new OtherPlayerTownView(this)
-
 class Building
   constructor: (key, building) ->
     @id = key
@@ -222,21 +172,4 @@ class Building
     @status = building['status']
     @ttb_string = building['ttb_string']
 
-
-window.UnitFactory = (unit_hash, is_user_unit) ->
-  switch unit_hash.type
-    when "squad"
-      if is_user_unit
-        unit = new PlayerSquad unit_hash
-      else
-        unit = new OtherPlayerSquad unit_hash
-    # when "green_orb" then unit = new GreenOrb unit_hash
-    # when "black_orb" then unit = new BlackOrb unit_hash
-    when "town"
-      if is_user_unit
-        unit = new PlayerTown unit_hash
-      else
-        unit = new OtherPlayerTown unit_hash
-    else
-      throw new Error 'Unit have no type'
-  unit
+window.Unit = Unit

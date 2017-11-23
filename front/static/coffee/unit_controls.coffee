@@ -1,6 +1,6 @@
 ##
 # Right column unit controls
-class ControlsView
+class UnitControls
   constructor: (unit) ->
     id = unit.id
     id_attr = 'unit-info-' + id
@@ -43,34 +43,6 @@ class ControlsView
     )
     @id.html(unit.id)
     @inventory_view = new InventoryView(inventory, unit.inventory, inventory_item_description)
-    @update(unit)
-
-  remove_element: () ->
-    if @info
-      @info.remove()
-      @info = null
-
-  update: (unit) ->
-    if unit.dead && @info
-      @info.remove()
-      return
-    if unit.name != @unit_name
-      @unit_name = unit.name
-      @name.attr('title', @unit_name)
-      @name.html(@unit_name)
-    @life.html(unit.life)
-    @wounds.html(unit.wounds)
-    @xy.html(unit.x + ',' + unit.y)
-    @ap.html(unit.ap)
-    @dmg.html(unit.damage)
-    @def.html(unit.defence)
-
-class PlayerControlsView extends ControlsView
-  rename: (unit_id, new_name) ->
-    App.rename_unit(unit_id, new_name)
-
-  constructor: (unit) ->
-    super unit
     @name.html(unit.name)
     @name.dblclick(() =>
       @name.html('')
@@ -113,14 +85,27 @@ class PlayerControlsView extends ControlsView
     )
     @name.attr('title', unit.name)
 
-class PlayerSquadControlsView extends PlayerControlsView
-  constructor: (unit) ->
-    super unit
+  update: (unit) ->
+    if unit.dead && @info
+      @info.remove()
+      return
+    if unit.name != @unit_name
+      @unit_name = unit.name
+      @name.attr('title', @unit_name)
+      @name.html(@unit_name)
+    @life.html(unit.life)
+    @wounds.html(unit.wounds)
+    @xy.html(unit.x + ',' + unit.y)
+    @ap.html(unit.ap)
+    @dmg.html(unit.damage)
+    @def.html(unit.defence)
 
-class PlayerTownControlsView extends PlayerControlsView
-  constructor: (unit) ->
-    super unit
+  remove_element: () ->
+    if @info
+      @info.remove()
+      @info = null
 
+  rename: (unit_id, new_name) ->
+    App.rename_unit(unit_id, new_name)
 
-window.PlayerSquadControlsView = PlayerSquadControlsView
-window.PlayerTownControlsView = PlayerTownControlsView
+window.UnitControls = UnitControls

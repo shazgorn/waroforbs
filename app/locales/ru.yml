@@ -11,6 +11,7 @@ ru:
   mountain: Горы
   log_entry_already_have_town: У Вас уже есть город
   log_entry_barracs_not_build: Казармы не построены
+  log_entry_building_already_in_progress: Строительство уже идёт
   log_entry_cell_occupied: Клетка занята
   log_entry_more_glory_required: Нехватает ОС
   log_entry_no_free_cells: Нет свободных клеток для юнита

@@ -145,6 +145,15 @@ RSpec.describe Game, "testing" do
     expect(unit).to be_nil
   end
 
+  it 'is building' do
+    user = User.new('builder')
+    Town.new(1, 1, user)
+    b_name = 'barracs'
+    Celluloid::Actor[:game].build(user, b_name.to_sym)
+    Celluloid::Actor[:game].build(user, b_name.to_sym)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_already_in_progress'))
+  end
+
   it 'is hiring squad', :slow => true do
     user = User.new('hirer')
     town = Town.new(1, 1, user)

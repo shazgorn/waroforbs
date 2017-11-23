@@ -43,7 +43,6 @@ class BuildingCard
           .html(count)
           .appendTo(@building_cost)
     @build = @el.find('.build-button')
-
     switch building.status
       when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
         @build

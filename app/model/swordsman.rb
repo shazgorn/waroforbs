@@ -7,7 +7,7 @@ class Swordsman < Unit
   BASE_DEF = 10
 
   def initialize(x, y, user)
-    super(:squad, x, y, user)
+    super(:swordsman, x, y, user)
     @damage = BASE_DMG
     @defence = BASE_DEF
     @ap = @max_ap = BASE_AP
@@ -37,4 +37,3 @@ class Swordsman < Unit
   end
 
 end
-

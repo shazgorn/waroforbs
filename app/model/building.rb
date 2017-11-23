@@ -60,7 +60,7 @@ class Building
   # Start construction
 
   def build
-    raise OrbError, 'Building already in progress' if @status == STATE_IN_PROGRESS
+    raise BuildingAlreadyInProgress, 'Building already in progress' if @status == STATE_IN_PROGRESS
     check_build
     @status = STATE_IN_PROGRESS
     if @cost_time

@@ -80,7 +80,7 @@ RSpec.describe "Front tests", :js => true do
     expect(page).to have_no_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(new_unit_name)
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info'){|div| expect(div['title']).to eq(new_unit_name)}
-    find('.player-hero'){|div| expect(div['title']).to eq(new_unit_name)}
+    find('.own.swordsman'){|div| expect(div['title']).to eq(new_unit_name)}
   end
 
   it "is moving" do
@@ -96,13 +96,13 @@ RSpec.describe "Front tests", :js => true do
     page.execute_script("App.spawn_dummy_near(#{xy[0]},#{xy[1]});")
     expect(page).to have_css('.attack-target')
     defender = first('.attack-target')
-    start_defender_life = defender.find('.other-player-unit-life-info').text.to_i
+    start_defender_life = defender.find('.life-box').text.to_i
     expect(1..Config.get('MAX_LIFE')).to include(start_defender_life)
     defender.click()
     defender_wounds = find('.defender-casualties .wounds').text.to_i
     defender_kills = find('.defender-casualties .kills').text.to_i
     defender_casualties = defender_wounds + defender_kills
-    defender_life = defender.find('.other-player-unit-life-info').text.to_i
+    defender_life = defender.find('.life-box').text.to_i
     expect(start_defender_life - defender_casualties).to eq(defender_life)
   end
 
@@ -111,7 +111,7 @@ RSpec.describe "Front tests", :js => true do
     find('.inventory-item-settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
     find('.unit-info:last-of-type').click()
-    find('.player-town').click()
+    find('.own.town.select-target').click()
     find('.modal.town .building-card-barracs .build-button').click()
     barracs_time_cost = Config.get('barracs')['cost_time']
     sleep(barracs_time_cost)
@@ -119,7 +119,7 @@ RSpec.describe "Front tests", :js => true do
     restart
     find('.inventory-item-settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
-    find('.player-town').click()
+    find('.own.town.select-target').click()
     expect(page).to have_no_content(I18n.t('Hire squad'))
   end
 
@@ -129,7 +129,7 @@ RSpec.describe "Front tests", :js => true do
     expect(page).to have_content(I18n.t('res_settlers_action_label'))
     click_button(I18n.t('res_settlers_action_label'))
     find('#unit-info-list > .unit-info:last-of-type').click()
-    find('.player-town').click()
+    find('.own.town.select-target').click()
     expect(page).to have_content(I18n.t('Barracs'))
     find('.modal.town .building-card-barracs .build-button').click()
     barracs_time_cost = Config.get('barracs')['cost_time']

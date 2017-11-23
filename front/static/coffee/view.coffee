@@ -11,13 +11,23 @@ class UnitView extends View
     @unit_life = model.life
     @element = $(document.createElement('div'))
         .addClass('unit')
-        .addClass(model.css_class)
+        .addClass(model.type)
         .data('id', model.id)
         .attr('title', model.title)
         .attr('id', model.attr_id)
     @life_el = $(document.createElement('span'))
         .html(model.life)
+        .addClass('life-box')
         .appendTo(@element)
+    if model.own
+      @element
+        .addClass('own')
+        .addClass('select-target')
+        .on('click', () =>
+          App.set_active_unit(model.id)
+        )
+    else
+      @element.addClass('enemy')
 
   remove_element: () ->
     if @element
@@ -32,26 +42,6 @@ class UnitView extends View
       @unit_title = model.title
       @element.attr('title', @unit_title)
 
-##
-#  TODO: write sane tests
-class SquadView extends UnitView
-  constructor: (model) ->
-    super model
-
-class PlayerSquadView extends SquadView
-  constructor: (model) ->
-    super model
-    @life_el.addClass('player-unit-life-info')
-    @element
-      .addClass('select-target')
-      .on('click', () =>
-        App.set_active_unit(model.id)
-      )
-
-class OtherPlayerSquadView extends SquadView
-  constructor: (model) ->
-    super model
-    @life_el.addClass('other-player-unit-life-info')
 
 class OrbView extends UnitView
   constructor: (model) ->
@@ -65,20 +55,9 @@ class GreenOrbView extends OrbView
   constructor: (model) ->
     super model
 
-class PlayerTownView extends UnitView
+class MonolithView extends UnitView
   constructor: (model) ->
     super model
-    @life_el.addClass('player-unit-life-info')
-    @element
-      .addClass 'select-target'
-      .on('click', () =>
-        App.set_active_unit(model.id)
-      )
-
-class OtherPlayerTownView extends UnitView
-  constructor: (model) ->
-    super model
-    @life_el.addClass('other-player-unit-life-info')
 
 
 class TownInventoryItemView extends View
@@ -109,9 +88,7 @@ class TownInventoryItemView extends View
         @el = null
 
 window.TownInventoryItemView = TownInventoryItemView
-window.PlayerSquadView = PlayerSquadView
-window.OtherPlayerSquadView = OtherPlayerSquadView
-window.PlayerTownView = PlayerTownView
-window.OtherPlayerTownView = OtherPlayerTownView
 window.BlackOrbView = BlackOrbView
 window.GreenOrbView = GreenOrbView
+window.MonolithView = MonolithView
+window.UnitView = UnitView

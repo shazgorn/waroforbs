@@ -4,6 +4,7 @@ require 'orb'
 require 'unit'
 require 'swordsman'
 require 'town'
+require 'monolith'
 require 'map'
 require 'user'
 require 'building'
@@ -298,7 +299,11 @@ class Game
   def build(user, building_id)
     town = Town.get_by_user user
     return LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
-    town.build(building_id)
+    begin
+      town.build(building_id)
+    rescue BuildingAlreadyInProgress
+      LogBox.error(I18n.t('log_entry_building_already_in_progress'), user)
+    end
   end
 
   TER2RES = {
@@ -436,6 +441,16 @@ class Game
     xy = empty_adj_cell_xy(x, y)
     if xy
       Swordsman.new(xy[:x], xy[:y], user)
+    else
+      LogBox.error(I18n.t('log_entry_no_empty_cells'), user)
+    end
+  end
+
+  def spawn_monolith_near(x, y)
+    user = User.new(Config.get('DUMMY_LOGIN'))
+    xy = empty_adj_cell_xy(x, y)
+    if xy
+      Monolith.new(xy[:x], xy[:y], user)
     else
       LogBox.error(I18n.t('log_entry_no_empty_cells'), user)
     end

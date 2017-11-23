@@ -229,144 +229,147 @@ button {
       background-color: $black;
     }
   }
+}
 
-  .unit {
-    background-repeat: no-repeat;
-    background-position: center;
-    border: thin solid transparent;
-    box-sizing: border-box;
-    height: inherit;
-    position: absolute;
-    width: inherit;
-    z-index: 6;
+.unit {
+  background-repeat: no-repeat;
+  background-position: center;
+  border: thin solid transparent;
+  box-sizing: border-box;
+  height: inherit;
+  position: absolute;
+  width: inherit;
+  z-index: 6;
 
-    &.attack-target {
-      border: thin solid $red;
-      cursor: crosshair;
-      z-index: 10;
-    }
-
-    &.select-target {
-      cursor: pointer;
-    }
-  }
-
-  .player-hero {
-    background-image: url('/img/swordsman.png');
-  }
-
-  .player-unit {
-    &:hover,
-    &.player-unit-hover {
-      border: thin dashed $hover-hero-color;
-    }
-
-    &.active-player-unit {
-      border: thin solid $active-hero-color;
-      z-index: 10
-    }
-  }
-
-  .player-unit-life-info, .other-player-unit-life-info {
-    bottom: -2px;
-    color: $white;
-    font-size: 10px;
-    font-weight: bold;
-    right: 0;
-    padding: 0 2px;
-    position: absolute;
-  }
-
-  .player-unit-life-info {
-    background-color: rgba(200, 0, 0, 0.7);
-  }
-
-  .other-player-unit-life-info {
-    background-color: rgba(0, 0, 200, 0.7);
-  }
-
-  .other-player-hero {
-    background-image: url('/img/swordsman.png');
-  }
-
-  .green-orb {
-    background-color: $orb-color;
-    border-color: $black;
-    border-radius: 20px;
-  }
-
-  .black-orb {
-    background-color: $black;
-    border-color: $gray;
-    border-radius: 20px;
-  }
-
-  .town,
-  .player-town {
-    background-image: url('/img/town.png');
-  }
-
-  .orb {
-    height: $orb-dimension;
-    left: $orb-margin;
-    top: $orb-margin;
-    width: $orb-dimension;
-  }
-
-  .orb-md {
-    height: $orb-md-dimension;
-    left: $orb-md-margin;
-    top: $orb-md-margin;
-    width: $orb-md-dimension;
-  }
-
-  .orb-sm {
-    height: $orb-sm-dimension;
-    left: $orb-sm-margin;
-    top: $orb-sm-margin;
-    width: $orb-sm-dimension;
-  }
-
-  .wounds {
-    color: $yellow;
-  }
-
-  .kills {
-    color: $red;
-  }
-
-  .casualties {
-    font-weight: bold;
-    left: 4px;
-    position: absolute;
-    transition: top 3s ease, color 3s ease;
+  &.attack-target {
+    border: thin solid $red;
+    cursor: crosshair;
     z-index: 10;
   }
 
-  .casualties-start {
-    top: -10px;
+  &.select-target {
+    cursor: pointer;
   }
 
-  .casualties-end {
-    top: -30px;
+  &.town {
+    background-image: url('/img/town.png');
   }
-
-  // .defender-casualties-start {
-  //   color: $red;
-  // }
-
-  // .defender-casualties-end {
-  //   color: $yellow;
-  // }
-
-  // .attacker-casualties-start {
-  //   color: $blue;
-  // }
-
-  // .attacker-casualties-end {
-  //   color: $aqua;
-  // }
 }
+
+.own {
+  &:hover,
+  &.player-unit-hover {
+    border: thin dashed $hover-hero-color;
+  }
+
+  &.active-player-unit {
+    border: thin solid $active-hero-color;
+    z-index: 10
+  }
+}
+
+.own > .life-box {
+  background-color: rgba(0, 0, 200, 0.7);
+}
+
+.neutral > .life-box {
+  background-color: rgba(200, 200, 200, 0.7);
+}
+
+.enemy > .life-box {
+  background-color: rgba(200, 0, 0, 0.7);
+}
+
+.life-box {
+  bottom: -2px;
+  color: $white;
+  font-size: 10px;
+  font-weight: bold;
+  right: 0;
+  padding: 0 2px;
+  position: absolute;
+}
+
+.green-orb {
+  background-color: $orb-color;
+  border-color: $black;
+  border-radius: 20px;
+}
+
+.black-orb {
+  background-color: $black;
+  border-color: $gray;
+  border-radius: 20px;
+}
+
+.swordsman {
+  background-image: url('/img/swordsman.png');
+}
+
+.monolith {
+  background-image: url('/img/monolith.png');
+}
+
+.orb {
+  height: $orb-dimension;
+  left: $orb-margin;
+  top: $orb-margin;
+  width: $orb-dimension;
+}
+
+.orb-md {
+  height: $orb-md-dimension;
+  left: $orb-md-margin;
+  top: $orb-md-margin;
+  width: $orb-md-dimension;
+}
+
+.orb-sm {
+  height: $orb-sm-dimension;
+  left: $orb-sm-margin;
+  top: $orb-sm-margin;
+  width: $orb-sm-dimension;
+}
+
+.wounds {
+  color: $yellow;
+}
+
+.kills {
+  color: $red;
+}
+
+.casualties {
+  font-weight: bold;
+  left: 4px;
+  position: absolute;
+  transition: top 3s ease, color 3s ease;
+  z-index: 10;
+}
+
+.casualties-start {
+  top: -10px;
+}
+
+.casualties-end {
+  top: -30px;
+}
+
+// .defender-casualties-start {
+//   color: $red;
+// }
+
+// .defender-casualties-end {
+//   color: $yellow;
+// }
+
+// .attacker-casualties-start {
+//   color: $blue;
+// }
+
+// .attacker-casualties-end {
+//   color: $aqua;
+// }
 
 .user-info-nickname-info {
   color: red;
