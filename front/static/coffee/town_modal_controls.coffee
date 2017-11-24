@@ -6,42 +6,12 @@ class TownModalControls
     _this = this
 
     @last_town = null
-    # fill in building modal
-    @buildings =
-      'barracs': {
-        callback: () ->
-          # $(document.createElement('div'))
-          #   .addClass('modal-building-fill')
-          #   .appendTo('.modal.town .modal-building-inner')
-
-          # last_town = App.units[_this.last_town]
-          # if last_town
-          #   for squad_id in last_town.adj_companies
-          #     create_squad_card(App.my_units[squad_id])
-      }
     $('.close-modal').click(() ->
       $('.modal').hide()
     )
 
-  # create_squad_card: (squad) ->
-  #   $(document.createElement('div'))
-  #     .addClass('squad-card')
-  #     .addClass('pointer')
-  #     .data('id', squad.id)
-  #     .attr('title', 'Add squad')
-  #     .html("\
-  #     Squad ##{squad.id} <br> \
-  #     x,y: #{squad.x},#{squad.y}<br> \
-  #     damage: #{squad.damage} <br>\
-  #     defence: #{squad.defence} <br>\
-  #     hp: #{squad.hp} <br>\
-  #     ap: #{squad.ap} <br>\
-  #     squads: #{squad.squads}\
-  #     ")
-  #     .appendTo('.modal.building .modal-building-fill')
-  #     .click(() ->
-  #       App.add_squad_to_squad($(this).data('id'))
-  #     )
+  update: () ->
+    console.log('update town modal controls')
 
   create_cell: (cell) ->
     $(document.createElement('div'))

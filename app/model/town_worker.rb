@@ -1,16 +1,32 @@
-class TownWorker < JSONable
+class TownWorker
   attr_reader :type
   attr_accessor :x, :y
 
   def initialize
     @x = nil
     @y = nil
+    # collecting resource type
     @type = nil
     @start_time = nil
+    @finish_time = nil
     # time to collect
     @ttc = nil
-    @finish_time = nil
     start_default_res_collection
+  end
+
+  def to_hash()
+    {
+      'x' => @x,
+      'y' => @y,
+      'type' => @type,
+      'start_time' => @start_time,
+      'finish_time' => @finish_time,
+      'ttc' => @ttc,
+    }
+  end
+
+  def to_json(generator = JSON.generator)
+    to_hash().to_json
   end
 
   def start_default_res_collection

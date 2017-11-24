@@ -11,7 +11,6 @@ class TownModal
     # towns name, will be set by player someday
     @name = town.name
     @el.find('.modal-title').html(@name)
-    @controls = new TownModalControls
     inventory_item_description = @el.find('.town-inventory-item-description')
     @inventory_view = new TownInventoryView(@el.find('.town-inventory-inner'), town.inventory, inventory_item_description)
     @buildings_cards = town.buildings_cards
@@ -27,10 +26,15 @@ class TownModal
         @el.show()
 
   update: (town) ->
-    return
-    # if town.name != @name
-    #   @title = town.title
-    #   @el.find('.modal-title').html(@name)
+    if town.name != @name
+      @title = town.title
+      @el.find('.modal-title').html(@name)
+
+  create_controls: () ->
+    @controls = new TownModalControls
+
+  update_controls: () ->
+    @controls.update()
 
   clean_up: () ->
     @el.find('.buildings-inner *').remove()

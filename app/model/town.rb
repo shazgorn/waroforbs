@@ -52,7 +52,8 @@ class Town < Unit
     hash = super
     hash.merge!(
       {
-        :buildings => @buildings
+        :buildings => @buildings,
+        :workers => @workers
       }
     )
     hash

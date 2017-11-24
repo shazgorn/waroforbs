@@ -1,22 +1,9 @@
-# - rename 'css_' to 'attr_'
-# - really?
-# unit title - title attribute for unit's element on the map, building title is another thing
-
-class Model
-  constructor: (hash) ->
-    # view property is a link to view
-    @view = null
-    @controls = null # only player's models has it
-
-  update: (hash) ->
-    return
-
 ##
+# unit title - title attribute for unit's element on the map, building title is another thing
 # Every unit should have every property no matter player's or not
 # till visibility options arrive
-class Unit extends Model
+class Unit
   constructor: (unit, @own) ->
-    super unit
     @_unit = unit
     @id = unit.id
     @attr_id = "unit-#{@id}"
@@ -79,9 +66,16 @@ class Unit extends Model
   create_modal: () ->
     if @own && @type == 'town'
       @modal = new TownModal(this)
+      @modal.create_controls()
       @modal.bind_open_handler([@view.element])
+      # @modal.init_town_workers(@workers)
       for key, building_card of @buildings_cards
         building_card.set_town_modal(@modal, @buildings[key])
+
+  update_modal: () ->
+    if @modal
+      @modal.update()
+      @modal.update_controls()
 
   remove: () ->
     console.log('remove ' + @id)
@@ -98,7 +92,6 @@ class Unit extends Model
     for key, building of unit.buildings
       @buildings[key] = new Building(key, building)
       @buildings_cards[key] = BuildingCard.create(building)
-    console.log(@buildings_cards)
 
   ##
   # cell in town radius
@@ -132,44 +125,5 @@ class Unit extends Model
       building.update(unit['buildings'][key])
     for key, building_card of @buildings_cards
       building_card.update(unit['buildings'][key])
-
-class TownCell
-  constructor: (id, x, y, town_id) ->
-    @id = id
-    @x = x
-    @y = y
-    @type = ''
-    @title = ''
-    @html = ''
-    @town_id = town_id
-    @set_type(@type)
-    @has_worker = false
-    # $DOMElement
-    @el = null
-
-  set_type: (type) ->
-    @type = type
-    @title = "#{@x},#{@y} #{@type}"
-    @html = "#{@x},#{@y}"
-
-  trigger_worker: () ->
-    if @has_worker
-      App.free_worker(@town_id, @x, @y)
-    else
-      App.set_free_worker_to_xy(@town_id, @x, @y)
-
-class Building
-  constructor: (key, building) ->
-    @id = key
-    @name = building['name']
-    @title = building['title']
-    @status = building['status']
-    @ttb_string = building['ttb_string']
-    @cost_res = building['cost_res']
-    @actions = building['actions']
-
-  update: (building) ->
-    @status = building['status']
-    @ttb_string = building['ttb_string']
 
 window.Unit = Unit
