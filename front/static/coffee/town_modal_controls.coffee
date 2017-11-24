@@ -1,6 +1,3 @@
-##
-# Modal callbacks and stuff
-class TownModalControls
   constructor: () ->
     _town_controls = this
     _this = this
@@ -66,5 +63,3 @@ class TownModalControls
 
   open_town: (id) ->
     @last_town = id
-
-window.TownModalControls = TownModalControls

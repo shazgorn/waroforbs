@@ -5,7 +5,6 @@
 # Card - some entity in modal window
 # In this case it is building box in the town screen
 # Created when new building model is fetched, updated when building model has been changed, etc
-# Extract(remove) building related logic from TownModalControls and leave rendering tasks only.
 # Call town modal controls via model.controls
 class BuildingCard
   @create: (building) ->

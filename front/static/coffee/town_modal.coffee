@@ -13,9 +13,9 @@ class TownModal
     @el.find('.modal-title').html(@name)
     inventory_item_description = @el.find('.town-inventory-item-description')
     @inventory_view = new TownInventoryView(@el.find('.town-inventory-inner'), town.inventory, inventory_item_description)
-    @buildings_cards = town.buildings_cards
-    for key, building_card of @buildings_cards
-      @el.find('.buildings-inner').append(building_card.el)
+
+  append_building_card_el: (el) ->
+    @el.find('.buildings-inner').append(el)
 
   ##
   # Open the town modal window by clicking on any element in the 'list'
@@ -30,10 +30,10 @@ class TownModal
       @title = town.title
       @el.find('.modal-title').html(@name)
 
-  create_controls: () ->
-    @controls = new TownModalControls
+  create_province: () ->
+    @controls = new Province
 
-  update_controls: () ->
+  update_province: () ->
     @controls.update()
 
   clean_up: () ->

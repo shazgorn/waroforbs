@@ -107,8 +107,6 @@ class Application
             unit_model.create_view()
             unit_model.create_controls()
             unit_model.update_controls()
-            unit_model.init_buildings(unit_hash)
-            unit_model.init_workers(unit_hash)
             unit_model.create_modal()
           @units[unit_id] = unit_model
         if unit_model.need_to_move

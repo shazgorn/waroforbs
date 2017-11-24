@@ -2,6 +2,9 @@
 # unit title - title attribute for unit's element on the map, building title is another thing
 # Every unit should have every property no matter player's or not
 # till visibility options arrive
+# modal - TownModal
+# @param {object} unit
+# @param {bool} @own
 class Unit
   constructor: (unit, @own) ->
     @_unit = unit
@@ -19,6 +22,10 @@ class Unit
     @title = unit.name
     unless @own
       @title += ' [' + unit.user_name + ']'
+    @buildings = {}
+    @buildings_cards = {}
+    for key, building of unit.buildings
+      @buildings[key] = new Building(key, building)
 
   update: (unit) ->
     return if @dead
@@ -37,6 +44,7 @@ class Unit
     @wounds = unit.wounds
     @name = unit.name
     @adj_companies = unit.adj_companies
+    @workers = unit.workers
     if @controls
       @controls.inventory_view.sync_resources(@inventory, unit.inventory)
     if @modal
@@ -66,19 +74,21 @@ class Unit
   create_modal: () ->
     if @own && @type == 'town'
       @modal = new TownModal(this)
-      @modal.create_controls()
-      @modal.bind_open_handler([@view.element])
-      # @modal.init_town_workers(@workers)
+      for key, building of @buildings
+        @buildings_cards[key] = BuildingCard.create(building)
       for key, building_card of @buildings_cards
+        @modal.append_building_card_el(building_card.el)
         building_card.set_town_modal(@modal, @buildings[key])
+      @modal.create_province()
+      # @modal.init_town_workers(@workers)
+      @modal.bind_open_handler([@view.element])
 
   update_modal: () ->
     if @modal
       @modal.update()
-      @modal.update_controls()
+      @modal.update_province()
 
   remove: () ->
-    console.log('remove ' + @id)
     if @view
       @view.remove_element()
     if @controls
@@ -86,44 +96,10 @@ class Unit
     if @modal
       @modal.clean_up()
 
-  init_buildings: (unit) ->
-    @buildings = {}
-    @buildings_cards = {}
-    for key, building of unit.buildings
-      @buildings[key] = new Building(key, building)
-      @buildings_cards[key] = BuildingCard.create(building)
-
-  ##
-  # cell in town radius
-  # displayed in the town modal window
-  init_workers: (unit) ->
-    # id => cell
-    @cells = {}
-    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
-    for dy in range
-      for dx in range
-        x = @x + dx
-        y = @y + dy
-        id = "#{x}_#{y}"
-        cell = new TownCell(id, x, y, @id)
-        if App.cells[id]
-          if @x == x && @y == y
-            cell.html = cell.title = cell.type = 'town'
-          else
-            cell.set_type(App.cells[id]['@type'])
-        else
-          cell.html = '&nbsp;'
-          cell.title = 'Hic sunt dracones'
-        @cells[id] = cell
-    @workers = unit['workers']
-    for id, w of @workers
-      if w['@x'] && w['@y']
-        @cells[w['@x'] + '_' + w['@y']].has_worker = true
-
   update_buildings: (unit) ->
     for key, building of @buildings
-      building.update(unit['buildings'][key])
+      building.update(unit.buildings[key])
     for key, building_card of @buildings_cards
-      building_card.update(unit['buildings'][key])
+      building_card.update(unit.buildings[key])
 
 window.Unit = Unit
