@@ -198,6 +198,12 @@ RSpec.describe Game, "testing" do
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_already_have_town'))
   end
 
+  it 'is setting worker' do
+    user = User.new('worker')
+    town = Town.new(1, 1, user)
+    Celluloid::Actor[:game].set_worker_to_xy(user, town.id, 1, 2, 2)
+  end
+
   it 'testing empty adj cell xy' do
     xy = Celluloid::Actor[:game].empty_adj_cell_xy(5, 5)
     expect(xy[:x]).to eq(4)

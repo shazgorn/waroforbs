@@ -306,31 +306,24 @@ class Game
     end
   end
 
-  TER2RES = {
-    :grass => nil,
-    :tree => :wood,
-    :mountain => :stone
-  }
-
   def in_town_radius?(town, x, y)
     @map.max_diff(town.x, town.y, x, y) <= Town::RADIUS
   end
 
-  def set_free_worker_to_xy(user, town_id, x, y)
+  TER2RES = {
+    :grass => :gold,
+    :tree => :wood,
+    :mountain => :stone
+  }
+
+  def set_worker_to_xy(user, town_id, worker_pos, x, y)
     town = Town.get_by_user user
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
     type = TER2RES[@map.cell_type_at(x, y)]
-    town.set_free_worker_to x, y, type, @map.max_diff(town.x, town.y, x, y)
-  end
-
-  def free_worker(user, town_id, x, y)
-    town = Town.get_by_user user
-    raise OrbError, 'No user town' unless town
-    raise OrbError, 'You are trying to free worker at town coordinates' if town.x == x && town.y == y
-    raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
-    town.free_worker_at x, y
+    raise OrbError, "No resource type for map tile #{x}, #{y}" if type.nil?
+    town.set_worker_to(worker_pos, x, y, type, @map.max_diff(town.x, town.y, x, y))
   end
 
   TYPE2COST = {

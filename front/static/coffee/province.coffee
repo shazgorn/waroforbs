@@ -30,9 +30,9 @@ class Province
           cell.title = 'Hic sunt dracones'
           cell.type = 'darkness'
         @cells[id] = cell
-    for id, w of @workers
-      if w.x && w.y
-        @cells[w.x + '_' + w.y].has_worker = true
+    # for id, w of @workers
+    #   if w.x && w.y
+    #     @cells[w.x + '_' + w.y].has_worker = true
 
   create_cell: (cell) ->
     $(document.createElement('div'))
@@ -67,26 +67,29 @@ class Province
   bind_actions_cells: () ->
     for id, cell of @cells
       cell.el.off('click')
-      do (cell) ->
-        cell.el.click(() ->
-          cell.trigger_worker()
+      do (cell) =>
+        cell.el.click(() =>
+          if @selected_worker
+            App.set_worker_to_xy(@town_id, @selected_worker, cell.x, cell.y)
         )
 
-  select_worker: (n, $w) ->
+  select_worker: (pos, $w) ->
     () =>
-      @selected_worker = n
+      @selected_worker = pos
       $('.worker-selected').removeClass('worker-selected')
       $w.addClass('worker-selected')
 
   draw_workers: () ->
-    for w in @workers
+    for name, w of @workers
       $w = $(document.createElement('span'))
-        .attr('id', "worker-#{w.name}")
+        .attr('id', "worker-#{w.pos}")
         .addClass('worker')
         .addClass('worker-' + w.type)
-        .attr('title', w.name + ' ' + w.res_title)
+        .attr('title', w.pos + ' ' + w.res_title)
         .appendTo('.workers-list')
-      $w.click(@select_worker(w.name, $w))
+      $w.click(@select_worker(w.pos, $w))
 
+  update: () ->
+    console.log('update province')
 
 window.Province = Province

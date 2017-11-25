@@ -62,11 +62,8 @@ class Application
   add_squad_to_squad: (squad_id) ->
     @ws.add_squad_to_squad(squad_id, @town_controls.last_town)
 
-  set_free_worker_to_xy: (town_id, x, y) ->
-    @ws.set_free_worker_to_xy(town_id, x, y)
-
-  free_worker: (town_id, x, y) ->
-    @ws.free_worker(town_id, x, y)
+  set_worker_to_xy: (town_id, worker_pos, x, y) ->
+    @ws.set_worker_to_xy(town_id, worker_pos, x, y)
 
   set_active_unit_directly: (unit_id) ->
     @controls.set_active_unit(unit_id)
@@ -99,7 +96,8 @@ class Application
           unit_model.update(unit_hash)
           unit_model.update_view()
           unit_model.update_controls()
-          unit_model.update_buildings(unit_hash)
+          # unit_model.update_modal()
+          # unit_model.update_buildings(unit_hash)
         else
           unit_model = new Unit(unit_hash, is_user_unit)
           unit_model.update(unit_hash)

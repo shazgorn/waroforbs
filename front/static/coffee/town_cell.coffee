@@ -7,19 +7,9 @@ class TownCell
     @type_title = ''
     @html = ''
     @town_id = town_id
-    @set_type(@type)
-    @has_worker = false
+    # @has_worker = false
     @is_town = false
     # $DOMElement
     @el = null
-
-  set_type: (type) ->
-
-
-  trigger_worker: () ->
-    if @has_worker
-      App.free_worker(@town_id, @x, @y)
-    else
-      App.set_free_worker_to_xy(@town_id, @x, @y)
 
 window.TownCell = TownCell

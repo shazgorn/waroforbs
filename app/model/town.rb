@@ -19,11 +19,11 @@ class Town < Unit
     super(TYPE, x, y, user)
     @damage = 5
     @defence = 50
-    @workers = [
-      TownWorker.new(1),
-      TownWorker.new(2),
-      TownWorker.new(3)
-    ]
+    @workers = {
+      1 => TownWorker.new(1),
+      2 => TownWorker.new(2),
+      3 => TownWorker.new(3)
+    }
     @buildings = {
       #:tavern => Tavern.new,
       :barracs => Barracs.new
@@ -65,44 +65,34 @@ class Town < Unit
 
   def tick
     super
-    @workers.each{|worker|
+    @workers.each_value{|worker|
       if worker.check_res
         @inventory[worker.type] += 1
       end
     }
   end
 
-  def free_worker_at x, y
-    w_at_xy = get_worker_at x, y
-    raise OrbError, "No worker at #{x}, #{y}" unless w_at_xy
-    w_at_xy.clear
-  end
-
-  def set_free_worker_to x, y, type, distance
-    w_at_xy = get_worker_at x, y
-    raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
-    if w_at_xy.nil?
-      worker = get_free_worker
-      raise OrbError, "No free workers" if worker.nil?
-      if worker
-        worker.x = x
-        worker.y = y
-        # do send worker mining gold if he is doing nothing
-        if type && worker.type != type
-          worker.start_res_collection type, distance
-        end
-        return true
-      end
+  def set_worker_to(pos, x, y, type, distance)
+    worker = get_worker_by_pos(pos)
+    # w_at_xy = get_worker_at(x, y)
+    # raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
+    # raise OrbError, "No free workers" if worker.nil?
+    if worker
+      worker.x = x
+      worker.y = y
+      # reset mining process only if coordinates are differ
+      # Send worker mining gold if he is doing nothing
+      # thats bogus!
+      # why there can be no type?
+      # if type  && worker.type != type
+      worker.start_res_collection(type, distance)
+      # end
     end
-    false
   end
 
-  def get_worker_at x, y
-    @workers.select{|w| w.x == x && w.y == y}.first
-  end
-
-  def get_free_worker
-    @workers.select{|w| w.x == nil && w.y == nil}.first
+  def get_worker_by_pos(pos)
+    # TODO: check if worker exists
+    @workers[pos]
   end
 
   ##

@@ -4,8 +4,8 @@ class TownWorker
 
   ##
   # Worker position in province 1,2,3. Show worker in province bar and select which workers goes where
-  def initialize(name)
-    @name = name
+  def initialize(pos)
+    @pos = pos
     @x = nil
     @y = nil
     # collecting resource type
@@ -15,12 +15,12 @@ class TownWorker
     @finish_time = nil
     # time to collect
     @ttc = nil
-    start_default_res_collection
+    start_res_collection
   end
 
   def to_hash()
     {
-      'name' => @name,
+      'pos' => @pos,
       'x' => @x,
       'y' => @y,
       'type' => @type,
@@ -35,11 +35,8 @@ class TownWorker
     to_hash().to_json
   end
 
-  def start_default_res_collection
-    start_res_collection :gold
-  end
-
-  def start_res_collection(res_type, distance = 1)
+  def start_res_collection(res_type = :gold, distance = 1)
+    raise OrbError, 'res_type is nil' if res_type.nil?
     @type = res_type
     @res_title = I18n.t(res_type)
     @ttc = Config.get('resource')[@type.to_s]['time_to_collect'] * distance
@@ -49,7 +46,7 @@ class TownWorker
 
   def clear
     @x = @y = nil
-    start_default_res_collection
+    start_res_collection
   end
 
   # check if it`s time to collect resource

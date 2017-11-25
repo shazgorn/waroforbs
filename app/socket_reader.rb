@@ -15,9 +15,9 @@ class SocketReader
   end
 
   def read_message_from_socket
-    info 'read from socket'
+    info 'Read from socket'
     msg = @websocket.read
-    info msg
+    info "Message: #{msg}"
     data = JSON.parse msg
     data['writer_name'] = @writer_name
     if data['op'] == 'close'
