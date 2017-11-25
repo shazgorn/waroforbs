@@ -7,6 +7,9 @@ class TownModal
   # @param {PlayerTown} town
   constructor: (town) ->
     @el = $('.modal.town')
+    @el.find('.close-modal').click(() ->
+      $('.modal').hide()
+    )
     # towns name, will be set by player someday
     @name = town.name
     @el.find('.modal-title').html(@name)
