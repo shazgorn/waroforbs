@@ -6,7 +6,7 @@ class MapTile
     @y = y
     # type - :grass, :tree, etc
     @type = type
-    @title = ''
+    @type_title = ''
   end
 
   def to_hash
@@ -14,7 +14,7 @@ class MapTile
       :x => @x,
       :y => @y,
       :type => @type,
-      :title => I18n.t(@type)
+      :type_title => I18n.t(@type)
     }
   end
 

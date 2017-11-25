@@ -13,13 +13,18 @@ class Province
         cell = new TownCell(id, x, y, @town_id)
         if App.cells[id]
           if @town_x == x && @town_y == y
+            # town cell
             cell.html = '&nbsp;'
             cell.title = @town_title
             cell.type = App.cells[id].type
             cell.is_town = true
           else
-            cell.set_type(App.cells[id].type)
+            # non town cell
+            cell.type = App.cells[id].type
+            cell.title = "#{x},#{y} #{App.cells[id].type_title}"
+            cell.html = "#{x},#{y}"
         else
+          # out of map
           cell.html = '&nbsp;'
           cell.title = 'Hic sunt dracones'
           cell.type = 'darkness'

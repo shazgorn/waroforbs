@@ -4,7 +4,7 @@ class TownCell
     @x = x
     @y = y
     @type = ''
-    @title = ''
+    @type_title = ''
     @html = ''
     @town_id = town_id
     @set_type(@type)
@@ -14,9 +14,7 @@ class TownCell
     @el = null
 
   set_type: (type) ->
-    @type = type
-    @title = "#{@x},#{@y} #{@type}"
-    @html = "#{@x},#{@y}"
+
 
   trigger_worker: () ->
     if @has_worker
