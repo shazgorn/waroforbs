@@ -679,13 +679,18 @@ button {
     .worker {
       border: thin solid $theme-border;
       display: inline-block;
+      cursor: pointer;
       height: $cell-dimension;
       margin-right: .5rem;
       width: $cell-dimension;
     }
 
+    .worker-selected {
+      border: thin solid $orange;
+    }
+
     .worker-gold {
-      @include res-gold();
+      background-image: url('/img/worker-gold.png');
     }
 
     .worker-wood {

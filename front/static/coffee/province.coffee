@@ -3,6 +3,7 @@
 class Province
   constructor: (@workers, @town_x, @town_y, @town_id, @town_title) ->
     # id => cell
+    @selected_worker = null
     @cells = {}
     range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
     for dy in range
@@ -71,12 +72,21 @@ class Province
           cell.trigger_worker()
         )
 
+  select_worker: (n, $w) ->
+    () =>
+      @selected_worker = n
+      $('.worker-selected').removeClass('worker-selected')
+      $w.addClass('worker-selected')
+
   draw_workers: () ->
     for w in @workers
       $w = $(document.createElement('span'))
+        .attr('id', "worker-#{w.name}")
         .addClass('worker')
         .addClass('worker-' + w.type)
-        .attr('title', w.type)
+        .attr('title', w.name + ' ' + w.res_title)
         .appendTo('.workers-list')
+      $w.click(@select_worker(w.name, $w))
+
 
 window.Province = Province

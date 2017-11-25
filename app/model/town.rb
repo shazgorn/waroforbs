@@ -19,7 +19,11 @@ class Town < Unit
     super(TYPE, x, y, user)
     @damage = 5
     @defence = 50
-    @workers = [TownWorker.new, TownWorker.new, TownWorker.new]
+    @workers = [
+      TownWorker.new(1),
+      TownWorker.new(2),
+      TownWorker.new(3)
+    ]
     @buildings = {
       #:tavern => Tavern.new,
       :barracs => Barracs.new

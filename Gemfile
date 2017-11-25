@@ -14,7 +14,7 @@ source "https://rubygems.org" do
   gem 'reel'
   group :test do
     gem 'capybara'
-    gem 'capybara-webkit', '>=1.14'
+    # gem 'capybara-webkit', '>=1.14'
     gem 'selenium-webdriver'
   end
 end

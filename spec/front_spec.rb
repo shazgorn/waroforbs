@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'capybara'
 require 'capybara/rspec'
-require 'capybara/webkit'
+# require 'capybara/webkit'
 require 'i18n'
 
 module PlayHelper

@@ -54,6 +54,10 @@ class Map
       },
       7 => {
         :path => "./" + Config.get('img_path') + "picea.png",
+        :type => :tree
+      },
+      8 => {
+        :path => "./" + Config.get('img_path') + "mountain.png",
         :type => :mountain
       }
     }
