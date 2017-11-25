@@ -13,6 +13,7 @@ class MapTile
     {
       :x => @x,
       :y => @y,
+      :type => @type,
       :title => I18n.t(@type)
     }
   end

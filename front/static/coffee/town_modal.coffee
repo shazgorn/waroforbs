@@ -1,7 +1,6 @@
 ##
 # Create town modal
 # and fill it with buildings, inventory, quick actions
-# This class will replace TownControls because of bad naming and coding
 class TownModal
   ##
   # @constructor
@@ -30,11 +29,14 @@ class TownModal
       @title = town.title
       @el.find('.modal-title').html(@name)
 
-  create_province: () ->
-    @controls = new Province
+  create_province: (workers, town_x, town_y, town_id, town_title) ->
+    @province = new Province(workers, town_x, town_y, town_id, town_title)
+    @province.draw_town_cells()
+    @province.draw_workers()
+    @province.bind_actions_cells()
 
   update_province: () ->
-    @controls.update()
+    @province.update()
 
   clean_up: () ->
     @el.find('.buildings-inner *').remove()

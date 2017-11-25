@@ -9,6 +9,7 @@ class TownCell
     @town_id = town_id
     @set_type(@type)
     @has_worker = false
+    @is_town = false
     # $DOMElement
     @el = null
 

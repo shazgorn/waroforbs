@@ -679,9 +679,9 @@ button {
     .worker {
       border: thin solid $theme-border;
       display: inline-block;
-      height: 1rem;
+      height: $cell-dimension;
       margin-right: .5rem;
-      width: 1rem;
+      width: $cell-dimension;
     }
 
     .worker-gold {
@@ -697,7 +697,7 @@ button {
     }
 
     .worker-cell {
-      border: thin solid $black;
+      border: thin solid $wooden-color;
       cursor: pointer;
       display: inline-block;
       height: 3rem;
@@ -720,6 +720,16 @@ button {
 
     .worker-cell-mountain {
       background-color: $gray;
+    }
+
+    .worker-cell-darkness {
+      background-color: $black;
+    }
+
+    .worker-cell-town {
+      background-image: url('/img/town.png');
+      background-repeat: no-repeat;
+      background-position: center;
     }
   }
 

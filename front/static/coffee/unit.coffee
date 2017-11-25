@@ -79,8 +79,7 @@ class Unit
       for key, building_card of @buildings_cards
         @modal.append_building_card_el(building_card.el)
         building_card.set_town_modal(@modal, @buildings[key])
-      @modal.create_province()
-      # @modal.init_town_workers(@workers)
+      @modal.create_province(@workers, @x, @y, @id, @title)
       @modal.bind_open_handler([@view.element])
 
   update_modal: () ->
