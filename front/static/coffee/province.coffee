@@ -70,27 +70,29 @@ class Province
       do (cell) =>
         cell.el.click(() =>
           if cell.worker
-            @select_worker(cell.worker, null)
+            @select_worker(cell.worker.pos, null)
           else if @selected_worker
             App.set_worker_to_xy(@town_id, @selected_worker, cell.x, cell.y)
         )
 
-  select_worker: (w, $w) ->
+  select_worker: (pos, $w) ->
     unless $w
       $w = $("#worker-#{w.pos}")
+    $('.worker-cell-selected').removeClass('worker-cell-selected')
     if $w.hasClass('worker-selected')
+      # deselect worker
       $w.removeClass('worker-selected')
       @selected_worker = null
-      $('.worker-cell-selected').removeClass('worker-cell-selected')
     else
-      @selected_worker = w.pos
+      # select worker
+      @selected_worker = pos
       $('.worker-selected').removeClass('worker-selected')
       $w.addClass('worker-selected')
-      $('#' + @make_cell_id(w.x, w.y)).addClass('worker-cell-selected')
+      $('#' + @make_cell_id(@workers[pos].x, @workers[pos].y)).addClass('worker-cell-selected')
 
-  select_worker_handler: (w, $w) ->
+  select_worker_handler: (pos, $w) ->
     () =>
-      @select_worker(w, $w)
+      @select_worker(pos, $w)
 
   draw_workers: () ->
     for pos, w of @workers
@@ -101,23 +103,23 @@ class Province
         .attr('title', w.pos + ' ' + w.res_title)
         .appendTo('.workers-list')
         do (w, $w) =>
-          $w.click(@select_worker_handler(w, $w))
+          $w.click(@select_worker_handler(w.pos, $w))
 
   update: (workers, town_title) ->
     if @town_title != town_title
       @town_title = town_title
       $('#' + @make_cell_id(@town_x, @town_y))
         .attr('title', @town_title)
-    for id, w of workers
-      if w.x != @workers[id].x || w.y != @workers[id].y
-        if @cells[@workers[id].x + '_' + @workers[id].y]
-          @cells[@workers[id].x + '_' + @workers[id].y].worker = null
-          $('.worker-cell-selected').removeClass('worker-cell-selected')
-          @cells[@workers[id].x + '_' + @workers[id].y].el
+    for pos, w of workers
+      if w.x != @workers[w.pos].x || w.y != @workers[w.pos].y
+        if @cells[@workers[w.pos].x + '_' + @workers[w.pos].y]
+          @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].worker = null
+          @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el
             .removeClass('has-worker')
-            .removeClass('worker-selected')
-        @workers[id] = w
-        @cells[@workers[id].x + '_' + @workers[id].y].el.addClass('has-worker')
-        @cells[@workers[id].x + '_' + @workers[id].y].el.addClass('worker-cell-selected')
+            .removeClass('worker-cell-selected')
+        @workers[w.pos] = w
+        @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el.addClass('has-worker')
+        if w.pos == @selected_worker
+          @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el.addClass('worker-cell-selected')
 
 window.Province = Province
