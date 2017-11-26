@@ -110,11 +110,12 @@ class Province
         .attr('title', @town_title)
     for id, w of workers
       if w.x != @workers[id].x || w.y != @workers[id].y
-        @cells[@workers[id].x + '_' + @workers[id].y].worker = null
-        $('.worker-cell-selected').removeClass('worker-cell-selected')
-        @cells[@workers[id].x + '_' + @workers[id].y].el
-          .removeClass('has-worker')
-          .removeClass('worker-selected')
+        if @cells[@workers[id].x + '_' + @workers[id].y]
+          @cells[@workers[id].x + '_' + @workers[id].y].worker = null
+          $('.worker-cell-selected').removeClass('worker-cell-selected')
+          @cells[@workers[id].x + '_' + @workers[id].y].el
+            .removeClass('has-worker')
+            .removeClass('worker-selected')
         @workers[id] = w
         @cells[@workers[id].x + '_' + @workers[id].y].el.addClass('has-worker')
         @cells[@workers[id].x + '_' + @workers[id].y].el.addClass('worker-cell-selected')
