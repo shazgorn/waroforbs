@@ -77,7 +77,7 @@ class Province
 
   select_worker: (pos, $w) ->
     unless $w
-      $w = $("#worker-#{w.pos}")
+      $w = $("#worker-#{pos}")
     $('.worker-cell-selected').removeClass('worker-cell-selected')
     if $w.hasClass('worker-selected')
       # deselect worker
@@ -111,6 +111,10 @@ class Province
       $('#' + @make_cell_id(@town_x, @town_y))
         .attr('title', @town_title)
     for pos, w of workers
+      if w.type != @workers[w.pos].type
+        $('#' + "worker-#{w.pos}")
+          .removeClass("worker-#{@workers[w.pos].type}")
+          .addClass("worker-#{w.type}")
       if w.x != @workers[w.pos].x || w.y != @workers[w.pos].y
         if @cells[@workers[w.pos].x + '_' + @workers[w.pos].y]
           @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].worker = null
