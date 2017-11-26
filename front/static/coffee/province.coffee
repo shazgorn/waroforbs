@@ -57,15 +57,12 @@ class Province
       $row = $("#worker-row-#{cell.y}")
       if $row.length == 0
         $row = @create_row(cell.y)
-      $cell = $("#town_cell_#{cell.id}")
-      if $cell.length == 0
-        $cell = @create_cell(cell)
-        $row.append($cell)
-      cell.el = $cell
-      if cell.worker && !$cell.hasClass('has-worker')
-        $cell.addClass('has-worker')
-      else if !cell.worker && $cell.hasClass('has-worker')
-        $cell.removeClass('has-worker')
+      cell.el = @create_cell(cell)
+      $row.append(cell.el)
+      if cell.worker
+        cell.el.addClass('has-worker')
+      else if !cell.worker
+        cell.el.removeClass('has-worker')
 
   bind_actions_cells: () ->
     for id, cell of @cells
@@ -105,18 +102,21 @@ class Province
         .appendTo('.workers-list')
         do (w, $w) =>
           $w.click(@select_worker_handler(w, $w))
-      if w.x && w.y
-        $('#' + @make_cell_id(w.x, w.y))
-          .append(
-            $(document.createElement('div'))
-              .addClass('worker')
-              .addClass('worker-' + w.type)
-          )
 
-  update: (@workers, town_title) ->
+  update: (workers, town_title) ->
     if @town_title != town_title
       @town_title = town_title
       $('#' + @make_cell_id(@town_x, @town_y))
         .attr('title', @town_title)
+    for id, w of workers
+      if w.x != @workers[id].x || w.y != @workers[id].y
+        @cells[@workers[id].x + '_' + @workers[id].y].worker = null
+        $('.worker-cell-selected').removeClass('worker-cell-selected')
+        @cells[@workers[id].x + '_' + @workers[id].y].el
+          .removeClass('has-worker')
+          .removeClass('worker-selected')
+        @workers[id] = w
+        @cells[@workers[id].x + '_' + @workers[id].y].el.addClass('has-worker')
+        @cells[@workers[id].x + '_' + @workers[id].y].el.addClass('worker-cell-selected')
 
 window.Province = Province
