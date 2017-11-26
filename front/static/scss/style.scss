@@ -538,6 +538,10 @@ button {
   background-image: url('/img/wood.png');
 }
 
+.inventory-item-stone {
+  background-image: url('/img/stone.png');
+}
+
 .inventory-item-empty {
 }
 
@@ -701,11 +705,11 @@ button {
     }
 
     .worker-wood {
-      @include res-wood();
+      background-image: url('/img/worker-wood.png');
     }
 
     .worker-stone {
-      @include res-stone();
+      background-image: url('/img/worker-stone.png');
     }
 
     .worker-cell {
@@ -728,10 +732,15 @@ button {
 
     .worker-cell-tree {
       background-color: $wood-color;
+
+      &.has-worker {
+        background-image: url('/img/worker-wood.png');
+      }
     }
 
     .worker-cell-grass {
       background-color: $green;
+
       &.has-worker {
         background-image: url('/img/worker-gold.png');
       }
@@ -739,6 +748,10 @@ button {
 
     .worker-cell-mountain {
       background-color: $gray;
+
+      &.has-worker {
+        background-image: url('/img/worker-stone.png');
+      }
     }
 
     .worker-cell-darkness {
