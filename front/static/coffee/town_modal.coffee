@@ -38,8 +38,8 @@ class TownModal
     @province.draw_workers()
     @province.bind_actions_cells()
 
-  update_province: () ->
-    @province.update()
+  update_province: (workers, town_title) ->
+    @province.update(workers, town_title)
 
   clean_up: () ->
     @el.find('.buildings-inner *').remove()

@@ -676,17 +676,24 @@ button {
   }
 
   .workers-inner {
-    .worker {
-      border: thin solid $theme-border;
-      display: inline-block;
-      cursor: pointer;
-      height: $cell-dimension;
-      margin-right: .5rem;
-      width: $cell-dimension;
+    .workers-list {
+      margin-bottom: 1rem;
+
+      .worker {
+        border: thin solid $theme-border;
+        display: inline-block;
+        margin-right: .5rem;
+      }
     }
 
-    .worker-selected {
-      border: thin solid $white;
+    .worker {
+      cursor: pointer;
+      height: $cell-dimension;
+      width: $cell-dimension;
+
+      &.worker-selected {
+        border: thin solid $white;
+      }
     }
 
     .worker-gold {
@@ -705,13 +712,17 @@ button {
       border: thin solid $wooden-color;
       cursor: pointer;
       display: inline-block;
-      height: 3rem;
-      line-height: 3rem;
+      height: $cell-dimension;
+      line-height: $cell-dimension;
       text-align: center;
-      width: 3rem;
+      width: $cell-dimension;
+
+      &.worker-cell-selected {
+        border-color: $white;
+      }
     }
 
-    .worker-cell-has-worker {
+    .has-worker {
       border-color: $orange;
     }
 
@@ -721,6 +732,9 @@ button {
 
     .worker-cell-grass {
       background-color: $green;
+      &.has-worker {
+        background-image: url('/img/worker-gold.png');
+      }
     }
 
     .worker-cell-mountain {

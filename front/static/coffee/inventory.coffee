@@ -59,7 +59,6 @@ class InventoryView
             .html(App.resource_info[res].action_label)
             .appendTo(@inventory_item_description)
             .click(() ->
-              console.log('settle the town')
               App.controls.actions.settle_town_action.callback()
             )
         @descriptionShown = true

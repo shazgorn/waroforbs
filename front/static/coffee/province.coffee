@@ -1,7 +1,7 @@
 ##
 # Town province
 class Province
-  constructor: (@workers, @town_x, @town_y, @town_id, @town_title) ->
+  constructor: (@workers, @town_title, @town_x, @town_y, @town_id) ->
     # id => cell
     @selected_worker = null
     @cells = {}
@@ -30,13 +30,16 @@ class Province
           cell.title = 'Hic sunt dracones'
           cell.type = 'darkness'
         @cells[id] = cell
-    # for id, w of @workers
-    #   if w.x && w.y
-    #     @cells[w.x + '_' + w.y].has_worker = true
+    for id, w of @workers
+      if w.x && w.y
+        @cells[w.x + '_' + w.y].worker = w
+
+  make_cell_id: (x, y) ->
+    "town_cell_#{x}_#{y}"
 
   create_cell: (cell) ->
     $(document.createElement('div'))
-      .attr('id', "town_cell_#{cell.x}_#{cell.y}")
+      .attr('id', @make_cell_id(cell.x, cell.y))
       .addClass('worker-cell')
       .addClass("worker-cell-#{cell.type}")
       .addClass(if cell.is_town then 'worker-cell-town' else '')
@@ -59,37 +62,61 @@ class Province
         $cell = @create_cell(cell)
         $row.append($cell)
       cell.el = $cell
-      if cell.has_worker && !$cell.hasClass('worker-cell-has-worker')
-        $cell.addClass('worker-cell-has-worker')
-      else if !cell.has_worker && $cell.hasClass('worker-cell-has-worker')
-        $cell.removeClass('worker-cell-has-worker')
+      if cell.worker && !$cell.hasClass('has-worker')
+        $cell.addClass('has-worker')
+      else if !cell.worker && $cell.hasClass('has-worker')
+        $cell.removeClass('has-worker')
 
   bind_actions_cells: () ->
     for id, cell of @cells
       cell.el.off('click')
       do (cell) =>
         cell.el.click(() =>
-          if @selected_worker
+          if cell.worker
+            @select_worker(cell.worker, null)
+          else if @selected_worker
             App.set_worker_to_xy(@town_id, @selected_worker, cell.x, cell.y)
         )
 
-  select_worker: (pos, $w) ->
-    () =>
-      @selected_worker = pos
+  select_worker: (w, $w) ->
+    unless $w
+      $w = $("#worker-#{w.pos}")
+    if $w.hasClass('worker-selected')
+      $w.removeClass('worker-selected')
+      @selected_worker = null
+      $('.worker-cell-selected').removeClass('worker-cell-selected')
+    else
+      @selected_worker = w.pos
       $('.worker-selected').removeClass('worker-selected')
       $w.addClass('worker-selected')
+      $('#' + @make_cell_id(w.x, w.y)).addClass('worker-cell-selected')
+
+  select_worker_handler: (w, $w) ->
+    () =>
+      @select_worker(w, $w)
 
   draw_workers: () ->
-    for name, w of @workers
+    for pos, w of @workers
       $w = $(document.createElement('span'))
         .attr('id', "worker-#{w.pos}")
         .addClass('worker')
         .addClass('worker-' + w.type)
         .attr('title', w.pos + ' ' + w.res_title)
         .appendTo('.workers-list')
-      $w.click(@select_worker(w.pos, $w))
+        do (w, $w) =>
+          $w.click(@select_worker_handler(w, $w))
+      if w.x && w.y
+        $('#' + @make_cell_id(w.x, w.y))
+          .append(
+            $(document.createElement('div'))
+              .addClass('worker')
+              .addClass('worker-' + w.type)
+          )
 
-  update: () ->
-    console.log('update province')
+  update: (@workers, town_title) ->
+    if @town_title != town_title
+      @town_title = town_title
+      $('#' + @make_cell_id(@town_x, @town_y))
+        .attr('title', @town_title)
 
 window.Province = Province

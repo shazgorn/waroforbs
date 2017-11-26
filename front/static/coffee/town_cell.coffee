@@ -7,7 +7,7 @@ class TownCell
     @type_title = ''
     @html = ''
     @town_id = town_id
-    # @has_worker = false
+    @worker = null
     @is_town = false
     # $DOMElement
     @el = null
