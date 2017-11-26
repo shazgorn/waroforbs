@@ -66,13 +66,12 @@ class Province
 
   bind_actions_cells: () ->
     for id, cell of @cells
-      cell.el.off('click')
-      do (cell) =>
-        cell.el.click(() =>
-          if cell.worker
-            @select_worker(cell.worker.pos, null)
+      do (id) =>
+        @cells[id].el.click(() =>
+          if @cells[id].worker
+            @select_worker(@cells[id].worker.pos, null)
           else if @selected_worker
-            App.set_worker_to_xy(@town_id, @selected_worker, cell.x, cell.y)
+            App.set_worker_to_xy(@town_id, @selected_worker, @cells[id].x, @cells[id].y)
         )
 
   select_worker: (pos, $w) ->
@@ -123,6 +122,7 @@ class Province
             .removeClass('worker-cell-selected')
         @workers[w.pos] = w
         @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el.addClass('has-worker')
+        @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].worker = w
         if w.pos == @selected_worker
           @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el.addClass('worker-cell-selected')
 
