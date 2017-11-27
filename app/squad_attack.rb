@@ -2,8 +2,8 @@ class SquadAttack
   def initialize(a, d)
     @a = a
     @d = d
-    @a_initiative = @a.initiative + rand(1..4)
-    @d_initiative = @d.initiative + rand(1..4)
+    @a_initiative = @a.initiative + rand(0..@a.initiative)
+    @d_initiative = @d.initiative + rand(0..@d.initiative)
     @res = {
       :a_casualties => {
         :kills => 0,
