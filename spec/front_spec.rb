@@ -18,6 +18,16 @@ module PlayHelper
     login
   end
 
+  def settle_town
+    find('.inventory-item-settlers').click()
+    click_button(I18n.t('res_settlers_action_label'))
+  end
+
+  def open_town
+    find('#unit-info-list > .unit-info:last-of-type').click()
+    find('.own.town.select-target').click()
+  end
+
   def restart
     find('#open-options').click()
     find('#restart').click()
@@ -136,5 +146,20 @@ RSpec.describe "Front tests", :js => true do
     expect(find('.modal.town .building-in-progress .building-time').text).to eq(seconds_to_hm(barracs_time_cost))
     sleep(barracs_time_cost)
     find('.modal.town .building-built #open-screen-barracs').click()
+  end
+
+  it "is testing workers", :slow => true do
+    log_in
+    settle_town
+    open_town
+    worker = find('#worker-1')
+    worker.click()
+    worker.assert_matches_selector('#worker-1.worker-selected')
+    first('.worker-cell-mountain').click()
+    page.assert_selector('.has-worker.worker-cell-mountain')
+    page.assert_selector('.town-inventory-inner .inventory-item', count: 5)
+    sleep(20)
+    click_button('control_5')
+    page.assert_selector('.town-inventory-inner .inventory-item', count: 5)
   end
 end

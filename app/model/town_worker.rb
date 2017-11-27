@@ -11,6 +11,7 @@ class TownWorker
     # collecting resource type
     @type = nil
     @res_title = nil
+    @profession = nil # occupation
     @start_time = nil
     @finish_time = nil
     # time to collect
