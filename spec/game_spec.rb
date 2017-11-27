@@ -97,7 +97,7 @@ RSpec.describe Game, "testing" do
       dx = @dx
       dy = @dy
       logs = nil
-      (Swordsman::BASE_AP + 1).times do
+      (Config.get(@unit.type.to_s)['ap'].to_i + 1).times do
         Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, dx, dy)
         logs = LogBox.get_current_by_user(@user)
         dx *= -1

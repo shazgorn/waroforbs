@@ -1,25 +1,13 @@
 require 'unit'
 
 class Swordsman < Unit
-  MAX_SQUADS = 10
-  BASE_DMG = 30
-  BASE_AP = 20
-  BASE_DEF = 10
-
   def initialize(x, y, user)
     super(:swordsman, x, y, user)
-    @damage = BASE_DMG
-    @defence = BASE_DEF
-    @ap = @max_ap = BASE_AP
     @name = I18n.t(self.class.name)
   end
 
   def die
     super
-  end
-
-  def dmg
-    @squads * (@damage + Random.rand(@damage * 0.2)).round(0)
   end
 
   class << self

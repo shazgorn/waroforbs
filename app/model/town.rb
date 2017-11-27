@@ -17,8 +17,6 @@ class Town < Unit
 
   def initialize(x, y, user)
     super(TYPE, x, y, user)
-    @damage = 5
-    @defence = 50
     @workers = {
       1 => TownWorker.new(1),
       2 => TownWorker.new(2),

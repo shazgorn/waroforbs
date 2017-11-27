@@ -2,7 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory
+  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence
   attr_accessor :name
 
   ATTACK_COST = 1
@@ -21,8 +21,9 @@ class Unit
     @dead = false
     @x = x
     @y = y
-    @defence = 0
-    @ap = @max_ap = 0
+    @attack = Config.get(type.to_s)['attack'].to_i
+    @defence = Config.get(type.to_s)['defence'].to_i
+    @ap = @max_ap = Config.get(type.to_s)['ap'].to_i
     @@units[@id] = self
     @life = Config.get('MAX_LIFE')
     @wounds = 0
@@ -80,7 +81,7 @@ class Unit
       'life' => @life,
       'wounds' => @wounds,
       'dead' => @dead,
-      'damage' => @damage,
+      'attack' => @attack,
       'defence' => @defence,
       'inventory' => @inventory,
       'user_name' => @user.login,
@@ -111,10 +112,6 @@ class Unit
   def die
     @dead = true
     place(nil, nil)
-  end
-
-  def dmg
-    @damage + Random.rand(@damage)
   end
 
   def place(x = nil, y = nil)

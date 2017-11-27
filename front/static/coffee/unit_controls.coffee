@@ -27,7 +27,7 @@ class UnitControls
     @wounds = @info.find('.unit-wounds-info')
     @xy = @info.find('.unit-xy-info')
     @ap = @info.find('.unit-ap-info')
-    @dmg = @info.find('.unit-damage-info')
+    @attack = @info.find('.unit-attack-info')
     @def = @info.find('.unit-defence-info')
     inventory = @info.find('.unit-inventory-info')
     inventory_item_description = @info.find('.unit-inventory-item-description-info')
@@ -97,7 +97,7 @@ class UnitControls
     @wounds.html(unit.wounds)
     @xy.html(unit.x + ',' + unit.y)
     @ap.html(unit.ap)
-    @dmg.html(unit.damage)
+    @attack.html(unit.attack)
     @def.html(unit.defence)
 
   remove_element: () ->

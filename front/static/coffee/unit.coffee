@@ -11,7 +11,7 @@ class Unit
     @id = unit.id
     @attr_id = "unit-#{@id}"
     @type = unit.type
-    @damage = unit.damage
+    @attack = unit.attack
     @defence = unit.defence
     @dead = unit.dead
     @inventory =  unit.inventory
