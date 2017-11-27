@@ -12,6 +12,9 @@ ru:
   gold: Золото
   wood: Дерево
   stone: Камень
+  Peon: Батрак
+  Woodcutter: Лесоруб
+  Stonecutter: Каменотёс
   log_entry_already_have_town: У Вас уже есть город
   log_entry_barracs_not_build: Казармы не построены
   log_entry_building_already_in_progress: Строительство уже идёт

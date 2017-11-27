@@ -49,8 +49,7 @@ class Province
   create_row: (id) ->
     $(document.createElement('div'))
       .attr('id', "worker-row-#{id}")
-      .addClass('worker-row')
-      .appendTo('.modal.town .workers-inner')
+      .appendTo('.province-inner')
 
   draw_town_cells: () ->
     for id, cell of @cells
@@ -99,7 +98,7 @@ class Province
         .attr('id', "worker-#{w.pos}")
         .addClass('worker')
         .addClass('worker-' + w.type)
-        .attr('title', w.pos + ' ' + w.res_title)
+        .attr('title', w.profession)
         .appendTo('.workers-list')
         do (w, $w) =>
           $w.click(@select_worker_handler(w.pos, $w))

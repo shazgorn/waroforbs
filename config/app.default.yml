@@ -41,7 +41,10 @@ unit_class:
 resource:
   gold:
     time_to_collect: 10
+    profession: Peon
   wood:
     time_to_collect: 30
+    profession: Woodcutter
   stone:
     time_to_collect: 50
+    profession: Stonecutter

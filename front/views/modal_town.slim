@@ -13,9 +13,12 @@
     .modal-town-actions.container
       .modal-town-actions-title = t('Quick actions')
       .modal-town-actions-inner
-    .workers.container
-      .workers-title = t('Workers')
-      .workers-inner
+    .container.flex-container
+      .province
+        .province-title = t('Province')
+        .province-inner
+      .workers
+        .workers-title = t('Workers')
         .workers-list
     .town-inventory.container
       .town-inventory-title = t('Inventory')

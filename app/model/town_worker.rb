@@ -25,6 +25,7 @@ class TownWorker
       'y' => @y,
       'type' => @type,
       'res_title' => @res_title,
+      'profession' => @profession,
       'start_time' => @start_time,
       'finish_time' => @finish_time,
       'ttc' => @ttc,
@@ -38,6 +39,7 @@ class TownWorker
   def start_res_collection(res_type = :gold, distance = 1)
     raise OrbError, 'res_type is nil' if res_type.nil?
     @type = res_type
+    @profession = I18n.t(Config.get('resource')[@type.to_s]['profession'])
     @res_title = I18n.t(res_type)
     @ttc = Config.get('resource')[@type.to_s]['time_to_collect'] * distance
     @start_time = Time.now
