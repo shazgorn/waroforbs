@@ -27,6 +27,7 @@ swordsman:
   ap: 20
   attack: 3
   defence: 3
+  initiative: 1
   cost_res:
     gold: 10
   cost_glory: 10
@@ -34,6 +35,7 @@ town:
   ap: 0
   attack: 1
   defence: 1
+  initiative: 0
 unit_class:
   swordsman: Swordsman
 resource:

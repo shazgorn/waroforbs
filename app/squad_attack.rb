@@ -2,6 +2,8 @@ class SquadAttack
   def initialize(a, d)
     @a = a
     @d = d
+    @a_initiative = @a.initiative + rand(1..4)
+    @d_initiative = @d.initiative + rand(1..4)
     @res = {
       :a_casualties => {
         :kills => 0,
@@ -34,20 +36,20 @@ class SquadAttack
     d_times = @d.strength
     a_times.times{|i|
       return if @a.dead? || @d.dead?
-      single_attack_on(@d, :d_casualties, @a.attack, @d.defence)
+      single_attack_on(@d, :d_casualties, @a.attack, @d.defence, @a_initiative, @d_initiative)
       # retaliation
-      single_attack_on(@a, :a_casualties, @d.attack, @a.defence)
+      single_attack_on(@a, :a_casualties, @d.attack, @a.defence, @d_initiative, @a_initiative)
       d_times -= 1 if d_times
     }
     # continue retaliation if defender has more lifes than attacker
     d_times.times{|i|
       return if @a.dead? || @d.dead?
-      single_attack_on(@a, :a_casualties, @d.attack, @a.defence)
+      single_attack_on(@a, :a_casualties, @d.attack, @a.defence, @d_initiative, @a_initiative)
     }
   end
 
-  def single_attack_on(d, index, attack, defence)
-    roll(attack, defence)
+  def single_attack_on(d, index, attack, defence, a_initiative, d_initiative)
+    roll(attack, defence, a_initiative, d_initiative)
     if kill?
       # for SE kills became wounds
       if d.kill
@@ -61,9 +63,9 @@ class SquadAttack
     end
   end
 
-  def roll(attack, defence)
+  def roll(attack, defence, a_initiative, d_initiative)
     if attack
-      @prob = rand(100) * defence / attack
+      @prob = rand(100) * (defence + d_initiative) / (attack + a_initiative)
     else
       @prob = 100
     end

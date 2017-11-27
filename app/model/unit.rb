@@ -2,7 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence
+  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence, :initiative
   attr_accessor :name
 
   ATTACK_COST = 1
@@ -23,6 +23,7 @@ class Unit
     @y = y
     @attack = Config.get(type.to_s)['attack'].to_i
     @defence = Config.get(type.to_s)['defence'].to_i
+    @initiative = Config.get(type.to_s)['initiative'].to_i
     @ap = @max_ap = Config.get(type.to_s)['ap'].to_i
     @@units[@id] = self
     @life = Config.get('MAX_LIFE')
