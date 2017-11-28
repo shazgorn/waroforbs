@@ -116,15 +116,6 @@ class Application
         console.error(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
-    # if @my_units_ids.length == 0
-    #   @lock_controls()
-    # $('.unit-info:not(.unit-info-template)').each((i, el) =>
-    #   id = $(el).data('id')
-    #   if $.inArray(id, @my_units_ids) == -1
-    #     $(el).remove()
-    #     if id == @active_unit_id
-    #       @lock_controls()
-    # )
     true
 
   # bind attack handlers

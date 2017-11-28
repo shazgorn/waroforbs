@@ -45,6 +45,8 @@ class TownModal
     @el.find('.buildings-inner *').remove()
     @el.find('.modal-building-actions-inner *').remove()
     @el.find('.town-inventory-inner *').remove()
+    @el.find('.province-inner *').remove()
+    @el.find('.workers-list *').remove()
 
   restore_title: () ->
     $('.modal.town .modal-title').html(@name)
