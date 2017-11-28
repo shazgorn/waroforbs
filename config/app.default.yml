@@ -40,11 +40,11 @@ unit_class:
   swordsman: Swordsman
 resource:
   gold:
-    time_to_collect: 10
+    time_to_collect: 1
     profession: Peon
   wood:
-    time_to_collect: 30
+    time_to_collect: 3
     profession: Woodcutter
   stone:
-    time_to_collect: 50
+    time_to_collect: 5
     profession: Stonecutter

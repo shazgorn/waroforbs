@@ -7,31 +7,33 @@ class InventoryView
   constructor: (@element, new_inventory, @inventory_item_description) ->
     @max_slots = 5
     @descriptionShown = false
-    filled_slots = 0
+    @res_el = {}
+    empty_slots_to_hide = 0
     for res, q of new_inventory
-      @create_res(res, q) if q
-      filled_slots++ if q > 0
-    for f in [filled_slots+1..@max_slots]
-      @create_empty_res()
+      @res_el[res] = @add_res(res, q)
+      if q
+        empty_slots_to_hide++
+      else
+        @res_el[res].hide()
+    for f in [1..@max_slots]
+      @add_empty_res()
+    for f in [1..empty_slots_to_hide]
+      @element.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
 
   ##
   # Update
   # @param {array} old_inventory - inventory in model
   # @param {array} new_inventory - unit inventory
   sync_resources: (old_inventory, new_inventory) ->
-    empty_res_to_add = 0
     for res, q of new_inventory
       if old_inventory[res] > 0 && q == 0
-        @remove_res(res)
-        empty_res_to_add++
+        @res_el[res].hide()
+        @element.find('.hidden').first().removeClass('hidden')
       else if old_inventory[res] == 0 && q > 0
-        @create_res(res, q)
-        empty_res_to_add--
-      else if old_inventory[res] != q
+        @res_el[res].show()
+        @element.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
+      if old_inventory[res] != q
         @update_res(res, q)
-    if empty_res_to_add
-      for empty in [0...empty_res_to_add]
-        @create_empty_res()
     if @descriptionShown
       @inventory_item_description.html('')
       @descriptionShown = false
@@ -39,7 +41,7 @@ class InventoryView
   ##
   # @param {string} res
   # @param {int} q
-  create_res: (res, q) ->
+  add_res: (res, q) ->
     $(document.createElement('div'))
       .html(
         $(document.createElement('div'))
@@ -51,7 +53,7 @@ class InventoryView
       .addClass('inventory-item-' + res)
       .appendTo(@element)
       .click((e) =>
-        e.preventDefault();
+        e.preventDefault()
         @inventory_item_description.html(App.resource_info[res].description)
         if App.resource_info[res].action
           $(document.createElement('button'))
@@ -64,16 +66,11 @@ class InventoryView
         @descriptionShown = true
       )
 
-  create_empty_res: ->
+  add_empty_res: () ->
     $(document.createElement('div'))
       .addClass('inventory-item')
       .addClass('inventory-item-empty')
       .appendTo(@element)
-
-  ##
-  # @param {string} res - resource name
-  remove_res: (res) ->
-    @element.children('.inventory-item-' + res).remove()
 
   ##
   # @param {string} res - resource name
@@ -84,10 +81,4 @@ class InventoryView
       .attr('title', App.resource_info[res].title + ' ' + q)
       .find('.inventory-item-q').html(q)
 
-class TownInventoryView extends InventoryView
-  constructor: (element, new_inventory, inventory_item_description) ->
-    super(element, new_inventory, inventory_item_description)
-    @max_slots = 10
-
 window.InventoryView = InventoryView
-window.TownInventoryView = TownInventoryView

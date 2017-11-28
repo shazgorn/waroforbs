@@ -14,7 +14,7 @@ class TownModal
     @name = town.name
     @el.find('.modal-title').html(@name)
     inventory_item_description = @el.find('.town-inventory-item-description')
-    @inventory_view = new TownInventoryView(@el.find('.town-inventory-inner'), town.inventory, inventory_item_description)
+    @inventory_view = new InventoryView(@el.find('.town-inventory-inner'), town.inventory, inventory_item_description)
 
   append_building_card_el: (el) ->
     @el.find('.buildings-inner').append(el)
