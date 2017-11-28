@@ -113,7 +113,7 @@ class Map
     if tile
       cell.attr(
         'title',
-        tile.x + ',' + tile.y + ' ' + tile.title
+        tile.x + ',' + tile.y + ' ' + tile.type_title
       )
     cell
 
