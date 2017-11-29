@@ -12,7 +12,6 @@ class Application
     @initialized = false
     @attacking = false
     @cells = null
-    @TOWN_RADIUS = null
     @current_glory = null
 
   update_user_info: (user_glory, user_max_glory, user_name = null) ->

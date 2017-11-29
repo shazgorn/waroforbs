@@ -1,38 +1,45 @@
 ##
 # Town province
 class Province
-  constructor: (@workers, @town_title, @town_x, @town_y, @town_id) ->
+  constructor: (@workers, @town_x, @town_y, @town_id, @town_title, @town_radius) ->
     # id => cell
     @selected_worker = null
     @cells = {}
-    range = [(-1 * App.TOWN_RADIUS)..App.TOWN_RADIUS]
-    for dy in range
-      for dx in range
+    town_range = [(-1 * @town_radius)..@town_radius]
+    @range_x = [(-1 * @town_radius + @town_x)..(@town_radius + @town_x)]
+    @range_y = [(-1 * @town_radius + @town_y)..(@town_radius + @town_y)]
+    cell_y = cell_x = 0
+    for dy in town_range
+      cell_x++
+      for dx in town_range
+        cell_y++
         x = @town_x + dx
         y = @town_y + dy
-        id = "#{x}_#{y}"
-        cell = new TownCell(id, x, y, @town_id)
-        if App.cells[id]
+        cell = new TownCell(x, y, @town_id)
+        if App.cells[x]? && App.cells[x][y]?
+          cell.in_map = true
           if @town_x == x && @town_y == y
             # town cell
             cell.html = '&nbsp;'
             cell.title = @town_title
-            cell.type = App.cells[id].type
+            cell.type = App.cells[x][y].type
             cell.is_town = true
           else
             # non town cell
-            cell.type = App.cells[id].type
-            cell.title = "#{x},#{y} #{App.cells[id].type_title}"
+            cell.type = App.cells[x][y].type
+            cell.title = "#{x},#{y} #{App.cells[x][y].type_title}"
             cell.html = "#{x},#{y}"
         else
           # out of map
           cell.html = '&nbsp;'
-          cell.title = 'Hic sunt dracones'
+          cell.title = 'Hic sunt dracones ' + x + ' ' + y
           cell.type = 'darkness'
-        @cells[id] = cell
+        unless @cells[x]?
+          @cells[x] = {}
+        @cells[x][y] = cell
     for id, w of @workers
       if w.x && w.y
-        @cells[w.x + '_' + w.y].worker = w
+        @cells[w.x][w.y].worker = w
 
   make_cell_id: (x, y) ->
     "town_cell_#{x}_#{y}"
@@ -52,26 +59,30 @@ class Province
       .appendTo('.province-inner')
 
   draw_town_cells: () ->
-    for id, cell of @cells
-      $row = $("#worker-row-#{cell.y}")
-      if $row.length == 0
-        $row = @create_row(cell.y)
-      cell.el = @create_cell(cell)
-      $row.append(cell.el)
-      if cell.worker
-        cell.el.addClass('has-worker')
-      else if !cell.worker
-        cell.el.removeClass('has-worker')
+    for x in @range_x
+      for y in @range_y
+        cell = @cells[x][y]
+        $row = $("#worker-row-#{y}")
+        if $row.length == 0
+          $row = @create_row(y)
+        cell.el = @create_cell(cell)
+        $row.append(cell.el)
+        if cell.worker
+          cell.el.addClass('has-worker')
+        else if !cell.worker
+          cell.el.removeClass('has-worker')
 
   bind_actions_cells: () ->
-    for id, cell of @cells
-      do (id) =>
-        @cells[id].el.click(() =>
-          if @cells[id].worker
-            @select_worker(@cells[id].worker.pos, null)
-          else if @selected_worker
-            App.set_worker_to_xy(@town_id, @selected_worker, @cells[id].x, @cells[id].y)
-        )
+    for x in @range_x
+      for y in @range_y
+        if @cells[x][y].in_map && !@cells[x][y].is_town
+          do (x, y) =>
+            @cells[x][y].el.click(() =>
+              if @cells[x][y].worker
+                @select_worker(@cells[x][y].worker.pos, null)
+              else if @selected_worker
+                App.set_worker_to_xy(@town_id, @selected_worker, x, y)
+            )
 
   select_worker: (pos, $w) ->
     unless $w
@@ -114,15 +125,15 @@ class Province
           .removeClass("worker-#{@workers[w.pos].type}")
           .addClass("worker-#{w.type}")
       if w.x != @workers[w.pos].x || w.y != @workers[w.pos].y
-        if @cells[@workers[w.pos].x + '_' + @workers[w.pos].y]
-          @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].worker = null
-          @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el
+        if @workers[w.pos].x && @workers[w.pos].y && @cells[@workers[w.pos].x][@workers[w.pos].y]
+          @cells[@workers[w.pos].x][@workers[w.pos].y].worker = null
+          @cells[@workers[w.pos].x][@workers[w.pos].y].el
             .removeClass('has-worker')
             .removeClass('worker-cell-selected')
         @workers[w.pos] = w
-        @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el.addClass('has-worker')
-        @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].worker = w
+        @cells[@workers[w.pos].x][@workers[w.pos].y].el.addClass('has-worker')
+        @cells[@workers[w.pos].x][@workers[w.pos].y].worker = w
         if w.pos == @selected_worker
-          @cells[@workers[w.pos].x + '_' + @workers[w.pos].y].el.addClass('worker-cell-selected')
+          @cells[@workers[w.pos].x][@workers[w.pos].y].el.addClass('worker-cell-selected')
 
 window.Province = Province

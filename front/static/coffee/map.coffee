@@ -90,8 +90,7 @@ class Map
         b = $(document.createElement('div'))
           .attr('id', "block_#{block_x}_#{block_y}")
           .addClass(blockClass)
-          # see Map::create_canvas_blocks
-          .css('background-image', "url(img/bg/bg_#{block_x}_#{block_y}.png)")
+          .css('background-image', "url(/img/#{App.blocks[block_x][block_y].path})")
           .css('left', "#{left_pos}px")
           .css('top', "#{top_pos}px")
           .appendTo('#blocks')
@@ -101,7 +100,7 @@ class Map
     block_y = (y - 1) // @block_dim_in_cells + 1
     left = (x - 1) % 10 * @cell_dim_in_px
     top = (y - 1) % 10 * @cell_dim_in_px
-    tile = App.cells[x + '_' + y]
+    tile = App.cells[x][y]
     cell = $(document.createElement('div'))
       .attr('id', "cell_#{x}_#{y}")
       .data('x', x)

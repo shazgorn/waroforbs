@@ -1,11 +1,12 @@
 class MapTile
-  attr_accessor :x, :y, :type
+  attr_accessor :x, :y, :type, :path
 
-  def initialize(x, y, type)
+  def initialize(x, y, type, path)
     @x = x
     @y = y
     # type - :grass, :tree, etc
     @type = type
+    @path = path
     @type_title = ''
   end
 
@@ -14,7 +15,8 @@ class MapTile
       :x => @x,
       :y => @y,
       :type => @type,
-      :type_title => I18n.t(@type)
+      :type_title => I18n.t(@type),
+      :path => @path
     }
   end
 

@@ -1,6 +1,5 @@
 class TownCell
-  constructor: (id, x, y, town_id) ->
-    @id = id
+  constructor: (x, y, town_id) ->
     @x = x
     @y = y
     @type = ''
@@ -9,6 +8,7 @@ class TownCell
     @town_id = town_id
     @worker = null
     @is_town = false
+    @in_map = false
     # $DOMElement
     @el = null
 

@@ -26,6 +26,8 @@ class Unit
     @buildings_cards = {}
     for key, building of unit.buildings
       @buildings[key] = new Building(key, building)
+    if unit.radius?
+      @radius = unit.radius
 
   update: (unit) ->
     return if @dead
@@ -79,7 +81,7 @@ class Unit
       for key, building_card of @buildings_cards
         @modal.append_building_card_el(building_card.el)
         building_card.set_town_modal(@modal, @buildings[key])
-      @modal.create_province(@workers, @title, @x, @y, @id)
+      @modal.create_province(@workers, @x, @y, @id, @title, @radius)
       @modal.bind_open_handler([@view.element])
 
   update_modal: (unit) ->

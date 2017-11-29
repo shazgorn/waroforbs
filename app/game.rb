@@ -187,7 +187,8 @@ class Game
       :user_max_glory => user.max_glory,
       :actions => user.actions,
       :units => all_units({user.id => {}}),
-      :cells => @map.cells,
+      :cells => @map.tiles,
+      :blocks => @map.blocks,
       :logs => LogBox.get_by_user(user),
       :resource_info => {
         :gold => {
@@ -212,7 +213,6 @@ class Game
           :action_label => I18n.t('res_settlers_action_label')
         }
       },
-      :TOWN_RADIUS => Town::RADIUS,
       :building_states => {
         :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
         :BUILDING_STATE_IN_PROGRESS => Building::STATE_IN_PROGRESS,
@@ -306,10 +306,6 @@ class Game
     end
   end
 
-  def in_town_radius?(town, x, y)
-    @map.max_diff(town.x, town.y, x, y) <= Town::RADIUS
-  end
-
   TER2RES = {
     :grass => :gold,
     :tree => :wood,
@@ -320,10 +316,10 @@ class Game
     town = Town.get_by_user user
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
-    raise OrbError, 'Cell is not near town' unless in_town_radius?(town, x, y)
+    raise OrbError, 'Cell is not near town' unless town.in_radius?(x, y)
     type = TER2RES[@map.cell_type_at(x, y)]
     raise OrbError, "No resource type for map tile #{x}, #{y}" if type.nil?
-    town.set_worker_to(worker_pos, x, y, type, @map.max_diff(town.x, town.y, x, y))
+    town.set_worker_to(worker_pos, x, y, type)
   end
 
   TYPE2COST = {

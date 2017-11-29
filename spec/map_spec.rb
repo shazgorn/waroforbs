@@ -25,4 +25,8 @@ RSpec.describe Map, "testing", :map => true do
     expect(greatest_x).to eq(Map::MAX_CELL_IDX)
     expect(greatest_y).to eq(Map::MAX_CELL_IDX)
   end
+
+  it 'generate map' do
+    map = Map.new(true, 'map_test')
+  end
 end

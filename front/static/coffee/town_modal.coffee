@@ -32,8 +32,8 @@ class TownModal
       @title = town.title
       @el.find('.modal-title').html(@name)
 
-  create_province: (workers, town_x, town_y, town_id, town_title) ->
-    @province = new Province(workers, town_x, town_y, town_id, town_title)
+  create_province: (workers, town_x, town_y, town_id, town_title, town_radius) ->
+    @province = new Province(workers, town_x, town_y, town_id, town_title, town_radius)
     @province.draw_town_cells()
     @province.draw_workers()
     @province.bind_actions_cells()

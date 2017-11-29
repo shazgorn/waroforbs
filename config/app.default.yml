@@ -36,6 +36,7 @@ town:
   attack: 1
   defence: 1
   initiative: 0
+  radius: 3
 unit_class:
   swordsman: Swordsman
 resource:

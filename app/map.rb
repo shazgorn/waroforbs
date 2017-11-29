@@ -9,7 +9,7 @@ require 'map_tile'
 
 class Map
   include Celluloid::Internals::Logger
-  attr_reader :cells
+  attr_reader :tiles, :blocks
   attr_accessor :ul
 
   CELL_DIM_PX = 32 # how may pixels in one cell (one side)
@@ -25,9 +25,11 @@ class Map
   # +generate+ map
 
   def initialize(generate = false, file_name = 'map')
+    @file_name = file_name
     @data_path = "./data/#{file_name}.dat"
-    @cells = {}
-    @cells_bg = {
+    @blocks = {}
+    @tiles = {}
+    @tiles_info = {
       1 => {
         :path => "./" + Config.get('img_path') + "grass.png",
         :type => :grass
@@ -66,20 +68,32 @@ class Map
     if generate || !File.exist?(@data_path)
       generate_map
     else
+      # TODO write blocks
       file = File.open(@data_path, "r")
-      @cells = Marshal.load(file)
+      data = Marshal.load(file)
+      @tiles = data[:tiles]
+      @blocks = data[:blocks]
     end
   end
 
   def generate_map
     start = Time.now.to_f
     info "Generate map"
+    MAP_CELLS_RANGE.each{|x|
+      @tiles[x] = {}
+      MAP_CELLS_RANGE.each{|y|
+        n = Random.rand 20
+        n = 1 unless @tiles_info.has_key?(n)
+        @tiles[x][y] = MapTile.new(x, y, @tiles_info[n][:type], @tiles_info[n][:path])
+        # puts "#{x}_#{y} #{@tiles_info[n][:type]}"
+      }
+    }
     create_canvas_blocks
     finish = Time.now.to_f
     diff = finish - start
     info "Map generated in %f seconds" % diff.to_f
     File.open(@data_path, "w") do |file|
-      file.print Marshal.dump(@cells)
+      file.print Marshal.dump({:tiles => @tiles, :blocks => @blocks})
       info "Map data saved to %s" % @data_path
     end
   end
@@ -87,10 +101,12 @@ class Map
   # generate map blocks
   def create_canvas_blocks(size = BLOCKS_IN_MAP_DIM)
     (1..size).each do |block_x|
+      @blocks[block_x] = {}
       (1..size).each do |block_y|
         create_canvas_block(block_x, block_y)
       end
     end
+    p @blocks
   end
 
   def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim_px = CELL_DIM_PX)
@@ -102,12 +118,7 @@ class Map
         canvas_x = 0
         cell_x = ((block_x - 1) * BLOCK_DIM + 1)
         while canvas_x < canvas_dim
-          n = Random.rand 20
-          n = 1 unless @cells_bg.has_key?(n)
-          cell_bg = @cells_bg[n]
-          map_cell = MapTile.new(cell_x, cell_y, cell_bg[:type])
-          builder << cell_bg[:path]
-          @cells["#{cell_x}_#{cell_y}"] = map_cell
+          builder << @tiles[cell_x][cell_y].path
           canvas_x += cell_dim_px
           cell_x += 1
         end
@@ -115,7 +126,9 @@ class Map
         cell_y += 1
       end
       #see map.coffee::addBlocks
-      canvas_path = "./" + Config.get('img_path') + "bg/bg_#{block_x}_#{block_y}.png"
+      block_path = "bg/bg_#{block_x}_#{block_y}_#{@file_name}.png"
+      @blocks[block_x][block_y] = {:path => block_path}
+      canvas_path = "./" + Config.get('img_path') + block_path
       builder << canvas_path
       info "write to #{canvas_path}"
     end
@@ -151,19 +164,11 @@ class Map
     (-1..1).include?(x1 - x2) && (-1..1).include?(y1 - y2)
   end
 
-  ##
-  # max distance by any axis
-
-  def max_diff(x1, y1, x2, y2)
-    [(x1 - x2).abs(), (y1 - y2).abs()].max
-  end
-
   def cell_at(x, y)
-    @cells["#{x}_#{y}"]
+    @tiles[x][y] # ["#{x}_#{y}"]
   end
 
   def cell_type_at(x, y)
-    cell = cell_at(x, y)
-    cell.type
+    cell_at(x, y).type
   end
 end

@@ -2,18 +2,19 @@ require 'unit'
 require 'single_entity'
 require 'transport'
 require 'town_worker'
+require 'map_helper'
 
 ##
 # SE - single entity
 class Town < Unit
   include SingleEntity
   include Transport
+  include MapHelper
 
   attr_accessor :adj_companies
   attr_reader :buildings, :actions
 
   TYPE = :town
-  RADIUS = 3
 
   def initialize(x, y, user)
     super(TYPE, x, y, user)
@@ -32,6 +33,7 @@ class Town < Unit
     @inventory[:gold] = 300
     @inventory[:wood] = 50
     @name = I18n.t('Town')
+    @radius = Config.get('town')['radius'].to_i
   end
 
   ##
@@ -55,7 +57,8 @@ class Town < Unit
     hash.merge!(
       {
         :buildings => @buildings,
-        :workers => @workers
+        :workers => @workers,
+        :radius => @radius
       }
     )
     hash
@@ -70,7 +73,7 @@ class Town < Unit
     }
   end
 
-  def set_worker_to(pos, x, y, type, distance)
+  def set_worker_to(pos, x, y, type)
     worker = get_worker_by_pos(pos)
     # w_at_xy = get_worker_at(x, y)
     # raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
@@ -83,7 +86,7 @@ class Town < Unit
       # thats bogus!
       # why there can be no type?
       # if type  && worker.type != type
-      worker.start_res_collection(type, distance)
+      worker.start_res_collection(type, max_diff(@x, @y, x, y))
       # end
     end
   end
@@ -120,6 +123,10 @@ class Town < Unit
       end
     }
     msg
+  end
+
+  def in_radius?(x, y)
+    max_diff(@x, @y, x, y) <= @radius
   end
 
   def pay_price(cost)
