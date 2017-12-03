@@ -19,7 +19,7 @@ MAX_LIFE: 15
 DUMMY_LOGIN: dummy
 barracs:
   unit: swordsman
-  cost_time: 6
+  cost_time: 60
   cost_res:
     gold: 20
     wood: 5
@@ -41,11 +41,11 @@ unit_class:
   swordsman: Swordsman
 resource:
   gold:
-    time_to_collect: 1
+    time_to_collect: 10
     profession: Peon
   wood:
-    time_to_collect: 3
+    time_to_collect: 30
     profession: Woodcutter
   stone:
-    time_to_collect: 5
+    time_to_collect: 50
     profession: Stonecutter

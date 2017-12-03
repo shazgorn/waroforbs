@@ -27,6 +27,6 @@ RSpec.describe Map, "testing", :map => true do
   end
 
   it 'generate map' do
-    map = Map.new(true, 'map_test')
+    Map.new(true, 'map_test')
   end
 end
