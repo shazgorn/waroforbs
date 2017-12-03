@@ -4,13 +4,16 @@
     button#open-help = t('Help')
     button#exit = t('Exit')
 
-  div class="user-info"
+  div.user-info
     div.user-info-nickname
       = t('user_nickname')
-      span#user-info-nickname-info.user-info-nickname-info
+      span#user-info-nickname-value.value
     div.user-info-glory
       = t('glory_title')
-      span#user-info-glory-info.user-info-glory-info
+      span#user-info-glory-value.value
+    div.user-info-turn
+      = t('turn')
+      span#user-info-turn-value.value
 
   #controls-arrows class="group"
 

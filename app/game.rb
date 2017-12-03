@@ -26,15 +26,20 @@ class Game
   include Celluloid::Internals::Logger
   include Cli
 
-  attr_reader :map
+  attr_reader :map, :turn
 
   def initialize(drop = false)
     info 'Starting game'
+    @turn = 1
     @generate = false
     check_args
     @map = Map.new(@generate)
     drop_all if drop
     subscribe('tick', :tick)
+  end
+
+  def make_turn
+    @turn += 1
   end
 
   def drop_all
@@ -184,6 +189,7 @@ class Game
       :user_id => user.id,
       :user_name => user.login,
       :user_glory => user.glory,
+      :turn => @turn,
       :user_max_glory => user.max_glory,
       :actions => user.actions,
       :units => all_units({user.id => {}}),

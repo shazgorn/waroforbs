@@ -325,30 +325,20 @@ button {
   top: -30px;
 }
 
-// .defender-casualties-start {
-//   color: $red;
-// }
-
-// .defender-casualties-end {
-//   color: $yellow;
-// }
-
-// .attacker-casualties-start {
-//   color: $blue;
-// }
-
-// .attacker-casualties-end {
-//   color: $aqua;
-// }
-
-.user-info-nickname-info {
-  color: red;
+.user-info .value {
   float: right;
 }
 
-.user-info-glory-info {
+.user-info-nickname .value {
+  color: red;
+}
+
+.user-info-glory .value {
   color: cyan;
-  float: right;
+}
+
+.user-info-turn .value {
+  color: orange;
 }
 
 #right-col {

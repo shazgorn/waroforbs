@@ -43,7 +43,7 @@ class WS
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
 
             # App init function calls
-            app.update_user_info(data.user_glory, data.user_max_glory, data.user_name)
+            app.update_user_info(data.turn, data.user_glory, data.user_max_glory, data.user_name)
             app.upcreate_units(data.units)
             app.center_on_active()
             app.set_active_unit_directly(data.active_unit_id)
@@ -57,7 +57,7 @@ class WS
                 app.map.casualties(data.d_casualties.wounds, data.d_casualties.kills, data.a_casualties.wounds, data.a_casualties.kills, data.d_id, data.a_id, 789, 123)
               else
                 app.map.casualties(data.a_casualties.wounds, data.a_casualties.kills, data.d_casualties.wounds, data.d_casualties.kills, data.a_id, data.d_id, 123, 789)
-            app.update_user_info(data.user_glory, data.user_max_glory)
+            app.update_user_info(data.turn, data.user_glory, data.user_max_glory)
             app.upcreate_units data.units
             app.update_user_controls data.actions
             app.attacking = false
