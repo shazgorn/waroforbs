@@ -429,7 +429,7 @@ button {
     }
 
     .unit-xy-info {
-      text-align: left;
+      text-align: center;
       width: 45px;
     }
   }
@@ -612,11 +612,16 @@ button {
     display: inline-block;
     height: 40px;
     line-height: 40px;
+    opacity: 0.8;
     text-align: center;
     width: 40px;
 
     &.worker-cell-selected {
       border-color: $white;
+    }
+
+    &:hover {
+      opacity: 1;
     }
   }
 
@@ -624,6 +629,7 @@ button {
     border-color: $orange;
     background-repeat: no-repeat;
     background-position: center;
+    opacity: 1;
   }
 
   .worker-cell-tree {
