@@ -38,7 +38,6 @@ RSpec.configure do |c|
   Capybara.javascript_driver = :selenium
   Capybara.app_host = 'http://0.0.0.0:9292/'
   Capybara.run_server = false
-  #Capybara.raise_javascript_errors = true
   c.include TimeHelper
   c.include PlayHelper
   c.include Capybara::DSL
@@ -51,16 +50,10 @@ RSpec.configure do |c|
   }
 end
 
-# Capybara::Webkit.configure do |config|
-#   config.allow_url("0.0.0.0")
-#   config.raise_javascript_errors = true
-# end
-
-
 RSpec.describe "Front tests", :js => true do
   it "is testing user info" do
     login = log_in
-    sleep(1) # wait init_map
+    # sleep(1) # wait init_map
     expect(find('#user-info-nickname-info').text).to eq(login)
     expect(find('#user-info-glory-info').text).to eq("#{Config.get('START_GLORY')}/#{Config.get('START_MAX_GLORY')}")
   end
@@ -68,7 +61,8 @@ RSpec.describe "Front tests", :js => true do
   it "is renaming" do
     log_in
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
-    expect(unit_name).to eq(I18n.t('Swordsman')) # TODO: get default unit type class
+    # units are named after class name
+    expect(unit_name).to eq(I18n.t(Config['unit_class'][Config['START_UNIT_TYPE']]))
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click
     # selenium does not support double clicks
     if Capybara.javascript_driver == :selenium
@@ -79,7 +73,6 @@ RSpec.describe "Front tests", :js => true do
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info .cancel-button').click()
     expect(find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text).to eq(unit_name)
     expect(page).to have_no_css('#unit-info-list > .unit-info:first-of-type .unit-name-info input')
-
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click
     if Capybara.javascript_driver == :selenium
       page.execute_script("$('#unit-info-list > .unit-info:first-of-type .unit-name-info').dblclick();")
@@ -95,9 +88,15 @@ RSpec.describe "Front tests", :js => true do
 
   it "is moving" do
     log_in
+    old_xy = find('.unit-xy-info').text
+    find('#control_7').click
+    find('#control_8').click
+    find('#control_9').click
+    find('#control_6').click
     find('#control_3').click
-    sleep(1)
-    # TODO: implement me
+    find('#control_2').click
+    find('#control_1').click
+    expect(find('.unit-xy-info').text).not_to eql(old_xy)
   end
 
   it "is attacking" do
@@ -123,8 +122,7 @@ RSpec.describe "Front tests", :js => true do
     find('.unit-info:last-of-type').click()
     find('.own.town.select-target').click()
     find('.modal.town .building-card-barracs .build-button').click()
-    barracs_time_cost = Config.get('barracs')['cost_time']
-    sleep(barracs_time_cost)
+    sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
     find('.modal.town .building-built #open-screen-barracs').click()
     restart
     find('.inventory-item-settlers').click()
@@ -142,9 +140,7 @@ RSpec.describe "Front tests", :js => true do
     find('.own.town.select-target').click()
     expect(page).to have_content(I18n.t('Barracs'))
     find('.modal.town .building-card-barracs .build-button').click()
-    barracs_time_cost = Config.get('barracs')['cost_time']
-    expect(find('.modal.town .building-in-progress .building-time').text).to eq(seconds_to_hm(barracs_time_cost))
-    sleep(barracs_time_cost)
+    sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
     find('.modal.town .building-built #open-screen-barracs').click()
   end
 

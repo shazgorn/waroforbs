@@ -1,19 +1,12 @@
 class Map
-  constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells,
-  @map_dim_in_blocks, cells) ->
-    this_obj = this
-    #this.initTooltip()
-    this.addBlocks()
+  constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells, @map_dim_in_blocks, cells) ->
+    @addBlocks()
     if App.options.all_cells
       @addAllCells(cells)
     this.initDragHandler()
     $('#blocks')
-      .width(@block_dim_in_ip * @map_dim_in_blocks)
-      .height(@block_dim_in_ip * @map_dim_in_blocks)
-
-  # initTooltip: () ->
-  #   $('#blocks').mousemove((e) ->
-  #   )
+      .css('height', "#{@block_dim_in_px * @map_dim_in_blocks}px")
+      .css('width', "#{@block_dim_in_px * @map_dim_in_blocks}px")
 
   initDragHandler: () ->
     moving = false
@@ -48,8 +41,6 @@ class Map
           if new_y < min_y
             new_y = min_y
           $('#blocks')
-            .width(@block_dim_in_ip * @map_dim_in_blocks)
-            .height(@block_dim_in_ip * @map_dim_in_blocks)
             .css('top', new_y + 'px')
             .css('left', new_x + 'px')
         false
@@ -75,18 +66,8 @@ class Map
     for block_x in [1..@map_dim_in_blocks]
       for block_y in [1..@map_dim_in_blocks]
         blockClass = 'block'
-        top_pos = block_y * @block_dim_in_px
-        left_pos = block_x * @block_dim_in_px
-        if block_y == 1
-          blockClass += ' block-top'
-          top_pos -= 5
-        if block_y == @map_dim_in_blocks
-          blockClass += ' block-bottom'
-        if block_x == 1
-          blockClass += ' block-left'
-          left_pos -= 5
-        if block_x == @map_dim_in_blocks
-          blockClass += ' block-right'
+        top_pos = (block_y - 1) * @block_dim_in_px
+        left_pos = (block_x - 1) * @block_dim_in_px
         b = $(document.createElement('div'))
           .attr('id', "block_#{block_x}_#{block_y}")
           .addClass(blockClass)

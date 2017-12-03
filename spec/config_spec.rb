@@ -2,7 +2,13 @@ require 'config'
 
 RSpec.describe Config, "test" do
   it 'merging' do
-    expect(YAML.load_file('config/app.yml')['barracs']['cost_time']).to eq(Config['barracs']['cost_time'])
-    expect(YAML.load_file('config/app.default.yml')['barracs']['unit']).to eq(Config['barracs']['unit'])
+    expect(Config['barracs']['cost_time']).to eq(YAML.load_file('app/config/test.yml')['barracs']['cost_time'])
+    expect(Config['barracs']['unit']).to eq(YAML.load_file('app/config/default.yml')['barracs']['unit'])
+    expect(Config['barracs']['cost_time']).to eq(YAML.load_file('app/config/test.yml')['barracs']['cost_time'])
+    expect(Config['BLOCKS_IN_MAP_DIM']).to eq(YAML.load_file('app/config/test.yml')['BLOCKS_IN_MAP_DIM'])
+  end
+
+  it 'enving' do
+    expect(ENV['ORBS_ENV']).to eq('test')
   end
 end

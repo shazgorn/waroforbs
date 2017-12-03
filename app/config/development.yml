@@ -1,0 +1,10 @@
+BLOCKS_IN_MAP_DIM: 3
+barracs:
+  cost_time: 6
+resource:
+  gold:
+    time_to_collect: 1
+  wood:
+    time_to_collect: 3
+  stone:
+    time_to_collect: 5

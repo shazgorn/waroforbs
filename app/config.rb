@@ -28,9 +28,18 @@ class Config
     end
 
     def load_config
-      @@config = YAML.load_file('config/app.default.yml')
-      config = YAML.load_file('config/app.yml')
-      merge(@@config, config)
+      # default is for production
+      @@config = YAML.load_file('app/config/default.yml')
+      env = nil
+      if ENV['ORBS_ENV']
+        env = ENV['ORBS_ENV']
+      elsif ENV['RACK_ENV']
+        env = ENV['RACK_ENV']
+      end
+      if ['test', 'development'].include?(env)
+        config = YAML.load_file("app/config/#{env}.yml")
+        merge(@@config, config)
+      end
       @@config
     end
 

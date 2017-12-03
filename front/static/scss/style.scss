@@ -176,22 +176,6 @@ button {
   width: 100%;
 }
 
-.block-bottom {
-  border-bottom: 5px solid $wooden-color;
-}
-
-.block-left {
-  border-left: 5px solid $wooden-color;
-}
-
-.block-right {
-  border-right: 5px solid $wooden-color;
-}
-
-.block-top {
-  border-top: 5px solid $wooden-color;
-}
-
 #map {
   background-color: $black;
   border: 0;
@@ -207,6 +191,7 @@ button {
 
   .blocks {
     position: absolute;
+    border: 5px solid $wooden-color
   }
 
   .block {
@@ -419,6 +404,14 @@ button {
     display: block;
     margin: .5rem 0;
   }
+}
+
+.unit-id-info {
+  width: 30px;
+}
+
+.unit-xy-info {
+  width: 45px;
 }
 
 .unit-info {

@@ -1,5 +1,8 @@
 *#
 *~
+GPATH
+GRTAGS
+GTAGS
 Gemfile.lock
 *.sass-cache/
 *.css
@@ -8,14 +11,9 @@ img/bg/*
 js/*
 css/*
 doc/*
-GPATH
-GRTAGS
-GTAGS
 data/map.*
-config.yml
 *.pid
 *.log
-app.yml
 thin.yml
 ws_thin.yml
 *.dat
