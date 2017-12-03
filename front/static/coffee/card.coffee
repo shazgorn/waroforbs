@@ -6,10 +6,15 @@
 # In this case it is building box in the town screen
 # Created when new building model is fetched, updated when building model has been changed, etc
 # Call town modal controls via model.controls
+#
+# TODO: Add close button
+
 class BuildingCard
   @create: (building) ->
     switch building.name
-      when "barracs" then building = new BarracsCard(building)
+      when 'barracs' then building = new BarracsCard(building)
+      when 'tavern' then building = new TavernCard(building)
+      else console.error('Unknown building ' + building)
 
   ###
   # @param {Building} building
@@ -62,7 +67,7 @@ class BuildingCard
           .addClass('building-not-built')
         @building_time = @el.find('.building-time')
           .html(building.ttb_string)
-        @close_building()
+        # @close_building() # ???
         if @town_modal
           @remove_open_handler()
         return
@@ -132,13 +137,11 @@ class BuildingCard
           .html(q)
       )
 
-class BarracsCard extends BuildingCard
   remove_building_inner: () ->
     $('.modal-body .modal-building-inner *').remove()
     $('.modal-body .modal-building-actions-inner *').remove()
 
   open_building: () ->
-    # clean up
     @remove_building_inner()
     $('.modal.town .modal-title').html(@town_modal.name + ' - ' + @title)
     for i, action of @actions
@@ -158,19 +161,27 @@ class BarracsCard extends BuildingCard
         .append(
           $(document.createElement('button'))
             .html(action.label)
-            .click(() =>
-              # console.log(action.unit_type)
-              App.hire_squad(action.unit_type)
-            )
+            .click(@action_cb(action))
         )
         .appendTo('.modal.town .modal-building-actions-inner')
-
-  ##
-  # TODO: Add close button
 
   close_building: () ->
     @remove_building_inner()
     if @town_modal
       @town_modal.restore_title
+
+  action_cb: () ->
+    console.error('Override me!')
+
+class BarracsCard extends BuildingCard
+  action_cb: (action) ->
+    () =>
+      App.hire_unit(action.unit_type)
+
+
+class TavernCard extends BuildingCard
+  action_cb: (action) ->
+    () =>
+      App.hire_unit(action.unit_type)
 
 window.BuildingCard = BuildingCard

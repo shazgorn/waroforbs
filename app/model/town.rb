@@ -24,7 +24,7 @@ class Town < Unit
       3 => TownWorker.new(3)
     }
     @buildings = {
-      #:tavern => Tavern.new,
+      :tavern => Tavern.new,
       :barracs => Barracs.new
     }
     @actions = []
@@ -111,8 +111,8 @@ class Town < Unit
     false
   end
 
-  def has_build_barracs?
-    @buildings[:barracs].built?
+  def built?(building)
+    @buildings[building.to_sym].built?
   end
 
   def check_price(cost)

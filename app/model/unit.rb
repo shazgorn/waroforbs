@@ -178,10 +178,6 @@ class Unit
       @@units
     end
 
-    def count
-      @@units.length
-    end
-
     ##
     # select and return object of Unit class with +id+
     # return nil if unit is not found
@@ -214,8 +210,7 @@ class Unit
     end
 
     def select_active_unit user
-      # active ?
-      @@units.values.select{|unit| unit.user_id == user.id && unit.type == :squad}.first
+      @@units.values.select{|unit| unit.user_id == user.id}.first
     end
 
     def place_is_empty?(x, y)

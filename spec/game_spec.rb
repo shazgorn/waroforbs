@@ -151,22 +151,43 @@ RSpec.describe Game, "testing" do
     b_name = 'barracs'
     Celluloid::Actor[:game].build(user, b_name.to_sym)
     Celluloid::Actor[:game].build(user, b_name.to_sym)
+    Celluloid::Actor[:game].build(user, :tavern)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_already_in_progress'))
   end
 
-  it 'is hiring squad', :slow => true do
+  it 'is hiring units', :slow => true do
     user = User.new('hirer')
     town = Town.new(1, 1, user)
     b_name = 'barracs'
+    Celluloid::Actor[:game].hire_unit(user, Config[b_name]['units'].first)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t(b_name.capitalize)))
     town.build(b_name.to_sym)
-    sleep(Config.get(b_name)['cost_time'])
-    expect(Config.get(b_name)['unit']).to eq('swordsman')
-    Celluloid::Actor[:game].hire_squad(user, Config.get(b_name)['unit'])
+    sleep(Config[b_name]['cost_time'])
+    expect(Config[b_name]['units'].include?('swordsman')).to be true
+    Celluloid::Actor[:game].hire_unit(user, Config[b_name]['units'].first)
     expect(Unit.get_by_user(user).length).to eq(2)
     LogBox.get_current_by_user(user)
     wrong_squad_type = 'wrong_squad_type'
-    Celluloid::Actor[:game].hire_squad(user, wrong_squad_type)
+    Celluloid::Actor[:game].hire_unit(user, wrong_squad_type)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unknown_unit', unit_type: wrong_squad_type))
+  end
+
+  it 'hire hero_swordsman', :slow => true do
+    user = User.new('hirer')
+    town = Town.new(1, 1, user)
+    Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t('Tavern')))
+    expect(Unit.get_by_user(user).length).to eq(1)
+    town.build(:tavern)
+    sleep(Config['tavern']['cost_time'])
+    Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t('Barracs')))
+    expect(Unit.get_by_user(user).length).to eq(1)
+    town.build(:barracs)
+    sleep(Config['barracs']['cost_time'])
+    Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
+    expect(Unit.get_by_user(user).length).to eq(2)
+    expect(LogBox.get_current_by_user(user).first.message). to eq(I18n.t('log_entry_new_unit', name: I18n.t('Hero swordsman')))
   end
 
   it 'is renaming unit' do

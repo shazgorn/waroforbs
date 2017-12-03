@@ -132,11 +132,11 @@ class WS
       })
     )
 
-  hire_squad: (unit_type) ->
+  hire_unit: (unit_type) ->
     @socket.send(
       JSON.stringify({
         token: @token,
-        op: 'hire_squad',
+        op: 'hire_unit',
         unit_type: unit_type
       })
     )

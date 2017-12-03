@@ -3,6 +3,7 @@ require 'log_box'
 require 'orb'
 require 'unit'
 require 'swordsman'
+require 'hero_swordsman'
 require 'town'
 require 'monolith'
 require 'map'
@@ -122,7 +123,6 @@ class Game
     return LogBox.error(I18n.t('log_entry_no_unit_to_disband'), user) unless unit
     Unit.delete(unit.id)
     LogBox.spawn(I18n.t('log_entry_unit_disbanded', unit_id: unit_id), user)
-    recalculate_user_actions(user)
   end
 
   def rename_unit(user, unit_id, unit_name)
@@ -130,12 +130,6 @@ class Game
     old_name = unit.name
     unit.name = unit_name
     LogBox.spawn(I18n.t('log_entry_unit_renamed', old_name: old_name, new_name: unit_name), user)
-  end
-
-  def bury(unit)
-    if unit.user
-      recalculate_user_actions(unit.user)
-    end
   end
 
   ##################### CONSTRUCTORS #####################################
@@ -237,35 +231,36 @@ class Game
     xy = get_random_xy
     LogBox.spawn(I18n.t('log_entry_no_empty_cells'), user) unless xy
     unit = Swordsman.new(xy[:x], xy[:y], user)
-    LogBox.spawn(I18n.t('log_entry_new_squad'), user)
+    LogBox.spawn(I18n.t('log_entry_new_unit', name: unit.name), user)
     user.active_unit_id = unit.id
-    recalculate_user_actions(user)
     unit
   end
 
   ##
   # +user+ User
-  # TODO: add squad type :swordsman
+  # +unit_type+ String
 
-  def hire_squad(user, squad_type)
+  def hire_unit(user, unit_type)
     town = Town.get_by_user(user)
-    unless Config['unit_class'][squad_type]
-      LogBox.error(I18n.t('log_entry_unknown_unit', unit_type: squad_type), user)
+    unless Config['unit_class'][unit_type]
+      LogBox.error(I18n.t('log_entry_unknown_unit', unit_type: unit_type), user)
       return
     end
     if town.nil?
       LogBox.error(I18n.t('log_entry_user_has_no_town'), user)
       return
     end
-    unless town.has_build_barracs?
-      LogBox.error(I18n.t('log_entry_barracs_not_build'), user)
-      return
-    end
-    if user.glory < Config.get(squad_type)['cost_glory']
+    Config[unit_type]['required_buildings'].each{|building|
+      unless town.built?(building)
+        LogBox.error(I18n.t('log_entry_building_not_build', building: I18n.t(building.capitalize)), user)
+        return
+      end
+    }
+    if user.glory < Config.get(unit_type)['cost_glory']
       LogBox.error(I18n.t('log_entry_more_glory_required'), user)
       return
     end
-    cost = Config.get(squad_type)['cost_res']
+    cost = Config.get(unit_type)['cost_res']
     if res = town.check_price(cost)
       LogBox.error(res, user)
       return
@@ -276,10 +271,10 @@ class Game
       return
     end
     town.pay_price(cost)
-    user.pay_glory(Config.get(squad_type)['cost_glory'])
-    unit = Module.const_get(Config.get('unit_class')[squad_type]).new(empty_cell[:x], empty_cell[:y], user)
+    user.pay_glory(Config.get(unit_type)['cost_glory'])
+    unit = Module.const_get(Config['unit_class'][unit_type]).new(empty_cell[:x], empty_cell[:y], user)
     user.active_unit_id = unit.id
-    LogBox.spawn(I18n.t("log_entry_new_squad"), user)
+    LogBox.spawn(I18n.t("log_entry_new_unit", name: unit.name), user)
     unit
   end
 
@@ -294,13 +289,12 @@ class Game
   #   end
   # end
 
+  # TODO: check that active unit have settlers
   def settle_town(user, active_unit_id)
-    # replace with action check ?
     return LogBox.error(I18n.t('log_entry_already_have_town'), user) if Town.has_live_town? user
-    unit = Swordsman.get_by_id(active_unit_id)
+    unit = Unit.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
     Town.new(unit.x, unit.y, user)
-    recalculate_user_actions user
     unit.take_res(:settlers, 1)
     LogBox.spawn(I18n.t('log_entry_settle_town'), user)
   end
@@ -512,12 +506,6 @@ class Game
     if d.user
       LogBox.defence(res, d.user)
     end
-    if a.dead?
-      bury(a)
-    end
-    if d.dead?
-      bury(d)
-    end
     res
   end
 
@@ -547,18 +535,6 @@ class Game
     end
     attack(a, d)
   end
-
-  def recalculate_user_actions user
-    has_town = Town.has_any? user
-    has_live_squad = Swordsman.has_any_live? user
-    if has_live_squad && !has_town
-      user.enable_new_town_action
-    elsif !has_live_squad && !has_town
-    else
-      user.disable_new_town_action
-    end
-  end
-
 end
 
 

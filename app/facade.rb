@@ -96,8 +96,8 @@ class Facade
       Celluloid::Actor[:game].spawn_dummy_near(data['x'], data['y'])
     when :spawn_monolith_near
       Celluloid::Actor[:game].spawn_monolith_near(data['x'], data['y'])
-    when :hire_squad
-      Celluloid::Actor[:game].hire_squad(user, data['unit_type'])
+    when :hire_unit
+      Celluloid::Actor[:game].hire_unit(user, data['unit_type'])
     when :disband
       unit_id = data['unit_id']
       Celluloid::Actor[:game].disband user, unit_id

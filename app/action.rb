@@ -46,6 +46,7 @@ end
 
 class NewTownAction < Action
   NAME = :settle_town_action
+
   def initialize(on)
     super(on)
     @name = NAME
@@ -53,14 +54,33 @@ class NewTownAction < Action
   end
 end
 
-class HireSwordsmanAction < Action
+class HireAction < Action
+  def initialize(on)
+    super(on)
+    @label = I18n.t('Hire')
+  end
+end
+
+class HireSwordsmanAction < HireAction
   NAME = 'hire_swordsman_action'
+
   def initialize(on)
     super(on)
     @name = NAME
-    @label = I18n.t('Hire')
     @title = I18n.t('Swordsman')
     @unit_type = 'swordsman'
+    @cost = Config[@unit_type]['cost_res']
+  end
+end
+
+class HireHeroSwordsmanAction < HireAction
+  NAME = 'hire_hero_action'
+
+  def initialize(on)
+    super(on)
+    @name = NAME
+    @title = I18n.t('Hero swordsman')
+    @unit_type = 'hero_swordsman'
     @cost = Config[@unit_type]['cost_res']
   end
 end
