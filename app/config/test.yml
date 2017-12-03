@@ -5,6 +5,6 @@ resource:
   gold:
     time_to_collect: 1
   wood:
-    time_to_collect: 1
+    time_to_collect: 3
   stone:
-    time_to_collect: 1
+    time_to_collect: 5

@@ -637,6 +637,8 @@ button {
 
   .has-worker {
     border-color: $orange;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .worker-cell-tree {
@@ -813,6 +815,21 @@ button {
   }
 }
 
+.card {
+  border: thin solid $wooden-color;
+  padding: .5rem;
+  text-align: center;
+  width: 9rem;
+}
+
+.card-cost {
+  height: 55px;
+}
+
+.cost {
+  display: inline-block;
+}
+
 .modal-body {
   @include clearfix();
   padding: .5rem;
@@ -838,14 +855,6 @@ button {
     text-align: center;
     width: 9rem;
 
-    .building-cost {
-      height: 55px;
-
-      .resource {
-        display: inline-block;
-      }
-    }
-
     &.building-built {
       @include themed-2px();
       a {
@@ -854,7 +863,7 @@ button {
     }
 
     &:not(.building-not-built) {
-      .build-button, .building-cost {
+      .build-button, .card-cost {
 	display: none;
       }
     }

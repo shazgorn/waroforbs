@@ -3,6 +3,7 @@ require 'capybara'
 require 'capybara/rspec'
 # require 'capybara/webkit'
 require 'i18n'
+require 'orb_tick'
 
 module PlayHelper
   def log_in
@@ -19,7 +20,7 @@ module PlayHelper
   end
 
   def settle_town
-    find('.inventory-item-settlers').click()
+    find('.inventory-item.settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
   end
 
@@ -117,7 +118,7 @@ RSpec.describe "Front tests", :js => true do
 
   it "is restarting", :slow => true do
     log_in
-    find('.inventory-item-settlers').click()
+    find('.inventory-item.settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
     find('.unit-info:last-of-type').click()
     find('.own.town.select-target').click()
@@ -125,15 +126,15 @@ RSpec.describe "Front tests", :js => true do
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
     find('.modal.town .building-built #open-screen-barracs').click()
     restart
-    find('.inventory-item-settlers').click()
+    find('.inventory-item.settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
     find('.own.town.select-target').click()
-    expect(page).to have_no_content(I18n.t('Hire squad'))
+    expect(page).to have_no_content(I18n.t('Hire'))
   end
 
   it "is building", :slow => true do
     log_in
-    find('.inventory-item-settlers').click()
+    find('.inventory-item.settlers').click()
     expect(page).to have_content(I18n.t('res_settlers_action_label'))
     click_button(I18n.t('res_settlers_action_label'))
     find('#unit-info-list > .unit-info:last-of-type').click()
@@ -154,7 +155,7 @@ RSpec.describe "Front tests", :js => true do
     first('.worker-cell-mountain').click()
     page.assert_selector('.has-worker.worker-cell-mountain')
     page.assert_selector('.town-inventory-inner .inventory-item', count: 5)
-    sleep(20)
+    sleep(Config['resource']['stone']['time_to_collect'].to_i + OrbTick::TICK_TIME) # stone time_to_collect + tick_interval
     click_button('control_5')
     page.assert_selector('.town-inventory-inner .inventory-item', count: 5)
   end

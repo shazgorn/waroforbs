@@ -52,8 +52,8 @@ class Application
   rename_unit: (id, name) ->
     @ws.rename_unit(id, name)
 
-  hire_squad: () ->
-    @ws.hire_squad()
+  hire_squad: (unit_type) ->
+    @ws.hire_squad(unit_type)
 
   spawn_dummy_near: (x, y) ->
     @ws.spawn_dummy_near(x, y)

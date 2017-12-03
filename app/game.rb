@@ -243,6 +243,10 @@ class Game
 
   def hire_squad(user, squad_type)
     town = Town.get_by_user(user)
+    unless Config['unit_class'][squad_type]
+      LogBox.error(I18n.t('log_entry_unknown_unit', unit_type: squad_type), user)
+      return
+    end
     if town.nil?
       LogBox.error(I18n.t('log_entry_user_has_no_town'), user)
       return

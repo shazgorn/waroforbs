@@ -30,6 +30,7 @@ swordsman:
   initiative: 1
   cost_res:
     gold: 10
+    wood: 1
   cost_glory: 10
 town:
   ap: 0

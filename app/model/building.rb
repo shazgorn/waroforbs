@@ -18,13 +18,12 @@ class Building
     @ttb = nil
     @ttb_string = nil
     @cost_time = nil
-    @cost_res = {
-      :gold => 0,
-      :wood => 0,
-      :stone => 0
-    }
+    @cost_res = nil
     @start_time = nil
     @finish_time = nil
+    @cost_time = Config.get(@name)['cost_time']
+    @cost_res = Config.get(@name)['cost_res']
+    @ttb_string = seconds_to_hm(@cost_time)
   end
 
   def to_hash()
@@ -49,7 +48,7 @@ class Building
 
   def enough_resources? avail_resources
     @cost_res.each{|res_name, res_count|
-      if res_count > 0 && (!avail_resources.has_key?(res_name) || avail_resources[res_name] < res_count)
+      if res_count > 0 && (!avail_resources.has_key?(res_name.to_sym) || avail_resources[res_name.to_sym] < res_count)
         return false
       end
     }
@@ -78,10 +77,7 @@ class Building
   def check_build
     case @status
     when STATE_CAN_BE_BUILT
-      @cost_time = Config.get(@name)['cost_time']
-      @cost_res[:gold] = Config.get(@name)['cost_res']['gold']
-      @cost_res[:wood] = Config.get(@name)['cost_res']['wood']
-      @ttb_string = seconds_to_hm @cost_time
+
     when STATE_IN_PROGRESS
       if Time.now() > @finish_time
         @status = STATE_BUILT
@@ -119,9 +115,9 @@ end
 
 class Tavern < Building
   def initialize
-    super
     @name = 'tavern'
     @title = I18n.t('Tavern')
+    super
   end
 end
 
@@ -129,16 +125,16 @@ class Barracs < Building
   SQUAD_COST = 10
 
   def initialize
-    super
     @name = 'barracs'
     @title = I18n.t('Barracs')
+    super
   end
 
   def actions
     if built?
-      [HireSquadAction.new(true)]
+      [HireSwordsmanAction.new(true)]
     else
-      [HireSquadAction.new(false)]
+      [HireSwordsmanAction.new(false)]
     end
   end
 end

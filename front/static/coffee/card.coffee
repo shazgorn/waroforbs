@@ -32,19 +32,9 @@ class BuildingCard
       .data('id', building.name)
     @building_time = @el.find('.building-time')
       .html(building.ttb_string)
-    @building_cost = @el.find('.building-cost')
+    card_cost = @el.find('.card-cost')
     for res, q of building.cost_res
-      if q
-        $(document.createElement('div'))
-          .addClass('resource')
-          .addClass(res)
-          .attr('title', "#{res} #{q}")
-          .html(
-            $(document.createElement('div'))
-              .addClass('resource-q')
-              .html(q)
-          )
-          .appendTo(@building_cost)
+      @add_cost(res, q).appendTo(card_cost)
     @build = @el.find('.build-button')
     switch building.status
       when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
@@ -131,6 +121,17 @@ class BuildingCard
       1000
     )
 
+  add_cost: (res, q) ->
+    $(document.createElement('div'))
+      .addClass('resource cost')
+      .addClass(res)
+      .attr('title', App.resource_info[res].title + ' ' + q)
+      .html(
+        $(document.createElement('div'))
+          .addClass('resource-q')
+          .html(q)
+      )
+
 class BarracsCard extends BuildingCard
   remove_building_inner: () ->
     $('.modal-body .modal-building-inner *').remove()
@@ -141,12 +142,28 @@ class BarracsCard extends BuildingCard
     @remove_building_inner()
     $('.modal.town .modal-title').html(@town_modal.name + ' - ' + @title)
     for i, action of @actions
-      $(document.createElement('button'))
-        .html(action.label)
-        .appendTo('.modal.town .modal-building-actions-inner')
-        .click(() =>
-          App.hire_squad()
+      $(document.createElement('div'))
+        .addClass('card')
+        .append(
+          $(document.createElement('div'))
+            .html(action.title)
         )
+        .append(
+          $(document.createElement('div'))
+            .addClass('card-cost')
+            .html(
+              @add_cost(res, q) for res, q of action.cost
+            )
+        )
+        .append(
+          $(document.createElement('button'))
+            .html(action.label)
+            .click(() =>
+              # console.log(action.unit_type)
+              App.hire_squad(action.unit_type)
+            )
+        )
+        .appendTo('.modal.town .modal-building-actions-inner')
 
   ##
   # TODO: Add close button

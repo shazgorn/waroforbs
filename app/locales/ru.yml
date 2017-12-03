@@ -1,7 +1,7 @@
 ru:
   Default action: Действие по умолчанию
   New town: Основать город
-  Hire squad: Нанять отряд
+  Hire: Нанять
   Barracs: Казармы
   Tavern: Таверна
   Town: Город
@@ -39,6 +39,7 @@ ru:
   log_entry_unit_killed: Ваш юнит погиб
   log_entry_unit_lost: Ваш юнит погиб
   log_entry_unit_renamed: 'Юнит переименов из %{old_name} в %{new_name}'
+  log_entry_unknown_unit: 'Неизвестный тип юнита %{unit_type}'
   log_entry_user_logged_in: 'Пользователь %{user} вошел'
   log_entry_user_has_no_town: У пользователя нет города
   log_entry_unit_dead: Юнит мертв и никуда не пойдет

@@ -7,13 +7,19 @@ class Action < JSONable
     @on = on
     @label = I18n.t('Default action')
     @name = :default_action
+    @title = nil
+    @cost = nil
+    @unit_type = nil
   end
 
   def to_hash()
     {
       'on' => @on,
       'label' => @label,
-      'name' => @name
+      'name' => @name,
+      'title' => @title,
+      'cost' => @cost,
+      'unit_type' => @unit_type
     }
   end
 
@@ -47,11 +53,14 @@ class NewTownAction < Action
   end
 end
 
-class HireSquadAction < Action
-  NAME = 'hire_squad_action'
+class HireSwordsmanAction < Action
+  NAME = 'hire_swordsman_action'
   def initialize(on)
     super(on)
     @name = NAME
-    @label = I18n.t('Hire squad')
+    @label = I18n.t('Hire')
+    @title = I18n.t('Swordsman')
+    @unit_type = 'swordsman'
+    @cost = Config[@unit_type]['cost_res']
   end
 end

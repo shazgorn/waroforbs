@@ -163,6 +163,10 @@ RSpec.describe Game, "testing" do
     expect(Config.get(b_name)['unit']).to eq('swordsman')
     Celluloid::Actor[:game].hire_squad(user, Config.get(b_name)['unit'])
     expect(Unit.get_by_user(user).length).to eq(2)
+    LogBox.get_current_by_user(user)
+    wrong_squad_type = 'wrong_squad_type'
+    Celluloid::Actor[:game].hire_squad(user, wrong_squad_type)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_unknown_unit', unit_type: wrong_squad_type))
   end
 
   it 'is renaming unit' do
