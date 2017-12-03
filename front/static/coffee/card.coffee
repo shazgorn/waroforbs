@@ -33,13 +33,17 @@ class BuildingCard
     @building_time = @el.find('.building-time')
       .html(building.ttb_string)
     @building_cost = @el.find('.building-cost')
-    for res, count of building.cost_res
-      if count
+    for res, q of building.cost_res
+      if q
         $(document.createElement('div'))
-          .addClass('cost-res')
-          .addClass('cost-res-' + res)
-          .attr('title', "#{res} #{count}")
-          .html(count)
+          .addClass('resource')
+          .addClass(res)
+          .attr('title', "#{res} #{q}")
+          .html(
+            $(document.createElement('div'))
+              .addClass('resource-q')
+              .html(q)
+          )
           .appendTo(@building_cost)
     @build = @el.find('.build-button')
     switch building.status

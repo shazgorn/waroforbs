@@ -72,7 +72,7 @@ class TownInventoryItemView extends View
   create_view: (item) ->
     @el = $(document.createElement('div'))
       .addClass('inventory-res')
-      .addClass('inventory-res-' + item.id)
+      .addClass(item.id)
       .attr('title', item.id + ' ' + item.count)
       .html(item.count)
       .appendTo('.town-inventory-inner')

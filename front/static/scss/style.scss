@@ -80,21 +80,6 @@ $log-width: calc(100% - #{$right-col-width} - 2.5rem);
   width: 10rem;
 }
 
-@mixin res-gold() {
-  background-color: $gold;
-  color: $black;
-}
-
-@mixin res-wood() {
-  background-color: $wood-color;
-  color: $white;
-}
-
-@mixin res-stone() {
-  background-color: $gray;
-  color: $black;
-}
-
 @mixin themed() {
   background-color: $theme-bg;
   border: thin solid $theme-border;
@@ -500,9 +485,6 @@ button {
 .inventory-item {
   border: 2px solid $wooden-color;
   float: left;
-  height: $cell-dimension;
-  margin-right: 3px;
-  width: $cell-dimension;
 }
 
 .unit-inventory-item-action {
@@ -514,7 +496,7 @@ button {
   display: none;
 }
 
-.inventory-item-q {
+.resource-q {
   font-size: .7rem;
   height: 10px;
   position: relative;
@@ -523,23 +505,27 @@ button {
   width: $cell-dimension;
 }
 
-.inventory-item-settlers {
-  background-image: url('/img/settlers.png');
+.resource {
+  background-repeat: no-repeat;
+  height: $cell-dimension;
+  margin-right: 3px;
+  width: $cell-dimension;
 }
 
-.inventory-item-gold {
+.gold {
   background-image: url('/img/gold.png');
 }
 
-.inventory-item-wood {
+.wood {
   background-image: url('/img/wood.png');
 }
 
-.inventory-item-stone {
+.stone {
   background-image: url('/img/stone.png');
 }
 
-.inventory-item-empty {
+.settlers {
+  background-image: url('/img/settlers.png');
 }
 
 #controls-arrows {
@@ -639,10 +625,10 @@ button {
     border: thin solid $wooden-color;
     cursor: pointer;
     display: inline-block;
-    height: $cell-dimension;
-    line-height: $cell-dimension;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
-    width: $cell-dimension;
+    width: 40px;
 
     &.worker-cell-selected {
       border-color: $white;
@@ -716,26 +702,6 @@ button {
     height: 50%;
   }
 
-  .cost-res {
-    display: inline-block;
-    height: 2rem;
-    line-height: 2rem;
-    margin: .3rem 0;
-    min-width: 2rem;
-  }
-
-  .cost-res-gold {
-    @include res-gold();
-  }
-
-  .cost-res-wood {
-    @include res-wood();
-  }
-
-  .cost-res-stone {
-    @include res-stone();
-  }
-
   .workers-list {
     display: flex;
     flex-direction: column;
@@ -779,18 +745,6 @@ button {
       line-height: 3rem;
       min-width: 3rem;
       text-align: center;
-    }
-
-    .inventory-res-gold {
-      @include res-gold();
-    }
-
-    .inventory-res-wood {
-      @include res-wood();
-    }
-
-    .inventory-res-stone {
-      @include res-stone();
     }
   }
 
@@ -885,7 +839,11 @@ button {
     width: 9rem;
 
     .building-cost {
-      height: 3rem;
+      height: 55px;
+
+      .resource {
+        display: inline-block;
+      }
     }
 
     &.building-built {

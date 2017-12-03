@@ -52,12 +52,13 @@ class InventoryView
     $(document.createElement('div'))
       .html(
         $(document.createElement('div'))
-          .addClass('inventory-item-q')
+          .addClass('resource-q')
           .html(q)
       )
       .attr('title', App.resource_info[res].title + ' ' + q)
       .addClass('inventory-item')
-      .addClass('inventory-item-' + res)
+      .addClass('resource')
+      .addClass(res)
       .appendTo(@element)
       .click((e) =>
         e.preventDefault()
@@ -76,6 +77,7 @@ class InventoryView
   add_empty_res: () ->
     $(document.createElement('div'))
       .addClass('inventory-item')
+      .addClass('resource')
       .addClass('inventory-item-empty')
       .appendTo(@element)
 
@@ -84,8 +86,8 @@ class InventoryView
   # @param {int} q - resource quantity
   update_res: (res, q) ->
     @element
-      .find('.inventory-item-' + res)
+      .find('.' + res)
       .attr('title', App.resource_info[res].title + ' ' + q)
-      .find('.inventory-item-q').html(q)
+      .find('.resource-q').html(q)
 
 window.InventoryView = InventoryView
