@@ -28,3 +28,4 @@ node_modules/*
 bin/
 spec/examples.txt
 capybara-*.html
+spec/javascripts/helpers/*.js

@@ -42,7 +42,8 @@ class UnitControls
       App.set_active_unit(unit.id)
     )
     @id.html(unit.id)
-    @inventory_view = new InventoryView(inventory, unit.inventory, inventory_item_description)
+    @inventory_view = new InventoryView(inventory, inventory_item_description)
+    @inventory_view.create_slots(unit.inventory)
     @name.html(unit.name)
     @name.dblclick(() =>
       @name.html('')

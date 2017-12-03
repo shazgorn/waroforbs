@@ -12,9 +12,10 @@ source "https://rubygems.org" do
   gem 'rspec'
   gem 'celluloid'
   gem 'reel'
-  group :test do
+  group :development, :test do
     gem 'capybara'
     # gem 'capybara-webkit', '>=1.14'
     gem 'selenium-webdriver'
+    gem 'jasmine'
   end
 end

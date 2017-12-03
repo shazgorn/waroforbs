@@ -4,10 +4,12 @@
 # @element - DOMElement, container for inventory items
 class InventoryView
   # max_slots may be set by model, more unit lvl - more slots, unclear for now
-  constructor: (@element, new_inventory, @inventory_item_description) ->
+  constructor: (@element, @inventory_item_description) ->
     @max_slots = 5
     @descriptionShown = false
     @res_el = {}
+
+  calc_empty_slots_to_hide: (new_inventory) ->
     empty_slots_to_hide = 0
     for res, q of new_inventory
       @res_el[res] = @add_res(res, q)
@@ -15,10 +17,15 @@ class InventoryView
         empty_slots_to_hide++
       else
         @res_el[res].hide()
-    for f in [1..@max_slots]
-      @add_empty_res()
-    for f in [1..empty_slots_to_hide]
-      @element.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
+    empty_slots_to_hide
+
+  create_slots: (new_inventory) ->
+    empty_slots_to_hide = @calc_empty_slots_to_hide(new_inventory)
+    @add_empty_res() for [@max_slots...0]
+    @hide_empty_slot() for [empty_slots_to_hide...0]
+
+  hide_empty_slot: () ->
+    @element.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
 
   ##
   # Update
