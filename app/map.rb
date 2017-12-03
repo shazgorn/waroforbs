@@ -9,11 +9,12 @@ require 'map_tile'
 
 class Map
   include Celluloid::Internals::Logger
+
   attr_reader :tiles, :blocks
   attr_accessor :ul
 
   CELL_DIM_PX = 32 # how may pixels in one cell (one side)
-  BLOCK_DIM = Config.get('BLOCK_DIM') # how many cells in block (one side)
+  BLOCK_DIM = Config['BLOCK_DIM'] # how many cells in block (one side)
   BLOCK_DIM_PX = CELL_DIM_PX * BLOCK_DIM # how many pixels in one block (one side)
   BLOCKS_IN_MAP_DIM = Config.get('BLOCKS_IN_MAP_DIM')
   MAX_CELL_IDX = BLOCK_DIM * BLOCKS_IN_MAP_DIM

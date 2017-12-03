@@ -2,7 +2,12 @@ require 'yaml'
 
 class Config
   @@config = nil
+
   class << self
+    def[](key)
+      get(key)
+    end
+
     ##
     # +left+ hash, +right+ hash
 
@@ -29,11 +34,11 @@ class Config
       @@config
     end
 
-    def get value
+    def get(key)
       if @@config.nil?
         load_config
       end
-      @@config[value]
+      @@config[key]
     end
   end
 end
