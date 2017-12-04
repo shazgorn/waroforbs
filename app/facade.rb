@@ -79,13 +79,7 @@ class Facade
         user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
       )
     when :attack
-      params = data['params']
-      res = Celluloid::Actor[:game].attack_by_user(
-        user, user.active_unit_id, params['id'].to_i
-      )
-      if res
-        user_data[user_data_key].merge!(res)
-      end
+      Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, data['d_id'].to_i)
     when :settle_town
       Celluloid::Actor[:game].settle_town(user, user.active_unit_id)
     when :build

@@ -1,4 +1,5 @@
 require 'unit'
+require 'single_entity'
 
 class HeroSwordsman < Unit
   include SingleEntity

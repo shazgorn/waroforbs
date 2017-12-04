@@ -315,10 +315,17 @@ button {
 
 .casualties {
   font-weight: bold;
-  left: 4px;
   position: absolute;
   transition: top 3s ease, color 3s ease;
   z-index: 10;
+}
+
+.casualties-0 {
+  left: -10px;
+}
+
+.casualties-1 {
+  left: 10px;
 }
 
 .casualties-start {

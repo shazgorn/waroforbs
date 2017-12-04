@@ -5,19 +5,25 @@ class LogEntry < JSONable
   attr_accessor :user, :type
   attr_reader :message
 
+  def initialize(type, message, user = nil, res = nil)
+    @message = message
+    @type = type
+    @user = user
+    t = Time.now
+    @time = t.strftime("%Y.%m.%d %H:%M:%S")
+    @iso_time = t.iso8601
+    # log detailed information (Result!)
+    @res = res
+  end
+
   def to_hash
     {
       :message => @message,
       :type => @type,
-      :time => @time
+      :time => @time,
+      :iso_time => @iso_time,
+      :res => @res
     }
-  end
-
-  def initialize(type, message, user = nil)
-    @message = message
-    @type = type
-    @user = user
-    @time = Time.now.strftime("%Y.%m.%d %H:%M:%S")
   end
 
   class << self
@@ -43,7 +49,7 @@ class LogEntry < JSONable
       if res[:a_casualties][:killed]
         message += '. ' + I18n.t('log_entry_unit_lost') + '.'
       end
-      self.new(:attack, message, user)
+      self.new(:attack, message, user, res)
     end
 
     def defence(res, user = nil)
@@ -55,7 +61,7 @@ class LogEntry < JSONable
       if res[:d_casualties][:killed]
         message += '. ' + I18n.t('log_entry_unit_lost') + '.'
       end
-      self.new(:defence, message, user)
+      self.new(:defence, message, user, res)
     end
   end
 end

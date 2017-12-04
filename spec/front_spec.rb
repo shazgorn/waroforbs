@@ -109,8 +109,8 @@ RSpec.describe "Front tests", :js => true do
     start_defender_life = defender.find('.life-box').text.to_i
     expect(1..Config.get('MAX_LIFE')).to include(start_defender_life)
     defender.click()
-    defender_wounds = find('.defender-casualties .wounds').text.to_i
-    defender_kills = find('.defender-casualties .kills').text.to_i
+    defender_wounds = find('.casualties-defender .wounds').text.to_i
+    defender_kills = find('.casualties-defender .kills').text.to_i
     defender_casualties = defender_wounds + defender_kills
     defender_life = defender.find('.life-box').text.to_i
     expect(start_defender_life - defender_casualties).to eq(defender_life)

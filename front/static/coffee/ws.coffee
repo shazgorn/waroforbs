@@ -30,6 +30,8 @@ class WS
         if data.logs
           for l in data.logs
             app.log(l)
+            if new Date(l.iso_time) > (new Date() - 1000 * 5) && l.res
+              app.map.casualties(l.res.a_casualties.wounds, l.res.a_casualties.kills, l.res.d_casualties.wounds, l.res.d_casualties.kills, l.res.a_id, l.res.d_id)
         switch data.data_type
           when 'init_map'
             # App init set properties
@@ -52,14 +54,9 @@ class WS
             # App init finished
             app.initialized = true
           when 'units'
-            if data.op == "attack"
-              if data.defender
-                app.map.casualties(data.d_casualties.wounds, data.d_casualties.kills, data.a_casualties.wounds, data.a_casualties.kills, data.d_id, data.a_id, 789, 123)
-              else
-                app.map.casualties(data.a_casualties.wounds, data.a_casualties.kills, data.d_casualties.wounds, data.d_casualties.kills, data.a_id, data.d_id, 123, 789)
             app.update_user_info(data.turn, data.user_glory, data.user_max_glory)
-            app.upcreate_units data.units
-            app.update_user_controls data.actions
+            app.upcreate_units(data.units)
+            app.update_user_controls(data.actions)
             app.attacking = false
           when 'error'
             switch data.error
@@ -85,13 +82,13 @@ class WS
       })
     )
 
-  attack: (unit_id, params) ->
+  attack: (unit_id, d_id) ->
     @socket.send(
       JSON.stringify({
           token: @token,
           unit_id: unit_id,
           op: 'attack',
-          params: params
+          d_id: d_id
       })
     )
 

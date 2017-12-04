@@ -1,5 +1,7 @@
 class Map
   constructor: (@cell_dim_in_px, @block_dim_in_px, @block_dim_in_cells, @map_dim_in_blocks, cells) ->
+    # casualties counter, do not show casualties numbers in one place all at once
+    @casualtiesN = 0
     @addBlocks()
     if App.options.all_cells
       @addAllCells(cells)
@@ -101,12 +103,9 @@ class Map
     for id, cell of cells
       @addCell(cell.x, cell.y)
 
-  applyCasualtiesTo: (cell, wounds, kills, type, timeout) ->
+  applyCasualtiesTo: (cell, wounds, kills, delay, casualtiesN, type) ->
     d = $(document.createElement('span'))
-      .addClass('casualties')
-      .addClass('casualties-start')
-      .addClass("#{type}-casualties")
-      .addClass("#{type}-casualties-start")
+      .addClass("casualties casualties-#{casualtiesN} casualties-start casualties-#{type}")
       .append(
         $(document.createElement('span'))
         .addClass('wounds')
@@ -118,22 +117,19 @@ class Map
         .html(kills)
       )
       .appendTo(cell)
-
-    ###
-    If you apply it instantly it will fuck you up. I do love timeouts anyway...
-    ###
+    # If you apply it instantly it will fuck you up. I do love timeouts anyway...
     setTimeout(() ->
       d
         .removeClass('casualties-start')
         .addClass('casualties-end')
-        .removeClass("#{type}-casualties-start")
-        .addClass("#{type}-casualties-end")
-      setTimeout((() -> d.remove()), 1234)
-    , timeout)
+      setTimeout((() -> d.remove()), 2345)
+    , delay)
 
-  casualties: (a_wounds, a_kills, d_wounds, d_kills, a_id, d_id, a_delay, d_delay) ->
-    @applyCasualtiesTo($("#unit-#{d_id}").parent(), d_wounds, d_kills, 'defender', a_delay)
-    @applyCasualtiesTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 'attacker', d_delay)
+  casualties: (a_wounds, a_kills, d_wounds, d_kills, a_id, d_id) ->
+    @casualtiesN += 1
+    @applyCasualtiesTo($("#unit-#{d_id}").parent(), d_wounds, d_kills, 123, @casualtiesN % 2, 'defender')
+    @applyCasualtiesTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 456, @casualtiesN % 2, 'attacker')
+
 
   center_on_hero: (unit_id) ->
     $unit = $("##{unit_id}")

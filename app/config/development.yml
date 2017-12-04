@@ -1,4 +1,4 @@
-BLOCKS_IN_MAP_DIM: 3
+BLOCKS_IN_MAP_DIM: 1
 barracs:
   cost_time: 1
 tavern:

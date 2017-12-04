@@ -144,7 +144,7 @@ class Application
   attack: (unit) ->
     if !@attacking
       @attacking = true
-      @ws.attack(@active_unit_id, {id: $(unit).data('id')})
+      @ws.attack(@active_unit_id, $(unit).data('id'))
 
   init_user_controls: (actions) ->
     @controls.init_user_controls(actions)
