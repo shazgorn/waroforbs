@@ -148,6 +148,14 @@ class WS
       })
     )
 
+  provoke_dummy_attack: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'provoke_dummy_attack'
+      })
+    )
+
   spawn_monolith_near: (x, y) ->
     @socket.send(
       JSON.stringify({
@@ -155,16 +163,6 @@ class WS
         op: 'spawn_monolith_near',
         x: x,
         y: y
-      })
-    )
-
-  add_squad_to_squad: (squad_id, town_id) ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'add_squad_to_squad',
-        squad_id: squad_id,
-        town_id: town_id
       })
     )
 

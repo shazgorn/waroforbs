@@ -246,9 +246,20 @@ RSpec.describe Game, "testing" do
   it 'testing dummy' do
     x = 3
     y = 3
-    unit = Celluloid::Actor[:game].spawn_dummy_near(x, y)
+    Celluloid::Actor[:game].spawn_dummy_near(x, y)
+    unit = Unit.get_by_user(User.new(Config['DUMMY_LOGIN'])).first
     expect(unit.x).to eq(x - 1)
     expect(unit.x).to eq(y - 1)
-    expect(unit.user.login).to eq(Config.get('DUMMY_LOGIN'))
+    expect(unit.user.login).to eq(Config['DUMMY_LOGIN'])
+  end
+
+  it 'provoke dummy to attack' do
+    user = User.new('defender')
+    x = 5
+    y = 5
+    unit = Swordsman.new(x, y, user)
+    Celluloid::Actor[:game].spawn_dummy_near(x + 1, y + 1)
+    Celluloid::Actor[:game].provoke_dummy_attack()
+    expect(LogBox.get_current_by_user(user).first.type).to eq(:defence)
   end
 end

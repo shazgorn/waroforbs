@@ -439,6 +439,14 @@ class Game
     end
   end
 
+  def provoke_dummy_attack()
+    user = User.new(Config.get('DUMMY_LOGIN'))
+    units = Unit.get_by_user(user)
+    units.each{|unit|
+      attack_adj_cells(unit)
+    }
+  end
+
   def spawn_monolith_near(x, y)
     user = User.new(Config.get('DUMMY_LOGIN'))
     xy = empty_adj_cell_xy(x, y)
@@ -481,15 +489,18 @@ class Game
   end
 
   #################### ATTACK ##################################################
+  ##
+  # a +Unit+
+
   def attack_adj_cells a
     (-1..1).each do |adx|
       (-1..1).each do |ady|
         if !(adx == 0 && ady == 0)
           adj_x = a.x + adx
           adj_y = a.y + ady
-          d = Unit.get_by_xy adj_x, adj_y
+          d = Unit.get_by_xy(adj_x, adj_y)
           if d
-            return attack a, d
+            return attack(a, d)
           end
         end
       end

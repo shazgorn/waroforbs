@@ -59,8 +59,8 @@ class Application
   spawn_dummy_near: (x, y) ->
     @ws.spawn_dummy_near(x, y)
 
-  add_squad_to_squad: (squad_id) ->
-    @ws.add_squad_to_squad(squad_id, @town_controls.last_town)
+  provoke_dummy_attack: () ->
+    @ws.provoke_dummy_attack()
 
   set_worker_to_xy: (town_id, worker_pos, x, y) ->
     @ws.set_worker_to_xy(town_id, worker_pos, x, y)

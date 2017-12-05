@@ -114,6 +114,9 @@ RSpec.describe "Front tests", :js => true do
     defender_casualties = defender_wounds + defender_kills
     defender_life = defender.find('.life-box').text.to_i
     expect(start_defender_life - defender_casualties).to eq(defender_life)
+    sleep(3) # wait for casualties numbers to disappear
+    page.execute_script("App.provoke_dummy_attack();")
+    expect(page).to have_css('.casualties-defender')
   end
 
   it "is restarting", :slow => true do
