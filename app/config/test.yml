@@ -1,8 +1,12 @@
 BLOCKS_IN_MAP_DIM: 1
 barracs:
-  cost_time: 1
+  cost_levels:
+    1:
+      time: 1
 tavern:
-  cost_time: 1
+  cost_levels:
+    1:
+      time: 1
 resource:
   gold:
     time_to_collect: 1

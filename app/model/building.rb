@@ -21,8 +21,9 @@ class Building
     @cost_res = nil
     @start_time = nil
     @finish_time = nil
-    @cost_time = Config.get(@name)['cost_time']
-    @cost_res = Config.get(@name)['cost_res']
+    @level = 0
+    @cost_time = Config[@name]['cost_levels'][1]['time']
+    @cost_res = Config[@name]['cost_levels'][1]['res']
     @ttb_string = seconds_to_hm(@cost_time)
   end
 
@@ -38,6 +39,7 @@ class Building
       'status' => @status,
       'ttb' => @ttb,
       'ttb_string' => @ttb_string,
+      'level' => @level,
       'actions' => actions
     }
   end
