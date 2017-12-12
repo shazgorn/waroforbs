@@ -45,7 +45,7 @@ RSpec.configure do |c|
   c.before(:example) {
     I18n.load_path = Dir[
       File.join('./app/locales', '*.yml'),
-      File.join('./front/config/locales/views', '*.yml')
+      File.join('./front/locales', '*.yml')
     ]
     I18n.default_locale = :ru
   }
@@ -125,7 +125,9 @@ RSpec.describe "Front tests", :js => true do
     click_button(I18n.t('res_settlers_action_label'))
     find('.unit-info:last-of-type').click()
     find('.own.town.select-target').click()
+    find('#build-mode-on').click()
     find('.modal.town .building-card-barracs .build-button').click()
+    find('#build-mode-off').click()
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
     find('.modal.town .building-built #open-screen-barracs').click()
     restart
@@ -142,8 +144,10 @@ RSpec.describe "Front tests", :js => true do
     click_button(I18n.t('res_settlers_action_label'))
     find('#unit-info-list > .unit-info:last-of-type').click()
     find('.own.town.select-target').click()
+    find('#build-mode-on').click()
     expect(page).to have_content(I18n.t('Barracs'))
     find('.modal.town .building-card-barracs .build-button').click()
+    find('#build-mode-off').click()
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
     find('.modal.town .building-built #open-screen-barracs').click()
   end

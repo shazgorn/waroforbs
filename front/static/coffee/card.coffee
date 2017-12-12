@@ -24,66 +24,89 @@ class BuildingCard
     @name = building.name
     @title = building.title
     @actions = building.actions
+    @build_label = building.build_label
     # building container(card) with link, time to build, cost and build button
-    @el = $('.building-card-template')
-      .clone()
-      .addClass("building-card-#{building.name}")
+    @el = $(document.createElement('div'))
+      .addClass("building-card building-card-#{building.name}")
       .attr('id', building.id)
-      .removeClass('building-card-template')
+      .appendTo('#buildings-list')
     # open building link
-    @open_building_button = @el.find('.open-building')
+    @open_building_el = $(document.createElement('a'))
       .html(@title)
       .attr('id', "open-screen-#{building.name}")
       .data('id', building.name)
-    @building_time = @el.find('.building-time')
+      .appendTo(@el)
+    @building_time = $(document.createElement('div'))
+      .addClass('building-time')
       .html(building.ttb_string)
-    card_cost = @el.find('.card-cost')
+      .appendTo(@el)
+    @building_cost = $(document.createElement('div'))
+      .addClass('card-cost')
+      .appendTo(@el)
     for res, q of building.cost_res
-      @add_cost(res, q).appendTo(card_cost)
-    @build = @el.find('.build-button')
+      @add_cost(res, q).appendTo(@building_cost)
+    @build_button = $(document.createElement('button'))
+      .addClass('build-button')
+      .html(@build_label)
+      .appendTo(@el)
     switch building.status
-      when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
-        @build
+      when App.building_states['BUILDING_STATE_GROUND']
+        @build_button
           .click(() =>
             App.build(@name)
           )
         @el
-          .addClass('building-not-built')
+          .addClass('building-ground')
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
         @el
           .addClass('building-in-progress')
-        @start_building_countdown()
-      when App.building_states['BUILDING_STATE_BUILT']
+        # @start_building_countdown()
+      when App.building_states['BUILDING_STATE_COMPLETE'], App.building_states['BUILDING_STATE_CAN_UPGRADE']
         @el
           .addClass('building-built')
+        if building.status == App.building_states['BUILDING_STATE_CAN_UPGRADE']
+          @el.addClass('building-can-upgrade')
+          @build_button
+            .click(() =>
+              App.build(@name)
+            )
 
   update: (building) ->
+    if building.build_label != @build_label
+      @build_button.html(@build_label)
     @actions = building.actions
     switch building.status
-      when App.building_states['BUILDING_STATE_CAN_BE_BUILT']
+      when App.building_states['BUILDING_STATE_GROUND']
         @el
           .removeClass('building-in-progress')
           .removeClass('building-built')
-          .addClass('building-not-built')
-        @building_time = @el.find('.building-time')
-          .html(building.ttb_string)
-        # @close_building() # ???
-        if @town_modal
-          @remove_open_handler()
+          .addClass('building-ground')
+        @building_time.html(building.ttb_string)
+        # @town_modal.close_building() if open_building is current
+        # if @town_modal
+        #   @remove_open_handler()
         return
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
         @el
-          .removeClass('building-not-built')
+          .removeClass('building-ground')
           .addClass('building-in-progress')
           @start_building_countdown()
         @building_time.html(building.ttb_string)
-      when App.building_states['BUILDING_STATE_BUILT']
+      when App.building_states['BUILDING_STATE_COMPLETE'], App.building_states['BUILDING_STATE_CAN_UPGRADE']
         @el
-          .removeClass('building-not-built')
+          .removeClass('building-ground')
           .removeClass('building-in-progress')
           .addClass('building-built')
-        if @town_modal
-          @init_open_handler()
+        if building.status == App.building_states['BUILDING_STATE_CAN_UPGRADE']
+          @el.addClass('building-can-upgrade')
+          @build_button.off('click')
+            .click(() =>
+              App.build(@name)
+            )
+      # if @town_modal
+      #   @init_open_handler()
+
+
 
   ##
   # @param {TownModal} modal
@@ -91,17 +114,16 @@ class BuildingCard
   set_town_modal: (modal, building) ->
     _this = this
     @town_modal = modal
-    if building.status == App.building_states['BUILDING_STATE_BUILT']
-      @init_open_handler()
+    @init_open_handler()
 
   init_open_handler: () ->
-    @el
+    @open_building_el
       .click(() =>
         @open_building()
       )
 
   remove_open_handler: () ->
-    @el
+    @open_building_el
       .off('click')
 
   start_building_countdown: () ->
@@ -137,38 +159,31 @@ class BuildingCard
           .html(q)
       )
 
-  remove_building_inner: () ->
-    $('.modal-body .modal-building-inner *').remove()
-    $('.modal-body .modal-building-actions-inner *').remove()
-
   open_building: () ->
-    @remove_building_inner()
-    $('.modal.town .modal-title').html(@town_modal.name + ' - ' + @title)
+    @town_modal.remove_building_inner()
+    @town_modal.append_title(@title)
+    @town_modal.set_building_description(@name)
     for i, action of @actions
-      $(document.createElement('div'))
-        .addClass('card')
-        .append(
-          $(document.createElement('div'))
-            .html(action.title)
-        )
-        .append(
-          $(document.createElement('div'))
-            .addClass('card-cost')
-            .html(
-              @add_cost(res, q) for res, q of action.cost
-            )
-        )
-        .append(
-          $(document.createElement('button'))
-            .html(action.label)
-            .click(@action_cb(action))
-        )
-        .appendTo('.modal.town .modal-building-actions-inner')
-
-  close_building: () ->
-    @remove_building_inner()
-    if @town_modal
-      @town_modal.restore_title
+      if action.on
+        $(document.createElement('div'))
+          .addClass('card')
+          .append(
+            $(document.createElement('div'))
+              .html(action.title)
+          )
+          .append(
+            $(document.createElement('div'))
+              .addClass('card-cost')
+              .html(
+                @add_cost(res, q) for res, q of action.cost
+              )
+          )
+          .append(
+            $(document.createElement('button'))
+              .html(action.label)
+              .click(@action_cb(action))
+          )
+          .appendTo('.modal.town .modal-building-actions-inner')
 
   action_cb: () ->
     console.error('Override me!')

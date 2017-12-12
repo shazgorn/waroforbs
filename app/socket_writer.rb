@@ -32,9 +32,11 @@ class SocketWriter
         res = user_data
         # user should be inited at this point
         user = game.get_user_by_token(@token)
+        # why not in facade, not in game?
         if user_data[:data_type] == :init_map
           res.merge!(game.init_map(@token))
         end
+        # remove duplication of facade.parse_data and following code
         res[:logs] = game.get_current_logs_by_user(user)
         res[:user_glory] = user.glory
         res[:user_max_glory] = user.max_glory

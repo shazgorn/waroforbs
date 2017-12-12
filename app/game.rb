@@ -170,6 +170,9 @@ class Game
     unit.give_res(:wood, 7)
   end
 
+  ##
+  # user must be initialized
+
   def init_map(token)
     user = get_user_by_token(token)
     {
@@ -214,10 +217,12 @@ class Game
         }
       },
       :building_states => {
-        :BUILDING_STATE_CAN_BE_BUILT => Building::STATE_CAN_BE_BUILT,
+        :BUILDING_STATE_GROUND => Building::STATE_GROUND,
         :BUILDING_STATE_IN_PROGRESS => Building::STATE_IN_PROGRESS,
-        :BUILDING_STATE_BUILT => Building::STATE_BUILT
-      }
+        :BUILDING_STATE_COMPLETE => Building::STATE_COMPLETE,
+        :BUILDING_STATE_CAN_UPGRADE => Building::STATE_CAN_UPGRADE
+      },
+      :building_descriptions => I18n.t('BuildingDescriptions')
     }
   end
 
@@ -304,9 +309,15 @@ class Game
     town = Town.get_by_user user
     return LogBox.error(I18n.t('log_entry_user_has_no_town'), user) if town.nil?
     begin
-      town.build(building_id)
-    rescue BuildingAlreadyInProgress
+      if town.build(building_id)
+        LogBox.spawn(I18n.t('log_entry_construction_started', building: town.get_building_title(building_id)), user)
+      end
+    rescue UnableToComplyBuildingInProgress
       LogBox.error(I18n.t('log_entry_building_already_in_progress'), user)
+    rescue NotEnoughResources
+      LogBox.error(I18n.t('log_entry_not_enough_res', res: ''), user)
+    rescue MaxBuildingLevelReached
+      LogBox.error(I18n.t('log_entry_max_building_level_reached', res: ''), user)
     end
   end
 

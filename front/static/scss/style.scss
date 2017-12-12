@@ -736,8 +736,6 @@ button {
     .worker-stone {
       background-image: url('/img/worker-stone.png');
     }
-
-
   }
 
   .town-inventory.container {
@@ -831,6 +829,28 @@ button {
   display: inline-block;
 }
 
+.build-mode-on {
+  .building-card:not(.building-ground) {
+    display: none;
+  }
+}
+
+.build-mode-off {
+  .build-button, .card-cost {
+    display: none;
+  }
+
+  .building-card {
+    &.building-ground {
+      display: none;
+    }
+
+    &:not(.building-in-progress) .building-time {
+      display: none;
+    }
+  }
+}
+
 .modal-body {
   @include clearfix();
   padding: .5rem;
@@ -863,13 +883,7 @@ button {
       }
     }
 
-    &:not(.building-not-built) {
-      .build-button, .card-cost {
-	display: none;
-      }
-    }
-
-    &.building-not-built {
+    &.building-ground {
       a.open-building,
       .building-time {
 	color: $gray;
@@ -881,12 +895,6 @@ button {
       .building-time {
 	color: $gray;
 	font-style: italic;
-      }
-    }
-
-    &.building-built {
-      .building-time {
-	display: none;
       }
     }
 

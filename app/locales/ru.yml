@@ -1,9 +1,14 @@
 ru:
+  Build: Построить
+  Upgrade: Улучшить
   Default action: Действие по умолчанию
   New town: Основать город
   Hire: Нанять
   Barracs: Казармы
   Tavern: Таверна
+  BuildingDescriptions:
+    barracs: Позволяет нанимать мечников
+    tavern: Позволяет нанимать героев различных типов
   Town: Город
   Swordsman: Мечники
   Hero: Герой
@@ -18,6 +23,7 @@ ru:
   Woodcutter: Лесоруб
   Stonecutter: Каменотёс
   log_entry_already_have_town: У Вас уже есть город
+  log_entry_construction_started: '%{building} - строительство начато'
   log_entry_building_not_build: '%{building} не построены'
   log_entry_building_already_in_progress: Строительство уже идёт
   log_entry_cell_occupied: Клетка занята
@@ -29,6 +35,7 @@ ru:
   log_entry_defender_not_found: Нет юнюта для атаки
   log_entry_defender_already_dead: Атакуемый юнит уже мертв
   log_entry_enemy_unit_killed: Вражеский юнит уничтожен
+  log_entry_max_building_level_reached: Здание максимального уровня
   log_entry_move: "Юнит #%{unit_id} перемещен %{dx}, %{dy} на %{new_x}:%{new_y}"
   log_entry_new_unit: Новый юнит '%{name}' создан
   log_entry_new_user: 'Новый пользователь %{user} создан'

@@ -3,6 +3,8 @@ barracs:
   cost_levels:
     1:
       time: 1
+    2:
+      time: 2
 tavern:
   cost_levels:
     1:

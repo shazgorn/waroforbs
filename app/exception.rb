@@ -4,5 +4,11 @@ end
 class WrongToken < OrbError
 end
 
-class BuildingAlreadyInProgress < OrbError
+class UnableToComplyBuildingInProgress < OrbError
+end
+
+class NotEnoughResources < OrbError
+end
+
+class MaxBuildingLevelReached < OrbError
 end

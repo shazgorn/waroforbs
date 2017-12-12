@@ -41,6 +41,7 @@ class WS
             app.active_unit_id = data.active_unit_id
             app.user_id = data.user_id
             app.building_states = data.building_states
+            app.building_descriptions = data.building_descriptions
             app.resource_info = data.resource_info
             app.MAX_CELL_IDX = data.MAX_CELL_IDX
 

@@ -6,25 +6,34 @@ require 'time_helper'
 class Building
   include TimeHelper
 
-  attr_reader :cost_res, :name
+  attr_reader :cost_res, :name, :status, :level, :title
 
-  STATE_CAN_BE_BUILT = 1
+  STATE_GROUND = 1
   STATE_IN_PROGRESS = 2
-  STATE_BUILT = 3
+  STATE_COMPLETE = 3
+  STATE_CAN_UPGRADE = 4
 
   def initialize
-    @status = STATE_CAN_BE_BUILT
+    @status = STATE_GROUND
+    @build_label = I18n.t('Build')
     # time to build (remaining time)
     @ttb = nil
-    @ttb_string = nil
-    @cost_time = nil
-    @cost_res = nil
     @start_time = nil
     @finish_time = nil
     @level = 0
-    @cost_time = Config[@name]['cost_levels'][1]['time']
-    @cost_res = Config[@name]['cost_levels'][1]['res']
-    @ttb_string = seconds_to_hm(@cost_time)
+    @max_level = Config[@name]['max_level'].to_i
+    init_cost
+  end
+
+  ##
+  # Init cost for next level
+
+  def init_cost
+    if @level + 1 <= @max_level
+      @cost_time = Config[@name]['cost_levels'][@level + 1]['time']
+      @cost_res = Config[@name]['cost_levels'][@level + 1]['res']
+      @ttb_string = seconds_to_hm(@cost_time)
+    end
   end
 
   def to_hash()
@@ -40,6 +49,7 @@ class Building
       'ttb' => @ttb,
       'ttb_string' => @ttb_string,
       'level' => @level,
+      'build_label' => @build_label,
       'actions' => actions
     }
   end
@@ -59,9 +69,11 @@ class Building
 
   ##
   # Start construction
+  # return true if construction started
 
   def build
-    raise BuildingAlreadyInProgress, 'Building already in progress' if @status == STATE_IN_PROGRESS
+    raise UnableToComplyBuildingInProgress if @status == STATE_IN_PROGRESS
+    raise MaxBuildingLevelReached if @level == @max_level
     check_build
     @status = STATE_IN_PROGRESS
     if @cost_time
@@ -73,19 +85,24 @@ class Building
   end
 
   ##
-  # Check if building status can be set to STATE_BUILT from STATE_IN_PROGRESS
+  # Check if building status can be set to STATE_COMPLETE from STATE_IN_PROGRESS
   # should be used on every read action
 
   def check_build
     case @status
-    when STATE_CAN_BE_BUILT
-
     when STATE_IN_PROGRESS
       if Time.now() > @finish_time
-        @status = STATE_BUILT
         @finish_time = nil
         @start_time = nil
         @ttb = nil
+        @level += 1
+        init_cost
+        if @level < @max_level
+          @status = STATE_CAN_UPGRADE
+          @build_label = I18n.t('Upgrade')
+        else
+          @status = STATE_COMPLETE
+        end
       else
         update_ttb
       end
@@ -99,7 +116,7 @@ class Building
 
   def built?
     check_build
-    @status == STATE_BUILT
+    @status == STATE_COMPLETE || @status == STATE_CAN_UPGRADE
   end
 
   def in_progress?
@@ -107,7 +124,8 @@ class Building
   end
 
   def destroy
-    @status = STATE_CAN_BE_BUILT
+    @status = STATE_GROUND
+    @build_label = I18n.t('Build')
   end
 
   def actions

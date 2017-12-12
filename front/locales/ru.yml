@@ -31,11 +31,13 @@ ru:
   Restart: Перезапустить
   Save: Сохранить
   Buildings: Здания
+  Build mode: Режим строительства
+  Quit build mode: Выйти из режима строительства
+  Back: Назад
   Workers: Работники
   Province: Провинция
   Inventory: Инвентарь
   Open: Открыть
-  Build: Построить
   Town: Город
   user_nickname: 'Ник:'
   glory_title: 'ОС:'

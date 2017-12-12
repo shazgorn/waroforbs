@@ -23,13 +23,18 @@ unit_class:
 barracs:
   units:
     - swordsman
-  max_level: 1
+  max_level: 2
   cost_levels:
     1:
       time: 60
       res:
         gold: 20
         wood: 5
+    2:
+      time: 120
+      res:
+        gold: 40
+        wood: 10
 tavern:
   units:
     - hero_swordsman

@@ -96,15 +96,19 @@ class Town < Unit
     @workers[pos]
   end
 
+  def get_building_title(id)
+    @buildings[id].title
+  end
+
   ##
   # +building_id+ - symbol
 
   def build(building_id)
     raise OrbError, "Unknown building '#{building_id}'" unless @buildings[building_id]
     building = @buildings[building_id]
-    raise OrbError, 'Not enough resources' unless building.enough_resources?(@inventory)
-    pay_price(building.cost_res)
+    raise NotEnoughResources unless building.enough_resources?(@inventory)
     if building.build
+      pay_price(building.cost_res)
       update_actions
       return true
     end

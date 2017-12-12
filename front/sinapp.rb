@@ -5,7 +5,7 @@ require 'i18n'
 require 'slim'
 require_relative '../app/config.rb'
 
-I18n.load_path = Dir[File.join(settings.root, 'config/locales/views', '*.yml')]
+I18n.load_path = Dir[File.join(settings.root, 'locales', '*.yml')]
 I18n.default_locale = :ru
 
 set :public_folder, './front/static'

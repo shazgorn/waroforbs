@@ -4,7 +4,7 @@ RSpec.configure do |c|
   c.before(:example) {
     I18n.load_path = Dir[
       File.join('./app/locales', '*.yml'),
-      File.join('./front/config/locales/views', '*.yml')
+      File.join('./front/locales', '*.yml') # do not remove me
     ]
     I18n.default_locale = :ru
   }
@@ -36,6 +36,12 @@ RSpec.describe Game, "testing" do
     units = Unit.get_by_user(user)
     expect(units.size).to eq(1)
     expect(units.first.inventory[:settlers]).to eq(1)
+  end
+
+  it 'init map' do
+    Celluloid::Actor[:game].init_user(token)
+    hash = Celluloid::Actor[:game].init_map(token)
+    expect(hash).to be_a(Hash)
   end
 
   context "is moving" do
@@ -150,9 +156,10 @@ RSpec.describe Game, "testing" do
     Town.new(1, 1, user)
     b_name = 'barracs'
     Celluloid::Actor[:game].build(user, b_name.to_sym)
+    LogBox.get_current_by_user(user) # clean building started
     Celluloid::Actor[:game].build(user, b_name.to_sym)
-    Celluloid::Actor[:game].build(user, :tavern)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_already_in_progress'))
+    Celluloid::Actor[:game].build(user, :tavern)
   end
 
   it 'is hiring units', :slow => true do

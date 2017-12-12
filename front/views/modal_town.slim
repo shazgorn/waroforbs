@@ -5,11 +5,15 @@
       a.close-modal href="#"
         | X
   .modal-body
+    #building-description.modal-building-description
     .modal-building-inner
     .modal-building-actions-inner
     .buildings.container
       .buildings-title = t('Buildings')
-      .buildings-inner
+      #buildings-inner.buildings-inner
+        #buildings-list.buildings-list
+        #build-mode-on.building-card = t('Build mode')
+        #build-mode-off.building-card.building-ground = t('Quit build mode')
     .modal-town-actions.container
       .modal-town-actions-title = t('Quick actions')
       .modal-town-actions-inner
