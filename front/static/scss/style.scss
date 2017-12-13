@@ -830,7 +830,7 @@ button {
 }
 
 .build-mode-on {
-  .building-card:not(.building-ground) {
+  .building-in-progress, .building-built {
     display: none;
   }
 }
@@ -876,7 +876,7 @@ button {
     text-align: center;
     width: 9rem;
 
-    &.building-built {
+    &.building-built, &.building-can-upgrade {
       @include themed-2px();
       a {
 	color: $theme-color;

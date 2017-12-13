@@ -55,21 +55,18 @@ class BuildingCard
           .click(() =>
             App.build(@name)
           )
-        @el
-          .addClass('building-ground')
+        @el.addClass('building-ground')
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
-        @el
-          .addClass('building-in-progress')
+        @el.addClass('building-in-progress')
         # @start_building_countdown()
-      when App.building_states['BUILDING_STATE_COMPLETE'], App.building_states['BUILDING_STATE_CAN_UPGRADE']
-        @el
-          .addClass('building-built')
-        if building.status == App.building_states['BUILDING_STATE_CAN_UPGRADE']
-          @el.addClass('building-can-upgrade')
-          @build_button
-            .click(() =>
-              App.build(@name)
-            )
+      when App.building_states['BUILDING_STATE_COMPLETE']
+        @el.addClass('building-built')
+      when App.building_states['BUILDING_STATE_CAN_UPGRADE']
+        @el.addClass('building-can-upgrade')
+        @build_button
+          .click(() =>
+            App.build(@name)
+          )
 
   update: (building) ->
     if building.build_label != @build_label
@@ -87,26 +84,29 @@ class BuildingCard
         #   @remove_open_handler()
         return
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
+        @build_button.off('click')
         @el
           .removeClass('building-ground')
           .addClass('building-in-progress')
           @start_building_countdown()
         @building_time.html(building.ttb_string)
-      when App.building_states['BUILDING_STATE_COMPLETE'], App.building_states['BUILDING_STATE_CAN_UPGRADE']
+      when App.building_states['BUILDING_STATE_COMPLETE']
+        @build_button.off('click')
         @el
           .removeClass('building-ground')
           .removeClass('building-in-progress')
           .addClass('building-built')
-        if building.status == App.building_states['BUILDING_STATE_CAN_UPGRADE']
-          @el.addClass('building-can-upgrade')
-          @build_button.off('click')
-            .click(() =>
-              App.build(@name)
-            )
+      when App.building_states['BUILDING_STATE_CAN_UPGRADE']
+        @el
+          .removeClass('building-ground')
+          .removeClass('building-in-progress')
+          .addClass('building-can-upgrade')
+        @build_button
+          .click(() =>
+            App.build(@name)
+          )
       # if @town_modal
       #   @init_open_handler()
-
-
 
   ##
   # @param {TownModal} modal

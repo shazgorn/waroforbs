@@ -19,7 +19,6 @@ class TownModal
     @inventory_view.create_slots(town.inventory)
     @building_description = $('#building-description')
     @buildings_inner = @el.find('#buildings-inner')
-    # @buildings_el = $('#buildings-list')
     @buildings_inner
       .addClass('build-mode-off')
     $('#build-mode-on').click(() =>
