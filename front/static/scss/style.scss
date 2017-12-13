@@ -904,3 +904,12 @@ button {
     }
   }
 }
+
+.sticky-footer {
+  bottom: 8px;
+  color: #333;
+  font-size: small;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
