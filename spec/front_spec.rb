@@ -129,7 +129,7 @@ RSpec.describe "Front tests", :js => true do
     find('.modal.town .building-card-barracs .build-button').click()
     find('#build-mode-off').click()
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
-    find('.modal.town .building-built #open-screen-barracs').click()
+    find('.modal.town .building-can-upgrade #open-screen-barracs').click()
     restart
     find('.inventory-item.settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
@@ -149,7 +149,7 @@ RSpec.describe "Front tests", :js => true do
     find('.modal.town .building-card-barracs .build-button').click()
     find('#build-mode-off').click()
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
-    find('.modal.town .building-built #open-screen-barracs').click()
+    find('.modal.town .building-can-upgrade #open-screen-barracs').click()
   end
 
   it "is testing workers", :slow => true do
