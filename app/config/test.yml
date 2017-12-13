@@ -9,10 +9,3 @@ tavern:
   cost_levels:
     1:
       time: 1
-resource:
-  gold:
-    time_to_collect: 1
-  wood:
-    time_to_collect: 3
-  stone:
-    time_to_collect: 5

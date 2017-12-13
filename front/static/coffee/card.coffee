@@ -37,7 +37,6 @@ class BuildingCard
       .attr('id', "open-screen-#{building.name}")
       .data('id', building.name)
       .appendTo(@el)
-    console.log(@level)
     if @level > 1
       $(document.createElement('span'))
         .html(' [' + @level + ']')

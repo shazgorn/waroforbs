@@ -42,7 +42,8 @@ class TownWorker
     @type = res_type
     @profession = I18n.t(Config.get('resource')[@type.to_s]['profession'])
     @res_title = I18n.t(res_type)
-    @ttc = Config.get('resource')[@type.to_s]['time_to_collect'] * distance
+    res_info = Config.get('resource')[@type.to_s]
+    @ttc = res_info['production_time'] + res_info['delivery_time'] * distance
     @start_time = Time.now
     @finish_time = @start_time + @ttc
   end

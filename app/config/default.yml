@@ -76,11 +76,17 @@ town:
   radius: 3
 resource:
   gold:
-    time_to_collect: 10
+    production_building: factory
+    production_time: 10
+    delivery_time: 0
     profession: Peon
   wood:
-    time_to_collect: 30
+    production_building: sawmill
+    production_time: 30
+    delivery_time: 1
     profession: Woodcutter
   stone:
-    time_to_collect: 50
+    production_building: quarry
+    production_time: 50
+    delivery_time: 2
     profession: Stonecutter

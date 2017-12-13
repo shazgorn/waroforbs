@@ -2,6 +2,7 @@
 # Town province
 class Province
   constructor: (@workers, @town_x, @town_y, @town_id, @town_title, @town_radius) ->
+    console.log(@workers)
     # id => cell
     @selected_worker = null
     @cells = {}

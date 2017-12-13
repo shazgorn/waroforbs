@@ -6,7 +6,7 @@ RSpec.describe Building, "#testing" do
     Tavern.new
   end
 
-  it 'building' do
+  it 'building', :slow => true do
     b = Barracs.new
     level = 0
     b.build

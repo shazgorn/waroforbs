@@ -162,6 +162,7 @@ class Map
   end
 
   def adj_cells?(x1, y1, x2, y2)
+    info "#{x1},#{y1} #{x2},#{y2}"
     (-1..1).include?(x1 - x2) && (-1..1).include?(y1 - y2)
   end
 
