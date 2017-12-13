@@ -24,6 +24,7 @@ class BuildingCard
     @name = building.name
     @title = building.title
     @actions = building.actions
+    @level = building.level
     @build_label = building.build_label
     # building container(card) with link, time to build, cost and build button
     @el = $(document.createElement('div'))
@@ -36,6 +37,11 @@ class BuildingCard
       .attr('id', "open-screen-#{building.name}")
       .data('id', building.name)
       .appendTo(@el)
+    console.log(@level)
+    if @level > 1
+      $(document.createElement('span'))
+        .html(' [' + @level + ']')
+        .appendTo(@open_building_el)
     @building_time = $(document.createElement('div'))
       .addClass('building-time')
       .html(building.ttb_string)
