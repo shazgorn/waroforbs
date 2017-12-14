@@ -78,7 +78,7 @@ class Town < Unit
     # w_at_xy = get_worker_at(x, y)
     # raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
     # raise OrbError, "No free workers" if worker.nil?
-    if worker && worker.x != x && worker.y != y
+    if worker && (worker.x != x || worker.y != y)
       worker.x = x
       worker.y = y
       # reset mining process only if coordinates are differ

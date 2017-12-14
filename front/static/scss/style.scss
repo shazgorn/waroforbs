@@ -727,6 +727,19 @@ button {
       }
     }
 
+    .worker-timebar-container {
+      background-color: $yellow;
+      height: 2px;
+      width: 100px;
+    }
+
+    .worker-timebar {
+      background-color: $red;
+      height: 2px;
+      transition: width 1s;
+      z-index: 22;
+    }
+
     .worker-gold {
       background-image: url('/img/worker-gold.png');
     }

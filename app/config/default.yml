@@ -77,16 +77,16 @@ town:
 resource:
   gold:
     production_building: factory
-    production_time: 10
+    production_time: 100
     delivery_time: 0
     profession: Peon
   wood:
     production_building: sawmill
-    production_time: 30
-    delivery_time: 10
+    production_time: 300
+    delivery_time: 100
     profession: Woodcutter
   stone:
     production_building: quarry
-    production_time: 50
-    delivery_time: 20
+    production_time: 500
+    delivery_time: 200
     profession: Stonecutter
