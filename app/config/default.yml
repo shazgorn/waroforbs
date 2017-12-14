@@ -83,10 +83,10 @@ resource:
   wood:
     production_building: sawmill
     production_time: 30
-    delivery_time: 1
+    delivery_time: 10
     profession: Woodcutter
   stone:
     production_building: quarry
     production_time: 50
-    delivery_time: 2
+    delivery_time: 20
     profession: Stonecutter

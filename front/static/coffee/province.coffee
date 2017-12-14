@@ -2,7 +2,6 @@
 # Town province
 class Province
   constructor: (@workers, @town_x, @town_y, @town_id, @town_title, @town_radius) ->
-    console.log(@workers)
     # id => cell
     @selected_worker = null
     @cells = {}
@@ -106,14 +105,33 @@ class Province
 
   draw_workers: () ->
     for pos, w of @workers
-      $w = $(document.createElement('span'))
+      $w = $(document.createElement('div'))
         .attr('id', "worker-#{w.pos}")
         .addClass('worker')
         .addClass('worker-' + w.type)
         .attr('title', w.profession)
+      $winfo = $(document.createElement('div'))
+        .addClass('worker-info')
+        .append(
+          $(document.createElement('span'))
+            .attr('id', "worker-#{pos}-info-production-time")
+            .html(w.production_time),
+          $(document.createTextNode('/')),
+          $(document.createElement('span'))
+            .attr('id', "worker-#{pos}-info-delivery-time")
+            .html(w.delivery_time)
+          $(document.createTextNode('/')),
+          $(document.createElement('span'))
+            .attr('id', "worker-#{pos}-info-total-time")
+            .html(w.total_time)
+        )
+      $wr = $(document.createElement('div'))
+        .addClass('worker-row')
         .appendTo('.workers-list')
-        do (w, $w) =>
-          $w.click(@select_worker_handler(w.pos, $w))
+        .append($w)
+        .append($winfo)
+      do (w, $w) =>
+        $w.click(@select_worker_handler(w.pos, $w))
 
   update: (workers, town_title) ->
     if @town_title != town_title
@@ -131,10 +149,15 @@ class Province
           @cells[@workers[w.pos].x][@workers[w.pos].y].el
             .removeClass('has-worker')
             .removeClass('worker-cell-selected')
-        @workers[w.pos] = w
+        @workers[w.pos].x = w.x
+        @workers[w.pos].y = w.y
         @cells[@workers[w.pos].x][@workers[w.pos].y].el.addClass('has-worker')
         @cells[@workers[w.pos].x][@workers[w.pos].y].worker = w
         if w.pos == @selected_worker
           @cells[@workers[w.pos].x][@workers[w.pos].y].el.addClass('worker-cell-selected')
+      for time in ['production', 'delivery', 'total']
+        if w["#{time}_time"] != @workers[w.pos]["#{time}_time"]
+          $("#worker-#{pos}-info-#{time}-time").html(w["#{time}_time"])
+      @workers[w.pos] = w
 
 window.Province = Province

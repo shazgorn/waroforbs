@@ -78,14 +78,14 @@ class Town < Unit
     # w_at_xy = get_worker_at(x, y)
     # raise OrbError, "Worker is already on #{x}, #{y}" if w_at_xy
     # raise OrbError, "No free workers" if worker.nil?
-    if worker
+    if worker && worker.x != x && worker.y != y
       worker.x = x
       worker.y = y
       # reset mining process only if coordinates are differ
       # Send worker mining gold if he is doing nothing
       # thats bogus!
       # why there can be no type?
-      # if type  && worker.type != type
+      # if type && worker.type != type
       worker.start_res_collection(type, max_diff(@x, @y, x, y))
       # end
     end

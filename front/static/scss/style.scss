@@ -709,15 +709,17 @@ button {
     display: flex;
     flex-direction: column;
 
-    .worker {
-      border: thin solid $theme-border;
-      display: inline-block;
-      margin-right: .5rem;
+    .worker-row {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 1rem;
     }
 
     .worker {
+      border: thin solid $theme-border;
       cursor: pointer;
       height: $cell-dimension;
+      margin-right: .5rem;
       width: $cell-dimension;
 
       &.worker-selected {
