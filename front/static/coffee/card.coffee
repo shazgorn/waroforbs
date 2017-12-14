@@ -74,27 +74,28 @@ class BuildingCard
           )
 
   update: (building) ->
-    if building.build_label != @build_label
+    if @build_label != building.build_label
+      @build_label = building.build_label
       @build_button.html(@build_label)
     @actions = building.actions
     switch building.status
       when App.building_states['BUILDING_STATE_GROUND']
+        @building_time.html(building.ttb_string)
         @el
           .removeClass('building-in-progress')
           .removeClass('building-built')
           .addClass('building-ground')
-        @building_time.html(building.ttb_string)
         # @town_modal.close_building() if open_building is current
         # if @town_modal
         #   @remove_open_handler()
         return
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
+        @building_time.html(building.ttb_string)
         @build_button.off('click')
         @el
           .removeClass('building-ground')
           .addClass('building-in-progress')
           @start_building_countdown()
-        @building_time.html(building.ttb_string)
       when App.building_states['BUILDING_STATE_COMPLETE']
         @build_button.off('click')
         @el
@@ -102,6 +103,7 @@ class BuildingCard
           .removeClass('building-in-progress')
           .addClass('building-built')
       when App.building_states['BUILDING_STATE_CAN_UPGRADE']
+        @building_time.html(building.ttb_string)
         @el
           .removeClass('building-ground')
           .removeClass('building-in-progress')
