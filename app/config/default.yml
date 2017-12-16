@@ -82,10 +82,11 @@ sawmill:
         gold: 5
         wood: 2
     2:
-      time: 20
+      time: + 10
       res:
-        gold: 10
-        wood: 4
+        gold: + 10
+        wood: + 4
+        stone: + 2
 quarry:
   resource: stone
   max_level: 10
@@ -98,8 +99,8 @@ quarry:
     2:
       time: 20
       res:
-        gold: 10
-        wood: 4
+        gold: + 10
+        wood: + 4
 swordsman:
   required_buildings:
     - barracs

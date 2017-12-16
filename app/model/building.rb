@@ -1,4 +1,5 @@
 require 'time_helper'
+require 'cost_parser'
 
 # status = 0 can be built
 # status = 1 in progress
@@ -30,8 +31,9 @@ class Building
 
   def init_cost
     if @level + 1 <= @max_level
-      @cost_time = Config[@name]['cost_levels'][@level + 1]['time']
-      @cost_res = Config[@name]['cost_levels'][@level + 1]['res']
+      cost = CostParser.find_cost(@name, @level + 1)
+      @cost_time = cost['time']
+      @cost_res = cost['res']
       @ttb_string = seconds_to_hm(@cost_time)
     end
   end

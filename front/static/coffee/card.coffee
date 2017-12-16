@@ -41,10 +41,7 @@ class BuildingCard
       .attr('id', "open-screen-#{building.name}")
       .data('id', building.name)
       .appendTo(@el)
-    if @level > 1
-      $(document.createElement('span'))
-        .html(' [' + @level + ']')
-        .appendTo(@open_building_el)
+    @update_building_level(building.level)
     @building_time = $(document.createElement('div'))
       .addClass('building-time')
       .html(building.ttb_string)
@@ -77,11 +74,23 @@ class BuildingCard
             App.build(@name)
           )
 
+  update_building_level: (level) ->
+    if level != @level
+      @level = level
+    if @level > 1
+      unless @building_level_el
+        @building_level_el = $(document.createElement('span'))
+          .appendTo(@open_building_el)
+      @building_level_el
+        .html(' [' + @level + ']')
+
   update: (building) ->
+    @update_building_level(building.level)
     if @build_label != building.build_label
       @build_label = building.build_label
       @build_button.html(@build_label)
     @actions = building.actions
+    @status = building.status
     switch building.status
       when App.building_states['BUILDING_STATE_GROUND']
         @building_time.html(building.ttb_string)
@@ -112,6 +121,7 @@ class BuildingCard
           .removeClass('building-ground')
           .removeClass('building-in-progress')
           .addClass('building-can-upgrade')
+        @build_button.off('click')
         @build_button
           .click(() =>
             App.build(@name)
@@ -141,12 +151,14 @@ class BuildingCard
     clearInterval(@interval)
     @interval = setInterval(
       () =>
+        if @status != App.building_states['BUILDING_STATE_IN_PROGRESS']
+          clearInterval(@interval)
+          return
         ms = @building_time.html().split(':')
         m = ms[0] * 1
         s = ms[1] * 1
         if s == 0
           if m == 0
-            clearInterval(@interval)
             App.fetch()
             return
           s = 59
