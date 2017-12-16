@@ -1,12 +1,15 @@
+require 'building_container'
+
 class TownWorker
   attr_reader :type
-  attr_accessor :x, :y
+  attr_accessor :x, :y, :total_time, :remaining_time
 
   ##
   # Worker position in province 1,2,3. Show worker in province bar and select which workers goes where
 
-  def initialize(pos)
+  def initialize(pos, bc)
     @pos = pos
+    @bc = bc
     @x = nil
     @y = nil
     # collecting resource type
@@ -20,7 +23,7 @@ class TownWorker
     # production + delivery time
     @total_time = nil
     @remaining_time = nil
-    start_res_collection
+    @distance = nil
   end
 
   def to_hash()
@@ -45,21 +48,26 @@ class TownWorker
   end
 
   ##
-  # TODO: Reset time on building upgrade
+  # Recalculate time after every resource collection
+  # because buildings can be upgraded, no hard work i think
 
-  def start_res_collection(res_type = :gold, distance = 1, production_building_level = 0, roads_level = 0)
-    raise OrbError, 'res_type is nil' if res_type.nil?
+  def start_res_collection(res_type, distance)
     @type = res_type
-    @profession = I18n.t(Config.get('resource')[@type.to_s]['profession'])
+    @distance = distance
     @res_title = I18n.t(res_type)
-    res_info = Config.get('resource')[@type.to_s]
-    @production_time = (res_info['production_time'] * (100 - production_building_level) / 100).to_i
-    @delivery_time = (res_info['delivery_time'] * distance * (100 - roads_level) / 100).to_i
+    @profession = I18n.t(Config['resource'][@type.to_s]['profession'])
+    @res_info = Config['resource'][@type.to_s]
+    # TODO: max_level + 1 - production_level
+    @production_time = @res_info['production_time'] * (11 - @bc.get_levels(@type)[0])
+    @delivery_time = @res_info['delivery_time'] * @distance * (11 - @bc.get_levels(@type)[1])
     @total_time = @production_time + @delivery_time
     @start_time = Time.now
     @finish_time = @start_time + @total_time
     @remaining_time = @total_time
   end
+
+  ##
+  # deprecated
 
   def clear
     @x = @y = nil
@@ -67,13 +75,13 @@ class TownWorker
   end
 
   # check if it`s time to collect sto^Wresource
-  def check_res
+  def collect_res
     if @finish_time && Time.now > @finish_time
-      @finish_time += @total_time
-      return true
-    else
-      @remaining_time = @finish_time - Time.now
+      start_res_collection(@type, @distance)
+      return 1
     end
-    return false
+    # what if tick is less ?
+    @remaining_time = @finish_time - Time.now
+    0
   end
 end

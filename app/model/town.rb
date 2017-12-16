@@ -18,14 +18,22 @@ class Town < Unit
 
   def initialize(x, y, user)
     super(TYPE, x, y, user)
-    @workers = {
-      1 => TownWorker.new(1),
-      2 => TownWorker.new(2),
-      3 => TownWorker.new(3)
-    }
     @buildings = {
       :tavern => Tavern.new,
-      :barracs => Barracs.new
+      :barracs => Barracs.new,
+      :roads => Roads.new,
+      :factory => Factory.new,
+      :sawmill => Sawmill.new,
+      :quarry => Quarry.new
+    }
+    bc = BuildingContainer.new(@buildings)
+    @workers = {
+      1 => TownWorker.new(1, bc),
+      2 => TownWorker.new(2, bc),
+      3 => TownWorker.new(3, bc)
+    }
+    @workers.each_value{|w|
+      w.start_res_collection(:gold, 0)
     }
     @actions = []
     @adj_companies = []
@@ -33,7 +41,7 @@ class Town < Unit
     @inventory[:gold] = 300
     @inventory[:wood] = 50
     @name = I18n.t('Town')
-    @radius = Config.get('town')['radius'].to_i
+    @radius = Config['town']['radius'].to_i
   end
 
   ##
@@ -67,11 +75,12 @@ class Town < Unit
   def tick
     super
     @workers.each_value{|worker|
-      if worker.check_res
-        @inventory[worker.type] += 1
-      end
+      @inventory[worker.type.to_sym] += worker.collect_res
     }
   end
+
+  ##
+  # {type} - symbol
 
   def set_worker_to(pos, x, y, type)
     worker = get_worker_by_pos(pos)
@@ -101,6 +110,7 @@ class Town < Unit
   end
 
   ##
+  # Start construction
   # +building_id+ - symbol
 
   def build(building_id)

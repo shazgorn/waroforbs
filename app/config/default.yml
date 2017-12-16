@@ -45,6 +45,61 @@ tavern:
       res:
         gold: 10
         wood: 10
+roads:
+  max_level: 10
+  cost_levels:
+    1:
+      time: 4
+      res:
+        gold: 5
+        wood: 2
+    2:
+      time: 20
+      res:
+        gold: 10
+        wood: 4
+factory:
+  resource: gold
+  max_level: 10
+  cost_levels:
+    1:
+      time: 4
+      res:
+        gold: 5
+        wood: 2
+    2:
+      time: 20
+      res:
+        gold: 10
+        wood: 4
+sawmill:
+  resource: wood
+  max_level: 10
+  cost_levels:
+    1:
+      time: 4
+      res:
+        gold: 5
+        wood: 2
+    2:
+      time: 20
+      res:
+        gold: 10
+        wood: 4
+quarry:
+  resource: stone
+  max_level: 10
+  cost_levels:
+    1:
+      time: 4
+      res:
+        gold: 5
+        wood: 2
+    2:
+      time: 20
+      res:
+        gold: 10
+        wood: 4
 swordsman:
   required_buildings:
     - barracs
@@ -77,16 +132,24 @@ town:
 resource:
   gold:
     production_building: factory
-    production_time: 100
+    production_time: 1
     delivery_time: 0
     profession: Peon
   wood:
     production_building: sawmill
-    production_time: 300
-    delivery_time: 100
+    production_time: 3
+    delivery_time: 1
     profession: Woodcutter
   stone:
     production_building: quarry
-    production_time: 500
-    delivery_time: 200
+    production_time: 5
+    delivery_time: 2
     profession: Stonecutter
+terrain_move_cost:
+  grass: 1
+  tree: 2
+  mountain: 3
+terrain_to_res:
+  grass: gold
+  tree: wood
+  mountain: stone

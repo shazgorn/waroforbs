@@ -14,6 +14,10 @@ class BuildingCard
     switch building.name
       when 'barracs' then building = new BarracsCard(building)
       when 'tavern' then building = new TavernCard(building)
+      when 'roads' then building = new RoadsCard(building)
+      when 'factory' then building = new FactoryCard(building)
+      when 'sawmill' then building = new SawmillCard(building)
+      when 'quarry' then building = new QuarryCard(building)
       else console.error('Unknown building ' + building)
 
   ###
@@ -205,5 +209,13 @@ class TavernCard extends BuildingCard
   action_cb: (action) ->
     () =>
       App.hire_unit(action.unit_type)
+
+class RoadsCard extends BuildingCard;
+
+class FactoryCard extends BuildingCard;
+
+class SawmillCard extends BuildingCard;
+
+class QuarryCard extends BuildingCard;
 
 window.BuildingCard = BuildingCard

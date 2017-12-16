@@ -9,6 +9,12 @@ require 'monolith'
 require 'map'
 require 'user'
 require 'building'
+require 'tavern'
+require 'barracs'
+require 'roads'
+require 'factory'
+require 'sawmill'
+require 'quarry'
 require 'cli'
 require 'squad_attack'
 require 'attack'
@@ -321,27 +327,15 @@ class Game
     end
   end
 
-  TER2RES = {
-    :grass => :gold,
-    :tree => :wood,
-    :mountain => :stone
-  }
-
   def set_worker_to_xy(user, town_id, worker_pos, x, y)
     town = Town.get_by_user user
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless town.in_radius?(x, y)
-    type = TER2RES[@map.cell_type_at(x, y)]
+    type = Config['terrain_to_res'][@map.cell_type_at(x, y).to_s]
     raise OrbError, "No resource type for map tile #{x}, #{y}" if type.nil?
     town.set_worker_to(worker_pos, x, y, type)
   end
-
-  TYPE2COST = {
-    :grass => 1,
-    :tree => 2,
-    :mountain => 3
-  }
 
   ##
   # unit - Unit
@@ -355,7 +349,7 @@ class Game
     new_y = unit.y + dy
     return LogBox.error(I18n.t('log_entry_out_of_map'), unit.user) unless @map.has?(new_x, new_y)
     type = @map.cell_type_at(new_x, new_y)
-    cost = TYPE2COST[type]
+    cost = Config['terrain_move_cost'][type.to_s].to_i
     return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
     u = Unit.get_by_xy(new_x, new_y)
     if u && u.alive? && u.not_enterable_for(unit)

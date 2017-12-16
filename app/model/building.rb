@@ -132,35 +132,3 @@ class Building
     []
   end
 end
-
-class Tavern < Building
-  def initialize
-    @name = 'tavern'
-    @title = I18n.t('Tavern')
-    super
-  end
-
-  def actions
-    if built? # TODO: and barracs.built?
-      [HireHeroSwordsmanAction.new(true)]
-    else
-      [HireHeroSwordsmanAction.new(false)]
-    end
-  end
-end
-
-class Barracs < Building
-  def initialize
-    @name = 'barracs'
-    @title = I18n.t('Barracs')
-    super
-  end
-
-  def actions
-    if built?
-      [HireSwordsmanAction.new(true)]
-    else
-      [HireSwordsmanAction.new(false)]
-    end
-  end
-end
