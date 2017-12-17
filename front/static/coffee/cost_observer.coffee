@@ -2,11 +2,11 @@ class CostObserver
   ##
   # @param {Object} cost
   # @param {string} target
-  constructor: (cost, target) ->
+  constructor: (target, cost) ->
+    @target = target
     @cost = cost
     @cost_q_el = {}
     @cost_res_el = {}
-    @target = target
     for res, q of @cost
       @add_cost(res, q)
 

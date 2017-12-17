@@ -28,7 +28,6 @@ class BuildingCard
     @name = building.name
     @title = building.title
     @actions = building.actions
-    @level = building.level
     @build_label = building.build_label
     # building container(card) with link, time to build, cost and build button
     @el = $(document.createElement('div'))
@@ -41,7 +40,6 @@ class BuildingCard
       .attr('id', "open-screen-#{building.name}")
       .data('id', building.name)
       .appendTo(@el)
-    @update_building_level(building.level)
     @building_time = $(document.createElement('div'))
       .addClass('building-time')
       .html(building.ttb_string)
@@ -49,7 +47,9 @@ class BuildingCard
     @building_cost = $(document.createElement('div'))
       .addClass('card-cost')
       .appendTo(@el)
-    @cost_observer = new CostObserver(building.cost_res, @building_cost)
+    @cost_observer = new CostObserver(@building_cost, building.cost_res)
+    @level_observer = new LevelObserver(@open_building_el, building.level)
+    @time_observer = null
     @build_button = $(document.createElement('button'))
       .addClass('build-button')
       .html(@build_label)
@@ -73,20 +73,10 @@ class BuildingCard
             App.build(@name)
           )
 
-  update_building_level: (level) ->
-    if level != @level
-      @level = level
-    if @level > 1
-      unless @building_level_el
-        @building_level_el = $(document.createElement('span'))
-          .appendTo(@open_building_el)
-      @building_level_el
-        .html(' [' + @level + ']')
-
   update: (building) ->
     # update cost
     @cost_observer.update(building.cost_res)
-    @update_building_level(building.level)
+    @level_observer.update(building.level)
     if @build_label != building.build_label
       @build_label = building.build_label
       @build_button.html(@build_label)
