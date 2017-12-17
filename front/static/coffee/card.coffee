@@ -28,7 +28,6 @@ class BuildingCard
     @name = building.name
     @title = building.title
     @actions = building.actions
-
     # building container(card)
     @el = $(document.createElement('div'))
       .addClass("building-card building-card-#{building.name}")
@@ -44,48 +43,15 @@ class BuildingCard
     @time_observer = new TimeObserver(@el, building.ttb_string, building.status)
     @cost_observer = new CostObserver(@el, building.cost_res)
     @build_observer = new BuildObserver(@el, building.build_label, building.status, building.name)
-    switch building.status
-      when App.building_states['BUILDING_STATE_GROUND']
-        @el.addClass('building-ground')
-      when App.building_states['BUILDING_STATE_IN_PROGRESS']
-        @el.addClass('building-in-progress')
-      when App.building_states['BUILDING_STATE_COMPLETE']
-        @el.addClass('building-built')
-      when App.building_states['BUILDING_STATE_CAN_UPGRADE']
-        @el.addClass('building-can-upgrade')
+    @state_observer = new StateObserver(@el, building.status)
 
   update: (building) ->
     @level_observer.update(building.level)
     @time_observer.update(building.ttb_string, building.status)
     @cost_observer.update(building.cost_res)
     @build_observer.update(building.build_label, building.status)
+    @state_observer.update(building.state)
     @actions = building.actions
-    switch building.status
-      when App.building_states['BUILDING_STATE_GROUND']
-        @el
-          .removeClass('building-in-progress')
-          .removeClass('building-built')
-          .addClass('building-ground')
-        # @town_modal.close_building() if open_building is current
-        # if @town_modal
-        #   @remove_open_handler()
-        return
-      when App.building_states['BUILDING_STATE_IN_PROGRESS']
-        @el
-          .removeClass('building-ground')
-          .addClass('building-in-progress')
-      when App.building_states['BUILDING_STATE_COMPLETE']
-        @el
-          .removeClass('building-ground')
-          .removeClass('building-in-progress')
-          .addClass('building-built')
-      when App.building_states['BUILDING_STATE_CAN_UPGRADE']
-        @el
-          .removeClass('building-ground')
-          .removeClass('building-in-progress')
-          .addClass('building-can-upgrade')
-      # if @town_modal
-      #   @init_open_handler()
 
   ##
   # @param {TownModal} modal
@@ -100,10 +66,6 @@ class BuildingCard
       .click(() =>
         @open_building()
       )
-
-  remove_open_handler: () ->
-    @open_building_el
-      .off('click')
 
   add_cost: (res, q) ->
     $(document.createElement('div'))
