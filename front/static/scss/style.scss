@@ -560,7 +560,6 @@ button {
   width: 20px;
 }
 
-
 #log {
   background-color: $theme-color;
   bottom: 0;
@@ -848,6 +847,10 @@ button {
   .building-in-progress, .building-built {
     display: none;
   }
+
+  .current-level {
+    display: none;
+  }
 }
 
 .build-mode-off {
@@ -861,6 +864,10 @@ button {
     }
 
     &:not(.building-in-progress) .building-time {
+      display: none;
+    }
+
+    .next-level {
       display: none;
     }
   }

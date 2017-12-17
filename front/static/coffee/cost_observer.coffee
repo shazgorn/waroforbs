@@ -1,12 +1,15 @@
 class CostObserver
   ##
-  # @param {Object} cost
   # @param {string} target
+  # @param {Object} cost
   constructor: (target, cost) ->
     @target = target
     @cost = cost
     @cost_q_el = {}
     @cost_res_el = {}
+    @building_cost = $(document.createElement('div'))
+      .addClass('card-cost')
+      .appendTo(@target)
     for res, q of @cost
       @add_cost(res, q)
 
@@ -19,7 +22,7 @@ class CostObserver
       .addClass(res)
       .attr('title', App.resource_info[res].title + ' ' + q)
       .html(@cost_q_el[res])
-      .appendTo(@target)
+      .appendTo(@building_cost)
 
   update: (cost) ->
     for res, q of cost

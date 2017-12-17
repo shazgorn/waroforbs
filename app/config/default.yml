@@ -58,10 +58,10 @@ buildings:
             gold: 5
             wood: 2
         2:
-          time: + 20
+          time: + 2
           res:
-            gold: + 10
-            wood: + 4
+            gold: + 1
+            wood: + 1
   factory:
     resource: gold
     max_level: 10

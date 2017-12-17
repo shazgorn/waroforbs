@@ -29,7 +29,7 @@ class BuildingCard
     @title = building.title
     @actions = building.actions
     @build_label = building.build_label
-    # building container(card) with link, time to build, cost and build button
+    # building container(card)
     @el = $(document.createElement('div'))
       .addClass("building-card building-card-#{building.name}")
       .attr('id', building.id)
@@ -40,16 +40,9 @@ class BuildingCard
       .attr('id', "open-screen-#{building.name}")
       .data('id', building.name)
       .appendTo(@el)
-    @building_time = $(document.createElement('div'))
-      .addClass('building-time')
-      .html(building.ttb_string)
-      .appendTo(@el)
-    @building_cost = $(document.createElement('div'))
-      .addClass('card-cost')
-      .appendTo(@el)
-    @cost_observer = new CostObserver(@building_cost, building.cost_res)
-    @level_observer = new LevelObserver(@open_building_el, building.level)
-    @time_observer = null
+    @level_observer = new LevelObserver(@open_building_el, building.level, building.max_level)
+    @time_observer = new TimeObserver(@el, building.ttb_string, building.status)
+    @cost_observer = new CostObserver(@el, building.cost_res)
     @build_button = $(document.createElement('button'))
       .addClass('build-button')
       .html(@build_label)
@@ -63,7 +56,6 @@ class BuildingCard
         @el.addClass('building-ground')
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
         @el.addClass('building-in-progress')
-        # @start_building_countdown()
       when App.building_states['BUILDING_STATE_COMPLETE']
         @el.addClass('building-built')
       when App.building_states['BUILDING_STATE_CAN_UPGRADE']
@@ -74,9 +66,9 @@ class BuildingCard
           )
 
   update: (building) ->
-    # update cost
-    @cost_observer.update(building.cost_res)
     @level_observer.update(building.level)
+    @time_observer.update(building.ttb_string, building.status)
+    @cost_observer.update(building.cost_res)
     if @build_label != building.build_label
       @build_label = building.build_label
       @build_button.html(@build_label)
@@ -84,7 +76,6 @@ class BuildingCard
     @status = building.status
     switch building.status
       when App.building_states['BUILDING_STATE_GROUND']
-        @building_time.html(building.ttb_string)
         @el
           .removeClass('building-in-progress')
           .removeClass('building-built')
@@ -94,12 +85,10 @@ class BuildingCard
         #   @remove_open_handler()
         return
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
-        @building_time.html(building.ttb_string)
         @build_button.off('click')
         @el
           .removeClass('building-ground')
           .addClass('building-in-progress')
-          @start_building_countdown()
       when App.building_states['BUILDING_STATE_COMPLETE']
         @build_button.off('click')
         @el
@@ -107,7 +96,6 @@ class BuildingCard
           .removeClass('building-in-progress')
           .addClass('building-built')
       when App.building_states['BUILDING_STATE_CAN_UPGRADE']
-        @building_time.html(building.ttb_string)
         @el
           .removeClass('building-ground')
           .removeClass('building-in-progress')
@@ -137,30 +125,6 @@ class BuildingCard
   remove_open_handler: () ->
     @open_building_el
       .off('click')
-
-  start_building_countdown: () ->
-    clearInterval(@interval)
-    @interval = setInterval(
-      () =>
-        if @status != App.building_states['BUILDING_STATE_IN_PROGRESS']
-          clearInterval(@interval)
-          return
-        ms = @building_time.html().split(':')
-        m = ms[0] * 1
-        s = ms[1] * 1
-        if s == 0
-          if m == 0
-            App.fetch()
-            return
-          s = 59
-          m = m - 1
-        else
-          s = s - 1
-        if s < 10
-          s = '0' + s
-        @building_time.html(m + ':' + s)
-      1000
-    )
 
   add_cost: (res, q) ->
     $(document.createElement('div'))

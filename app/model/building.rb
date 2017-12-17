@@ -50,6 +50,7 @@ class Building
       'ttb' => @ttb,
       'ttb_string' => @ttb_string,
       'level' => @level,
+      'max_level' => @max_level,
       'build_label' => @build_label,
       'actions' => actions
     }

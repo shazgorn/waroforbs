@@ -9,6 +9,7 @@ class Building
     @actions = building['actions']
     @build_label = building.build_label
     @level = building.level
+    @max_level = building.max_level
 
   update: (building) ->
     @status = building.status
