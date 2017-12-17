@@ -166,12 +166,12 @@ RSpec.describe Game, "testing" do
     user = User.new('hirer')
     town = Town.new(1, 1, user)
     b_name = 'barracs'
-    Celluloid::Actor[:game].hire_unit(user, Config[b_name]['units'].first)
+    Celluloid::Actor[:game].hire_unit(user, Config['buildings'][b_name]['units'].first)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t(b_name.capitalize)))
     town.build(b_name.to_sym)
-    sleep(Config[b_name]['cost_levels'][1]['time'])
-    expect(Config[b_name]['units'].include?('swordsman')).to be true
-    Celluloid::Actor[:game].hire_unit(user, Config[b_name]['units'].first)
+    sleep(Config['buildings'][b_name]['cost'][1]['time'])
+    expect(Config['buildings'][b_name]['units'].include?('swordsman')).to be true
+    Celluloid::Actor[:game].hire_unit(user, Config['buildings'][b_name]['units'].first)
     expect(Unit.get_by_user(user).length).to eq(2)
     LogBox.get_current_by_user(user)
     wrong_squad_type = 'wrong_squad_type'
@@ -186,12 +186,12 @@ RSpec.describe Game, "testing" do
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t('Tavern')))
     expect(Unit.get_by_user(user).length).to eq(1)
     town.build(:tavern)
-    sleep(Config['tavern']['cost_levels'][1]['time'])
+    sleep(Config['buildings']['tavern']['cost'][1]['time'])
     Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t('Barracs')))
     expect(Unit.get_by_user(user).length).to eq(1)
     town.build(:barracs)
-    sleep(Config['barracs']['cost_levels'][1]['time'])
+    sleep(Config['buildings']['barracs']['cost'][1]['time'])
     Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
     expect(Unit.get_by_user(user).length).to eq(2)
     expect(LogBox.get_current_by_user(user).first.message). to eq(I18n.t('log_entry_new_unit', name: I18n.t('Hero swordsman')))
@@ -264,7 +264,7 @@ RSpec.describe Game, "testing" do
     user = User.new('defender')
     x = 5
     y = 5
-    unit = Swordsman.new(x, y, user)
+    Swordsman.new(x, y, user)
     Celluloid::Actor[:game].spawn_dummy_near(x + 1, y + 1)
     Celluloid::Actor[:game].provoke_dummy_attack()
     expect(LogBox.get_current_by_user(user).first.type).to eq(:defence)

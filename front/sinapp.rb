@@ -3,7 +3,8 @@
 require 'sinatra'
 require 'i18n'
 require 'slim'
-require_relative '../app/config.rb'
+$:.unshift(File.expand_path(File.dirname(__FILE__)) + '/../app')
+require 'config'
 
 I18n.load_path = Dir[File.join(settings.root, 'locales', '*.yml')]
 I18n.default_locale = :ru

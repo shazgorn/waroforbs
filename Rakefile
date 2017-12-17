@@ -52,14 +52,16 @@ task :js do
 end
 
 task :front_start do
-  system('thin -R config.ru start -C config/thin.yml')
+  system('thin -R config.ru start -C config/thin.yml --require app/ --require app/model/')
 end
 
 task :front_stop do
-  system('thin -R config.ru stop -C config/thin.yml')
+  system('thin -R config.ru stop -C config/thin.yml  --require app/ --require app/model/')
 end
 
-task front_restart: [:front_stop, :front_start]
+task :front_restart do
+  system('thin -R config.ru restart -C config/thin.yml  --require app/ --require app/model/')
+end
 
 task :bots do
   system('ruby app/bot/cell_bot_client.rb')

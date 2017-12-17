@@ -1,5 +1,4 @@
 require 'time_helper'
-require 'cost_parser'
 
 # status = 0 can be built
 # status = 1 in progress
@@ -22,7 +21,7 @@ class Building
     @start_time = nil
     @finish_time = nil
     @level = 0
-    @max_level = Config[@name]['max_level'].to_i
+    @max_level = Config['buildings'][@name]['max_level'].to_i
     init_cost
   end
 
@@ -31,7 +30,7 @@ class Building
 
   def init_cost
     if @level + 1 <= @max_level
-      cost = CostParser.find_cost(@name, @level + 1)
+      cost = Config['buildings'][@name]['cost'][@level + 1]
       @cost_time = cost['time']
       @cost_res = cost['res']
       @ttb_string = seconds_to_hm(@cost_time)

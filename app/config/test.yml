@@ -1,11 +1,15 @@
 BLOCKS_IN_MAP_DIM: 1
-barracs:
-  cost_levels:
-    1:
-      time: 1
-    2:
-      time: 2
-tavern:
-  cost_levels:
-    1:
-      time: 1
+buildings:
+  barracs:
+    cost:
+      formula:
+        1:
+          time: 1
+        2:
+          time: 60
+  tavern:
+    max_level: 2
+    cost:
+      formula:
+        1:
+          time: 1

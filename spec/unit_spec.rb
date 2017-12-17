@@ -43,7 +43,7 @@ RSpec.describe Unit, "testing" do
     user = User.new('destroyer')
     town = Town.new(5, 5, user)
     town.build :barracs
-    sleep(Config['barracs']['cost_levels'][1]['time'].to_i + 2)
+    sleep(Config['buildings']['barracs']['cost'][1]['time'].to_i + 2)
     town.kill
   end
 

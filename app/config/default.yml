@@ -20,87 +20,94 @@ DUMMY_LOGIN: dummy
 unit_class:
   swordsman: Swordsman
   hero_swordsman: HeroSwordsman
-barracs:
-  units:
-    - swordsman
-  max_level: 2
-  cost_levels:
-    1:
-      time: 60
-      res:
-        gold: 20
-        wood: 5
-    2:
-      time: 120
-      res:
-        gold: 40
-        wood: 10
-tavern:
-  units:
-    - hero_swordsman
-  max_level: 1
-  cost_levels:
-    1:
-      time: 60
-      res:
-        gold: 10
-        wood: 10
-roads:
-  max_level: 10
-  cost_levels:
-    1:
-      time: 4
-      res:
-        gold: 5
-        wood: 2
-    2:
-      time: 20
-      res:
-        gold: 10
-        wood: 4
-factory:
-  resource: gold
-  max_level: 10
-  cost_levels:
-    1:
-      time: 4
-      res:
-        gold: 5
-        wood: 2
-    2:
-      time: 20
-      res:
-        gold: 10
-        wood: 4
-sawmill:
-  resource: wood
-  max_level: 10
-  cost_levels:
-    1:
-      time: 4
-      res:
-        gold: 5
-        wood: 2
-    2:
-      time: + 10
-      res:
-        gold: + 10
-        wood: + 4
-        stone: + 2
-quarry:
-  resource: stone
-  max_level: 10
-  cost_levels:
-    1:
-      time: 4
-      res:
-        gold: 5
-        wood: 2
-    2:
-      time: 20
-      res:
-        gold: + 10
-        wood: + 4
+buildings:
+  barracs:
+    units:
+      - swordsman
+    max_level: 10
+    cost:
+      formula:
+        1:
+          time: 60
+          res:
+            gold: 10
+            wood: 2
+        2:
+          time: + 60
+          res:
+            gold: + 10
+            wood: + 2
+  tavern:
+    units:
+      - hero_swordsman
+    max_level: 1
+    cost:
+      formula:
+        1:
+          time: 60
+          res:
+            gold: 10
+            wood: 10
+  roads:
+    max_level: 10
+    cost:
+      formula:
+        1:
+          time: 4
+          res:
+            gold: 5
+            wood: 2
+        2:
+          time: 20
+          res:
+            gold: 10
+            wood: 4
+  factory:
+    resource: gold
+    max_level: 10
+    cost:
+      formula:
+        1:
+          time: 4
+          res:
+            gold: 5
+            wood: 2
+        2:
+          time: 20
+          res:
+            gold: 10
+            wood: 4
+  sawmill:
+    resource: wood
+    max_level: 10
+    cost:
+      formula:
+        1:
+          time: 4
+          res:
+            gold: 5
+            wood: 2
+        2:
+          time: + 10
+          res:
+            gold: + 10
+            wood: + 4
+            stone: + 2
+  quarry:
+    resource: stone
+    max_level: 10
+    cost:
+      formula:
+        1:
+          time: 4
+          res:
+            gold: 5
+            wood: 2
+        2:
+          time: 20
+          res:
+            gold: + 10
+            wood: + 4
 swordsman:
   required_buildings:
     - barracs

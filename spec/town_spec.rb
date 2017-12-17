@@ -24,8 +24,6 @@ RSpec.describe Town, "testing" do
     town = Town.new(1, 1, user)
     pos = 1
     w = town.get_worker_by_pos(pos)
-    production_building_level = town.buildings[:sawmill].level
-    roads_level = town.buildings[:roads].level
     w.start_res_collection(:wood, 1)
     expect(w.total_time).to_not be_nil
     expect(w.remaining_time).to_not be_nil

@@ -49,8 +49,7 @@ class BuildingCard
     @building_cost = $(document.createElement('div'))
       .addClass('card-cost')
       .appendTo(@el)
-    for res, q of building.cost_res
-      @add_cost(res, q).appendTo(@building_cost)
+    @cost_observer = new CostObserver(building.cost_res, @building_cost)
     @build_button = $(document.createElement('button'))
       .addClass('build-button')
       .html(@build_label)
@@ -85,6 +84,8 @@ class BuildingCard
         .html(' [' + @level + ']')
 
   update: (building) ->
+    # update cost
+    @cost_observer.update(building.cost_res)
     @update_building_level(building.level)
     if @build_label != building.build_label
       @build_label = building.build_label

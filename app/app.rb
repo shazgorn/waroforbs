@@ -5,7 +5,6 @@ require 'pp'
 require 'json'
 require 'mini_magick'
 require 'fileutils'
-# require 'logger'
 
 require 'exception'
 require 'config'

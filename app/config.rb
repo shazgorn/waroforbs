@@ -1,4 +1,5 @@
 require 'yaml'
+require 'building_cost_generator'
 
 class Config
   @@config = nil
@@ -6,6 +7,30 @@ class Config
   class << self
     def[](key)
       get(key)
+    end
+
+    def get(key)
+      if @@config.nil?
+        load_config()
+        BuildingCostGenerator.new(@@config['buildings']).generate_buildings_cost()
+      end
+      @@config[key]
+    end
+
+    def load_config
+      # default is for production
+      @@config = YAML.load_file('app/config/default.yml')
+      env = nil
+      if ENV['ORBS_ENV']
+        env = ENV['ORBS_ENV']
+      elsif ENV['RACK_ENV']
+        env = ENV['RACK_ENV']
+      end
+      if ['test', 'development'].include?(env)
+        config = YAML.load_file("app/config/#{env}.yml")
+        merge(@@config, config)
+      end
+      @@config
     end
 
     ##
@@ -25,29 +50,6 @@ class Config
       else
         left[key] = right[key]
       end
-    end
-
-    def load_config
-      # default is for production
-      @@config = YAML.load_file('app/config/default.yml')
-      env = nil
-      if ENV['ORBS_ENV']
-        env = ENV['ORBS_ENV']
-      elsif ENV['RACK_ENV']
-        env = ENV['RACK_ENV']
-      end
-      if ['test', 'development'].include?(env)
-        config = YAML.load_file("app/config/#{env}.yml")
-        merge(@@config, config)
-      end
-      @@config
-    end
-
-    def get(key)
-      if @@config.nil?
-        load_config
-      end
-      @@config[key]
     end
   end
 end
