@@ -28,7 +28,7 @@ class BuildingCard
     @name = building.name
     @title = building.title
     @actions = building.actions
-    @build_label = building.build_label
+
     # building container(card)
     @el = $(document.createElement('div'))
       .addClass("building-card building-card-#{building.name}")
@@ -43,16 +43,9 @@ class BuildingCard
     @level_observer = new LevelObserver(@open_building_el, building.level, building.max_level)
     @time_observer = new TimeObserver(@el, building.ttb_string, building.status)
     @cost_observer = new CostObserver(@el, building.cost_res)
-    @build_button = $(document.createElement('button'))
-      .addClass('build-button')
-      .html(@build_label)
-      .appendTo(@el)
+    @build_observer = new BuildObserver(@el, building.build_label, building.status, building.name)
     switch building.status
       when App.building_states['BUILDING_STATE_GROUND']
-        @build_button
-          .click(() =>
-            App.build(@name)
-          )
         @el.addClass('building-ground')
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
         @el.addClass('building-in-progress')
@@ -60,20 +53,13 @@ class BuildingCard
         @el.addClass('building-built')
       when App.building_states['BUILDING_STATE_CAN_UPGRADE']
         @el.addClass('building-can-upgrade')
-        @build_button
-          .click(() =>
-            App.build(@name)
-          )
 
   update: (building) ->
     @level_observer.update(building.level)
     @time_observer.update(building.ttb_string, building.status)
     @cost_observer.update(building.cost_res)
-    if @build_label != building.build_label
-      @build_label = building.build_label
-      @build_button.html(@build_label)
+    @build_observer.update(building.build_label, building.status)
     @actions = building.actions
-    @status = building.status
     switch building.status
       when App.building_states['BUILDING_STATE_GROUND']
         @el
@@ -85,12 +71,10 @@ class BuildingCard
         #   @remove_open_handler()
         return
       when App.building_states['BUILDING_STATE_IN_PROGRESS']
-        @build_button.off('click')
         @el
           .removeClass('building-ground')
           .addClass('building-in-progress')
       when App.building_states['BUILDING_STATE_COMPLETE']
-        @build_button.off('click')
         @el
           .removeClass('building-ground')
           .removeClass('building-in-progress')
@@ -100,11 +84,6 @@ class BuildingCard
           .removeClass('building-ground')
           .removeClass('building-in-progress')
           .addClass('building-can-upgrade')
-        @build_button.off('click')
-        @build_button
-          .click(() =>
-            App.build(@name)
-          )
       # if @town_modal
       #   @init_open_handler()
 

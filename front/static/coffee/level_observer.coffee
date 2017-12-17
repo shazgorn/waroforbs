@@ -1,5 +1,4 @@
 class LevelObserver
-  # next level
   ##
   # @param {string} target
   # @param {Object} level
