@@ -17,7 +17,7 @@
 
   #controls-arrows class="group"
 
-  div class="unit-info unit-info-template"
+  div.unit-info.unit-info-template
     div.unit-name-info title=t('unit_name_title')
     div.unit-info-row
       div.unit-id-info title="id"
@@ -27,8 +27,8 @@
       div.unit-wounds-info title=t('unit_wounds_title')
       div.unit-attack-info title=t('unit_attack_title')
       div.unit-defence-info title=t('unit_defence_title')
-    div.unit-inventory-info
-    div.unit-inventory-item-description-info
+    div.unit-inventory.inventory
+      == slim :inventory
     div.unit-info-actions
       button.unit-info-disband = t('Disband')
 

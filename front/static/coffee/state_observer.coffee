@@ -29,3 +29,5 @@ class StateObserver
           .removeClass('building-ground')
           .removeClass('building-in-progress')
           .addClass('building-can-upgrade')
+
+window.StateObserver = StateObserver

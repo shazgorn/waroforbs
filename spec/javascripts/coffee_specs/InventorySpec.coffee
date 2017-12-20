@@ -1,4 +1,4 @@
-describe "InventoryView", ->
+describe "InventoryObserver", ->
   it "calculating empty slots", ->
     old_inventory =
       gold: 0
@@ -16,7 +16,7 @@ describe "InventoryView", ->
       stone: 0
       settlers: 0
 
-    inventory_view = new InventoryView($(document.createElement('div')), null)
+    inventory_view = new InventoryObserver($(document.createElement('div')), null)
     expect(App.resource_info['gold'].title).toBe('')
     expect(inventory_view.calc_empty_slots_to_hide(empty_inventory)).toBe(0)
     # expect(inventory_view.calc_empty_slots_to_hide(new_inventory)).toBe(1)

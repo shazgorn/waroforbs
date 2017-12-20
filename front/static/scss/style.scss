@@ -20,7 +20,6 @@ $orb-sm-margin: ($cell-dimension - $orb-sm-dimension) / 2;
 $button-size: 60px;
 $column-gap: 30px;
 $font-family: 'PT Serif', serif;
-$right-col-width: 230px;
 // colors
 $aqua: #0ff;
 $black: #000;
@@ -53,10 +52,15 @@ $theme-bg: $saddlebrown;
 $theme-border: $chocolate;
 $theme-color: #ffffe0;
 $theme-hover: $sienna;
+$right-col-width: 20%;
 // 2rem left + 2rem between right col + 2 rem for paddings
-$modal-width: calc(100% - #{$right-col-width} - 6rem);
+$modal-width: calc(80% - 6rem);
 // - 2.5rem for padding + scroll
-$log-width: calc(100% - #{$right-col-width} - 2.5rem);
+// $log-width: calc(100% - #{$right-col-width} - 2.5rem);
+$map-width: 80%;
+$log-width: 80%;
+
+$resource-font-size: .7rem;
 
 @mixin clearfix() {
   &::before,
@@ -167,7 +171,7 @@ button {
   height: 100%;
   overflow: hidden;
   position: absolute;
-  width: 100%;
+  width: $map-width;
 
   &.bordered-cells .cell {
     border-bottom: thin dashed $darkolivegreen;
@@ -446,6 +450,7 @@ button {
   }
 
   .unit-info-actions {
+    display: none;
     margin: 2px 0;
   }
 
@@ -474,8 +479,46 @@ button {
   }
 }
 
-.unit-inventory-info {
-  height: 60px;
+.inventory-tabs {
+  display: flex;
+  flex-direction: row;
+  font-size: .8rem;
+  font-weight: bold;
+}
+
+.inventory-tabs {
+  .tab {
+    cursor: pointer;
+    margin: 8px 0;
+    padding: 4px;
+
+    &.selected {
+      border-top: thin solid $orange;
+      color: $orange;
+    }
+
+    &:hover {
+      // color: #ffffa0;
+      color: $orange;
+    }
+  }
+}
+
+.unit-inventory {
+  &:not(.give) {
+    .resource-input {
+      display: none;
+    }
+
+    .give {
+      display: none;
+    }
+  }
+  &:not(.take) {
+    .take {
+      display: none;
+    }
+  }
 }
 
 .inventory-item {
@@ -492,12 +535,24 @@ button {
   display: none;
 }
 
+.resources {
+  height: 80px;
+}
+
 .resource-q {
-  font-size: .7rem;
-  height: 10px;
+  font-size: $resource-font-size;
+  height: 15px;
   position: relative;
   text-align: center;
   top: $cell-dimension;
+  width: $cell-dimension;
+}
+
+.resource-input {
+  font-size: $resource-font-size;
+  position: relative;
+  text-align: center;
+  top: $cell-dimension + 2px;
   width: $cell-dimension;
 }
 

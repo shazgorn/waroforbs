@@ -14,9 +14,7 @@ class TownModal
     @name = town.name
     @modal_title = @el.find('.modal-title')
     @modal_title.html(@name)
-    inventory_item_description = @el.find('.town-inventory-item-description')
-    @inventory_view = new InventoryView(@el.find('.town-inventory-inner'), inventory_item_description)
-    @inventory_view.create_slots(town.inventory)
+    @inventory_observer = new InventoryObserver(@el.find('.unit-inventory'), town.inventory)
     @building_description = $('#building-description')
     @buildings_inner = @el.find('#buildings-inner')
     @buildings_inner
@@ -47,6 +45,7 @@ class TownModal
         @el.show()
 
   update: (town) ->
+    @inventory_observer.update(town.inventory)
     if town.name != @name
       @title = town.title
       @modal_title.html(@name)

@@ -47,12 +47,8 @@ class Unit
     @name = unit.name
     @adj_companies = unit.adj_companies
     @workers = unit.workers
-    if @controls
-      @controls.inventory_view.sync_resources(@inventory, unit.inventory)
-    if @modal
-      @modal.inventory_view.sync_resources(@inventory, unit.inventory)
-    for res, q of unit.inventory
-      @inventory[res] = q
+    # why did i updated inventory every property?
+    @inventory = unit.inventory
     if @own
       @title = unit.name
     else

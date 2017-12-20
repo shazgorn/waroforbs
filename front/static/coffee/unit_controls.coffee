@@ -29,8 +29,6 @@ class UnitControls
     @ap = @info.find('.unit-ap-info')
     @attack = @info.find('.unit-attack-info')
     @def = @info.find('.unit-defence-info')
-    inventory = @info.find('.unit-inventory-info')
-    inventory_item_description = @info.find('.unit-inventory-item-description-info')
     @disband = @info.find('.unit-info-disband')
     @disband.data('id', unit.id).click(() ->
       App.disband($(this).data('id'))
@@ -41,9 +39,8 @@ class UnitControls
     @info.off('click').on('click', () ->
       App.set_active_unit(unit.id)
     )
+    @inventory_observer = new InventoryObserver(@info.find('.unit-inventory'), unit.inventory)
     @id.html(unit.id)
-    @inventory_view = new InventoryView(inventory, inventory_item_description)
-    @inventory_view.create_slots(unit.inventory)
     @name.html(unit.name)
     @name.dblclick(() =>
       @name.html('')
@@ -94,6 +91,7 @@ class UnitControls
       @unit_name = unit.name
       @name.attr('title', @unit_name)
       @name.html(@unit_name)
+    @inventory_observer.update(unit.inventory)
     @life.html(unit.life)
     @wounds.html(unit.wounds)
     @xy.html(unit.x + ',' + unit.y)
