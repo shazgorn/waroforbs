@@ -59,35 +59,6 @@ class MonolithView extends UnitView
   constructor: (model) ->
     super model
 
-
-class TownInventoryItemView extends View
-  ###
-  # @param {TownInventoryItem} item
-  ###
-  constructor: (item) ->
-    super(item)
-    if item.count
-      @create_view(item)
-
-  create_view: (item) ->
-    @el = $(document.createElement('div'))
-      .addClass('inventory-res')
-      .addClass(item.id)
-      .attr('title', item.id + ' ' + item.count)
-      .html(item.count)
-      .appendTo('.town-inventory-inner')
-
-  update: (item) ->
-    if !@el && item.count
-      create_view(item)
-    else if @el
-      if item.count
-        @el.html(item.count)
-      else
-        @el.remove()
-        @el = null
-
-window.TownInventoryItemView = TownInventoryItemView
 window.BlackOrbView = BlackOrbView
 window.GreenOrbView = GreenOrbView
 window.MonolithView = MonolithView

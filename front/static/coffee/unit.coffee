@@ -45,9 +45,7 @@ class Unit
     @life = unit.life
     @wounds = unit.wounds
     @name = unit.name
-    @adj_companies = unit.adj_companies
     @workers = unit.workers
-    # why did i updated inventory every property?
     @inventory = unit.inventory
     if @own
       @title = unit.name

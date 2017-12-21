@@ -505,6 +505,10 @@ button {
 }
 
 .unit-inventory {
+  &.inventory .adj-units {
+    display: none;
+  }
+
   &:not(.give) {
     .resource-input {
       display: none;
@@ -514,6 +518,7 @@ button {
       display: none;
     }
   }
+
   &:not(.take) {
     .take {
       display: none;
@@ -560,6 +565,19 @@ button {
   background-repeat: no-repeat;
   height: $cell-dimension;
   margin-right: 3px;
+  width: $cell-dimension;
+}
+
+.adj-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.adj-unit {
+  background-repeat: no-repeat;
+  border: 2px solid $wooden-color;
+  height: $cell-dimension;
+  margin: 0 3px 3px 0;
   width: $cell-dimension;
 }
 

@@ -39,7 +39,7 @@ class UnitControls
     @info.off('click').on('click', () ->
       App.set_active_unit(unit.id)
     )
-    @inventory_observer = new InventoryObserver(@info.find('.unit-inventory'), unit.inventory)
+    @inventory_observer = new InventoryObserver(@info.find('.unit-inventory'), unit.inventory, unit.x, unit.y)
     @id.html(unit.id)
     @name.html(unit.name)
     @name.dblclick(() =>
@@ -91,7 +91,7 @@ class UnitControls
       @unit_name = unit.name
       @name.attr('title', @unit_name)
       @name.html(@unit_name)
-    @inventory_observer.update(unit.inventory)
+    @inventory_observer.update(unit.inventory, unit.x, unit.y)
     @life.html(unit.life)
     @wounds.html(unit.wounds)
     @xy.html(unit.x + ',' + unit.y)

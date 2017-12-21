@@ -4,16 +4,21 @@
 # @element - DOMElement, container for inventory items
 class InventoryObserver
   # max_slots may be set by model, more unit lvl - more slots, unclear for now
-  constructor: (target, inventory) ->
+  constructor: (target, inventory, x, y) ->
     @target = target
     @inventory = inventory
+    @x = x
+    @y = y
+    # @adj_units
     @resources_el = @target.find('.resources')
     @inventory_item_description_el = @target.children('.item-description')
     @max_slots = 5
     @descriptionShown = false
     # res -> $slot
     @res_el = {}
+    @adj_units_el = @target.children('.adj-units')
     @create_slots(@inventory)
+    @create_adj_units()
     @bind()
 
   bind: () ->
@@ -25,6 +30,9 @@ class InventoryObserver
       _this.target.removeClass(selected)
       selected = $(this).data('tab')
       _this.target.addClass(selected)
+    )
+    @target.find('button.give').click(() ->
+      console.log('give')
     )
 
   calc_empty_slots_to_hide: (inventory) ->
@@ -45,10 +53,39 @@ class InventoryObserver
   hide_empty_slot: () ->
     @resources_el.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
 
+  adj_unit: (x, y) ->
+    if App.MAX_CELL_IDX >= @x + x > 0 && App.MAX_CELL_IDX >= @y + y > 0
+      "#{@x+x}:#{@y+y}"
+    else
+      ""
+
+  create_adj_units: () ->
+    @adj_cells = {}
+    for y in [-1..1]
+      adj_row = $(document.createElement('div'))
+        .addClass('adj-row')
+        .appendTo(@adj_units_el)
+      for x in [-1..1]
+        unless @adj_cells[x]
+          @adj_cells[x] = {}
+        @adj_cells[x][y] = $(document.createElement('div'))
+          .addClass('adj-unit')
+          .html(@adj_unit(x, y))
+          .appendTo(adj_row)
+          .click(() ->
+            console.log('select adj give unit')
+          )
+
+  update_adj_units: () ->
+    for y in [-1..1]
+      for x in [-1..1]
+        @adj_cells[x][y]
+          .html(@adj_unit(x, y))
+
   ##
   # Update
   # @param {array} inventory - unit inventory
-  update: (inventory) ->
+  update: (inventory, x, y) ->
     for res, q of inventory
       if @inventory[res] > 0 && q == 0
         @res_el[res].hide()
@@ -58,6 +95,10 @@ class InventoryObserver
         @resources_el.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
       if @inventory[res] != q
         @update_res(res, q)
+    if @x != x || @y != y
+      @x = x
+      @y = y
+      @update_adj_units()
     if @descriptionShown
       @inventory_item_description_el.html('')
       @descriptionShown = false

@@ -63,45 +63,13 @@ class Game
     LogBox.get_current_by_user(user)
   end
 
-  def all_units_for_all units
-    units.each_value{|unit|
-      if unit.type == :town
-        unit.adj_companies = []
-        units.each_value{|adj_unit|
-          if adj_unit.alive? && unit != adj_unit && unit.user && unit.user == adj_unit.user && @map.adj_cells?(unit.x, unit.y, adj_unit.x, adj_unit.y)
-            unit.adj_companies.push(adj_unit.id)
-          end
-        }
-      end
-    }
-  end
-
   ##
   # Select and return all units.
   # Select user`s town and select adjacent companies to it (one can add more
   # squads in barracs)
-  # TODO: calc adj companies only on squad move, dead, new town
 
   def all_units(token)
     units = Unit.all
-    if false
-      users.each{|id, data|
-        user = User.get(id)
-        if user
-          town = units.values.select{|unit| unit.type == :town && unit.user.id == user.id}.first
-          if town && town.alive?
-            town.adj_companies = []
-            units.each_value{|unit|
-              if unit.alive? && unit != town && unit.user && unit.user.id == user.id && @map.adj_cells?(town.x, town.y, unit.x, unit.y)
-                town.adj_companies.push(unit.id)
-              end
-            }
-          end
-        end
-      }
-    else
-      all_units_for_all units
-    end
     units
   end
 

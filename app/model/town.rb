@@ -11,7 +11,6 @@ class Town < Unit
   include Transport
   include MapHelper
 
-  attr_accessor :adj_companies
   attr_reader :buildings, :actions
 
   TYPE = :town
@@ -36,7 +35,6 @@ class Town < Unit
       w.start_res_collection(:gold, 0)
     }
     @actions = []
-    @adj_companies = []
     # start capital for testing
     @inventory[:gold] = 300
     @inventory[:wood] = 50
