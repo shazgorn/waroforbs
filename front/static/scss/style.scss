@@ -224,10 +224,10 @@ button {
   &.select-target {
     cursor: pointer;
   }
+}
 
-  &.town {
-    background-image: url('/img/town.png');
-  }
+.town {
+  background-image: url('/img/town.png');
 }
 
 .own {
@@ -575,10 +575,17 @@ button {
 
 .adj-unit {
   background-repeat: no-repeat;
+  background-position: center center;
   border: 2px solid $wooden-color;
   height: $cell-dimension;
+  line-height: $cell-dimension;
   margin: 0 3px 3px 0;
+  text-align: center;
   width: $cell-dimension;
+
+  &.selected {
+    border-color: $orange;
+  }
 }
 
 .gold {
@@ -844,7 +851,7 @@ button {
     }
   }
 
-  &.town {
+  &.modal-town {
     @include big-modal();
   }
 
@@ -860,19 +867,6 @@ button {
 .town-inventory-inner {
   @include clearfix();
   margin-bottom: 15px;
-}
-
-@mixin inventory-item-description() {
-  font-style: italic;
-  font-weight: normal;
-}
-
-.unit-inventory-item-description-info {
-  @include inventory-item-description();
-}
-
-.town-inventory-item-description {
-  @include inventory-item-description();
 }
 
 .modal-top-bar {

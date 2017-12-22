@@ -6,7 +6,7 @@ class TownModal
   # @constructor
   # @param {PlayerTown} town
   constructor: (town) ->
-    @el = $('.modal.town')
+    @el = $('.modal-town')
     @el.find('.close-modal').click(() ->
       $('.modal').hide()
     )
@@ -14,7 +14,7 @@ class TownModal
     @name = town.name
     @modal_title = @el.find('.modal-title')
     @modal_title.html(@name)
-    @inventory_observer = new InventoryObserver(@el.find('.unit-inventory'), town.inventory)
+    @inventory_observer = new InventoryObserver(@el.find('.unit-inventory'), town.inventory, town.x, town.y)
     @building_description = $('#building-description')
     @buildings_inner = @el.find('#buildings-inner')
     @buildings_inner

@@ -39,7 +39,8 @@ class UnitControls
     @info.off('click').on('click', () ->
       App.set_active_unit(unit.id)
     )
-    @inventory_observer = new InventoryObserver(@info.find('.unit-inventory'), unit.inventory, unit.x, unit.y)
+    @inventory_observer = new InventoryObserver(@info.find('.unit-inventory'), unit.inventory, unit)
+    ObserverRegistry.add('inventory_observer_' + unit.id, @inventory_observer)
     @id.html(unit.id)
     @name.html(unit.name)
     @name.dblclick(() =>

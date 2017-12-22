@@ -13,6 +13,7 @@ class Application
     @attacking = false
     @cells = null
     @current_glory = null
+    @observer_registry = []
 
   update_user_info: (turn, user_glory, user_max_glory, user_name = null) ->
     $('#user-info-turn-value').html(turn)
@@ -26,6 +27,9 @@ class Application
 
   move: (params) ->
     @ws.move(@active_unit_id, params)
+
+  give: (from, to, inventory) ->
+    @ws.give(from, to, inventory)
 
   lock_controls: () ->
     @controls.lock_controls()
@@ -116,6 +120,7 @@ class Application
         console.error(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
+    ObserverRegistry.publish('units', @units)
     true
 
   # bind attack handlers
@@ -163,5 +168,8 @@ class Application
       setTimeout(() ->
         log_entry.removeClass('new-log-entry')
       , 2000)
+
+  error: (message) ->
+    @log {message: message, type: 'error', time: ''}
 
 window.App = new Application

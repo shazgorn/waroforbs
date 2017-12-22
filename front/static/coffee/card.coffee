@@ -102,7 +102,7 @@ class BuildingCard
               .html(action.label)
               .click(@action_cb(action))
           )
-          .appendTo('.modal.town .modal-building-actions-inner')
+          .appendTo('.modal-town .modal-building-actions-inner')
 
   action_cb: () ->
     console.error('Override me!')

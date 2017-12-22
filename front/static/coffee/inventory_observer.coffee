@@ -4,22 +4,43 @@
 # @element - DOMElement, container for inventory items
 class InventoryObserver
   # max_slots may be set by model, more unit lvl - more slots, unclear for now
-  constructor: (target, inventory, x, y) ->
+  constructor: (target, inventory, unit) ->
     @target = target
     @inventory = inventory
-    @x = x
-    @y = y
-    # @adj_units
+    @unit = unit
+    @x = unit.x
+    @y = unit.y
+    # x,y => unit
+    @adj_units = {}
     @resources_el = @target.find('.resources')
     @inventory_item_description_el = @target.children('.item-description')
     @max_slots = 5
     @descriptionShown = false
     # res -> $slot
     @res_el = {}
+    @adj_cells = {}
     @adj_units_el = @target.children('.adj-units')
     @create_slots(@inventory)
     @create_adj_units()
     @bind()
+
+  notify: (event, units) ->
+    if event == 'units'
+      for dy in [-1..1]
+        for dx in [-1..1]
+          @adj_cells[dx][dy]
+            .attr('class', 'adj-unit')
+            .html(@adj_unit(dx, dy))
+          for unit_id, unit of units
+            if unit.x == @x + dx && unit.y == @y + dy
+              @adj_cells[dx][dy]
+                .addClass(unit.type)
+                .html('')
+              # TODO: multiple units on one cell
+              unless @adj_units[dx]
+                @adj_units[dx] = {}
+              @adj_units[dx][dy] = unit
+              break
 
   bind: () ->
     _this = this
@@ -31,8 +52,13 @@ class InventoryObserver
       selected = $(this).data('tab')
       _this.target.addClass(selected)
     )
-    @target.find('button.give').click(() ->
-      console.log('give')
+    @target.find('button.give').click(() =>
+      if @selected_id
+        to_give = {}
+        to_give[res] = el.find('.resource-input').val() for res, el of @res_el
+        App.give(@unit.id, @selected_id, to_give)
+      else
+        App.error('No selected unit')
     )
 
   calc_empty_slots_to_hide: (inventory) ->
@@ -53,34 +79,49 @@ class InventoryObserver
   hide_empty_slot: () ->
     @resources_el.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
 
-  adj_unit: (x, y) ->
-    if App.MAX_CELL_IDX >= @x + x > 0 && App.MAX_CELL_IDX >= @y + y > 0
-      "#{@x+x}:#{@y+y}"
+  adj_unit: (dx, dy) ->
+    if App.MAX_CELL_IDX >= @x + dx > 0 && App.MAX_CELL_IDX >= @y + dy > 0
+      "#{@x+dx}:#{@y+dy}"
     else
       ""
 
   create_adj_units: () ->
-    @adj_cells = {}
     for y in [-1..1]
       adj_row = $(document.createElement('div'))
         .addClass('adj-row')
         .appendTo(@adj_units_el)
       for x in [-1..1]
-        unless @adj_cells[x]
-          @adj_cells[x] = {}
-        @adj_cells[x][y] = $(document.createElement('div'))
-          .addClass('adj-unit')
-          .html(@adj_unit(x, y))
-          .appendTo(adj_row)
-          .click(() ->
-            console.log('select adj give unit')
-          )
+        do (x, y) =>
+          unless @adj_cells[x]
+            @adj_units[x] = {}
+            @adj_cells[x] = {}
+          @adj_cells[x][y] = $(document.createElement('div'))
+            .addClass('adj-unit')
+            .html(@adj_unit(x, y))
+            .appendTo(adj_row)
+            .click(() =>
+              @select_unit(x, y)
+            )
+          @adj_units[x][y] = null
+
+  remove_selected: () ->
+    for dy in [-1..1]
+      for dx in [-1..1]
+        @adj_cells[dx][dy].removeClass('selected')
+
+  select_unit: (x, y) ->
+    if @adj_units[x][y]
+      @remove_selected()
+      @selected_id = @adj_units[x][y].id
+      @adj_cells[x][y].addClass('selected')
+    else
+      @selected_id = null
 
   update_adj_units: () ->
-    for y in [-1..1]
-      for x in [-1..1]
-        @adj_cells[x][y]
-          .html(@adj_unit(x, y))
+    for dy in [-1..1]
+      for dx in [-1..1]
+        @adj_cells[dx][dy]
+          .html(@adj_unit(dx, dy))
 
   ##
   # Update

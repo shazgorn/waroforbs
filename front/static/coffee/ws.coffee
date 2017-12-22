@@ -83,6 +83,17 @@ class WS
       })
     )
 
+  give: (from_id, to_id, inventory) ->
+    @socket.send(
+      JSON.stringify({
+          token: @token,
+          op: 'give',
+          from_id: from_id,
+          to_id: to_id,
+          inventory: inventory
+      })
+    )
+
   attack: (unit_id, d_id) ->
     @socket.send(
       JSON.stringify({
