@@ -14,7 +14,8 @@ class TownModal
     @name = town.name
     @modal_title = @el.find('.modal-title')
     @modal_title.html(@name)
-    @inventory_observer = new InventoryObserver(@el.find('.unit-inventory'), town.inventory, town.x, town.y)
+    @inventory_observer = new InventoryObserver(@el.find('.unit-inventory'), town.inventory, town)
+    ObserverRegistry.add('inventory_observer_' + town.id, @inventory_observer)
     @building_description = $('#building-description')
     @buildings_inner = @el.find('#buildings-inner')
     @buildings_inner
@@ -34,7 +35,6 @@ class TownModal
 
   append_building_card_el: (el) ->
     el
-    #@el.find('.buildings-list').append(el)
 
   ##
   # Open the town modal window by clicking on any element in the 'list'
@@ -45,7 +45,7 @@ class TownModal
         @el.show()
 
   update: (town) ->
-    @inventory_observer.update(town.inventory)
+    @inventory_observer.update(town.inventory, town.x, town.y)
     if town.name != @name
       @title = town.title
       @modal_title.html(@name)
