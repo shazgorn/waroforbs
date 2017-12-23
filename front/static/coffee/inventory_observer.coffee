@@ -155,6 +155,7 @@ class InventoryObserver
           .html(q),
         $(document.createElement('input'))
           .attr('type', 'text')
+          .attr('name', res)
           .addClass('resource-input')
       )
       .attr('title', App.resource_info[res].title + ' ' + q)

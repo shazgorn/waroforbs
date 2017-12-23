@@ -15,6 +15,10 @@ img_path: front/static/img/
 START_GLORY: 120
 START_MAX_GLORY: 200
 START_UNIT_TYPE: swordsman
+start_res:
+  gold: 10
+  wood: 7
+  settlers: 1
 MAX_LIFE: 15
 DUMMY_LOGIN: dummy
 unit_class:

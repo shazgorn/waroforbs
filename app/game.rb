@@ -139,9 +139,9 @@ class Game
 
   def start_res_for_user(user)
     unit = new_random_squad(user)
-    unit.give_res(:settlers, 1)
-    unit.give_res(:gold, 10)
-    unit.give_res(:wood, 7)
+    Config['start_res'].each{|res, q|
+      unit.give_res(res.to_sym, q)
+    }
   end
 
   ##

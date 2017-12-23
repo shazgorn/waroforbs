@@ -55,7 +55,6 @@ end
 RSpec.describe "Front tests", :js => true do
   it "is testing user info" do
     login = log_in
-    # sleep(1) # wait init_map
     expect(find('#user-info-nickname-value').text).to eq(login)
     expect(find('#user-info-glory-value').text).to eq("#{Config.get('START_GLORY')}/#{Config.get('START_MAX_GLORY')}")
   end
@@ -127,10 +126,10 @@ RSpec.describe "Front tests", :js => true do
     find('.unit-info:last-of-type').click()
     find('.own.town.select-target').click()
     find('#build-mode-on').click()
-    find('.modal.town .building-card-barracs .build-button').click()
+    find('.modal-town .building-card-barracs .build-button').click()
     find('#build-mode-off').click()
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
-    find('.modal.town .building-can-upgrade #open-screen-barracs').click()
+    find('.modal-town .building-can-upgrade #open-screen-barracs').click()
     restart
     find('.inventory-item.settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
@@ -147,10 +146,10 @@ RSpec.describe "Front tests", :js => true do
     find('.own.town.select-target').click()
     find('#build-mode-on').click()
     expect(page).to have_content(I18n.t('Barracs'))
-    find('.modal.town .building-card-barracs .build-button').click()
+    find('.modal-town .building-card-barracs .build-button').click()
     find('#build-mode-off').click()
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
-    find('.modal.town .building-can-upgrade #open-screen-barracs').click()
+    find('.modal-town .building-can-upgrade #open-screen-barracs').click()
   end
 
   it "is testing workers", :slow => true do
@@ -162,9 +161,26 @@ RSpec.describe "Front tests", :js => true do
     worker.assert_matches_selector('#worker-1.worker-selected')
     first('.worker-cell-mountain').click()
     page.assert_selector('.has-worker.worker-cell-mountain')
-    page.assert_selector('.town-inventory-inner .inventory-item', count: 5)
+    page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
     sleep(Config['resource']['stone']['production_time'].to_i + OrbTick::TICK_TIME) # stone production_time + tick_interval
     click_button('control_5')
-    page.assert_selector('.town-inventory-inner .inventory-item', count: 5)
+    page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
+  end
+
+  it "inventory", :slow => true do
+    log_in
+    settle_town
+    find('#control_2').click # move, add test for multiple unit on cell
+    from = find('#unit-info-list > .unit-info:first-of-type')
+    from.find('.give-tab').click()
+    gold = from.find('.resource.gold')
+    gold_q = gold.find('.resource-q').text
+    expect(gold_q.to_i).to eq(Config['start_res']['gold'])
+    within(from) do
+      fill_in 'gold', with: gold_q
+    end
+    from.first('.adj-unit.town').click()
+    click_button I18n.t('Give')
+    expect(from).to have_no_css('.resource.gold')
   end
 end

@@ -50,7 +50,7 @@ class BuildingCard
     @time_observer.update(building.ttb_string, building.status)
     @cost_observer.update(building.cost_res)
     @build_observer.update(building.build_label, building.status)
-    @state_observer.update(building.state)
+    @state_observer.update(building.status)
     @actions = building.actions
 
   ##
