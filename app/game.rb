@@ -342,6 +342,19 @@ class Game
   end
 
   ##
+  # Res can be given to any unit, not our own
+  # TODO: narrow(make) the list of allowed recipients
+
+  def give(user, from_id, to_id, inventory)
+    from = Unit.get_by_user_id(user, from_id)
+    to = Unit.get_by_id(to_id)
+    inventory.each{|res, q|
+      taken_q = from.take_res(res.to_sym, q.to_i)
+      to.give_res(res.to_sym, taken_q)
+    }
+  end
+
+  ##
   # Orbs moving
 =begin
   def random_move(unit)

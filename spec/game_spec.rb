@@ -269,4 +269,36 @@ RSpec.describe Game, "testing" do
     Celluloid::Actor[:game].provoke_dummy_attack()
     expect(LogBox.get_current_by_user(user).first.type).to eq(:defence)
   end
+
+  context "inventory" do
+    before(:example) do
+      @user = User.new('giver')
+      @x = 1
+      @y = 1
+      @from = Swordsman.new(@x, @y, @user)
+      @from.inventory[:gold] = 10
+      @to = Town.new(@x + 1, @y + 1, @user)
+    end
+
+    it 'taking' do
+      from_gold = @from.inventory[:gold]
+      taken_q = @from.take_res(:gold, 10)
+      expect(taken_q).to eq(10)
+      expect(@from.inventory[:gold]).to eq(0)
+    end
+
+    it 'taking more' do
+      from_gold = @from.inventory[:gold]
+      taken_q = @from.take_res(:gold, 11)
+      expect(taken_q).to eq(10)
+      expect(@from.inventory[:gold]).to eq(0)
+    end
+
+    it 'givinig res' do
+      to_gold = @to.inventory[:gold]
+      Celluloid::Actor[:game].give(@user, @from.id, @to.id, {'gold' => '10'})
+      expect(@from.inventory[:gold]).to eq(0)
+      expect(@to.inventory[:gold]).to eq(to_gold + 10)
+    end
+  end
 end

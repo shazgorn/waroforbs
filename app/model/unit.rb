@@ -165,12 +165,20 @@ class Unit
     @inventory[res] += q
   end
 
+  ##
+  # Return quantity of take resources
+
   def take_res(res, q)
     unless @inventory.key? res
       @inventory[res] = 0
     end
-    # add some checks
+    if q > @inventory[res]
+      taken_q = @inventory[res]
+      @inventory[res] = 0
+      return taken_q
+    end
     @inventory[res] -= q
+    q
   end
 
   class << self

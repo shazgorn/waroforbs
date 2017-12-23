@@ -78,6 +78,8 @@ class Facade
       Celluloid::Actor[:game].move_user_hero_by(
         user, data['unit_id'], params['dx'].to_i, params['dy'].to_i
       )
+    when :give
+      Celluloid::Actor[:game].give(user, data['from_id'].to_i, data['to_id'].to_i, data['inventory'])
     when :attack
       Celluloid::Actor[:game].attack_by_user(user, user.active_unit_id, data['d_id'].to_i)
     when :settle_town
