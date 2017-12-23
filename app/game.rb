@@ -352,6 +352,21 @@ class Game
       taken_q = from.take_res(res.to_sym, q.to_i)
       to.give_res(res.to_sym, taken_q)
     }
+    # TODO: log
+  end
+
+  ##
+  # Res can be take to any own unit but from any
+  # TODO: narrow(make) the list of allowed donors(own, neutral)
+
+  def take(user, to_id, from_id, inventory)
+    to = Unit.get_by_user_id(user, to_id)
+    from = Unit.get_by_id(from_id)
+    inventory.each{|res, q|
+      taken_q = from.take_res(res.to_sym, q.to_i)
+      to.give_res(res.to_sym, taken_q)
+    }
+    # TODO: log
   end
 
   ##

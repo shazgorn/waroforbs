@@ -31,6 +31,9 @@ class Application
   give: (from, to, inventory) ->
     @ws.give(from, to, inventory)
 
+  take: (to, from, inventory) ->
+    @ws.take(to, from, inventory)
+
   lock_controls: () ->
     @controls.lock_controls()
 

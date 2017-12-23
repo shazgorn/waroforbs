@@ -509,11 +509,13 @@ button {
     display: none;
   }
 
-  &:not(.give) {
+  &.inventory {
     .resource-input {
       display: none;
     }
+  }
 
+  &:not(.give) {
     .give {
       display: none;
     }
@@ -526,10 +528,10 @@ button {
   }
 }
 
-.inventory-item {
-  border: 2px solid $wooden-color;
-  float: left;
-}
+// .inventory-item {
+//   border: 2px solid $wooden-color;
+//   float: left;
+// }
 
 .unit-inventory-item-action {
   display: block;
@@ -541,6 +543,8 @@ button {
 }
 
 .resources {
+  display: flex;
+  flex-direction: row;
   height: 80px;
 }
 

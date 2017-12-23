@@ -18,11 +18,14 @@ class InventoryObserver
     @descriptionShown = false
     # res -> $slot
     @res_el = {}
+    @res_q = {}
+    @res_input = {}
     @adj_cells = {}
     @adj_units_el = @target.children('.adj-units')
     @create_slots(@inventory)
     @create_adj_units()
     @bind()
+    # #@update_inventory(@inventory, {})
 
   notify: (event, units) ->
     if event == 'units'
@@ -45,40 +48,41 @@ class InventoryObserver
 
   bind: () ->
     _this = this
-    selected = 'inventory'
+    @selected_tab = 'inventory'
     @inventory_tab = @target.find('.tab').click(() ->
       _this.target.find('.tab').removeClass('selected')
       $(this).addClass('selected')
-      _this.target.removeClass(selected)
-      selected = $(this).data('tab')
-      _this.target.addClass(selected)
+      _this.target.removeClass(_this.selected_tab)
+      _this.selected_tab = $(this).data('tab')
+      _this.target.addClass(_this.selected_tab)
+      if _this.selected_tab in ['inventory', 'give']
+        _this.update_inventory(_this.inventory, {})
+      _this.selected_id = null
     )
     @target.find('button.give').click(() =>
       if @selected_id
-        to_give = {}
-        to_give[res] = el.find('.resource-input').val() for res, el of @res_el
-        App.give(@unit.id, @selected_id, to_give)
+        App.give(@unit.id, @selected_id, @collect_inv_from_inputs())
+      else
+        App.error('No selected unit')
+    )
+    @target.find('button.take').click(() =>
+      if @selected_id
+        App.take(@unit.id, @selected_id, @collect_inv_from_inputs())
       else
         App.error('No selected unit')
     )
 
-  calc_empty_slots_to_hide: (inventory) ->
-    empty_slots_to_hide = 0
-    for res, q of inventory
-      @res_el[res] = @add_res(res, q)
-      if q
-        empty_slots_to_hide++
-      else
-        @res_el[res].hide()
-    empty_slots_to_hide
+  collect_inv_from_inputs: () ->
+    inv = {}
+    for res, el of @res_el
+      input = el.find('.resource-input')
+      inv[res] = input.val()
+      input.val('')
+    inv
 
   create_slots: (inventory) ->
-    empty_slots_to_hide = @calc_empty_slots_to_hide(inventory)
-    @add_empty_res() for [@max_slots...0]
-    @hide_empty_slot() for [empty_slots_to_hide...0]
-
-  hide_empty_slot: () ->
-    @resources_el.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
+    for res, q of inventory
+      @res_el[res] = @add_res(res, q)
 
   adj_unit: (dx, dy) ->
     if App.MAX_CELL_IDX >= @x + dx > 0 && App.MAX_CELL_IDX >= @y + dy > 0
@@ -87,23 +91,25 @@ class InventoryObserver
       ""
 
   create_adj_units: () ->
-    for y in [-1..1]
+    for dy in [-1..1]
       adj_row = $(document.createElement('div'))
         .addClass('adj-row')
         .appendTo(@adj_units_el)
-      for x in [-1..1]
-        do (x, y) =>
-          unless @adj_cells[x]
-            @adj_units[x] = {}
-            @adj_cells[x] = {}
-          @adj_cells[x][y] = $(document.createElement('div'))
+      for dx in [-1..1]
+        do (dx, dy) =>
+          unless @adj_cells[dx]
+            @adj_units[dx] = {}
+            @adj_cells[dx] = {}
+          @adj_cells[dx][dy] = $(document.createElement('div'))
             .addClass('adj-unit')
-            .html(@adj_unit(x, y))
+            .html(@adj_unit(dx, dy))
             .appendTo(adj_row)
             .click(() =>
-              @select_unit(x, y)
+              @select_unit(dx, dy)
+              if @selected_tab == 'take'
+                @update_inventory(@adj_units[dx][dy].inventory, {})
             )
-          @adj_units[x][y] = null
+          @adj_units[dx][dy] = null
 
   remove_selected: () ->
     for dy in [-1..1]
@@ -124,19 +130,20 @@ class InventoryObserver
         @adj_cells[dx][dy]
           .html(@adj_unit(dx, dy))
 
+  update_inventory: (new_inventory, current_inventory) ->
+    for res, q of new_inventory
+      if !q
+        @res_el[res].hide()
+      else if q > 0
+        @res_el[res].show()
+      if current_inventory[res] != q
+        @update_res(res, q)
+
   ##
   # Update
   # @param {array} inventory - unit inventory
   update: (inventory, x, y) ->
-    for res, q of inventory
-      if @inventory[res] > 0 && q == 0
-        @res_el[res].hide()
-        @resources_el.find('.hidden').first().removeClass('hidden')
-      else if inventory[res] == 0 && q > 0
-        @res_el[res].show()
-        @resources_el.find('.inventory-item-empty:not(.hidden)').first().addClass('hidden')
-      if @inventory[res] != q
-        @update_res(res, q)
+    @update_inventory(inventory, @inventory)
     if @x != x || @y != y
       @x = x
       @y = y
@@ -149,20 +156,20 @@ class InventoryObserver
   # @param {string} res
   # @param {int} q
   add_res: (res, q) ->
+    @res_q[res] = $(document.createElement('div'))
+      .addClass('resource-q')
+      .html(q)
+    @res_input[res] = $(document.createElement('input'))
+      .attr('type', 'text')
+      .attr('name', res)
+      .addClass('resource-input')
     $(document.createElement('div'))
       .append(
-        $(document.createElement('div'))
-          .addClass('resource-q')
-          .html(q),
-        $(document.createElement('input'))
-          .attr('type', 'text')
-          .attr('name', res)
-          .addClass('resource-input')
+        @res_q[res],
+        @res_input[res]
       )
       .attr('title', App.resource_info[res].title + ' ' + q)
-      .addClass('inventory-item')
-      .addClass('resource')
-      .addClass(res)
+      .addClass('inventory-item resource ' + res)
       .appendTo(@resources_el)
       .click((e) =>
         @inventory_item_description_el.html(App.resource_info[res].description)
@@ -177,19 +184,13 @@ class InventoryObserver
         @descriptionShown = true
       )
 
-  add_empty_res: () ->
-    $(document.createElement('div'))
-      .addClass('inventory-item')
-      .addClass('resource')
-      .addClass('inventory-item-empty')
-      .appendTo(@resources_el)
-
   ##
   # @param {string} res - resource name
   # @param {int} q - resource quantity
   update_res: (res, q) ->
     @res_el[res]
       .attr('title', App.resource_info[res].title + ' ' + q)
-      .find('.resource-q').html(q)
+    @res_q[res]
+      .html(q)
 
 window.InventoryObserver = InventoryObserver

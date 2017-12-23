@@ -275,9 +275,9 @@ RSpec.describe Game, "testing" do
       @user = User.new('giver')
       @x = 1
       @y = 1
-      @from = Swordsman.new(@x, @y, @user)
+      @swordsman = @from = Swordsman.new(@x, @y, @user)
       @from.inventory[:gold] = Config['start_res']['gold'].to_i
-      @to = Town.new(@x + 1, @y + 1, @user)
+      @town = @to = Town.new(@x + 1, @y + 1, @user)
     end
 
     it 'taking' do
@@ -297,6 +297,14 @@ RSpec.describe Game, "testing" do
       Celluloid::Actor[:game].give(@user, @from.id, @to.id, {'gold' => Config['start_res']['gold'].to_s})
       expect(@from.inventory[:gold]).to eq(0)
       expect(@to.inventory[:gold]).to eq(to_gold + Config['start_res']['gold'].to_i)
+    end
+
+    it 'taking res' do
+      from_gold = @swordsman.inventory[:gold]
+      to_gold = @town.inventory[:gold]
+      Celluloid::Actor[:game].take(@user, @town.id, @swordsman.id, {'gold' => Config['start_res']['gold'].to_s})
+      expect(@swordsman.inventory[:gold]).to eq(0)
+      expect(@town.inventory[:gold]).to eq(to_gold + Config['start_res']['gold'].to_i)
     end
   end
 end
