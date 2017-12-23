@@ -32,9 +32,10 @@ class InventoryObserver
             .attr('class', 'adj-unit')
             .html(@adj_unit(dx, dy))
           for unit_id, unit of units
-            if unit.x == @x + dx && unit.y == @y + dy
+            if unit.x == @x + dx && unit.y == @y + dy && unit.own
               @adj_cells[dx][dy]
                 .addClass(unit.type)
+                .attr('title', unit.title)
                 .html('')
               # TODO: multiple units on one cell
               unless @adj_units[dx]

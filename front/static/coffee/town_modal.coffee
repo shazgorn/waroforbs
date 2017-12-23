@@ -15,7 +15,7 @@ class TownModal
     @modal_title = @el.find('.modal-title')
     @modal_title.html(@name)
     @inventory_observer = new InventoryObserver(@el.find('.unit-inventory'), town.inventory, town)
-    ObserverRegistry.add('inventory_observer_' + town.id, @inventory_observer)
+    ObserverRegistry.add('modal_inventory_observer_' + town.id, @inventory_observer)
     @building_description = $('#building-description')
     @buildings_inner = @el.find('#buildings-inner')
     @buildings_inner
