@@ -1,4 +1,6 @@
 BLOCKS_IN_MAP_DIM: 1
+res_spawner_tick: 60
+resource_lifetime_in_the_wild: 60
 buildings:
   barracs:
     cost:

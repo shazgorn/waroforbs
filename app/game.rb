@@ -42,6 +42,8 @@ class Game
     @generate = false
     check_args
     @map = Map.new(@generate)
+    # town_id => spawned resource count
+    @town_aid = {}
     drop_all if drop
     subscribe('tick', :tick)
     subscribe('spawn_random_res', :spawn_random_res)
@@ -430,18 +432,32 @@ class Game
   end
 
   def spawn_random_res(topic)
-    Town.alive.each{|id, unit|
-      spawn_random_res_near unit
+    Resource.all.each{|id, res|
+      if res.too_old?
+        Resource.delete res.id
+      end
+    }
+    Town.alive.each{|id, town|
+      unless @town_aid.key? town.id
+        @town_aid[town.id] = 0
+      end
+      if @town_aid[town.id] < Config['max_town_aid']
+        if spawn_random_res_near town
+          @town_aid[town.id] += 1
+        end
+      end
     }
   end
 
-  def spawn_random_res_near unit
-    xy = @map.get_rand_coords_near unit.x, unit.y, Config['random_res_town_radius']
+  def spawn_random_res_near town
+    xy = @map.get_rand_coords_near town.x, town.y, Config['random_res_town_radius']
     if Unit.place_is_empty?(xy[:x], xy[:y])
       resources = Config['resource'].keys
       res = resources[rand(resources.length)]
       res = Resource.new(res.to_sym, xy[:x], xy[:y])
+      return true
     end
+    false
   end
 
   def black_orbs_below_limit

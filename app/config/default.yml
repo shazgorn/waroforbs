@@ -21,6 +21,10 @@ start_res:
   settlers: 1
 max_random_res: 10
 random_res_town_radius: 7
+res_spawner_tick: 3600
+resource_lifetime_in_the_wild: 86400
+max_town_aid: 20
+orb_tick: 3
 MAX_LIFE: 15
 DUMMY_LOGIN: dummy
 unit_class:

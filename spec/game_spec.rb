@@ -314,6 +314,9 @@ RSpec.describe Game, "testing" do
     resources = Unit.get_by_types Config['resource'].keys.map{|res| res.to_sym}
     expect(resources.size).to eq(1)
     res = resources.values[0]
+    expect(res.too_old?).to be false
+    sleep(Config['resource_lifetime_in_the_wild'] + 1)
+    expect(res.too_old?).to be true
     res.take_res(:gold, Config['max_random_res'])
     res.take_res(:wood, Config['max_random_res'])
     res.take_res(:stone, Config['max_random_res'])

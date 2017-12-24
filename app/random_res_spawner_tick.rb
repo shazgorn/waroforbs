@@ -1,5 +1,4 @@
 class RandomResSpawnerTick
-  TICK_TIME = 60
   include Celluloid
   include Celluloid::Notifications
   include Celluloid::Internals::Logger
@@ -12,7 +11,7 @@ class RandomResSpawnerTick
     info 'Random res spawner tick started'
     now = Time.now.to_f
     sleep now.ceil - now + 0.001
-    every(TICK_TIME) do
+    every(Config['res_spawner_tick']) do
       publish 'spawn_random_res'
     end
   end

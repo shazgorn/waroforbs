@@ -21,4 +21,14 @@ class Resource < Unit
     Unit.delete(@id)
     return q
   end
+
+  def too_old?
+    Time.now - @created_time  > Config['resource_lifetime_in_the_wild']
+  end
+
+  class << self
+    def all
+      @@units.select{|id, unit| Config['resource'].keys.include? unit.type.to_s}
+    end
+  end
 end

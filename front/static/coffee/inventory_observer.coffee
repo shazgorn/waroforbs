@@ -64,7 +64,6 @@ class InventoryObserver
       _this.target.addClass(_this.selected_tab)
       if _this.selected_tab in ['inventory', 'give']
         _this.resources_el.show()
-        console.log(_this.inventory)
         _this.update_inventory(_this.inventory, {})
       else
         _this.resources_el.hide()

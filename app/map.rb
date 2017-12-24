@@ -163,9 +163,9 @@ class Map
     y_left = y - radius
     y_left = 1 if y_left < 1
     x_right = x + radius
-    x_right = MAX_CELL_IDX if x_left > MAX_CELL_IDX
+    x_right = MAX_CELL_IDX if x_right > MAX_CELL_IDX
     y_right = y + radius
-    y_right = MAX_CELL_IDX if y_left > MAX_CELL_IDX
+    y_right = MAX_CELL_IDX if y_right > MAX_CELL_IDX
     x = Random.rand(x_left..x_right)
     y = Random.rand(y_left..y_right)
     {:x => x, :y => y}

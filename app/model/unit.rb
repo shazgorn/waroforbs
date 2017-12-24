@@ -40,6 +40,7 @@ class Unit
       :stone => 0,
       :settlers => 0
     }
+    @created_time = Time.now
   end
 
   def strength

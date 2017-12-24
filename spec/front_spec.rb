@@ -162,7 +162,7 @@ RSpec.describe "Front tests", :js => true do
     first('.worker-cell-mountain').click()
     page.assert_selector('.has-worker.worker-cell-mountain')
     page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
-    sleep(Config['resource']['stone']['production_time'].to_i + OrbTick::TICK_TIME) # stone production_time + tick_interval
+    sleep(Config['resource']['stone']['production_time'].to_i + Config['orb_tick']) # stone production_time + tick_interval
     click_button('control_5')
     page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
   end
