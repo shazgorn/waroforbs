@@ -489,7 +489,7 @@ button {
 .inventory-tabs {
   .tab {
     cursor: pointer;
-    margin: 8px 0;
+    margin: 6px 0;
     padding: 4px;
 
     &.selected {
@@ -514,6 +514,10 @@ button {
 }
 
 .unit-inventory {
+  .buttons {
+    margin: 6px 0;
+  }
+
   &.inventory .adj-units {
     display: none;
   }

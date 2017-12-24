@@ -63,21 +63,33 @@ class InventoryObserver
       _this.selected_tab = $(this).data('tab')
       _this.target.addClass(_this.selected_tab)
       if _this.selected_tab in ['inventory', 'give']
+        _this.resources_el.show()
+        console.log(_this.inventory)
         _this.update_inventory(_this.inventory, {})
+      else
+        _this.resources_el.hide()
       _this.selected_id = null
     )
     @target.find('button.give').click(() =>
       if @selected_id
         App.give(@unit.id, @selected_id, @collect_inv_from_inputs())
+        @clear_selected()
       else
         App.error('No selected unit')
     )
     @target.find('button.take').click(() =>
       if @selected_id
         App.take(@unit.id, @selected_id, @collect_inv_from_inputs())
+        @clear_selected()
       else
         App.error('No selected unit')
     )
+
+  clear_selected: () ->
+    @target.find('.inventory-tab').click()
+    @target.find('.adj-unit.selected').removeClass('selected')
+    @selected_unit = null
+    @selected_id = null
 
   collect_inv_from_inputs: () ->
     inv = {}
@@ -138,6 +150,7 @@ class InventoryObserver
               @selected_id = unit.id
               @selected_unit = unit
               if @selected_tab == 'take'
+                @resources_el.show()
                 @update_inventory(@selected_unit.inventory, {})
             )
     else if @adj_units[dx][dy].length == 1
@@ -150,6 +163,7 @@ class InventoryObserver
     @selected_unit = @adj_units[dx][dy][0]
     @selected_id = @selected_unit.id
     @adj_cells[dx][dy].addClass('selected')
+    @resources_el.show()
 
   update_adj_units: () ->
     for dy in [-1..1]
@@ -165,6 +179,7 @@ class InventoryObserver
         @res_el[res].show()
       if current_inventory[res] != q
         @update_res(res, q)
+      current_inventory[res] = q
 
   ##
   # Update

@@ -1,5 +1,5 @@
 class RandomResSpawnerTick
-  TICK_TIME = 3
+  TICK_TIME = 60
   include Celluloid
   include Celluloid::Notifications
   include Celluloid::Internals::Logger
