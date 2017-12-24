@@ -519,7 +519,7 @@ button {
   }
 
   &.inventory {
-    .resource-input {
+    .resource-input, .resource-all {
       display: none;
     }
   }
@@ -549,6 +549,7 @@ button {
 .resources {
   display: flex;
   flex-direction: row;
+  margin: 3px 0;
 }
 
 .inventory-item {
@@ -588,6 +589,7 @@ button {
   background-repeat: no-repeat;
   background-position: center center;
   border: 2px solid $wooden-color;
+  font-size: .7rem;
   height: $cell-dimension;
   line-height: $cell-dimension;
   margin: 0 3px 3px 0;
@@ -710,6 +712,7 @@ button {
     border: thin solid $wooden-color;
     cursor: pointer;
     display: inline-block;
+    font-size: .7rem;
     height: 40px;
     line-height: 40px;
     opacity: 0.8;

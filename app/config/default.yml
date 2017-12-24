@@ -19,6 +19,8 @@ start_res:
   gold: 10
   wood: 7
   settlers: 1
+max_random_res: 10
+random_res_town_radius: 7
 MAX_LIFE: 15
 DUMMY_LOGIN: dummy
 unit_class:

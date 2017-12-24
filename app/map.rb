@@ -157,6 +157,20 @@ class Map
     {:x => x, :y => y}
   end
 
+  def get_rand_coords_near x, y, radius
+    x_left = x - radius
+    x_left = 1 if x_left < 1
+    y_left = y - radius
+    y_left = 1 if y_left < 1
+    x_right = x + radius
+    x_right = MAX_CELL_IDX if x_left > MAX_CELL_IDX
+    y_right = y + radius
+    y_right = MAX_CELL_IDX if y_left > MAX_CELL_IDX
+    x = Random.rand(x_left..x_right)
+    y = Random.rand(y_left..y_right)
+    {:x => x, :y => y}
+  end
+
   def d_include?(dx, dy)
     [dx, dy].count{|c| (-1..1).include? c} == 2
   end

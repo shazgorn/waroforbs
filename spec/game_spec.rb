@@ -300,11 +300,24 @@ RSpec.describe Game, "testing" do
     end
 
     it 'taking res' do
-      from_gold = @swordsman.inventory[:gold]
       to_gold = @town.inventory[:gold]
       Celluloid::Actor[:game].take(@user, @town.id, @swordsman.id, {'gold' => Config['start_res']['gold'].to_s})
       expect(@swordsman.inventory[:gold]).to eq(0)
       expect(@town.inventory[:gold]).to eq(to_gold + Config['start_res']['gold'].to_i)
     end
+  end
+
+  it 'spawn random res' do
+    user = User.new('user')
+    Town.new(5, 5, user)
+    Celluloid::Actor[:game].spawn_random_res('spawn_random_res')
+    resources = Unit.get_by_types Config['resource'].keys.map{|res| res.to_sym}
+    expect(resources.size).to eq(1)
+    res = resources.values[0]
+    res.take_res(:gold, Config['max_random_res'])
+    res.take_res(:wood, Config['max_random_res'])
+    res.take_res(:stone, Config['max_random_res'])
+    expect(res.x).to be_nil
+    resources = Unit.get_by_type :wood
   end
 end

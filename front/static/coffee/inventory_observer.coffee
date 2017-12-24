@@ -40,7 +40,7 @@ class InventoryObserver
           c = 0
           @adj_units[dx][dy] = []
           for unit_id, unit of units
-            if unit.x == @x + dx && unit.y == @y + dy && unit.own
+            if unit.x == @x + dx && unit.y == @y + dy && (unit.own || !unit.user_id)
               c++
               @adj_cells[dx][dy]
                 .addClass(unit.type)
@@ -190,13 +190,20 @@ class InventoryObserver
       .attr('type', 'text')
       .attr('name', res)
       .addClass('resource-input')
+    all = $(document.createElement('button'))
+      .addClass('resource-all')
+      .html(">>")
+      .click(() ->
+        $(this).prev().val($(this).prev().prev().html())
+      )
     $(document.createElement('div'))
       .append(
         $(document.createElement('div'))
           .addClass('resource-ico ' + res)
           .attr('title', App.resource_info[res].title + ' ' + q),
         @res_q[res],
-        @res_input[res]
+        @res_input[res],
+        all
       )
       .addClass('inventory-item resource')
       .appendTo(@resources_el)

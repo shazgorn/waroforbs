@@ -168,5 +168,13 @@ class Town < Unit
     def get_by_user user
       @@units.values.select{|unit| unit.user_id == user.id && unit.type == self::TYPE}.first
     end
+
+    def all
+      @@units.select{|id, unit| unit.type == self::TYPE}
+    end
+
+    def alive
+       @@units.select{|id, unit| unit.type == self::TYPE && unit.alive?}
+    end
   end
 end

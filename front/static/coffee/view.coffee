@@ -15,7 +15,8 @@ class UnitView extends View
         .data('id', model.id)
         .attr('title', model.title)
         .attr('id', model.attr_id)
-    @life_el = $(document.createElement('span'))
+    if model.life
+      @life_el = $(document.createElement('span'))
         .html(model.life)
         .addClass('life-box')
         .appendTo(@element)
@@ -26,7 +27,7 @@ class UnitView extends View
         .on('click', () =>
           App.set_active_unit(model.id)
         )
-    else
+    else if model.user_id
       @element.addClass('enemy')
 
   remove_element: () ->
@@ -35,9 +36,10 @@ class UnitView extends View
       @element = null
 
   update: (model) ->
-    if @unit_life != model.life
-      @unit_life = model.life
-      @life_el.html(@unit_life)
+    if model.life
+      if @unit_life != model.life
+        @unit_life = model.life
+        @life_el.html(@unit_life)
     if @unit_title != model.title
       @unit_title = model.title
       @element.attr('title', @unit_title)

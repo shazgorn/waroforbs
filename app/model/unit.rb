@@ -21,12 +21,16 @@ class Unit
     @dead = false
     @x = x
     @y = y
-    @attack = Config.get(type.to_s)['attack'].to_i
-    @defence = Config.get(type.to_s)['defence'].to_i
-    @initiative = Config.get(type.to_s)['initiative'].to_i
-    @ap = @max_ap = Config.get(type.to_s)['ap'].to_i
+    if Config[type.to_s]
+      @attack = Config[type.to_s]['attack'].to_i
+      @defence = Config[type.to_s]['defence'].to_i
+      @initiative = Config[type.to_s]['initiative'].to_i
+      @ap = @max_ap = Config[type.to_s]['ap'].to_i
+      @life = Config['MAX_LIFE']
+    else
+      @attack = @defence = @initiative = @ap = @max_ap = @life = 0
+    end
     @@units[@id] = self
-    @life = Config.get('MAX_LIFE')
     @wounds = 0
     @name = nil
     @in_battle = false
@@ -85,8 +89,8 @@ class Unit
       'attack' => @attack,
       'defence' => @defence,
       'inventory' => @inventory,
-      'user_name' => @user.login,
-      'user_id' => @user.id,
+      'user_name' => @user ? @user.login : nil,
+      'user_id' => @user ? @user.id : nil,
     }
   end
 
@@ -252,6 +256,12 @@ class Unit
       @@units = {}
     end
 
-  end
+    def get_by_type type
+      @@units.select{|id, unit| unit.type == type}
+    end
 
+    def get_by_types types
+      @@units.select{|id, unit| types.include? unit.type}
+    end
+  end
 end

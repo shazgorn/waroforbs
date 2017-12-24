@@ -15,19 +15,22 @@ class Unit
     @defence = unit.defence
     @dead = unit.dead
     @inventory =  unit.inventory
-    @user_id = unit.user_idnull
+    @user_id = unit.user_id
     @user_name = unit.user_name
     if !@dead
       @need_to_move = true
-    @title = unit.name
-    unless @own
-      @title += ' [' + unit.user_name + ']'
+    @set_title(unit)
     @buildings = {}
     @buildings_cards = {}
     for key, building of unit.buildings
       @buildings[key] = new Building(key, building)
     if unit.radius?
       @radius = unit.radius
+
+  set_title: (unit) ->
+    @title = unit.name
+    if not @own and unit.user_name
+      @title += ' [' + unit.user_name + ']'
 
   update: (unit) ->
     return if @dead
@@ -47,10 +50,6 @@ class Unit
     @name = unit.name
     @workers = unit.workers
     @inventory = unit.inventory
-    if @own
-      @title = unit.name
-    else
-      @title = unit.name + ' [' + unit.user_name + ']'
 
   create_view: () ->
     @view = new UnitView(this, @own)

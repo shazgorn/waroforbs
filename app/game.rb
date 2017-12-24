@@ -2,6 +2,7 @@ require 'log_entry'
 require 'log_box'
 require 'orb'
 require 'unit'
+require 'resource'
 require 'swordsman'
 require 'hero_swordsman'
 require 'town'
@@ -43,6 +44,7 @@ class Game
     @map = Map.new(@generate)
     drop_all if drop
     subscribe('tick', :tick)
+    subscribe('spawn_random_res', :spawn_random_res)
   end
 
   def make_turn
@@ -398,11 +400,12 @@ class Game
   end
 
   ##
-  # return first empty cell coordinates near adjacent to +x+,+y+
+  # return first empty cell coordinates adjacent to +x+,+y+
 
   def empty_adj_cell_xy(x, y)
-    (-1..1).each do |dx|
-      (-1..1).each do |dy|
+    range = (-1..1)
+    range.each do |dx|
+      range.each do |dy|
         new_x = x + dx
         new_y = y + dy
         if Unit.place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
@@ -413,7 +416,7 @@ class Game
     nil
   end
 
-  def empty_adj_cell unit
+  def empty_adj_cell(unit, radius = 1)
     empty_adj_cell_xy(unit.x, unit.y)
   end
 
@@ -424,6 +427,21 @@ class Game
     Unit.all.values.each{|unit|
       unit.tick
     }
+  end
+
+  def spawn_random_res(topic)
+    Town.alive.each{|id, unit|
+      spawn_random_res_near unit
+    }
+  end
+
+  def spawn_random_res_near unit
+    xy = @map.get_rand_coords_near unit.x, unit.y, Config['random_res_town_radius']
+    if Unit.place_is_empty?(xy[:x], xy[:y])
+      resources = Config['resource'].keys
+      res = resources[rand(resources.length)]
+      res = Resource.new(res.to_sym, xy[:x], xy[:y])
+    end
   end
 
   def black_orbs_below_limit

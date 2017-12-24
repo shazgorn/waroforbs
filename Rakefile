@@ -78,13 +78,13 @@ end
 task :test_fast do
   system('rspec --format doc --tag ~js --tag ~slow')
 end
-require 'jasmine'
-load 'jasmine/tasks/jasmine.rake'
+# require 'jasmine'
+# load 'jasmine/tasks/jasmine.rake'
 
-task :jasmine_helpers do
-  system('coffee --watch --bare --no-header -o spec/javascripts/helpers/ spec/javascripts/coffee_helpers/*.coffee')
-end
+# task :jasmine_helpers do
+#   system('coffee --watch --bare --no-header -o spec/javascripts/helpers/ spec/javascripts/coffee_helpers/*.coffee')
+# end
 
-task :jasmine_specs do
-  system('coffee --watch --no-header --bare -o spec/javascripts/jasmine_specs/ spec/javascripts/coffee_specs/*.coffee')
-end
+# task :jasmine_specs do
+#   system('coffee --watch --no-header --bare -o spec/javascripts/jasmine_specs/ spec/javascripts/coffee_specs/*.coffee')
+# end
