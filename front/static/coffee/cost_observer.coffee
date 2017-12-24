@@ -19,9 +19,12 @@ class CostObserver
       .html(q)
     @cost_res_el[res] = $(document.createElement('div'))
       .addClass('resource cost')
-      .addClass(res)
-      .attr('title', App.resource_info[res].title + ' ' + q)
-      .html(@cost_q_el[res])
+      .append(
+        $(document.createElement('div'))
+          .addClass('resource-ico ' + res)
+          .attr('title', App.resource_info[res].title + ' ' + q),
+        @cost_q_el[res],
+      )
       .appendTo(@building_cost)
 
   update: (cost) ->

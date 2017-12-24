@@ -21,7 +21,8 @@ class InventoryObserver
     @res_q = {}
     @res_input = {}
     @adj_cells = {}
-    @adj_units_el = @target.children('.adj-units')
+    @adj_units_el = @target.find('.adj-units')
+    @adj_units_multiple = @target.find('.adj-units-multiple')
     @create_slots(@inventory)
     @create_adj_units()
     @bind()
@@ -31,20 +32,26 @@ class InventoryObserver
     if event == 'units'
       for dy in [-1..1]
         for dx in [-1..1]
+          unless @adj_units[dx]
+            @adj_units[dx] = {}
           @adj_cells[dx][dy]
             .attr('class', 'adj-unit')
             .html(@adj_unit(dx, dy))
+          c = 0
+          @adj_units[dx][dy] = []
           for unit_id, unit of units
             if unit.x == @x + dx && unit.y == @y + dy && unit.own
+              c++
               @adj_cells[dx][dy]
                 .addClass(unit.type)
                 .attr('title', unit.title)
-                .html('')
-              # TODO: multiple units on one cell
-              unless @adj_units[dx]
-                @adj_units[dx] = {}
-              @adj_units[dx][dy] = unit
-              break
+              if c > 1
+                @adj_cells[dx][dy]
+                  .css('color', 'white')
+                  .html(c)
+              else
+                @adj_cells[dx][dy].html('')
+              @adj_units[dx][dy].push unit
 
   bind: () ->
     _this = this
@@ -96,33 +103,51 @@ class InventoryObserver
         .addClass('adj-row')
         .appendTo(@adj_units_el)
       for dx in [-1..1]
+        unless @adj_cells[dx]
+          @adj_cells[dx] = {}
+        unless @adj_units[dx]
+          @adj_units[dx] = {}
+        @adj_units[dx][dy] = []
         do (dx, dy) =>
-          unless @adj_cells[dx]
-            @adj_units[dx] = {}
-            @adj_cells[dx] = {}
           @adj_cells[dx][dy] = $(document.createElement('div'))
             .addClass('adj-unit')
             .html(@adj_unit(dx, dy))
             .appendTo(adj_row)
             .click(() =>
-              @select_unit(dx, dy)
-              if @selected_tab == 'take'
-                @update_inventory(@adj_units[dx][dy].inventory, {})
+              if @select_unit_or_multiple(dx, dy)
+                if @selected_tab == 'take'
+                  @update_inventory(@adj_units[dx][dy].inventory, {})
             )
-          @adj_units[dx][dy] = null
 
   remove_selected: () ->
-    for dy in [-1..1]
-      for dx in [-1..1]
-        @adj_cells[dx][dy].removeClass('selected')
+    @target.find('.adj-units-container .selected').removeClass('selected')
 
-  select_unit: (x, y) ->
-    if @adj_units[x][y]
-      @remove_selected()
-      @selected_id = @adj_units[x][y].id
-      @adj_cells[x][y].addClass('selected')
+  select_unit_or_multiple: (dx, dy) ->
+    @remove_selected()
+    @adj_units_multiple.children('*').remove()
+    if @adj_units[dx][dy].length > 1
+      for unit in @adj_units[dx][dy]
+        do (dx, dy, unit) =>
+          cell = $(document.createElement('div'))
+            .attr('title', unit.title)
+            .addClass('adj-unit ' + unit.type)
+            .appendTo(@adj_units_multiple)
+            .click(() =>
+              @remove_selected()
+              cell.addClass('selected')
+              @selected_id = unit.id
+              if @selected_tab == 'take'
+                @update_inventory(unit.inventory, {})
+            )
+    else if @adj_units[dx][dy].length == 1
+      return @select_unit(dx, dy)
     else
       @selected_id = null
+
+  select_unit: (dx, dy) ->
+    @selected_id = @adj_units[dx][dy].id
+    @adj_cells[dx][dy].addClass('selected')
+    @selected_id
 
   update_adj_units: () ->
     for dy in [-1..1]
@@ -165,11 +190,13 @@ class InventoryObserver
       .addClass('resource-input')
     $(document.createElement('div'))
       .append(
+        $(document.createElement('div'))
+          .addClass('resource-ico ' + res)
+          .attr('title', App.resource_info[res].title + ' ' + q),
         @res_q[res],
         @res_input[res]
       )
-      .attr('title', App.resource_info[res].title + ' ' + q)
-      .addClass('inventory-item resource ' + res)
+      .addClass('inventory-item resource')
       .appendTo(@resources_el)
       .click((e) =>
         @inventory_item_description_el.html(App.resource_info[res].description)

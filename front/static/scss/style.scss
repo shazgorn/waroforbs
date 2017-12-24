@@ -504,6 +504,15 @@ button {
   }
 }
 
+.adj-units-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.adj-units {
+  margin-right: 1rem;
+}
+
 .unit-inventory {
   &.inventory .adj-units {
     display: none;
@@ -528,11 +537,6 @@ button {
   }
 }
 
-// .inventory-item {
-//   border: 2px solid $wooden-color;
-//   float: left;
-// }
-
 .unit-inventory-item-action {
   display: block;
   margin: 0 auto;
@@ -545,30 +549,33 @@ button {
 .resources {
   display: flex;
   flex-direction: row;
-  height: 80px;
+}
+
+.inventory-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.resource {
+  margin-right: 3px;
+}
+
+.resource-ico {
+  height: $cell-dimension;
+  width: $cell-dimension;
 }
 
 .resource-q {
+  background-repeat: no-repeat;
   font-size: $resource-font-size;
   height: 15px;
-  position: relative;
   text-align: center;
-  top: $cell-dimension;
   width: $cell-dimension;
 }
 
 .resource-input {
   font-size: $resource-font-size;
-  position: relative;
   text-align: center;
-  top: $cell-dimension + 2px;
-  width: $cell-dimension;
-}
-
-.resource {
-  background-repeat: no-repeat;
-  height: $cell-dimension;
-  margin-right: 3px;
   width: $cell-dimension;
 }
 

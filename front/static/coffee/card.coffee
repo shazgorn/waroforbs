@@ -70,9 +70,10 @@ class BuildingCard
   add_cost: (res, q) ->
     $(document.createElement('div'))
       .addClass('resource cost')
-      .addClass(res)
-      .attr('title', App.resource_info[res].title + ' ' + q)
-      .html(
+      .append(
+        $(document.createElement('div'))
+          .addClass('resource-ico ' + res)
+          .attr('title', App.resource_info[res].title + ' ' + q),
         $(document.createElement('div'))
           .addClass('resource-q')
           .html(q)
