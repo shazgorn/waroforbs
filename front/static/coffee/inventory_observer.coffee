@@ -114,9 +114,9 @@ class InventoryObserver
             .html(@adj_unit(dx, dy))
             .appendTo(adj_row)
             .click(() =>
-              if @select_unit_or_multiple(dx, dy)
-                if @selected_tab == 'take'
-                  @update_inventory(@adj_units[dx][dy].inventory, {})
+              @select_unit_or_multiple(dx, dy)
+              if @selected_tab == 'take'
+                @update_inventory(@selected_unit.inventory, {})
             )
 
   remove_selected: () ->
@@ -136,18 +136,20 @@ class InventoryObserver
               @remove_selected()
               cell.addClass('selected')
               @selected_id = unit.id
+              @selected_unit = unit
               if @selected_tab == 'take'
-                @update_inventory(unit.inventory, {})
+                @update_inventory(@selected_unit.inventory, {})
             )
     else if @adj_units[dx][dy].length == 1
-      return @select_unit(dx, dy)
+      @select_unit(dx, dy)
     else
       @selected_id = null
+      @selected_unit = null
 
   select_unit: (dx, dy) ->
-    @selected_id = @adj_units[dx][dy].id
+    @selected_unit = @adj_units[dx][dy][0]
+    @selected_id = @selected_unit.id
     @adj_cells[dx][dy].addClass('selected')
-    @selected_id
 
   update_adj_units: () ->
     for dy in [-1..1]
