@@ -493,7 +493,7 @@ button {
     padding: 4px;
 
     &.selected {
-      border-top: thin solid $orange;
+      border-bottom: thin solid $orange;
       color: $orange;
     }
 

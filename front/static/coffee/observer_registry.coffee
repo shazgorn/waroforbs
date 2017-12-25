@@ -3,6 +3,7 @@ class ObserverRegistry
   @add: (key, observer) ->
     if @registry[key]
       throw new Error("#{key} already added to registry")
+    observer.name = key
     @registry[key] = observer
 
   @get: (key) ->

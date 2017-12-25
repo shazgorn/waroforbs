@@ -113,6 +113,7 @@ class Application
             unit_model.create_controls()
             unit_model.update_controls()
             unit_model.create_modal()
+            unit_model.update_modal(unit_hash)
           @units[unit_id] = unit_model
         if unit_model.need_to_move
           @map.appendElementToCell(unit_model.view.element, unit_model.x, unit_model.y)

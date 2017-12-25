@@ -26,7 +26,6 @@ class InventoryObserver
     @create_slots(@inventory)
     @create_adj_units()
     @bind()
-    # #@update_inventory(@inventory, {})
 
   notify: (event, units) ->
     if event == 'units'
