@@ -2,6 +2,8 @@ require 'log_entry'
 require 'log_box'
 require 'orb'
 require 'unit'
+require 'expirable'
+require 'chest'
 require 'resource'
 require 'swordsman'
 require 'hero_swordsman'
@@ -433,7 +435,7 @@ class Game
 
   def spawn_random_res(topic)
     Resource.all.each{|id, res|
-      if res.too_old?
+      if res.expired?
         Resource.delete res.id
       end
     }
@@ -442,19 +444,22 @@ class Game
         @town_aid[town.id] = 0
       end
       if @town_aid[town.id] < Config['max_town_aid']
-        if spawn_random_res_near town
+        if @town_aid[town.id] % 2 == 0
+          class_to_spawn = Resource
+        else
+          class_to_spawn = Chest
+        end
+        if spawn_random_res_near town, class_to_spawn
           @town_aid[town.id] += 1
         end
       end
     }
   end
 
-  def spawn_random_res_near town
+  def spawn_random_res_near town, class_to_spawn
     xy = @map.get_rand_coords_near town.x, town.y, Config['random_res_town_radius']
     if Unit.place_is_empty?(xy[:x], xy[:y])
-      resources = Config['resource'].keys
-      res = resources[rand(resources.length)]
-      res = Resource.new(res.to_sym, xy[:x], xy[:y])
+      class_to_spawn.new(xy[:x], xy[:y])
       return true
     end
     false
