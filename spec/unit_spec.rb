@@ -31,11 +31,11 @@ RSpec.describe Unit, "testing" do
     user = User.new('killer')
     hi = Swordsman.new(2, 2, user)
     hi.kill
-    expect(hi.life).to eq(Config.get('MAX_LIFE') - 1)
+    expect(hi.life).to eq(Config.get(:max_life) - 1)
     expect(hi.wounds).to eq(0)
     town = Town.new(3, 3, user)
     town.kill
-    expect(town.life).to eq(Config.get('MAX_LIFE') - 1)
+    expect(town.life).to eq(Config.get(:max_life) - 1)
     expect(town.wounds).to eq(1)
   end
 

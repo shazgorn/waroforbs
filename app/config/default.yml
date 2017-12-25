@@ -15,17 +15,17 @@ img_path: front/static/img/
 START_GLORY: 120
 START_MAX_GLORY: 200
 START_UNIT_TYPE: swordsman
-start_res:
-  gold: 10
-  wood: 7
-  settlers: 1
-max_random_res: 10
-random_res_town_radius: 7
-res_spawner_tick: 3600
-resource_lifetime_in_the_wild: 86400
-max_town_aid: 20
-orb_tick: 3
-MAX_LIFE: 15
+:start_res:
+  :gold: 10
+  :wood: 7
+  :settlers: 1
+:max_random_res: 10
+:random_res_town_radius: 7
+:res_spawner_tick: 3600
+:resource_lifetime_in_the_wild: 86400
+:max_town_aid: 20
+:orb_tick: 3
+:max_life: 15
 DUMMY_LOGIN: dummy
 unit_class:
   swordsman: Swordsman

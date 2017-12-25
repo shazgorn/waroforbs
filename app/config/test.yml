@@ -1,5 +1,5 @@
 BLOCKS_IN_MAP_DIM: 1
-resource_lifetime_in_the_wild: 3
+:resource_lifetime_in_the_wild: 3
 buildings:
   barracs:
     cost:

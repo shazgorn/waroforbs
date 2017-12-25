@@ -1,6 +1,6 @@
 module Expirable
   def expired?
-    Time.now - @created_time  > Config['resource_lifetime_in_the_wild']
+    Time.now - @created_time  > Config[:resource_lifetime_in_the_wild]
   end
 
   ##

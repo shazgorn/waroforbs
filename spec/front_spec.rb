@@ -107,7 +107,7 @@ RSpec.describe "Front tests", :js => true do
     expect(page).to have_css('.attack-target')
     defender = first('.attack-target')
     start_defender_life = defender.find('.life-box').text.to_i
-    expect(1..Config.get('MAX_LIFE')).to include(start_defender_life)
+    expect(1..Config.get(:max_life)).to include(start_defender_life)
     defender.click()
     defender_wounds = find('.casualties-defender .wounds').text.to_i
     defender_kills = find('.casualties-defender .kills').text.to_i
@@ -162,7 +162,7 @@ RSpec.describe "Front tests", :js => true do
     first('.worker-cell-mountain').click()
     page.assert_selector('.has-worker.worker-cell-mountain')
     page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
-    sleep(Config['resource']['stone']['production_time'].to_i + Config['orb_tick']) # stone production_time + tick_interval
+    sleep(Config['resource']['stone']['production_time'].to_i + Config[:orb_tick']) # stone production_time + tick_interval
     click_button('control_5')
     page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
   end

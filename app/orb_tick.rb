@@ -12,7 +12,7 @@ class OrbTick
     info 'Tick started'
     now = Time.now.to_f
     sleep now.ceil - now + 0.001
-    every(Config['orb_tick']) do
+    every(Config[:orb_tick]) do
       unless @monolith_spawned
         publish 'spawn_monolith'
       end

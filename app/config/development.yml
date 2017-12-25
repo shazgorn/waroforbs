@@ -1,5 +1,5 @@
 BLOCKS_IN_MAP_DIM: 1
-res_spawner_tick: 10
+:res_spawner_tick: 10
 buildings:
   barracs:
     cost:

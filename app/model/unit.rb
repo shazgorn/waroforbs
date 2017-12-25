@@ -26,7 +26,7 @@ class Unit
       @defence = Config[type.to_s]['defence'].to_i
       @initiative = Config[type.to_s]['initiative'].to_i
       @ap = @max_ap = Config[type.to_s]['ap'].to_i
-      @life = Config['MAX_LIFE']
+      @life = Config[:max_life]
     else
       @attack = @defence = @initiative = @ap = @max_ap = @life = 0
     end
@@ -48,7 +48,7 @@ class Unit
   end
 
   def kills
-    Config.get('MAX_LIFE') - @life - @wounds
+    Config.get(:max_life) - @life - @wounds
   end
 
   def kill

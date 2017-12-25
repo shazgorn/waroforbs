@@ -5,6 +5,6 @@ module SingleEntity
   end
 
   def strength
-    Config.get('MAX_LIFE')
+    Config.get(:max_life)
   end
 end

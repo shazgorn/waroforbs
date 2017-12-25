@@ -145,8 +145,8 @@ class Game
 
   def start_res_for_user(user)
     unit = new_random_squad(user)
-    Config['start_res'].each{|res, q|
-      unit.give_res(res.to_sym, q)
+    Config[:start_res].each{|res, q|
+      unit.give_res(res, q)
     }
   end
 
@@ -443,7 +443,7 @@ class Game
       unless @town_aid.key? town.id
         @town_aid[town.id] = 0
       end
-      if @town_aid[town.id] < Config['max_town_aid']
+      if @town_aid[town.id] < Config[:max_town_aid]
         if @town_aid[town.id] % 2 == 0
           class_to_spawn = Resource
         else
@@ -457,7 +457,7 @@ class Game
   end
 
   def spawn_random_res_near town, class_to_spawn
-    xy = @map.get_rand_coords_near town.x, town.y, Config['random_res_town_radius']
+    xy = @map.get_rand_coords_near town.x, town.y, Config[:random_res_town_radius]
     if Unit.place_is_empty?(xy[:x], xy[:y])
       class_to_spawn.new(xy[:x], xy[:y])
       return true

@@ -11,7 +11,7 @@ class RandomResSpawnerTick
     info 'Random res spawner tick started'
     now = Time.now.to_f
     sleep now.ceil - now + 0.001
-    every(Config['res_spawner_tick']) do
+    every(Config[:res_spawner_tick]) do
       publish 'spawn_random_res'
     end
   end
