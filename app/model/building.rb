@@ -6,7 +6,7 @@ require 'time_helper'
 class Building
   include TimeHelper
 
-  attr_reader :cost_res, :type, :status, :level, :title
+  attr_reader :cost_res, :type, :status, :level, :name
 
   STATE_GROUND = 1
   STATE_IN_PROGRESS = 2

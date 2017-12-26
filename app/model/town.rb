@@ -104,7 +104,7 @@ class Town < Unit
   end
 
   def get_building_title(id)
-    @buildings[id].title
+    @buildings[id].name
   end
 
   ##
