@@ -23,6 +23,7 @@ require 'squad_attack'
 require 'attack'
 require 'token'
 require 'turn_counter'
+require 'town_aid'
 
 ##
 # Game logic, some kind of incubator
@@ -44,14 +45,12 @@ class Game
     @generate = false
     check_args
     @map = Map.new(@generate)
-    # town_id => spawned resource count
-    @town_aid = {}
     drop_all if drop
     unless Celluloid::Actor[:turn_counter]
       Celluloid::Actor[:turn_counter] = TurnCounter.new
     end
     subscribe('tick', :tick)
-    subscribe('spawn_random_res', :spawn_random_res)
+    subscribe('spawn_random_res_near', :spawn_random_res_near)
   end
 
   def drop_all
@@ -277,7 +276,8 @@ class Game
     return LogBox.error(I18n.t('log_entry_already_have_town'), user) if Town.has_live_town? user
     unit = Unit.get_by_id(active_unit_id)
     raise OrbError, "Active unit is nil" unless unit
-    Town.new(unit.x, unit.y, user)
+    town = Town.new(unit.x, unit.y, user)
+    TownAid.new(town).async.run
     unit.take_res(:settlers, 1)
     LogBox.spawn(I18n.t('log_entry_settle_town'), user)
   end
@@ -431,30 +431,21 @@ class Game
     }
   end
 
-  def spawn_random_res(topic)
-    Resource.all.each{|id, res|
+  def expire_by_class cls
+    cls.all.each{|id, res|
       if res.expired?
-        Resource.delete res.id
-      end
-    }
-    Town.alive.each{|id, town|
-      unless @town_aid.key? town.id
-        @town_aid[town.id] = 0
-      end
-      if @town_aid[town.id] < Config[:max_town_aid]
-        if @town_aid[town.id] % 2 == 0
-          class_to_spawn = Resource
-        else
-          class_to_spawn = Chest
-        end
-        if spawn_random_res_near town, class_to_spawn
-          @town_aid[town.id] += 1
-        end
+        cls.delete res.id
       end
     }
   end
 
-  def spawn_random_res_near town, class_to_spawn
+  def check_expired
+    expire_by_class Resource
+    expire_by_class Chest
+  end
+
+  def spawn_random_res_near topic, town, class_to_spawn
+    check_expired
     xy = @map.get_rand_coords_near town.x, town.y, Config[:random_res_town_radius]
     if Unit.place_is_empty?(xy[:x], xy[:y])
       class_to_spawn.new(xy[:x], xy[:y])

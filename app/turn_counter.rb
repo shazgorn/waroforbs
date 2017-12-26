@@ -4,7 +4,7 @@ class TurnCounter
   attr_reader :turns
 
   def initialize
-    @turns = 1
+    @turns = 0
   end
 
   def make_turn

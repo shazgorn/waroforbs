@@ -309,8 +309,8 @@ RSpec.describe Game, "testing" do
 
   it 'spawn random res' do
     user = User.new('user')
-    Town.new(5, 5, user)
-    Celluloid::Actor[:game].spawn_random_res('spawn_random_res')
+    town = Town.new(5, 5, user)
+    Celluloid::Actor[:game].spawn_random_res_near 'spawn_random_res_near', town, Resource
     resources = Unit.get_by_types Config[:resource].keys.map{|res| res.to_sym}
     expect(resources.size).to eq(1)
     res = resources.values[0]
@@ -322,7 +322,7 @@ RSpec.describe Game, "testing" do
     res.take_res(:stone, Config[:max_random_res][:stone])
     expect(res.x).to be_nil
     resources = Unit.get_by_type :wood
-    Celluloid::Actor[:game].spawn_random_res('spawn_random_res')
+    Celluloid::Actor[:game].spawn_random_res_near 'spawn_random_res_near', town, Chest
     resources = Chest.all
     expect(resources.size).to eq(1)
     res = resources.values[0]

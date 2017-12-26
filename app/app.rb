@@ -20,7 +20,7 @@ require 'socket_reader'
 require 'socket_writer'
 require 'facade'
 require 'orb_tick'
-require 'random_res_spawner_tick'
+# require 'random_res_spawner_tick'
 require 'orb_websockets_server'
 require 'game'
 
@@ -31,7 +31,6 @@ begin
 
   game_supervisor = Game.supervise({as: :game})
   OrbTick.new
-  RandomResSpawnerTick.new
   OrbWebsocketsServer.run
   puts 'Going to sleep'
   sleep
