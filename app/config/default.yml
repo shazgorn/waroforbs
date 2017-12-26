@@ -19,7 +19,10 @@ START_UNIT_TYPE: swordsman
   :gold: 10
   :wood: 7
   :settlers: 1
-:max_random_res: 10
+:max_random_res:
+  :gold: 10
+  :wood: 5
+  :stone: 3
 :random_res_town_radius: 7
 :res_spawner_tick: 3600
 :resource_lifetime_in_the_wild: 86400

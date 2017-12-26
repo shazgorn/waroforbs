@@ -8,7 +8,7 @@ class Resource < Unit
     resources = Config['resource'].keys
     type = resources[rand(resources.length)]
     super(type.to_sym, x, y)
-    @inventory[type.to_sym] = rand(1..Config[:max_random_res])
+    @inventory[type.to_sym] = rand(1..Config[:max_random_res][type])
     @name = I18n.t(type.to_s)
   end
 

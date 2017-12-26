@@ -317,9 +317,9 @@ RSpec.describe Game, "testing" do
     expect(res.expired?).to be false
     sleep(Config[:resource_lifetime_in_the_wild] + 1)
     expect(res.expired?).to be true
-    res.take_res(:gold, Config[:max_random_res])
-    res.take_res(:wood, Config[:max_random_res])
-    res.take_res(:stone, Config[:max_random_res])
+    res.take_res(:gold, Config[:max_random_res][:gold])
+    res.take_res(:wood, Config[:max_random_res][:wood])
+    res.take_res(:stone, Config[:max_random_res][:stone])
     expect(res.x).to be_nil
     resources = Unit.get_by_type :wood
     Celluloid::Actor[:game].spawn_random_res('spawn_random_res')
