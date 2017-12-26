@@ -26,14 +26,12 @@ require 'game'
 
 begin
   JSON.dump_default_options[:max_nesting] = 10
-  game_supervisor = Game.supervise({as: :game})
-
   I18n.load_path = Dir[File.join('app/locales', '*.yml')]
   I18n.default_locale = :ru
 
+  game_supervisor = Game.supervise({as: :game})
   OrbTick.new
   RandomResSpawnerTick.new
-
   OrbWebsocketsServer.run
   puts 'Going to sleep'
   sleep

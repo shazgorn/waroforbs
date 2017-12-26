@@ -24,153 +24,153 @@ START_UNIT_TYPE: swordsman
   :wood: 5
   :stone: 3
 :random_res_town_radius: 7
-:res_spawner_tick: 3600
+:res_spawner_tick: 60
 :resource_lifetime_in_the_wild: 86400
 :max_town_aid: 20
 :orb_tick: 3
 :max_life: 15
 DUMMY_LOGIN: dummy
-unit_class:
-  swordsman: Swordsman
-  hero_swordsman: HeroSwordsman
-buildings:
-  barracs:
-    units:
-      - swordsman
-    max_level: 10
-    cost:
-      formula:
+:unit_class:
+  :swordsman: Swordsman
+  :hero_swordsman: HeroSwordsman
+:buildings:
+  :barracs:
+    :units:
+      - :swordsman
+    :max_level: 10
+    :cost:
+      :formula:
         1:
-          time: 60
-          res:
-            gold: 10
-            wood: 2
+          :time: 60
+          :res:
+            :gold: 10
+            :wood: 2
         2:
-          time: + 60
-          res:
-            gold: + 10
-            wood: + 2
-  tavern:
-    units:
-      - hero_swordsman
-    max_level: 1
-    cost:
-      formula:
+          :time: + 60
+          :res:
+            :gold: + 10
+            :wood: + 2
+  :tavern:
+    :units:
+      - :hero_swordsman
+    :max_level: 1
+    :cost:
+      :formula:
         1:
-          time: 60
-          res:
-            gold: 10
-            wood: 10
-  roads:
-    max_level: 10
-    cost:
-      formula:
+          :time: 60
+          :res:
+            :gold: 10
+            :wood: 10
+  :roads:
+    :max_level: 10
+    :cost:
+      :formula:
         1:
-          time: 4
-          res:
-            gold: 5
-            wood: 2
+          :time: 4
+          :res:
+            :gold: 5
+            :wood: 2
         2:
-          time: + 2
-          res:
-            gold: + 1
-            wood: + 1
-  factory:
-    resource: gold
-    max_level: 10
-    cost:
-      formula:
+          :time: + 2
+          :res:
+            :gold: + 1
+            :wood: + 1
+  :factory:
+    :resource: :gold
+    :max_level: 10
+    :cost:
+      :formula:
         1:
-          time: 4
-          res:
-            gold: 5
-            wood: 2
+          :time: 4
+          :res:
+            :gold: 5
+            :wood: 2
         2:
-          time: 20
-          res:
-            gold: 10
-            wood: 4
-  sawmill:
-    resource: wood
-    max_level: 10
-    cost:
-      formula:
+          :time: 20
+          :res:
+            :gold: 10
+            :wood: 4
+  :sawmill:
+    :resource: :wood
+    :max_level: 10
+    :cost:
+      :formula:
         1:
-          time: 4
-          res:
-            gold: 5
-            wood: 2
+          :time: 4
+          :res:
+            :gold: 5
+            :wood: 2
         2:
-          time: + 10
-          res:
-            gold: + 10
-            wood: + 4
-            stone: + 2
-  quarry:
-    resource: stone
-    max_level: 10
-    cost:
-      formula:
+          :time: + 10
+          :res:
+            :gold: + 10
+            :wood: + 4
+            :stone: + 2
+  :quarry:
+    :resource: :stone
+    :max_level: 10
+    :cost:
+      :formula:
         1:
-          time: 4
-          res:
-            gold: 5
-            wood: 2
+          :time: 4
+          :res:
+            :gold: 5
+            :wood: 2
         2:
-          time: 20
-          res:
-            gold: + 10
-            wood: + 4
-swordsman:
-  required_buildings:
-    - barracs
-  ap: 20
-  attack: 3
-  defence: 3
-  initiative: 1
-  cost_res:
-    gold: 10
-    wood: 1
-  cost_glory: 10
-hero_swordsman:
-  required_buildings:
-    - tavern
-    - barracs
-  ap: 30
-  attack: 4
-  defence: 4
-  initiative: 2
-  cost_res:
-    gold: 100
-    wood: 10
-  cost_glory: 20
-town:
-  ap: 0
-  attack: 1
-  defence: 1
-  initiative: 0
-  radius: 3
-resource:
-  gold:
-    production_building: factory
-    production_time: 1
-    delivery_time: 0
-    profession: Peon
-  wood:
-    production_building: sawmill
-    production_time: 3
-    delivery_time: 1
-    profession: Woodcutter
-  stone:
-    production_building: quarry
-    production_time: 5
-    delivery_time: 2
-    profession: Stonecutter
-terrain_move_cost:
-  grass: 1
-  tree: 2
-  mountain: 3
-terrain_to_res:
-  grass: gold
-  tree: wood
-  mountain: stone
+          :time: 20
+          :res:
+            :gold: + 10
+            :wood: + 4
+:swordsman:
+  :required_buildings:
+    - :barracs
+  :ap: 20
+  :attack: 3
+  :defence: 3
+  :initiative: 1
+  :cost_res:
+    :gold: 10
+    :wood: 1
+  :cost_glory: 10
+:hero_swordsman:
+  :required_buildings:
+    - :tavern
+    - :barracs
+  :ap: 30
+  :attack: 4
+  :defence: 4
+  :initiative: 2
+  :cost_res:
+    :gold: 100
+    :wood: 10
+  :cost_glory: 20
+:town:
+  :ap: 0
+  :attack: 1
+  :defence: 1
+  :initiative: 0
+  :radius: 3
+:resource:
+  :gold:
+    :production_building: :factory
+    :production_time: 1
+    :delivery_time: 0
+    :profession: Peon
+  :wood:
+    :production_building: :sawmill
+    :production_time: 3
+    :delivery_time: 1
+    :profession: Woodcutter
+  :stone:
+    :production_building: :quarry
+    :production_time: 5
+    :delivery_time: 2
+    :profession: Stonecutter
+:terrain_move_cost:
+  :grass: 1
+  :tree: 2
+  :mountain: 3
+:terrain_to_res:
+  :grass: :gold
+  :tree: :wood
+  :mountain: :stone

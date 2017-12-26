@@ -21,11 +21,11 @@ class Unit
     @dead = false
     @x = x
     @y = y
-    if Config[type.to_s]
-      @attack = Config[type.to_s]['attack'].to_i
-      @defence = Config[type.to_s]['defence'].to_i
-      @initiative = Config[type.to_s]['initiative'].to_i
-      @ap = @max_ap = Config[type.to_s]['ap'].to_i
+    if Config[type]
+      @attack = Config[type][:attack].to_i
+      @defence = Config[type][:defence].to_i
+      @initiative = Config[type][:initiative].to_i
+      @ap = @max_ap = Config[type][:ap].to_i
       @life = Config[:max_life]
     else
       @attack = @defence = @initiative = @ap = @max_ap = @life = 0

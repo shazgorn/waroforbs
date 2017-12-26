@@ -1,15 +1,15 @@
 BLOCKS_IN_MAP_DIM: 1
 :res_spawner_tick: 10
-buildings:
-  barracs:
-    cost:
-      formula:
+:buildings:
+  :barracs:
+    :cost:
+      :formula:
         1:
-          time: 10
+          :time: 10
         2:
-          time: 20
-  tavern:
-    cost:
-      formula:
+          :time: 20
+  :tavern:
+    :cost:
+      :formula:
         1:
-          time: 5
+          :time: 5

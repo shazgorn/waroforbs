@@ -11,7 +11,7 @@
 
 class BuildingCard
   @create: (building) ->
-    switch building.name
+    switch building.type
       when 'barracs' then building = new BarracsCard(building)
       when 'tavern' then building = new TavernCard(building)
       when 'roads' then building = new RoadsCard(building)
@@ -25,24 +25,25 @@ class BuildingCard
   ###
   constructor: (building) ->
     @town_modal = null
+    @type = building.type
     @name = building.name
-    @title = building.title
+    @title = @name
     @actions = building.actions
     # building container(card)
     @el = $(document.createElement('div'))
-      .addClass("building-card building-card-#{building.name}")
+      .addClass("building-card building-card-#{building.type}")
       .attr('id', building.id)
       .appendTo('#buildings-list')
     # open building link
     @open_building_el = $(document.createElement('a'))
       .html(@title)
-      .attr('id', "open-screen-#{building.name}")
-      .data('id', building.name)
+      .attr('id', "open-screen-#{building.type}")
+      .data('id', building.type)
       .appendTo(@el)
     @level_observer = new LevelObserver(@open_building_el, building.level, building.max_level)
     @time_observer = new TimeObserver(@el, building.ttb_string, building.status)
     @cost_observer = new CostObserver(@el, building.cost_res)
-    @build_observer = new BuildObserver(@el, building.build_label, building.status, building.name)
+    @build_observer = new BuildObserver(@el, building.build_label, building.status, building.type)
     @state_observer = new StateObserver(@el, building.status)
 
   update: (building) ->

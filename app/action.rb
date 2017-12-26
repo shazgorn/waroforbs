@@ -68,8 +68,8 @@ class HireSwordsmanAction < HireAction
     super(on)
     @name = NAME
     @title = I18n.t('Swordsman')
-    @unit_type = 'swordsman'
-    @cost = Config[@unit_type]['cost_res']
+    @unit_type = :swordsman
+    @cost = Config[@unit_type][:cost_res]
   end
 end
 
@@ -80,7 +80,7 @@ class HireHeroSwordsmanAction < HireAction
     super(on)
     @name = NAME
     @title = I18n.t('Hero swordsman')
-    @unit_type = 'hero_swordsman'
-    @cost = Config[@unit_type]['cost_res']
+    @unit_type = :hero_swordsman
+    @cost = Config[@unit_type][:cost_res]
   end
 end

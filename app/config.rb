@@ -12,7 +12,7 @@ class Config
     def get(key)
       if @@config.nil?
         load_config()
-        BuildingCostGenerator.new(@@config['buildings']).generate_buildings_cost()
+        BuildingCostGenerator.new(@@config[:buildings]).generate_buildings_cost()
       end
       @@config[key]
     end

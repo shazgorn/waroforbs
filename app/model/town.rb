@@ -39,7 +39,7 @@ class Town < Unit
     @inventory[:gold] = 300
     @inventory[:wood] = 50
     @name = I18n.t('Town')
-    @radius = Config['town']['radius'].to_i
+    @radius = Config[:town][:radius].to_i
   end
 
   ##
@@ -73,7 +73,7 @@ class Town < Unit
   def tick
     super
     @workers.each_value{|worker|
-      @inventory[worker.type.to_sym] += worker.collect_res
+      @inventory[worker.type] += worker.collect_res
     }
   end
 
@@ -124,13 +124,13 @@ class Town < Unit
   end
 
   def built?(building)
-    @buildings[building.to_sym].built?
+    @buildings[building].built?
   end
 
   def check_price(cost)
     msg = nil
     cost.each{|res, value|
-      if value > @inventory[res.to_sym]
+      if value > @inventory[res]
         msg += I18n.t('log_entry_not_enough_res', res: res)
       end
     }
@@ -143,7 +143,7 @@ class Town < Unit
 
   def pay_price(cost)
     cost.each{|res, value|
-      @inventory[res.to_sym] -= value
+      @inventory[res] -= value
     }
   end
 

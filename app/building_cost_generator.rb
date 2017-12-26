@@ -13,24 +13,24 @@ class BuildingCostGenerator
   end
 
   def default_cost
-    {'time' => 0, 'res' => {}}
+    {:time => 0, :res => {}}
   end
 
   def generate_building_cost(name)
     bconfig = @buildings[name]
     current_formula = nil
     prev_cost = default_cost
-    (1..bconfig['max_level']).each{|level|
-      raise OrbError, 'No formula for level 1 of #{name}' if level == 1 && bconfig['cost']['formula'][level].nil?
-      if bconfig['cost']['formula'][level]
-        current_formula = bconfig['cost']['formula'][level]
+    (1..bconfig[:max_level]).each{|level|
+      raise OrbError, 'No formula for level 1 of #{name}' if level == 1 && bconfig[:cost][:formula][level].nil?
+      if bconfig[:cost][:formula][level]
+        current_formula = bconfig[:cost][:formula][level]
       end
       # skip building cost set manually
-      if bconfig['cost'][level]
-        prev_cost = bconfig['cost'][level]
+      if bconfig[:cost][level]
+        prev_cost = bconfig[:cost][level]
       else
         prev_cost = parse_formula_and_apply prev_cost, current_formula
-        bconfig['cost'][level] = prev_cost.clone
+        bconfig[:cost][level] = prev_cost.clone
       end
     }
   end
@@ -40,11 +40,11 @@ class BuildingCostGenerator
 
   def parse_formula_and_apply prev_cost, formula
     new_cost = default_cost
-    formula['res'].each{|res, exp|
+    formula[:res].each{|res, exp|
       if exp.respond_to? :split
         tokens = exp.split(' ')
-        if prev_cost['res'][res]
-          prev_value = prev_cost['res'][res]
+        if prev_cost[:res][res]
+          prev_value = prev_cost[:res][res]
         else
           # resource cost widening
           case tokens[0]
@@ -55,16 +55,16 @@ class BuildingCostGenerator
             prev_value = 1
           end
         end
-        new_cost['res'][res] = prev_value.send tokens[0].to_sym, tokens[1].to_i
+        new_cost[:res][res] = prev_value.send tokens[0].to_sym, tokens[1].to_i
       else
-        new_cost['res'][res] = exp
+        new_cost[:res][res] = exp
       end
     }
-    if formula['time'].respond_to? :split
-      tokens = formula['time'].split(' ')
-      new_cost['time'] = prev_cost['time'].send tokens[0].to_sym, tokens[1].to_i
+    if formula[:time].respond_to? :split
+      tokens = formula[:time].split(' ')
+      new_cost[:time] = prev_cost[:time].send tokens[0].to_sym, tokens[1].to_i
     else
-      new_cost['time'] = formula['time']
+      new_cost[:time] = formula[:time]
     end
     new_cost
   end

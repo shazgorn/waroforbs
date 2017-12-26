@@ -103,7 +103,7 @@ RSpec.describe Game, "testing" do
       dx = @dx
       dy = @dy
       logs = nil
-      (Config[@unit.type.to_s]['ap'].to_i + 20).times do
+      (Config[@unit.type][:ap].to_i + 20).times do
         Celluloid::Actor[:game].move_user_hero_by(@user, @unit.id, dx, dy)
         logs = LogBox.get_current_by_user(@user)
         dx *= -1
@@ -154,10 +154,10 @@ RSpec.describe Game, "testing" do
   it 'is building' do
     user = User.new('builder')
     Town.new(1, 1, user)
-    b_name = 'barracs'
-    Celluloid::Actor[:game].build(user, b_name.to_sym)
+    b_type = :barracs
+    Celluloid::Actor[:game].build(user, b_type)
     LogBox.get_current_by_user(user) # clean building started
-    Celluloid::Actor[:game].build(user, b_name.to_sym)
+    Celluloid::Actor[:game].build(user, b_type)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_already_in_progress'))
     Celluloid::Actor[:game].build(user, :tavern)
   end
@@ -165,13 +165,13 @@ RSpec.describe Game, "testing" do
   it 'is hiring units', :slow => true do
     user = User.new('hirer')
     town = Town.new(1, 1, user)
-    b_name = 'barracs'
-    Celluloid::Actor[:game].hire_unit(user, Config['buildings'][b_name]['units'].first)
-    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t(b_name.capitalize)))
-    town.build(b_name.to_sym)
-    sleep(Config['buildings'][b_name]['cost'][1]['time'])
-    expect(Config['buildings'][b_name]['units'].include?('swordsman')).to be true
-    Celluloid::Actor[:game].hire_unit(user, Config['buildings'][b_name]['units'].first)
+    b_type = :barracs
+    Celluloid::Actor[:game].hire_unit(user, Config[:buildings][b_type][:units].first)
+    expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t(b_type.to_s.capitalize)))
+    town.build(b_type)
+    sleep(Config[:buildings][b_type][:cost][1][:time])
+    expect(Config[:buildings][b_type][:units].include?(:swordsman)).to be true
+    Celluloid::Actor[:game].hire_unit(user, Config[:buildings][b_type][:units].first)
     expect(Unit.get_by_user(user).length).to eq(2)
     LogBox.get_current_by_user(user)
     wrong_squad_type = 'wrong_squad_type'
@@ -182,17 +182,17 @@ RSpec.describe Game, "testing" do
   it 'hire hero_swordsman', :slow => true do
     user = User.new('hirer')
     town = Town.new(1, 1, user)
-    Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
+    Celluloid::Actor[:game].hire_unit(user, :hero_swordsman)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t('Tavern')))
     expect(Unit.get_by_user(user).length).to eq(1)
     town.build(:tavern)
-    sleep(Config['buildings']['tavern']['cost'][1]['time'])
-    Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
+    sleep(Config[:buildings][:tavern][:cost][1][:time])
+    Celluloid::Actor[:game].hire_unit(user, :hero_swordsman)
     expect(LogBox.get_current_by_user(user).first.message).to eq(I18n.t('log_entry_building_not_build', building: I18n.t('Barracs')))
     expect(Unit.get_by_user(user).length).to eq(1)
     town.build(:barracs)
-    sleep(Config['buildings']['barracs']['cost'][1]['time'])
-    Celluloid::Actor[:game].hire_unit(user, 'hero_swordsman')
+    sleep(Config[:buildings][:barracs][:cost][1][:time])
+    Celluloid::Actor[:game].hire_unit(user, :hero_swordsman)
     expect(Unit.get_by_user(user).length).to eq(2)
     expect(LogBox.get_current_by_user(user).first.message). to eq(I18n.t('log_entry_new_unit', name: I18n.t('Hero swordsman')))
   end
@@ -276,34 +276,34 @@ RSpec.describe Game, "testing" do
       @x = 1
       @y = 1
       @swordsman = @from = Swordsman.new(@x, @y, @user)
-      @from.inventory[:gold] = Config['start_res']['gold'].to_i
+      @from.inventory[:gold] = Config[:start_res][:gold].to_i
       @town = @to = Town.new(@x + 1, @y + 1, @user)
     end
 
     it 'taking' do
-      taken_q = @from.take_res(:gold, Config['start_res']['gold'].to_i)
-      expect(taken_q).to eq(Config['start_res']['gold'].to_i)
+      taken_q = @from.take_res(:gold, Config[:start_res][:gold].to_i)
+      expect(taken_q).to eq(Config[:start_res][:gold].to_i)
       expect(@from.inventory[:gold]).to eq(0)
     end
 
     it 'taking more' do
-      taken_q = @from.take_res(:gold, Config['start_res']['gold'].to_i + 1)
-      expect(taken_q).to eq(Config['start_res']['gold'].to_i)
+      taken_q = @from.take_res(:gold, Config[:start_res][:gold].to_i + 1)
+      expect(taken_q).to eq(Config[:start_res][:gold].to_i)
       expect(@from.inventory[:gold]).to eq(0)
     end
 
     it 'givinig res' do
       to_gold = @to.inventory[:gold]
-      Celluloid::Actor[:game].give(@user, @from.id, @to.id, {'gold' => Config['start_res']['gold'].to_s})
+      Celluloid::Actor[:game].give(@user, @from.id, @to.id, {:gold => Config[:start_res][:gold].to_s})
       expect(@from.inventory[:gold]).to eq(0)
-      expect(@to.inventory[:gold]).to eq(to_gold + Config['start_res']['gold'].to_i)
+      expect(@to.inventory[:gold]).to eq(to_gold + Config[:start_res][:gold].to_i)
     end
 
     it 'taking res' do
       to_gold = @town.inventory[:gold]
-      Celluloid::Actor[:game].take(@user, @town.id, @swordsman.id, {'gold' => Config['start_res']['gold'].to_s})
+      Celluloid::Actor[:game].take(@user, @town.id, @swordsman.id, {:gold => Config[:start_res][:gold].to_s})
       expect(@swordsman.inventory[:gold]).to eq(0)
-      expect(@town.inventory[:gold]).to eq(to_gold + Config['start_res']['gold'].to_i)
+      expect(@town.inventory[:gold]).to eq(to_gold + Config[:start_res][:gold].to_i)
     end
   end
 
@@ -311,7 +311,7 @@ RSpec.describe Game, "testing" do
     user = User.new('user')
     Town.new(5, 5, user)
     Celluloid::Actor[:game].spawn_random_res('spawn_random_res')
-    resources = Unit.get_by_types Config['resource'].keys.map{|res| res.to_sym}
+    resources = Unit.get_by_types Config[:resource].keys.map{|res| res.to_sym}
     expect(resources.size).to eq(1)
     res = resources.values[0]
     expect(res.expired?).to be false

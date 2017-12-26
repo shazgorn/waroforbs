@@ -1,16 +1,16 @@
 BLOCKS_IN_MAP_DIM: 1
 :resource_lifetime_in_the_wild: 3
-buildings:
-  barracs:
-    cost:
-      formula:
+:buildings:
+  :barracs:
+    :cost:
+      :formula:
         1:
-          time: 1
+          :time: 1
         2:
-          time: 60
-  tavern:
-    max_level: 2
-    cost:
-      formula:
+          :time: 60
+  :tavern:
+    :max_level: 2
+    :cost:
+      :formula:
         1:
-          time: 1
+          :time: 1

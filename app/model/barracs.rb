@@ -2,8 +2,8 @@ require 'building'
 
 class Barracs < Building
   def initialize
-    @name = 'barracs'
-    @title = I18n.t('Barracs')
+    @type = :barracs
+    @name = I18n.t('Barracs')
     super
   end
 

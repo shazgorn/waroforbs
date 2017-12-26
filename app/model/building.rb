@@ -6,7 +6,7 @@ require 'time_helper'
 class Building
   include TimeHelper
 
-  attr_reader :cost_res, :name, :status, :level, :title
+  attr_reader :cost_res, :type, :status, :level, :title
 
   STATE_GROUND = 1
   STATE_IN_PROGRESS = 2
@@ -21,7 +21,7 @@ class Building
     @start_time = nil
     @finish_time = nil
     @level = 0
-    @max_level = Config['buildings'][@name]['max_level'].to_i
+    @max_level = Config[:buildings][@type][:max_level].to_i
     init_cost
   end
 
@@ -30,9 +30,9 @@ class Building
 
   def init_cost
     if @level + 1 <= @max_level
-      cost = Config['buildings'][@name]['cost'][@level + 1]
-      @cost_time = cost['time']
-      @cost_res = cost['res']
+      cost = Config[:buildings][@type][:cost][@level + 1]
+      @cost_time = cost[:time]
+      @cost_res = cost[:res]
       @ttb_string = seconds_to_hm(@cost_time)
     end
   end
@@ -43,8 +43,8 @@ class Building
       'cost_res' => @cost_res,
       'cost_time' => @cost_time,
       'finish_time' => @finish_time,
+      'type' => @type,
       'name' => @name,
-      'title' => @title,
       'start_time' => @start_time,
       'status' => @status,
       'ttb' => @ttb,
@@ -62,7 +62,7 @@ class Building
 
   def enough_resources? avail_resources
     @cost_res.each{|res_name, res_count|
-      if res_count > 0 && (!avail_resources.has_key?(res_name.to_sym) || avail_resources[res_name.to_sym] < res_count)
+      if res_count > 0 && (!avail_resources.has_key?(res_name) || avail_resources[res_name] < res_count)
         return false
       end
     }

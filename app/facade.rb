@@ -64,7 +64,7 @@ class Facade
   end
 
   def make_action_on_op(op, user, data, user_data, user_data_key, token)
-    Celluloid::Actor[:game].make_turn
+    Celluloid::Actor[:turn_counter].make_turn
     case op
     when :init_map
       user_data[user_data_key][:data_type] = :init_map

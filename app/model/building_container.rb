@@ -7,6 +7,6 @@ class BuildingContainer
   end
 
   def get_levels(res_type)
-    [@buildings[Config['resource'][res_type.to_s]['production_building'].to_sym].level, @buildings[:roads].level]
+    [@buildings[Config[:resource][res_type][:production_building]].level, @buildings[:roads].level]
   end
 end

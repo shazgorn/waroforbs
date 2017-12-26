@@ -8,7 +8,7 @@ RSpec.describe Town, "testing" do
     w = town.get_worker_by_pos(pos)
     new_x = 2
     new_y = 2
-    expect(Config['resource'][:gold.to_s]['production_building']).to eq('factory')
+    expect(Config[:resource][:gold][:production_building]).to eq(:factory)
     town.set_worker_to(pos, new_x, new_y, :gold)
     expect(w.x).to eq(new_x)
     expect(w.y).to eq(new_y)

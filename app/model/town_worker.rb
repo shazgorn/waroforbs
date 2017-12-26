@@ -55,11 +55,11 @@ class TownWorker
     @type = res_type
     @distance = distance
     @res_title = I18n.t(res_type)
-    @profession = I18n.t(Config['resource'][@type.to_s]['profession'])
-    @res_info = Config['resource'][@type.to_s]
+    @profession = I18n.t(Config[:resource][@type][:profession])
+    @res_info = Config[:resource][@type]
     # TODO: max_level + 1 - production_level
-    @production_time = @res_info['production_time'] * (11 - @bc.get_levels(@type)[0])
-    @delivery_time = @res_info['delivery_time'] * @distance * (11 - @bc.get_levels(@type)[1])
+    @production_time = @res_info[:production_time] * (11 - @bc.get_levels(@type)[0])
+    @delivery_time = @res_info[:delivery_time] * @distance * (11 - @bc.get_levels(@type)[1])
     @total_time = @production_time + @delivery_time
     @start_time = Time.now
     @finish_time = @start_time + @total_time

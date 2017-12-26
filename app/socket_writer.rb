@@ -40,7 +40,7 @@ class SocketWriter
         res[:logs] = game.get_current_logs_by_user(user)
         res[:user_glory] = user.glory
         res[:user_max_glory] = user.max_glory
-        res[:turn] = game.turn
+        res[:turn] = Celluloid::Actor[:turn_counter].turns
       end
       res[:units] = game.all_units(@token)
     else

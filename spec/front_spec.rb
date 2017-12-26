@@ -63,7 +63,7 @@ RSpec.describe "Front tests", :js => true do
     log_in
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
     # units are named after class name
-    expect(unit_name).to eq(I18n.t(Config['unit_class'][Config['START_UNIT_TYPE']]))
+    expect(unit_name).to eq(I18n.t(Config[:unit_class][Config['START_UNIT_TYPE']]))
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click
     # selenium does not support double clicks
     if Capybara.javascript_driver == :selenium
@@ -162,7 +162,7 @@ RSpec.describe "Front tests", :js => true do
     first('.worker-cell-mountain').click()
     page.assert_selector('.has-worker.worker-cell-mountain')
     page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
-    sleep(Config['resource']['stone']['production_time'].to_i + Config[:orb_tick']) # stone production_time + tick_interval
+    sleep(Config[:resource]['stone'][production_time].to_i + Config[:orb_tick]) # stone production_time + tick_interval
     click_button('control_5')
     page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
   end
@@ -175,9 +175,9 @@ RSpec.describe "Front tests", :js => true do
     from.find('.give-tab').click()
     gold = from.find('.resource.gold')
     gold_q = gold.find('.resource-q').text
-    expect(gold_q.to_i).to eq(Config['start_res']['gold'])
+    expect(gold_q.to_i).to eq(Config[:start_res][:gold])
     within(from) do
-      fill_in 'gold', with: gold_q
+      fill_in :gold, with: gold_q
     end
     from.first('.adj-unit.town').click()
     click_button I18n.t('Give')

@@ -22,6 +22,7 @@ require 'cli'
 require 'squad_attack'
 require 'attack'
 require 'token'
+require 'turn_counter'
 
 ##
 # Game logic, some kind of incubator
@@ -36,23 +37,21 @@ class Game
   include Celluloid::Internals::Logger
   include Cli
 
-  attr_reader :map, :turn
+  attr_reader :map
 
   def initialize(drop = false)
     info 'Starting game'
-    @turn = 1
     @generate = false
     check_args
     @map = Map.new(@generate)
     # town_id => spawned resource count
     @town_aid = {}
     drop_all if drop
+    unless Celluloid::Actor[:turn_counter]
+      Celluloid::Actor[:turn_counter] = TurnCounter.new
+    end
     subscribe('tick', :tick)
     subscribe('spawn_random_res', :spawn_random_res)
-  end
-
-  def make_turn
-    @turn += 1
   end
 
   def drop_all
@@ -166,7 +165,6 @@ class Game
       :user_id => user.id,
       :user_name => user.login,
       :user_glory => user.glory,
-      :turn => @turn,
       :user_max_glory => user.max_glory,
       :actions => user.actions,
       :units => all_units({user.id => {}}),
@@ -227,7 +225,7 @@ class Game
 
   def hire_unit(user, unit_type)
     town = Town.get_by_user(user)
-    unless Config['unit_class'][unit_type]
+    unless Config[:unit_class][unit_type]
       LogBox.error(I18n.t('log_entry_unknown_unit', unit_type: unit_type), user)
       return
     end
@@ -235,17 +233,17 @@ class Game
       LogBox.error(I18n.t('log_entry_user_has_no_town'), user)
       return
     end
-    Config[unit_type]['required_buildings'].each{|building|
+    Config[unit_type][:required_buildings].each{|building|
       unless town.built?(building)
         LogBox.error(I18n.t('log_entry_building_not_build', building: I18n.t(building.capitalize)), user)
         return
       end
     }
-    if user.glory < Config.get(unit_type)['cost_glory']
+    if user.glory < Config.get(unit_type)[:cost_glory]
       LogBox.error(I18n.t('log_entry_more_glory_required'), user)
       return
     end
-    cost = Config.get(unit_type)['cost_res']
+    cost = Config.get(unit_type)[:cost_res]
     if res = town.check_price(cost)
       LogBox.error(res, user)
       return
@@ -256,8 +254,8 @@ class Game
       return
     end
     town.pay_price(cost)
-    user.pay_glory(Config.get(unit_type)['cost_glory'])
-    unit = Module.const_get(Config['unit_class'][unit_type]).new(empty_cell[:x], empty_cell[:y], user)
+    user.pay_glory(Config[unit_type][:cost_glory])
+    unit = Module.const_get(Config[:unit_class][unit_type]).new(empty_cell[:x], empty_cell[:y], user)
     user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_unit", name: unit.name), user)
     unit
@@ -306,7 +304,7 @@ class Game
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless town.in_radius?(x, y)
-    type = Config['terrain_to_res'][@map.cell_type_at(x, y).to_s]
+    type = Config[:terrain_to_res][@map.cell_type_at(x, y)]
     raise OrbError, "No resource type for map tile #{x}, #{y}" if type.nil?
     town.set_worker_to(worker_pos, x, y, type)
   end
@@ -323,7 +321,7 @@ class Game
     new_y = unit.y + dy
     return LogBox.error(I18n.t('log_entry_out_of_map'), unit.user) unless @map.has?(new_x, new_y)
     type = @map.cell_type_at(new_x, new_y)
-    cost = Config['terrain_move_cost'][type.to_s].to_i
+    cost = Config[:terrain_move_cost][type].to_i
     return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
     u = Unit.get_by_xy(new_x, new_y)
     if u && u.alive? && u.not_enterable_for(unit)

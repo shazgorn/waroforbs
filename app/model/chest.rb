@@ -8,8 +8,8 @@ class Chest < Unit
 
   def initialize(x, y)
     super(TYPE, x, y)
-    Config['resource'].keys.each{|res|
-      @inventory[res.to_sym] = rand(1..Config[:max_random_res][res])
+    Config[:resource].keys.each{|res|
+      @inventory[res] = rand(1..Config[:max_random_res][res])
     }
     @name = I18n.t(TYPE)
   end

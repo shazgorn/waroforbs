@@ -2,8 +2,8 @@ require 'building'
 
 class Tavern < Building
   def initialize
-    @name = 'tavern'
-    @title = I18n.t('Tavern')
+    @type = :tavern
+    @name = I18n.t('Tavern')
     super
   end
 
