@@ -24,27 +24,26 @@ class ClientContainer
   end
 
   def ws_disconnected(actor, reason)
-    p actor
     info "#{actor.inspect}  died, reason: #{reason.class}"
     begin
-      info "terminate #{@reader_name}"
+      info "Terminate #{@reader_name}"
       Celluloid::Actor[@reader_name].terminate
     rescue Celluloid::DeadActorError
       warn "#{@reader_name} already dead"
     end
     begin
-      info "terminate #{@writer_name}"
+      info "Terminate #{@writer_name}"
       Celluloid::Actor[@writer_name].terminate
     rescue Celluloid::DeadActorError
       warn "#{@writer_name} already dead"
     end
     begin
-      info "terminate #{@facade_name}"
+      info "Terminate #{@facade_name}"
       Celluloid::Actor[@facade_name].terminate
     rescue Celluloid::DeadActorError
       warn "#{@facade_name} already dead"
     end
-    info 'terminate container'
+    info 'Terminate container'
     terminate
     # p actor
     # Do not kill the whole group, use separate config or make it real container?

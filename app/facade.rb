@@ -8,6 +8,13 @@ class Facade
   include Celluloid::Internals::Logger
   include Celluloid::Notifications
 
+  attr_reader :user
+  finalizer :my_finalizer
+
+  def initialize
+    @user = nil
+  end
+
   def parse_user_data(data)
     user_data = parse_data data
     if user_data
@@ -49,16 +56,22 @@ class Facade
     op = op.to_sym
     user_data[user_data_key][:op] = op
     user_data[user_data_key][:data_type] = :units
-    user = Celluloid::Actor[:game].get_user_by_token(token)
-    if user && data.has_key?('unit_id')
+    unless @user
+      # add expiration time for token (one day)
+      @user = Celluloid::Actor[:game].get_user_by_token(token)
+      if @user
+        publish 'user_auth', @user.id
+      end
+    end
+    if @user && data.has_key?('unit_id')
       # remove duplicates of :active_unit_id setting in user_data?
-      user_data[user_data_key][:active_unit_id] = user.active_unit_id = data['unit_id'].to_i
+      user_data[user_data_key][:active_unit_id] = @user.active_unit_id = data['unit_id'].to_i
     end
     make_action_on_op(op, user, data, user_data, user_data_key, token)
-    if user
-      user_data[user_data_key][:actions] = user.actions
-      user_data[user_data_key][:user_glory] = user.glory
-      user_data[user_data_key][:user_max_glory] = user.max_glory
+    if @user
+      user_data[user_data_key][:actions] = @user.actions
+      user_data[user_data_key][:user_glory] = @user.glory
+      user_data[user_data_key][:user_max_glory] = @user.max_glory
     end
     user_data
   end
@@ -113,6 +126,12 @@ class Facade
       Celluloid::Actor[:game].refill_squad user, data['town_id'], data['unit_id']
     else
       LogBox.error('Unknown op', user)
+    end
+  end
+
+  def my_finalizer
+    if @user
+      publish 'user_quit', @user.id
     end
   end
 end
