@@ -40,6 +40,9 @@ class TownAid
   # Spawn loot boxes or resources for online users only
 
   def aid
+    if Time.now - @town.created_time > 604800 # week
+      terminate
+    end
     if @online
       @awakenenings += 1
       if Prime.prime? @awakenenings

@@ -2,7 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence, :initiative
+  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence, :initiative, :created_time
   attr_accessor :name
 
   ATTACK_COST = 1
