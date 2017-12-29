@@ -103,7 +103,7 @@ class Application
           unit_model.update(unit_hash)
           unit_model.update_view()
           unit_model.update_controls()
-          unit_model.update_modal(unit_hash)
+          unit_model.update_modal()
           unit_model.update_buildings(unit_hash)
         else
           unit_model = new Unit(unit_hash, is_user_unit)
@@ -113,7 +113,7 @@ class Application
             unit_model.create_controls()
             unit_model.update_controls()
             unit_model.create_modal()
-            unit_model.update_modal(unit_hash)
+            unit_model.update_modal()
           @units[unit_id] = unit_model
         if unit_model.need_to_move
           @map.appendElementToCell(unit_model.view.element, unit_model.x, unit_model.y)

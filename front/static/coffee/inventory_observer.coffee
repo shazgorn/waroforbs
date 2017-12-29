@@ -6,7 +6,9 @@ class InventoryObserver
   # max_slots may be set by model, more unit lvl - more slots, unclear for now
   constructor: (target, inventory, unit) ->
     @target = target
-    @inventory = inventory
+    @inventory = {}
+    for res, q of inventory
+      @inventory[res] = q
     @unit = unit
     @x = unit.x
     @y = unit.y

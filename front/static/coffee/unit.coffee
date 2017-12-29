@@ -77,9 +77,9 @@ class Unit
       @modal.create_province(@workers, @x, @y, @id, @title, @radius)
       @modal.bind_open_handler([@view.element])
 
-  update_modal: (unit) ->
+  update_modal: () ->
     if @modal
-      @modal.update(unit)
+      @modal.update(this)
       @modal.update_province(@workers, @title)
 
   remove: () ->
