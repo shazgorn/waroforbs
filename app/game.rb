@@ -44,10 +44,12 @@ class Game
     info 'Starting game'
     @generate = false
     check_args
-    @map = Map.new(@generate)
     drop_all if drop
-    unless Celluloid::Actor[:turn_counter]
-      Celluloid::Actor[:turn_counter] = TurnCounter.new
+    unless Actor[:map]
+      Actor[:map] = Map.new(@generate)
+    end
+    unless Actor[:turn_counter]
+      Actor[:turn_counter] = TurnCounter.new
     end
     subscribe('tick', :tick)
     subscribe('spawn_random_res_near', :spawn_random_res_near)
@@ -167,8 +169,8 @@ class Game
       :user_max_glory => user.max_glory,
       :actions => user.actions,
       :units => all_units({user.id => {}}),
-      :cells => @map.tiles,
-      :blocks => @map.blocks,
+      :cells => Actor[:map].tiles,
+      :blocks => Actor[:map].blocks,
       :logs => LogBox.get_by_user(user),
       :resource_info => {
         :gold => {
@@ -266,7 +268,7 @@ class Game
   #   if town.can_fill_squad?
   #     unit = Squad.get unit_id
   #     raise OrbError, 'No unit' unless unit
-  #     raise OrbError, 'Unit must be near town' unless @map.adj_cells?(town.x, town.y, unit.x, unit.y)
+  #     raise OrbError, 'Unit must be near town' unless Actor[:map].adj_cells?(town.x, town.y, unit.x, unit.y)
   #     town.pay_squad_price()
   #   end
   # end
@@ -304,7 +306,7 @@ class Game
     raise OrbError, 'No user town' unless town
     raise OrbError, 'You are trying to set worker at town coordinates' if town.x == x && town.y == y
     raise OrbError, 'Cell is not near town' unless town.in_radius?(x, y)
-    type = Config[:terrain_to_res][@map.cell_type_at(x, y)]
+    type = Config[:terrain_to_res][Actor[:map].cell_type_at(x, y)]
     raise OrbError, "No resource type for map tile #{x}, #{y}" if type.nil?
     town.set_worker_to(worker_pos, x, y, type)
   end
@@ -315,12 +317,12 @@ class Game
   # dy - int
 
   def move_unit_by(unit, dx, dy)
-    return LogBox.error(I18n.t('log_entry_wrong_direction'), unit.user) unless @map.d_include?(dx, dy)
+    return LogBox.error(I18n.t('log_entry_wrong_direction'), unit.user) unless Actor[:map].d_include?(dx, dy)
     return LogBox.error(I18n.t('log_entry_unit_dead'), unit.user) if unit.dead?
     new_x = unit.x + dx
     new_y = unit.y + dy
-    return LogBox.error(I18n.t('log_entry_out_of_map'), unit.user) unless @map.has?(new_x, new_y)
-    type = @map.cell_type_at(new_x, new_y)
+    return LogBox.error(I18n.t('log_entry_out_of_map'), unit.user) unless Actor[:map].has?(new_x, new_y)
+    type = Actor[:map].cell_type_at(new_x, new_y)
     cost = Config[:terrain_move_cost][type].to_i
     return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
     u = Unit.get_by_xy(new_x, new_y)
@@ -381,7 +383,7 @@ class Game
     begin
       dx = Random.rand(-1..1)
       dy = Random.rand(-1..1)
-    end while (dx == 0 && dy == 0) || !@map.has?(unit.x + dx, unit.y + dy)
+    end while (dx == 0 && dy == 0) || !Actor[:map].has?(unit.x + dx, unit.y + dy)
     info "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
     move_unit_by(unit, dx, dy)
   end
@@ -393,7 +395,7 @@ class Game
 
   def get_random_xy
     10000.times do
-      xy = @map.get_rand_coords
+      xy = Actor[:map].get_rand_coords
       if Unit.place_is_empty?(xy[:x], xy[:y])
         return xy
       end
@@ -410,7 +412,7 @@ class Game
       range.each do |dy|
         new_x = x + dx
         new_y = y + dy
-        if Unit.place_is_empty?(new_x, new_y) && @map.valid?(new_x, new_y)
+        if Unit.place_is_empty?(new_x, new_y) && Actor[:map].valid?(new_x, new_y)
           return {:x => new_x, :y => new_y}
         end
       end
@@ -446,7 +448,7 @@ class Game
 
   def spawn_random_res_near topic, town, class_to_spawn
     check_expired
-    xy = @map.get_rand_coords_near town.x, town.y, Config[:random_res_town_radius]
+    xy = Actor[:map].get_rand_coords_near town.x, town.y, Config[:random_res_town_radius]
     if Unit.place_is_empty?(xy[:x], xy[:y])
       class_to_spawn.new(xy[:x], xy[:y])
       return true

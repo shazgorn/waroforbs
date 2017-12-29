@@ -8,6 +8,7 @@ require 'config'
 require 'map_tile'
 
 class Map
+  include Celluloid
   include Celluloid::Internals::Logger
 
   attr_reader :tiles, :blocks
