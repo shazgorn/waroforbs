@@ -137,7 +137,6 @@ class InventoryObserver
             .click(() =>
               @select_unit_or_multiple(dx, dy)
               if @selected_tab == 'take' && @selected_unit
-                console.log @selected_unit
                 @update_inventory(@selected_unit.inventory, {})
             )
 

@@ -1,6 +1,6 @@
 BLOCKS_IN_MAP_DIM: 1
 :res_spawner_tick: 10
-:spawn_elf_every: 10
+:spawn_elf_every: 20
 :buildings:
   :barracs:
     :cost:

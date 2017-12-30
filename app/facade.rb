@@ -78,6 +78,7 @@ class Facade
 
   def make_action_on_op(op, user, data, user_data, user_data_key, token)
     Celluloid::Actor[:turn_counter].make_turn
+    start = Time.now
     case op
     when :init_map
       user_data[user_data_key][:data_type] = :init_map
@@ -127,6 +128,7 @@ class Facade
     else
       LogBox.error('Unknown op', user)
     end
+    info "Request execution time: %f" % (Time.now - start)
   end
 
   def my_finalizer
