@@ -213,7 +213,7 @@ button {
   height: inherit;
   position: absolute;
   width: inherit;
-  z-index: 6;
+  // z-index: 6;
 
   &.attack-target {
     border: thin solid $red;
@@ -255,13 +255,18 @@ button {
 }
 
 .life-box {
-  bottom: -2px;
+  bottom: -13px;
   color: $white;
   font-size: 10px;
   font-weight: bold;
-  right: 0;
+  left: 8px;
   padding: 0 2px;
   position: absolute;
+  // z-index: 2;
+}
+
+.unit:hover .life-box {
+  z-index: 2;
 }
 
 .green-orb {
