@@ -31,6 +31,7 @@ ru:
   Peon: Батрак
   Woodcutter: Лесоруб
   Stonecutter: Каменотёс
+  Elves: Эльфы
   log_entry_already_have_town: У Вас уже есть город
   log_entry_construction_started: '%{building} - строительство начато'
   log_entry_building_not_build: '%{building} не построены'

@@ -23,7 +23,12 @@ end
 RSpec.describe Facade, "#parse_data" do
   around do |ex|
     Celluloid.boot
-    Celluloid::Actor[:game] = Game.new(true)
+    Unit.drop_all
+    User.drop_all
+    Token.drop_all
+    Celluloid::Actor[:turn_counter] = TurnCounter.new
+    Celluloid::Actor[:map] = Map.new
+    Celluloid::Actor[:game] = Game.new
     ex.run
     Celluloid.shutdown
   end

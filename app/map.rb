@@ -108,7 +108,6 @@ class Map
         create_canvas_block(block_x, block_y)
       end
     end
-    p @blocks
   end
 
   def create_canvas_block(block_x, block_y, canvas_dim = BLOCK_DIM_PX, cell_dim_px = CELL_DIM_PX)
@@ -186,5 +185,13 @@ class Map
 
   def cell_type_at(x, y)
     cell_at(x, y).type
+  end
+
+  def each_tile
+    (1..MAX_CELL_IDX).each{|y|
+      (1..MAX_CELL_IDX).each{|x|
+        yield @tiles[x][y]
+      }
+    }
   end
 end

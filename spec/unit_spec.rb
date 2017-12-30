@@ -1,8 +1,15 @@
 require 'game'
 
 RSpec.describe Unit, "testing" do
+  around do |ex|
+    User.drop_all
+    Unit.drop_all
+    ex.run
+  end
+
+  let (:user) { User.new('unit user') }
+
   it 'it deleting units by user' do
-    user = User.new('deleter')
     Swordsman.new(1, 1, user)
     Swordsman.new(2, 1, user)
     Swordsman.new(3, 1, user)
@@ -14,7 +21,6 @@ RSpec.describe Unit, "testing" do
   end
 
   it 'is empty cell' do
-    user = User.new('test')
     hi = Swordsman.new(5, 5, user)
     hi.die
     expect(hi.x).to be_nil
@@ -28,7 +34,6 @@ RSpec.describe Unit, "testing" do
   end
 
   it 'is killing me and wound SingleEntity' do
-    user = User.new('killer')
     hi = Swordsman.new(2, 2, user)
     hi.kill
     expect(hi.life).to eq(Config.get(:max_life) - 1)
@@ -40,7 +45,6 @@ RSpec.describe Unit, "testing" do
   end
 
   it 'is destroying building', :slow => true do
-    user = User.new('destroyer')
     town = Town.new(5, 5, user)
     town.build :barracs
     sleep(Config[:buildings][:barracs][:cost][1][:time].to_i + 2)
@@ -48,15 +52,20 @@ RSpec.describe Unit, "testing" do
   end
 
   it 'is renaming unit' do
-    user = User.new('renamer')
     h = Swordsman.new(5, 5, user)
     h.name = 'new name'
   end
 
   it 'is enterable' do
-    user = User.new('renamer')
     unit = Swordsman.new(5, 5, user)
     town = Town.new(6, 6, user)
     expect(town.enterable_for(unit)).to be true
+  end
+
+  it 'all in' do
+    Swordsman.new(5, 5, user)
+    expect(Unit.all.size).to eq(1)
+    ElfSwordsman.new(6, 6, user)
+    expect(Unit.all.size).to eq(2)
   end
 end

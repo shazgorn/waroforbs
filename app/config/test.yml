@@ -1,6 +1,7 @@
 BLOCKS_IN_MAP_DIM: 1
 :resource_lifetime_in_the_wild: 3
 :res_spawner_tick: 1
+:spawn_elf_every: 1
 :buildings:
   :barracs:
     :cost:

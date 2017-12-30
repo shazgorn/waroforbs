@@ -20,7 +20,6 @@ require 'socket_reader'
 require 'socket_writer'
 require 'facade'
 require 'orb_tick'
-# require 'random_res_spawner_tick'
 require 'orb_websockets_server'
 require 'game'
 
@@ -29,6 +28,10 @@ begin
   I18n.load_path = Dir[File.join('app/locales', '*.yml')]
   I18n.default_locale = :ru
 
+  Map.supervise({as: :map})
+  ElfSpawner.supervise({as: :elf_spawner})
+  Celluloid[:elf_spawner].run
+  TurnCounter.supervise({as: :turn_counter})
   game_supervisor = Game.supervise({as: :game})
   OrbTick.new
   OrbWebsocketsServer.run

@@ -13,8 +13,11 @@ end
 RSpec.describe Game, "testing" do
   around do |ex|
     Celluloid.boot
-    Token.drop
-    Celluloid::Actor[:game] = Game.new(true)
+    Token.drop_all
+    User.drop_all
+    Unit.drop_all
+    Celluloid::Actor[:game] = Game.new
+    Celluloid::Actor[:map] = Map.new
     ex.run
     Celluloid.shutdown
   end

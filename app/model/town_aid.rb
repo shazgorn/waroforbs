@@ -38,6 +38,7 @@ class TownAid
 
   ##
   # Spawn loot boxes or resources for online users only
+  # Should limit number of chests near single town
 
   def aid
     if Time.now - @town.created_time > 604800 # week

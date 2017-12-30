@@ -28,11 +28,14 @@ START_UNIT_TYPE: swordsman
 :resource_lifetime_in_the_wild: 86400
 :max_town_aid: 20
 :orb_tick: 3
+:spawn_elf_every: 3600
 :max_life: 15
+:elf_login: Elves
 DUMMY_LOGIN: dummy
 :unit_class:
   :swordsman: Swordsman
   :hero_swordsman: HeroSwordsman
+  :elf_swordsman: ElfSwordsman
 :buildings:
   :barracs:
     :units:
@@ -144,6 +147,14 @@ DUMMY_LOGIN: dummy
     :gold: 100
     :wood: 10
   :cost_glory: 20
+:elf_swordsman:
+  :ap: 0
+  :attack: 5
+  :defence: 5
+  :initiative: 3
+  :cost_res:
+    :gold: 0
+  :cost_glory: 0
 :town:
   :ap: 0
   :attack: 1

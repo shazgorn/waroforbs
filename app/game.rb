@@ -6,6 +6,7 @@ require 'expirable'
 require 'chest'
 require 'resource'
 require 'swordsman'
+require 'elf_swordsman'
 require 'hero_swordsman'
 require 'town'
 require 'monolith'
@@ -24,6 +25,7 @@ require 'attack'
 require 'token'
 require 'turn_counter'
 require 'town_aid'
+require 'elf_spawner'
 
 ##
 # Game logic, some kind of incubator
@@ -40,24 +42,12 @@ class Game
 
   attr_reader :map
 
-  def initialize(drop = false)
+  def initialize()
     info 'Starting game'
     @generate = false
     check_args
-    drop_all if drop
-    unless Actor[:map]
-      Actor[:map] = Map.new(@generate)
-    end
-    unless Actor[:turn_counter]
-      Actor[:turn_counter] = TurnCounter.new
-    end
     subscribe('tick', :tick)
     subscribe('spawn_random_res_near', :spawn_random_res_near)
-  end
-
-  def drop_all
-    Unit.drop_all
-    User.drop_all
   end
 
   ############ DATA SELECTION METHODS ########################

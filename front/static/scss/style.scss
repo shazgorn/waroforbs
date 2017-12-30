@@ -174,8 +174,8 @@ button {
   width: $map-width;
 
   &.bordered-cells .cell {
-    border-bottom: thin dashed $darkolivegreen;
-    border-right: thin dashed $darkolivegreen;
+    // border-bottom: thin dashed $darkolivegreen;
+    // border-right: thin dashed $darkolivegreen;
   }
 
   .blocks {
@@ -282,6 +282,10 @@ button {
 
 .hero_swordsman {
   background-image: url('/img/hero_swordsman.png');
+}
+
+.elf_swordsman {
+  background-image: url('/img/elf_swordsman.png');
 }
 
 .monolith {

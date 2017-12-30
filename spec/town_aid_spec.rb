@@ -3,7 +3,10 @@ require 'game'
 RSpec.describe Town, "testing" do
   around do |ex|
     Celluloid.boot
-    Celluloid::Actor[:game] = Game.new(true)
+    Token.drop_all
+    User.drop_all
+    Unit.drop_all
+    Celluloid::Actor[:game] = Game.new
     ex.run
     Celluloid.shutdown
   end

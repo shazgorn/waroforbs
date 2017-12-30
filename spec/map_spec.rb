@@ -1,10 +1,9 @@
 require 'game'
-require 'map'
 
 RSpec.describe Map, "testing", :map => true do
   around do |ex|
     Celluloid.boot
-    Token.drop
+    Token.drop_all
     Celluloid::Actor[:map] = Map.new(true, 'map_test')
     ex.run
     Celluloid.shutdown
@@ -31,5 +30,13 @@ RSpec.describe Map, "testing", :map => true do
     end
     expect(greatest_x).to eq(Map::MAX_CELL_IDX)
     expect(greatest_y).to eq(Map::MAX_CELL_IDX)
+  end
+
+  it 'erate' do
+    tiles = 0
+    Celluloid::Actor[:map].each_tile{|tile|
+      tiles += 1
+    }
+    expect(tiles).to eq(Config['BLOCK_DIM'] ** 2 * Config['BLOCKS_IN_MAP_DIM'] ** 2)
   end
 end

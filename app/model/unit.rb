@@ -30,7 +30,6 @@ class Unit
     else
       @attack = @defence = @initiative = @ap = @max_ap = @life = 0
     end
-    @@units[@id] = self
     @wounds = 0
     @name = nil
     @in_battle = false
@@ -41,6 +40,7 @@ class Unit
       :settlers => 0
     }
     @created_time = Time.now
+    @@units[@id] = self
   end
 
   def strength

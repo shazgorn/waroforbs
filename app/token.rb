@@ -5,7 +5,7 @@ class Token
   class << self
     ##
     # return User
-    
+
     def get_user(token)
       @@tokens[token]
     end
@@ -19,7 +19,7 @@ class Token
       @@tokens[token] = user
     end
 
-    def drop
+    def drop_all
       @@tokens = {}
     end
   end
