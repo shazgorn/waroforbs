@@ -52,23 +52,27 @@ class InventoryObserver
                   .html(c)
               else
                 @adj_cells[dx][dy].html('')
+                if dx || dy
+                  @adj_cells[dx][dy].addClass('has-adj-unit')
               @adj_units[dx][dy].push unit
 
   bind: () ->
     _this = this
     @selected_tab = 'inventory'
+    # select tab
     @inventory_tab = @target.find('.tab').click(() ->
       _this.target.find('.tab').removeClass('selected')
       $(this).addClass('selected')
       _this.target.removeClass(_this.selected_tab)
       _this.selected_tab = $(this).data('tab')
       _this.target.addClass(_this.selected_tab)
+      _this.selected_id = null
       if _this.selected_tab in ['inventory', 'give']
         _this.resources_el.show()
         _this.update_inventory(_this.inventory, {})
-      else
+      else # take
         _this.resources_el.hide()
-      _this.selected_id = null
+        _this.select_adj_if_single()
     )
     @target.find('button.give').click(() =>
       if @selected_id
@@ -84,6 +88,11 @@ class InventoryObserver
       else
         App.error('No selected unit')
     )
+
+  # Select adj unit if it is only unit around
+  select_adj_if_single: () ->
+    if @target.find('.adj-units-container .has-adj-unit').length == 1
+      @target.find('.adj-units-container .has-adj-unit').click()
 
   clear_selected: () ->
     @target.find('.inventory-tab').click()
@@ -127,7 +136,8 @@ class InventoryObserver
             .appendTo(adj_row)
             .click(() =>
               @select_unit_or_multiple(dx, dy)
-              if @selected_tab == 'take'
+              if @selected_tab == 'take' && @selected_unit
+                console.log @selected_unit
                 @update_inventory(@selected_unit.inventory, {})
             )
 
