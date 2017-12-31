@@ -553,7 +553,7 @@ class Game
       return nil
     end
     d = Unit.get_by_id(def_id)
-    unless a.can_move?(Unit::ATTACK_COST)
+    unless a.can_attack?(Unit::ATTACK_COST)
       LogBox.error(I18n.t('log_entry_not_enough_ap'), a_user)
       return nil
     end

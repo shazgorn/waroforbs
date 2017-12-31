@@ -134,6 +134,8 @@ class Unit
     @ap >= cost
   end
 
+  alias can_attack? can_move?
+
   ##
   # If +unit+ can enter into +self+
 
