@@ -23,6 +23,8 @@ RSpec.describe Game, "testing" do
   end
 
   let (:token) { 'test_game_token' }
+  let (:map) { Celluloid::Actor[:map] }
+  let (:game) { Celluloid::Actor[:game] }
 
   it 'getting no user by token' do
     user = Celluloid::Actor[:game].get_user_by_token(token)
@@ -114,6 +116,26 @@ RSpec.describe Game, "testing" do
       end
       expect(logs.first.message).to eq(I18n.t('log_entry_not_enough_ap'))
     end
+
+    it 'fails to run from enemy to another enemy' do
+      enemy_user = User.new('enemy')
+      enemy1 = Swordsman.new(@unit.x + 1, @unit.y, enemy_user)
+      expect(game.enemy_zoc2zoc? @unit, @unit.x + 1, @unit.y + 1).to be true
+      expect(game.enemy_zoc2zoc? @unit, @unit.x - 1, @unit.y).to be false
+      enemy2 = Swordsman.new(@unit.x - 2, @unit.y + 1, enemy_user)
+      expect(game.enemy_zoc2zoc? @unit, @unit.x - 1, @unit.y).to be true
+      game.move_user_hero_by(@user, @unit.id, -1, 0)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_enemy_zoc'))
+    end
+  end
+
+  it 'enemy is near' do
+    a_user = User.new('attacker')
+    a = Swordsman.new(1, 1, a_user)
+    e_user = User.new('enemy')
+    Swordsman.new(2, 2, e_user)
+    expect(game.enemy_zoc? a, 3, 3).to be true
+    expect(game.enemy_zoc? a, 9, 9).to be false
   end
 
   it 'attack' do

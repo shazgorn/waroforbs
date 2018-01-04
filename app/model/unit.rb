@@ -188,6 +188,13 @@ class Unit
     q
   end
 
+  ##
+  # Check if two units are enemies (not allies, clan members, own)
+
+  def enemy_of? unit
+    @user.id != unit.user.id
+  end
+
   class << self
     def all
       @@units

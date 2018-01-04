@@ -158,17 +158,35 @@ class Map
   end
 
   def get_rand_coords_near x, y, radius
-    x_left = x - radius
-    x_left = 1 if x_left < 1
-    y_left = y - radius
-    y_left = 1 if y_left < 1
-    x_right = x + radius
-    x_right = MAX_CELL_IDX if x_right > MAX_CELL_IDX
-    y_right = y + radius
-    y_right = MAX_CELL_IDX if y_right > MAX_CELL_IDX
-    x = Random.rand(x_left..x_right)
-    y = Random.rand(y_left..y_right)
-    {:x => x, :y => y}
+    {
+      :x => Random.rand(axis_range_adj(x, radius)),
+      :y => Random.rand(axis_range_adj(y, radius))
+    }
+  end
+
+  ##
+  # axis - x or y coordinate
+  # return range of valid coordianates around axis(point)
+
+  def axis_range_adj axis, radius = 1
+    left = axis - radius
+    left = 1 if left < 1
+    right = axis + radius
+    right = MAX_CELL_IDX if right > MAX_CELL_IDX
+    (left..right)
+  end
+
+  ##
+  # Iterate over all adj cells around x, y
+
+  def each_adj_near x, y
+    (axis_range_adj y).each do |adj_y|
+      (axis_range_adj x).each do |adj_x|
+        unless x == adj_x && y == adj_y
+          yield adj_x, adj_y
+        end
+      end
+    end
   end
 
   def d_include?(dx, dy)

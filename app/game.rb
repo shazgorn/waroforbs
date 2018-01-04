@@ -319,8 +319,32 @@ class Game
     if u && u.alive? && u.not_enterable_for(unit)
       return LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user)
     end
+    if enemy_zoc2zoc? unit, new_x, new_y
+      return LogBox.error(I18n.t('log_entry_enemy_zoc'), unit.user)
+    end
     unit.move_to(new_x, new_y, cost)
     LogBox.move(unit.id, dx, dy, new_x, new_y, unit.user)
+  end
+
+  ##
+  # Check if unit is trying to move from Zone of Control of one enemy to Zone of Control of another enemy or the first one
+  def enemy_zoc2zoc? a, x2, y2
+    enemy_zoc?(a, a.x, a.y) && enemy_zoc?(a, x2, y2)
+  end
+
+  ##
+  # Return true if enemy unit is adj to x, y, false otherwise
+
+  def enemy_zoc? unit, x, y
+    (Actor[:map].axis_range_adj y).each do |adj_y|
+      (Actor[:map].axis_range_adj x).each do |adj_x|
+        adj_unit = Unit.get_by_xy adj_x, adj_y
+        if adj_unit && unit.enemy_of?(adj_unit)
+          return true
+        end
+      end
+    end
+    false
   end
 
   ##
@@ -364,20 +388,6 @@ class Game
     }
     # TODO: log
   end
-
-  ##
-  # Orbs moving
-=begin
-  def random_move(unit)
-    dx = dy = 0
-    begin
-      dx = Random.rand(-1..1)
-      dy = Random.rand(-1..1)
-    end while (dx == 0 && dy == 0) || !Actor[:map].has?(unit.x + dx, unit.y + dy)
-    info "random move ##{unit.id} (#{unit.type}) by #{dx}, #{dy}"
-    move_unit_by(unit, dx, dy)
-  end
-=end
 
   ##
   # Get random coordinates not occupied by any unit
@@ -567,26 +577,4 @@ class Game
     end
     attack(a, d)
   end
-end
-
-
-##
-# Set defender`s data from +res+ in +users+
-# +res+ is a result of the +attack+ execution
-# +users+ hash of attacking and defending users
-
-def set_def_data users, res
-  if res.has_key?(:d_user) && res[:d_user]
-    if user_online?(res[:d_user])
-      users[res[:d_user].id] = res[:d_data]
-      users[res[:d_user].id][:log] = log_entry
-    end
-  end
-end
-
-def save_and_exit
-  info "Terminating..."
-  dump
-  info "Good bye!"
-  exit
 end
