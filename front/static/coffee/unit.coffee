@@ -19,7 +19,7 @@ class Unit
     @user_name = unit.user_name
     if !@dead
       @need_to_move = true
-    @set_title(unit)
+    @set_title_from(unit)
     @buildings = {}
     @buildings_cards = {}
     for key, building of unit.buildings
@@ -27,7 +27,7 @@ class Unit
     if unit.radius?
       @radius = unit.radius
 
-  set_title: (unit) ->
+  set_title_from: (unit) ->
     @title = unit.name
     if not @own and unit.user_name
       @title += ' [' + unit.user_name + ']'
@@ -41,6 +41,7 @@ class Unit
       if @controls
         @controls.remove_element()
       return
+    @set_title_from unit
     @need_to_move = (@x != unit.x || @y != unit.y)
     @x = unit.x
     @y = unit.y

@@ -13,7 +13,7 @@ class UnitView extends View
         .addClass('unit')
         .addClass(model.type)
         .data('id', model.id)
-        .attr('title', model.title)
+        .attr('title', @unit_title)
         .attr('id', model.attr_id)
     if model.life
       @life_el = $(document.createElement('span'))

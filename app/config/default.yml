@@ -14,7 +14,7 @@ BLACK_ORB_START_DEFENCE: 10
 img_path: front/static/img/
 START_GLORY: 120
 START_MAX_GLORY: 200
-START_UNIT_TYPE: swordsman
+START_UNIT_TYPE: :swordsman
 :start_res:
   :gold: 10
   :wood: 7

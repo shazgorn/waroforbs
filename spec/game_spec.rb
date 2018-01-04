@@ -119,10 +119,10 @@ RSpec.describe Game, "testing" do
 
     it 'fails to run from enemy to another enemy' do
       enemy_user = User.new('enemy')
-      enemy1 = Swordsman.new(@unit.x + 1, @unit.y, enemy_user)
+      Swordsman.new(@unit.x + 1, @unit.y, enemy_user)
       expect(game.enemy_zoc2zoc? @unit, @unit.x + 1, @unit.y + 1).to be true
       expect(game.enemy_zoc2zoc? @unit, @unit.x - 1, @unit.y).to be false
-      enemy2 = Swordsman.new(@unit.x - 2, @unit.y + 1, enemy_user)
+      Swordsman.new(@unit.x - 2, @unit.y + 1, enemy_user)
       expect(game.enemy_zoc2zoc? @unit, @unit.x - 1, @unit.y).to be true
       game.move_user_hero_by(@user, @unit.id, -1, 0)
       expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_enemy_zoc'))

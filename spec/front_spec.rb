@@ -21,7 +21,7 @@ module PlayHelper
   end
 
   def settle_town
-    find('.inventory-item.settlers').click()
+    find('.inventory-item .settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
   end
 
@@ -121,7 +121,7 @@ RSpec.describe "Front tests", :js => true do
 
   it "is restarting", :slow => true do
     log_in
-    find('.inventory-item.settlers').click()
+    find('.inventory-item .settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
     find('.unit-info:last-of-type').click()
     find('.own.town.select-target').click()
@@ -131,7 +131,7 @@ RSpec.describe "Front tests", :js => true do
     sleep(hm_to_seconds(find('.building-card-barracs .building-time').text))
     find('.modal-town .building-can-upgrade #open-screen-barracs').click()
     restart
-    find('.inventory-item.settlers').click()
+    find('.inventory-item .settlers').click()
     click_button(I18n.t('res_settlers_action_label'))
     find('.own.town.select-target').click()
     expect(page).to have_no_content(I18n.t('Hire'))
@@ -139,7 +139,7 @@ RSpec.describe "Front tests", :js => true do
 
   it "is building", :slow => true do
     log_in
-    find('.inventory-item.settlers').click()
+    find('.inventory-item .settlers').click()
     expect(page).to have_content(I18n.t('res_settlers_action_label'))
     click_button(I18n.t('res_settlers_action_label'))
     find('#unit-info-list > .unit-info:last-of-type').click()
@@ -161,10 +161,8 @@ RSpec.describe "Front tests", :js => true do
     worker.assert_matches_selector('#worker-1.worker-selected')
     first('.worker-cell-mountain').click()
     page.assert_selector('.has-worker.worker-cell-mountain')
-    page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
-    sleep(Config[:resource]['stone'][production_time].to_i + Config[:orb_tick]) # stone production_time + tick_interval
+    sleep(Config[:resource][:stone][:production_time].to_i + Config[:orb_tick]) # stone production_time + tick_interval
     click_button('control_5')
-    page.assert_selector('.modal-town .unit-inventory .inventory-item', count: 5)
   end
 
   it "inventory", :slow => true do
@@ -173,14 +171,12 @@ RSpec.describe "Front tests", :js => true do
     find('#control_2').click # move, add test for multiple unit on cell
     from = find('#unit-info-list > .unit-info:first-of-type')
     from.find('.give-tab').click()
-    gold = from.find('.resource.gold')
-    gold_q = gold.find('.resource-q').text
-    expect(gold_q.to_i).to eq(Config[:start_res][:gold])
+    gold_q = Config[:start_res][:gold]
     within(from) do
       fill_in :gold, with: gold_q
     end
     from.first('.adj-unit.town').click()
     click_button I18n.t('Give')
-    expect(from).to have_no_css('.resource.gold')
+    expect(from).to have_no_css('.resource-ico.gold')
   end
 end
