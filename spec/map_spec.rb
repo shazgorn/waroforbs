@@ -1,10 +1,14 @@
 require 'game'
 
+class TestMap < Map
+  attr_accessor :blocks_in_map_dim, :tiles, :blocks
+end
+
 RSpec.describe Map, "testing", :map => true do
   around do |ex|
     Celluloid.boot
     Token.drop_all
-    Celluloid::Actor[:map] = Map.new(true, 'map_test')
+    Celluloid::Actor[:map] = TestMap.new(true, 'map_test')
     ex.run
     Celluloid.shutdown
   end
@@ -14,8 +18,8 @@ RSpec.describe Map, "testing", :map => true do
   it 'is out of map' do
     expect(map.has?(1,1)).to be true
     expect(map.has?(0,0)).to be false
-    expect(map.has?(Map::MAX_CELL_IDX, Map::MAX_CELL_IDX)).to be true
-    expect(map.has?(Map::MAX_CELL_IDX + 1, Map::MAX_CELL_IDX + 1)).to be false
+    expect(map.has?(Celluloid::Actor[:map].max_cell_idx, Celluloid::Actor[:map].max_cell_idx)).to be true
+    expect(map.has?(Celluloid::Actor[:map].max_cell_idx + 1, Celluloid::Actor[:map].max_cell_idx + 1)).to be false
   end
 
   it 'is God of Random' do
@@ -30,8 +34,8 @@ RSpec.describe Map, "testing", :map => true do
       expect(x > 0).to be true
       expect(y > 0).to be true
     end
-    expect(greatest_x).to eq(Map::MAX_CELL_IDX)
-    expect(greatest_y).to eq(Map::MAX_CELL_IDX)
+    expect(greatest_x).to eq(Celluloid::Actor[:map].max_cell_idx)
+    expect(greatest_y).to eq(Celluloid::Actor[:map].max_cell_idx)
   end
 
   it 'erate_each_tile' do
@@ -45,6 +49,14 @@ RSpec.describe Map, "testing", :map => true do
   it 'axis range adj' do
     expect(map.axis_range_adj 5, 1).to eq((4..6))
     expect(map.axis_range_adj 1, 1).to eq((1..2))
-    expect(map.axis_range_adj Map::MAX_CELL_IDX, 1).to eq((Map::MAX_CELL_IDX-1..Map::MAX_CELL_IDX))
+    expect(map.axis_range_adj Celluloid::Actor[:map].max_cell_idx, 1).to eq((Celluloid::Actor[:map].max_cell_idx-1..Celluloid::Actor[:map].max_cell_idx))
+  end
+
+  it 'map widening' do
+    expect(Celluloid::Actor[:map].check_map).to be true
+    Celluloid::Actor[:map].init_from_config(Celluloid::Actor[:map].blocks_in_map_dim + 1, Config['BLOCK_DIM'])
+    Celluloid::Actor[:map].tiles = {}
+    Celluloid::Actor[:map].blocks = {}
+    expect(Celluloid::Actor[:map].check_map).to be false
   end
 end

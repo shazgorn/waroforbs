@@ -117,7 +117,7 @@ RSpec.describe Game, "testing" do
       expect(logs.first.message).to eq(I18n.t('log_entry_not_enough_ap'))
     end
 
-    it 'fails to run from enemy to another enemy' do
+    it 'fails to run from one enemy to another enemy' do
       enemy_user = User.new('enemy')
       Swordsman.new(@unit.x + 1, @unit.y, enemy_user)
       expect(game.enemy_zoc2zoc? @unit, @unit.x + 1, @unit.y + 1).to be true

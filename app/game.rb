@@ -40,8 +40,6 @@ class Game
   include Celluloid::Internals::Logger
   include Cli
 
-  attr_reader :map
-
   def initialize()
     info 'Starting game'
     @generate = false
@@ -148,10 +146,10 @@ class Game
     {
       :map_shift => Map::SHIFT,
       :cell_dim_in_px => Map::CELL_DIM_PX,
-      :block_dim_in_cells => Map::BLOCK_DIM,
-      :block_dim_in_px => Map::BLOCK_DIM_PX,
-      :map_dim_in_blocks => Map::BLOCKS_IN_MAP_DIM,
-      :MAX_CELL_IDX => Map::MAX_CELL_IDX,
+      :block_dim_in_cells => Actor[:map].block_dim,
+      :block_dim_in_px => Actor[:map].block_dim_px,
+      :map_dim_in_blocks => Actor[:map].blocks_in_map_dim,
+      :MAX_CELL_IDX => Actor[:map].max_cell_idx,
       :active_unit_id => user.active_unit_id,
       :user_id => user.id,
       :user_name => user.login,
