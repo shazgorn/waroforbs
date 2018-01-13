@@ -17,13 +17,13 @@ class ElfSpawner
   end
 
   def spawn_elf
-    Celluloid::Actor[:map].each_tile{|tile|
+    Actor[:map].each_tile do |tile|
       if tile.type == :tree && Unit.get_by_xy(tile.x, tile.y).nil?
         if rand(100) > 90
-          info 'spawn elf'
+          info "spawn elf to #{tile.x}, #{tile.y}"
           ElfSwordsman.new tile.x, tile.y, @elf_user
         end
       end
-    }
+    end
   end
 end

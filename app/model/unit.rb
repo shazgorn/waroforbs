@@ -2,7 +2,7 @@
 # instead of general one (Unit)
 # for selecting units of specific type
 class Unit
-  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence, :initiative, :created_time
+  attr_reader :id, :type, :user, :x, :y, :life, :wounds, :inventory, :attack, :defence, :initiative, :created_time, :spotting_range
   attr_accessor :name
 
   ATTACK_COST = 1
@@ -32,6 +32,7 @@ class Unit
     end
     @wounds = 0
     @name = nil
+    @spotting_range = 7 # spotting range will be moved to config later, towns a with Watch Tower building should have increased spotting range, and town itself should be visible from afar
     @in_battle = false
     @inventory = {
       :gold => 0,
@@ -105,6 +106,10 @@ class Unit
     else
       nil
     end
+  end
+
+  def spotted? unit
+    (@x - @spotting_range..@x + @spotting_range).include?(unit.x) && (@y - @spotting_range..@y + @spotting_range).include?(unit.y)
   end
 
   def dead?
@@ -215,6 +220,13 @@ class Unit
       @@units.values.select{|unit| unit.user_id == user.id}
     end
 
+    ##
+    # Get units for user with keys
+
+    def get_by_user_h user
+      @@units.select{|id, unit| unit.user_id == user.id}
+    end
+
     def get_by_user_id user, id
       unit = @@units[id]
       return unit if unit && unit.user && unit.user_id == user.id
@@ -272,6 +284,10 @@ class Unit
 
     def get_by_types types
       @@units.select{|id, unit| types.include? unit.type}
+    end
+
+    def each_alive
+      @@units.each{|id, unit| yield id, unit if unit.alive?}
     end
   end
 end

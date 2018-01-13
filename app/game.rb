@@ -58,13 +58,18 @@ class Game
   end
 
   ##
-  # Select and return all units.
-  # Select user`s town and select adjacent companies to it (one can add more
-  # squads in barracs)
+  # Select and return all units for user
 
-  def all_units(token)
-    units = Unit.all
-    units
+  def all_units_for_user(user)
+    my = Unit.get_by_user_h(user)
+    visible = {}
+    visible.merge! my
+    my.each do |id, my_unit|
+      Unit.each_alive do |id, unit|
+        visible[id] = unit if my_unit.spotted? unit
+      end
+    end
+    visible
   end
 
   def dump
@@ -156,7 +161,7 @@ class Game
       :user_glory => user.glory,
       :user_max_glory => user.max_glory,
       :actions => user.actions,
-      :units => all_units({user.id => {}}),
+      :units => all_units_for_user(user),
       :cells => Actor[:map].tiles,
       :blocks => Actor[:map].blocks,
       :logs => LogBox.get_by_user(user),

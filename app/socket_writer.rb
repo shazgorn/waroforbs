@@ -20,7 +20,6 @@ class SocketWriter
       return
     end
     res = {}
-    game = args[:game]
     # this is our guy. Prepare data for owner of this socket
     if args[:user_data].has_key?(@name)
       # user specific data
@@ -31,25 +30,25 @@ class SocketWriter
       else
         res = user_data
         # user should be inited at this point
-        user = game.get_user_by_token(@token)
-        # why not in facade, not in game?
+        user = Actor[:game].get_user_by_token(@token)
+        # why not in facade, not in Game ?
         if user_data[:data_type] == :init_map
-          res.merge!(game.init_map(@token))
+          res.merge!(Actor[:game].init_map(@token))
         end
         # remove duplication of facade.parse_data and following code
-        res[:logs] = game.get_current_logs_by_user(user)
+        res[:logs] = Actor[:game].get_current_logs_by_user(user)
         res[:user_glory] = user.glory
         res[:user_max_glory] = user.max_glory
-        res[:turn] = Celluloid::Actor[:turn_counter].turns
+        res[:turn] = Actor[:turn_counter].turns
       end
-      res[:units] = game.all_units(@token)
+      res[:units] = Actor[:game].all_units_for_user(user)
     else
-      # everyone else
-      other_user = game.get_user_by_token(@token)
+      # for everyone else
+      other_user = Actor[:game].get_user_by_token(@token)
       res = {
-        :units => game.all_units(@token),
+        :units => Actor[:game].all_units_for_user(other_user),
         :data_type => :units,
-        :logs => game.get_current_logs_by_user(other_user),
+        :logs => Actor[:game].get_current_logs_by_user(other_user),
         # attack info
       }
     end
@@ -57,7 +56,7 @@ class SocketWriter
   end
 
   ##
-  # args => {:game => game, :user_data => {key => data}}
+  # args => {:user_data => {key => data}}
   # writer must check the key and send data to to socket on match
   # data has :op, :log, :token etc
 
