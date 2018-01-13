@@ -196,9 +196,12 @@ class Unit
 
   ##
   # Check if two units are enemies (not allies, clan members, own)
+  # Neutral units(resources) are not enemies
 
   def enemy_of? unit
-    user_id != unit.user_id
+    if unit.user_id
+      user_id != unit.user_id
+    end
   end
 
   class << self

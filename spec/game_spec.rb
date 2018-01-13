@@ -127,6 +127,12 @@ RSpec.describe Game, "testing" do
       game.move_user_hero_by(@user, @unit.id, -1, 0)
       expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_enemy_zoc'))
     end
+
+    it 'ignore neutral unit zoc' do
+      Chest.new(@unit.x + 1, @unit.y)
+      game.move_user_hero_by(@user, @unit.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: @dx, dy: @dy, new_x: @x + @dx, new_y: @y + @dy))
+    end
   end
 
   it 'enemy is near' do
