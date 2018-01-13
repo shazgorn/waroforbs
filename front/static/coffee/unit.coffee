@@ -15,6 +15,7 @@ class Unit
     @defence = unit.defence
     @dead = unit.dead
     @inventory =  unit.inventory
+    @spotting_range = unit.spotting_range
     @user_id = unit.user_id
     @user_name = unit.user_name
     if !@dead
@@ -96,5 +97,8 @@ class Unit
       building.update(unit.buildings[key])
     for key, building_card of @buildings_cards
       building_card.update(unit.buildings[key])
+
+  spotted: (x, y) ->
+    @x - @spotting_range <= x <= @x + @spotting_range && @y - @spotting_range <= y <= @y + @spotting_range
 
 window.Unit = Unit

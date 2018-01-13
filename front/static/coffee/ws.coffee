@@ -43,7 +43,7 @@ class WS
             app.building_states = data.building_states
             app.building_descriptions = data.building_descriptions
             app.resource_info = data.resource_info
-            app.MAX_CELL_IDX = data.MAX_CELL_IDX
+            app.max_cell_idx = data.MAX_CELL_IDX
 
             # App init function calls
             app.update_user_info(data.turn, data.user_glory, data.user_max_glory, data.user_name)

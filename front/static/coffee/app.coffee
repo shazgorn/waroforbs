@@ -15,6 +15,8 @@ class Application
     @cells = null
     @current_glory = null
     @observer_registry = []
+    # initialialized from server
+    @max_cell_idx = null
 
   update_user_info: (turn, user_glory, user_max_glory, user_name = null) ->
     $('#user-info-turn-value').html(turn)
@@ -125,6 +127,15 @@ class Application
         console.error(Error)
     @bind_action_handlers()
     @my_units_ids = (parseInt(id) for id, unit of @my_units)
+    for x in [1..@max_cell_idx]
+      for y in [1..@max_cell_idx]
+        fog_of_war = true
+        for id, unit of @my_units
+          if unit.spotted x, y
+            fog_of_war = false
+            break
+        @map.fog_of_war x, y, fog_of_war
+
     ObserverRegistry.publish('units', @units)
     true
 
@@ -176,5 +187,8 @@ class Application
 
   error: (message) ->
     @log {message: message, type: 'error', time: ''}
+
+  is_valid_coordinates: (x, y) ->
+    @max_cell_idx >= x > 0 && @max_cell_idx >= y > 0
 
 window.App = new Application

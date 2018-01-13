@@ -203,6 +203,11 @@ button {
       background-color: $black;
     }
   }
+
+  .fog-of-war {
+    background-color: black;
+    opacity: .2;
+  }
 }
 
 .unit {
@@ -448,8 +453,9 @@ button {
     }
 
     .unit-id-info {
+      color: $black;
       text-align: left;
-      width: 30px;
+      width: 40px;
     }
 
     .unit-xy-info {

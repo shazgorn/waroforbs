@@ -113,7 +113,7 @@ class InventoryObserver
       @res_el[res] = @add_res(res, q)
 
   adj_unit: (dx, dy) ->
-    if App.MAX_CELL_IDX >= @x + dx > 0 && App.MAX_CELL_IDX >= @y + dy > 0
+    if App.is_valid_coordinates @x + dx, @y + dy
       "#{@x+dx}:#{@y+dy}"
     else
       ""

@@ -90,6 +90,7 @@ class Unit
       'dead' => @dead,
       'attack' => @attack,
       'defence' => @defence,
+      'spotting_range' => @spotting_range,
       'inventory' => @inventory,
       'user_name' => @user ? @user.login : nil,
       'user_id' => @user ? @user.id : nil,

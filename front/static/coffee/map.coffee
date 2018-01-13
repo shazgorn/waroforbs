@@ -91,11 +91,24 @@ class Map
       .css('top', top)
       .appendTo("#block_#{block_x}_#{block_y}")
       .attr 'title', tile.x + ',' + tile.y + ' ' + tile.type_title
+    @fog_of_war tile.x, tile.y, true
 
   drawAllTiles: (cells) ->
     for x, row of cells
       for y, cell of row
         @drawTile cell
+
+  append_element_to_tile: (element, x, y) ->
+    App.cells[x][y].el.append element
+    @fog_of_war x, y, false
+
+  fog_of_war: (x, y, enabled) ->
+    if enabled && !App.cells[x][y].fog_of_war
+      App.cells[x][y].fog_of_war = true
+      App.cells[x][y].el.addClass 'fog-of-war'
+    else if !enabled && App.cells[x][y].fog_of_war
+      App.cells[x][y].fog_of_war = false
+      App.cells[x][y].el.removeClass 'fog-of-war'
 
   applyCasualtiesTo: (cell, wounds, kills, delay, casualtiesN, type) ->
     d = $(document.createElement('span'))
@@ -142,8 +155,5 @@ class Map
     else
       # TODO: translate me
       App.log({message: 'No position or no unit', type: 'error', time: 'Interface error'})
-
-  append_element_to_tile: (element, x, y) ->
-    App.cells[x][y].el.append element
 
 this.Map = Map
