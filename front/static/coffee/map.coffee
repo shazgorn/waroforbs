@@ -3,8 +3,7 @@ class Map
     # casualties counter, do not show casualties numbers in one place all at once
     @casualtiesN = 0
     @addBlocks()
-    if App.options.all_cells
-      @addAllCells(cells)
+    @drawAllTiles(cells)
     this.initDragHandler()
     $('#blocks')
       .css('height', "#{@block_dim_in_px * @map_dim_in_blocks}px")
@@ -78,30 +77,25 @@ class Map
           .css('top', "#{top_pos}px")
           .appendTo('#blocks')
 
-  addCell: (x, y) ->
-    block_x = (x - 1) // @block_dim_in_cells + 1
-    block_y = (y - 1) // @block_dim_in_cells + 1
-    left = (x - 1) % 10 * @cell_dim_in_px
-    top = (y - 1) % 10 * @cell_dim_in_px
-    tile = App.cells[x][y]
-    cell = $(document.createElement('div'))
-      .attr('id', "cell_#{x}_#{y}")
-      .data('x', x)
-      .data('y', y)
+  drawTile: (tile) ->
+    block_x = (tile.x - 1) // @block_dim_in_cells + 1
+    block_y = (tile.y - 1) // @block_dim_in_cells + 1
+    left = (tile.x - 1) % 10 * @cell_dim_in_px
+    top = (tile.y - 1) % 10 * @cell_dim_in_px
+    App.cells[tile.x][tile.y].el = $(document.createElement('div'))
+      .attr('id', "cell_#{tile.x}_#{tile.y}")
+      .data('x', tile.x)
+      .data('y', tile.y)
       .addClass('cell')
       .css('left', left)
       .css('top', top)
       .appendTo("#block_#{block_x}_#{block_y}")
-    if tile
-      cell.attr(
-        'title',
-        tile.x + ',' + tile.y + ' ' + tile.type_title
-      )
-    cell
+      .attr 'title', tile.x + ',' + tile.y + ' ' + tile.type_title
 
-  addAllCells: (cells) ->
-    for id, cell of cells
-      @addCell(cell.x, cell.y)
+  drawAllTiles: (cells) ->
+    for x, row of cells
+      for y, cell of row
+        @drawTile cell
 
   applyCasualtiesTo: (cell, wounds, kills, delay, casualtiesN, type) ->
     d = $(document.createElement('span'))
@@ -130,7 +124,6 @@ class Map
     @applyCasualtiesTo($("#unit-#{d_id}").parent(), d_wounds, d_kills, 123, @casualtiesN % 2, 'defender')
     @applyCasualtiesTo($("#unit-#{a_id}").parent(), a_wounds, a_kills, 456, @casualtiesN % 2, 'attacker')
 
-
   center_on_hero: (unit_id) ->
     $unit = $("##{unit_id}")
     block_pos = $unit.parent().parent().position()
@@ -150,28 +143,7 @@ class Map
       # TODO: translate me
       App.log({message: 'No position or no unit', type: 'error', time: 'Interface error'})
 
-  appendElementToCell: (element, x, y) ->
-    # append to selector not jQuery object!
-    cell_sel = "#cell_#{x}_#{y}"
-    $cell = $(cell_sel)
-    if $cell.length == 0
-      @addCell(x, y)
-    $(element).appendTo(cell_sel)
-
-  # update unit div on map or append a new one
-  append: (unit) ->
-    $unit = $("#unit-#{unit.id}")
-    if $unit.length == 0
-
-    else if $unit.length == 1
-      # unit already on map, update it
-      # add size class for orb (normal, medium, small)
-      if $unit.hasClass('green-orb')
-        $unit.addClass(unit.css_class)
-      # move unit
-      if $unit.parent().data('x') != unit.x ||
-          $unit.parent().data('y') != unit.y
-        $unit.appendTo(cell_sel)
-    $unit
+  append_element_to_tile: (element, x, y) ->
+    App.cells[x][y].el.append element
 
 this.Map = Map

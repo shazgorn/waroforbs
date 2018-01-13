@@ -1,7 +1,6 @@
 class OptionsModal
   constructor: () ->
     @log_height = 100
-    @all_cells = false
     @show_grid = false
     @init_options()
 
@@ -12,7 +11,6 @@ class OptionsModal
       $('#log').height(t.log_height * 20)
       $('.modal').css('bottom', ((t.log_height + 1) * 20) + 'px')
     , true)
-    @option('all_cells', @all_cells, 'bool', null, false)
     @option('show_grid', @show_grid, 'bool', (t) ->
       if t.show_grid
         $('#map').addClass("bordered-cells")

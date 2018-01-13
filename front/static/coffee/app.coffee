@@ -11,6 +11,7 @@ class Application
     @ws = new WS this
     @initialized = false
     @attacking = false
+    # two-dimensional array of map tiles
     @cells = null
     @current_glory = null
     @observer_registry = []
@@ -116,7 +117,7 @@ class Application
             unit_model.update_modal()
           @units[unit_id] = unit_model
         if unit_model.need_to_move
-          @map.appendElementToCell(unit_model.view.element, unit_model.x, unit_model.y)
+          @map.append_element_to_tile(unit_model.view.element, unit_model.x, unit_model.y)
           unit_model.need_to_move = false
         if is_user_unit
           @my_units[unit_id] = unit_model
