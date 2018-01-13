@@ -64,7 +64,7 @@ class Game
     my = Unit.get_by_user_h(user)
     visible = {}
     visible.merge! my
-    my.each do |id, my_unit|
+    my.each do |my_unit_id, my_unit|
       Unit.each_alive do |id, unit|
         visible[id] = unit if my_unit.spotted? unit
       end

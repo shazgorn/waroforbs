@@ -358,14 +358,14 @@ RSpec.describe Game, "testing" do
     user = User.new('user')
     units = game.all_units_for_user user
     expect(units.size).to eq 0
-    s1 = Swordsman.new(1, 1, user)
+    Swordsman.new(1, 1, user)
     units = game.all_units_for_user user
     expect(units.size).to eq 1
     enemy_user = User.new('enemy')
-    s2 = Swordsman.new(5, 5, enemy_user)
+    Swordsman.new(5, 5, enemy_user)
     units = game.all_units_for_user user
     expect(units.size).to eq 2
-    s3 = Swordsman.new(10, 10, enemy_user)
+    Swordsman.new(10, 10, enemy_user)
     units = game.all_units_for_user user
     expect(units.size).to eq 2
   end
