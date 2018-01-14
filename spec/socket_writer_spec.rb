@@ -40,11 +40,6 @@ RSpec.describe SocketWriter, "testing" do
       writer.token = token
     end
 
-    it 'Look, mom, no args!' do
-      res = writer.send_units 'send_units_to_user', {}
-      expect(res).to be_nil
-    end
-
     it 'handles errors' do
       error_msg = 'I`m an error'
       res = writer.make_result({:game => game, :user_data => {writer_name => {:error => error_msg}} })

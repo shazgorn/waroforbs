@@ -456,6 +456,7 @@ class Game
     xy = Actor[:map].get_rand_coords_near town.x, town.y, Config[:random_res_town_radius]
     if Unit.place_is_empty?(xy[:x], xy[:y])
       class_to_spawn.new(xy[:x], xy[:y])
+      publish 'send_units_to_user', {}
       return true
     end
     false
@@ -467,6 +468,7 @@ class Game
         if rand(100) > 95
           info "spawn elf to #{tile.x}, #{tile.y}"
           ElfSwordsman.new tile.x, tile.y, @elf_user
+          publish 'send_units_to_user', {}
         end
       end
     end

@@ -18,7 +18,7 @@ class Facade
   def parse_user_data(data)
     user_data = parse_data data
     if user_data
-      publish "send_units_to_user", {:game => Celluloid::Actor[:game], :user_data => user_data}
+      publish "send_units_to_user", {:user_data => user_data}
     end
   end
 

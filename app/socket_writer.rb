@@ -15,10 +15,6 @@ class SocketWriter
   end
 
   def make_result(args)
-    unless args[:user_data]
-      error 'No user_data in args'
-      return
-    end
     res = {}
     # this is our guy. Prepare data for owner of this socket
     if args[:user_data].has_key?(@name)
