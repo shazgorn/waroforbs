@@ -32,12 +32,13 @@ RSpec.describe Game, "testing" do
   end
 
   it 'is initializing user' do
+    size_before = User.all.size
     user = Celluloid::Actor[:game].init_user(token)
     expect(user.class).to eq(User)
-    expect(User.all.size).to eq(1)
+    expect(User.all.size).to eq(size_before + 1)
     user = Celluloid::Actor[:game].init_user(token)
     expect(user.class).to eq(User)
-    expect(User.all.size).to eq(1)
+    expect(User.all.size).to eq(size_before + 1)
     units = Unit.get_by_user(user)
     expect(units.size).to eq(1)
     expect(units.first.inventory[:settlers]).to eq(1)
@@ -374,5 +375,10 @@ RSpec.describe Game, "testing" do
     Swordsman.new(10, 10, enemy_user)
     units = game.all_units_for_user user
     expect(units.size).to eq 2
+  end
+
+  it 'spawning elves' do
+    100.times {|t| game.spawn_elf}
+    expect(ElfSwordsman.get_by_type(ElfSwordsman::TYPE).length).to be > 0
   end
 end

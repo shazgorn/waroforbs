@@ -43,9 +43,11 @@ class Game
   def initialize()
     info 'Starting game'
     @generate = false
+    @elf_user = User.new(I18n.t(Config.get(:elf_login)))
     check_args
     subscribe('tick', :tick)
     subscribe('spawn_random_res_near', :spawn_random_res_near)
+    subscribe('spawn_elf', :spawn_elf)
   end
 
   ############ DATA SELECTION METHODS ########################
@@ -457,6 +459,17 @@ class Game
       return true
     end
     false
+  end
+
+  def spawn_elf
+    Actor[:map].each_tile do |tile|
+      if tile.type == :tree && Unit.get_by_xy(tile.x, tile.y).nil?
+        if rand(100) > 95
+          info "spawn elf to #{tile.x}, #{tile.y}"
+          ElfSwordsman.new tile.x, tile.y, @elf_user
+        end
+      end
+    end
   end
 
   def black_orbs_below_limit
