@@ -8,6 +8,7 @@ class ElfSpawner
     now = Time.now.to_f
     sleep now.ceil - now + 0.001
     every(Config[:spawn_elf_every]) do
+      info 'publish spawn_elf'
       publish 'spawn_elf'
     end
   end

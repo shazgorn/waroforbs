@@ -462,7 +462,7 @@ class Game
     false
   end
 
-  def spawn_elf
+  def spawn_elf topic
     Actor[:map].each_tile do |tile|
       if tile.type == :tree && Unit.get_by_xy(tile.x, tile.y).nil?
         if rand(100) > 95
