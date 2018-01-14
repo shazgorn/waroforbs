@@ -17,7 +17,7 @@ class SocketWriter
   def make_result(args)
     res = {}
     # this is our guy. Prepare data for owner of this socket
-    if args[:user_data].has_key?(@name)
+    if args[:user_data] && args[:user_data].has_key?(@name)
       # user specific data
       user_data = args[:user_data][@name]
       if user_data[:error]
@@ -65,6 +65,7 @@ class SocketWriter
     if res
       @websocket << JSON.generate(res)
     end
+    res
   # rescue Reel::SocketError
   #   info "Ws client disconnected from #{@name} "
   #   terminate
