@@ -217,6 +217,7 @@ button {
   box-sizing: border-box;
   height: inherit;
   position: absolute;
+  transition: opacity 1s;
   width: inherit;
   // z-index: 6;
 
@@ -228,6 +229,14 @@ button {
 
   &.select-target {
     cursor: pointer;
+  }
+
+  &.disappear-animation {
+    opacity: 0;
+  }
+
+  &.appear-animation {
+    opacity: 0;
   }
 }
 
