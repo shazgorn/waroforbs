@@ -97,8 +97,18 @@ class Unit
     }
   end
 
-  def to_json(generator = JSON.generator)
-    to_hash().to_json
+  def to_enemy_hash
+    {
+      'id' => @id,
+      'type' => @type,
+      'name' => @name,
+      'x' => @x,
+      'y' => @y,
+      'life' => @life,
+      'dead' => @dead,
+      'user_name' => @user ? @user.login : nil,
+      'user_id' => @user ? @user.id : nil,
+    }
   end
 
   def user_id

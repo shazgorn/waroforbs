@@ -10,14 +10,14 @@ class UnitView extends View
     @unit_title = model.title
     @unit_life = model.life
     @element = $(document.createElement('div'))
-        .addClass('unit appear-animation-1')
+        .addClass 'unit appear-animation'
         .addClass(model.type)
         .data('id', model.id)
         .attr('title', @unit_title)
         .attr('id', model.attr_id)
     setTimeout(() =>
       @element
-        .removeClass 'appear-animation-1'
+        .removeClass 'appear-animation'
       , 1000)
     if model.life
       @life_el = $(document.createElement('span'))
@@ -37,7 +37,7 @@ class UnitView extends View
   remove_element: () ->
     if @element
       @element
-        .addClass 'disappear-animation-1'
+        .addClass 'disappear-animation'
       setTimeout(() =>
         @element.remove()
         @element = null

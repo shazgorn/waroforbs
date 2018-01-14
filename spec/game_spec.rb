@@ -44,12 +44,6 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  it 'init map' do
-    Celluloid::Actor[:game].init_user(token)
-    hash = Celluloid::Actor[:game].init_map(token)
-    expect(hash).to be_a(Hash)
-  end
-
   context "is moving" do
     before(:example) do
       @user = User.new('mover')
@@ -378,7 +372,7 @@ RSpec.describe Game, "testing" do
   end
 
   it 'spawning elves' do
-    100.times {|t| game.spawn_elf}
+    100.times {|t| game.spawn_elf 'spawn_elf' }
     expect(ElfSwordsman.get_by_type(ElfSwordsman::TYPE).length).to be > 0
   end
 end

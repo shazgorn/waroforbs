@@ -68,11 +68,6 @@ class Facade
       user_data[user_data_key][:active_unit_id] = @user.active_unit_id = data['unit_id'].to_i
     end
     make_action_on_op(op, user, data, user_data, user_data_key, token)
-    if @user
-      user_data[user_data_key][:actions] = @user.actions
-      user_data[user_data_key][:user_glory] = @user.glory
-      user_data[user_data_key][:user_max_glory] = @user.max_glory
-    end
     user_data
   end
 

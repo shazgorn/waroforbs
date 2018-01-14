@@ -3,6 +3,7 @@
 
 class Chest < Unit
   include Expirable
+  include PublicStorage
 
   TYPE = :chest
 

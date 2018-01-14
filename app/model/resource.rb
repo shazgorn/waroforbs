@@ -3,6 +3,7 @@
 
 class Resource < Unit
   include Expirable
+  include PublicStorage
 
   def initialize(x, y)
     resources = Config[:resource].keys
