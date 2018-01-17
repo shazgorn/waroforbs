@@ -303,5 +303,12 @@ class Unit
     def each_alive
       @@units.each{|id, unit| yield id, unit if unit.alive?}
     end
+
+    ##
+    # For limit check
+
+    def not_town_count user
+      @@units.select{|id, unit| unit.user_id == user.id && unit.type != :town && unit.alive? }.length
+    end
   end
 end

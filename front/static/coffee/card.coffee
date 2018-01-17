@@ -18,6 +18,7 @@ class BuildingCard
       when 'factory' then building = new FactoryCard(building)
       when 'sawmill' then building = new SawmillCard(building)
       when 'quarry' then building = new QuarryCard(building)
+      when 'farm' then building = new FarmCard(building)
       else console.error('Unknown building ' + building)
 
   ###
@@ -127,5 +128,7 @@ class FactoryCard extends BuildingCard;
 class SawmillCard extends BuildingCard;
 
 class QuarryCard extends BuildingCard;
+
+class FarmCard extends BuildingCard;
 
 window.BuildingCard = BuildingCard

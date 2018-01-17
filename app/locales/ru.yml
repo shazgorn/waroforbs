@@ -9,6 +9,7 @@ ru:
   Roads: Дороги
   Factory: Фабрика
   Sawmill: Лесопилка
+  Farm: Ферма
   Quarry: Каменоломня
   BuildingDescriptions:
     barracs: Позволяет нанимать мечников
@@ -17,6 +18,7 @@ ru:
     factory: Увеличивает скорость добычи золота
     sawmill: Увеличивает сккорость добычи дерева
     quarry: Увеличивает сккорость добычи камня
+    farm: Увеличивает лимит юнитов
   Town: Город
   Swordsman: Мечники
   Hero: Герой
@@ -37,7 +39,7 @@ ru:
   log_entry_building_not_build: '%{building} не построены'
   log_entry_building_already_in_progress: Строительство уже идёт
   log_entry_cell_occupied: Клетка занята
-  log_entry_more_glory_required: Нехватает ОС
+  log_entry_unit_limit_reached: Литим юнитов достигнут
   log_entry_no_free_cells: Нет свободных клеток для юнита
   log_entry_not_enough_res: 'Не хватает ресурсов(%{res})'
   log_entry_damage_dealt: 'Урон нанесен (ранено, убито): %{d_wounds}, %{d_kills}. Урона получено (ранено, убито): %{a_wounds}, %{a_kills}'

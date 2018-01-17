@@ -375,4 +375,23 @@ RSpec.describe Game, "testing" do
     100.times {|t| game.spawn_elf 'spawn_elf' }
     expect(ElfSwordsman.get_by_type(ElfSwordsman::TYPE).length).to be > 0
   end
+
+  it 'units_count' do
+    user = User.new('user')
+    expect(game.unit_count(user)).to eq 0
+    Swordsman.new(1, 1, user)
+    expect(game.unit_count(user)).to eq 1
+    Swordsman.new(2, 2, user)
+    expect(game.unit_count(user)).to eq 2
+    Town.new(2, 2, user)
+    expect(game.unit_count(user)).to eq 2
+  end
+
+  it 'user unit limit' do
+    user = User.new('user')
+    expect(game.unit_limit(user)).to eq Config[:base_unit_limit]
+    Town.new(1, 1, user)
+    Town.alive user
+    expect(game.unit_limit(user)).to eq Config[:base_unit_limit] + Config[:unit_limit_per_town]
+  end
 end

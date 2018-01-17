@@ -56,7 +56,7 @@ RSpec.describe "Front tests", :js => true do
   it "is testing user info" do
     login = log_in
     expect(find('#user-info-nickname-value').text).to eq(login)
-    expect(find('#user-info-glory-value').text).to eq("#{Config.get('START_GLORY')}/#{Config.get('START_MAX_GLORY')}")
+    expect(find('#user-info-limit-value').text).to eq("1/#{Config[:base_limit]}")
   end
 
   it "is renaming" do

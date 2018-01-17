@@ -102,10 +102,10 @@ class SocketWriter
         {
           :units => get_units_json_for_user(user),
           :logs => Actor[:game].get_current_logs_by_user(user),
-          :turn => Actor[:turn_counter].turns,
-          :user_glory => user.glory,
-          :user_max_glory => user.max_glory,
-          :actions => user.actions
+          :user_unit_count => Actor[:game].unit_count(user),
+          :user_unit_limit => Actor[:game].unit_limit(user),
+          :actions => user.actions,
+          :turn => Actor[:turn_counter].turns
         }
       )
     end

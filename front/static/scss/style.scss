@@ -368,15 +368,15 @@ button {
 }
 
 .user-info-nickname .value {
-  color: red;
+  color: $red;
 }
 
-.user-info-glory .value {
-  color: cyan;
+.user-info-limit .value {
+  color: $yellow;
 }
 
 .user-info-turn .value {
-  color: orange;
+  color: $orange;
 }
 
 #right-col {

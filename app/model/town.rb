@@ -23,7 +23,8 @@ class Town < Unit
       :roads => Roads.new,
       :factory => Factory.new,
       :sawmill => Sawmill.new,
-      :quarry => Quarry.new
+      :quarry => Quarry.new,
+      :farm => Farm.new
     }
     bc = BuildingContainer.new(@buildings)
     @workers = {
@@ -173,8 +174,8 @@ class Town < Unit
       @@units.select{|id, unit| unit.type == self::TYPE}
     end
 
-    def alive
-       @@units.select{|id, unit| unit.type == self::TYPE && unit.alive?}
+    def alive user = nil
+      @@units.select{|id, unit| (!user || unit.user_id == user.id) && unit.type == self::TYPE && unit.alive?}
     end
   end
 end

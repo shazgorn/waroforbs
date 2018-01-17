@@ -20,6 +20,7 @@ require 'roads'
 require 'factory'
 require 'sawmill'
 require 'quarry'
+require 'farm'
 require 'cli'
 require 'squad_attack'
 require 'attack'
@@ -132,7 +133,6 @@ class Game
   def restart(user)
     Unit.delete_by_user(user)
     start_res_for_user(user)
-    user.reset_glory
   end
 
   ##
@@ -181,8 +181,8 @@ class Game
         return
       end
     }
-    if user.glory < Config.get(unit_type)[:cost_glory]
-      LogBox.error(I18n.t('log_entry_more_glory_required'), user)
+    if unit_count(user) >= unit_limit(user)
+      LogBox.error(I18n.t('log_entry_unit_limit_reached'), user)
       return
     end
     cost = Config.get(unit_type)[:cost_res]
@@ -196,11 +196,27 @@ class Game
       return
     end
     town.pay_price(cost)
-    user.pay_glory(Config[unit_type][:cost_glory])
     unit = Module.const_get(Config[:unit_class][unit_type]).new(empty_cell[:x], empty_cell[:y], user)
     user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_unit", name: unit.name), user)
     unit
+  end
+
+  def unit_count(user)
+    Unit.not_town_count(user)
+  end
+
+  ##
+  # Max units count for hire
+
+  def unit_limit(user)
+    limit = Config[:base_unit_limit]
+    towns = Town.alive user
+    towns.each do |id, town|
+      limit += Config[:unit_limit_per_town]
+      limit += town.buildings[:farm].level
+    end
+    limit
   end
 
   # def refill_squad(user, town_id, unit_id)

@@ -46,7 +46,7 @@ class WS
             app.max_cell_idx = data.MAX_CELL_IDX
 
             # App init function calls
-            app.update_user_info(data.turn, data.user_glory, data.user_max_glory, data.user_name)
+            app.update_user_info(data.turn, data.user_unit_count, data.user_unit_limit, data.user_name)
             app.upcreate_units(data.units)
             app.center_on_active()
             app.set_active_unit_directly(data.active_unit_id)
@@ -55,7 +55,7 @@ class WS
             # App init finished
             app.initialized = true
           when 'units'
-            app.update_user_info(data.turn, data.user_glory, data.user_max_glory)
+            app.update_user_info(data.turn, data.user_unit_count, data.user_unit_limit)
             app.upcreate_units(data.units)
             app.update_user_controls(data.actions)
             app.attacking = false

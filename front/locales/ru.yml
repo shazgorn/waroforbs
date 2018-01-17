@@ -42,7 +42,7 @@ ru:
   Open: Открыть
   Town: Город
   user_nickname: 'Ник:'
-  glory_title: 'ОС:'
+  limit_title: 'Лимит:'
   turn: 'Ход:'
   help_body:
     Постройте город рядом с лесом и камнем, нажав кнопку "Основать город"

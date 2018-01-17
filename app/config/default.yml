@@ -2,6 +2,7 @@ ws_host: 0.0.0.0
 ws_port: 9293
 log: log/app.log
 pid: tmp/pids/app.pid
+img_path: front/static/img/
 BLOCKS_IN_MAP_DIM: 5
 BLOCK_DIM: 10
 GREEN_ORB_PER_BLOCK: 1
@@ -11,10 +12,9 @@ BLACK_ORB_MAX_SPEED: 60
 BLACK_ORB_START_HP: 1000
 BLACK_ORB_START_ATTACK: 100
 BLACK_ORB_START_DEFENCE: 10
-img_path: front/static/img/
-START_GLORY: 120
-START_MAX_GLORY: 200
 START_UNIT_TYPE: :swordsman
+:base_unit_limit: 1
+:unit_limit_per_town: 1
 :start_res:
   :gold: 10
   :wood: 7
@@ -124,6 +124,26 @@ DUMMY_LOGIN: dummy
           :res:
             :gold: + 10
             :wood: + 4
+  :farm:
+    :max_level: 10
+    :cost:
+      :formula:
+        1:
+          :time: 4
+          :res:
+            :gold: 5
+            :wood: 2
+        2:
+          :time: + 10
+          :res:
+            :gold: + 10
+            :wood: + 4
+        5:
+          :time: + 60
+          :res:
+            :gold: + 20
+            :wood: + 8
+            :stone: + 2
 :swordsman:
   :required_buildings:
     - :barracs
@@ -134,7 +154,6 @@ DUMMY_LOGIN: dummy
   :cost_res:
     :gold: 10
     :wood: 1
-  :cost_glory: 10
 :hero_swordsman:
   :required_buildings:
     - :tavern
@@ -146,7 +165,6 @@ DUMMY_LOGIN: dummy
   :cost_res:
     :gold: 100
     :wood: 10
-  :cost_glory: 20
 :elf_swordsman:
   :ap: 0
   :attack: 5
@@ -154,7 +172,6 @@ DUMMY_LOGIN: dummy
   :initiative: 3
   :cost_res:
     :gold: 0
-  :cost_glory: 0
 :town:
   :ap: 0
   :attack: 1

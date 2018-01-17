@@ -13,20 +13,16 @@ class Application
     @attacking = false
     # two-dimensional array of map tiles
     @cells = null
-    @current_glory = null
     @observer_registry = []
+    @limit_info = new ElementProxy '#user-info-limit-value', ''
     # initialialized from server
     @max_cell_idx = null
 
-  update_user_info: (turn, user_glory, user_max_glory, user_name = null) ->
+  update_user_info: (turn, unit_count, unit_limit, user_name = null) ->
     $('#user-info-turn-value').html(turn)
     if user_name && user_name != @user_name
       $('#user-info-nickname-value').html(user_name)
-    if user_glory? and user_max_glory?
-      new_glory = "#{user_glory}/#{user_max_glory}"
-      if @current_glory != new_glory
-        @current_glory = new_glory
-        $('#user-info-glory-value').html(@current_glory)
+    @limit_info.update "#{unit_count}/#{unit_limit}"
 
   move: (params) ->
     @ws.move(@active_unit_id, params)
