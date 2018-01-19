@@ -65,12 +65,14 @@ class Game
   # Select and return all units for user
 
   def all_units_for_user(user)
-    my = Unit.get_by_user_h(user)
+    my = Unit.select_alive_by_user(user)
     visible = {}
     visible.merge! my
     my.each do |my_unit_id, my_unit|
-      Unit.each_alive do |id, unit|
-        visible[id] = unit if my_unit.spotted? unit
+      Unit.each_alive do |id, other_unit|
+        if my_unit.spotted? other_unit
+          visible[id] = other_unit
+        end
       end
     end
     visible
@@ -161,6 +163,10 @@ class Game
     unit
   end
 
+  def spawn_default_unit x, y, user
+    Module.const_get(Config[:unit_class][Config[:start_unit_type]]).new x, y, user
+  end
+
   ##
   # +user+ User
   # +unit_type+ String
@@ -196,7 +202,7 @@ class Game
       return
     end
     town.pay_price(cost)
-    unit = Module.const_get(Config[:unit_class][unit_type]).new(empty_cell[:x], empty_cell[:y], user)
+    unit = spawn_default_unit empty_cell[:x], empty_cell[:y], user
     user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_unit", name: unit.name), user)
     unit
@@ -441,25 +447,38 @@ class Game
   end
 
   def spawn_dummy_near(x, y)
-    user = User.new(Config.get('DUMMY_LOGIN'))
+    user = User.new(Config[:dummy_login])
     xy = empty_adj_cell_xy(x, y)
     if xy
-      Swordsman.new(xy[:x], xy[:y], user)
+      spawn_default_unit xy[:x], xy[:y], user
     else
       LogBox.error(I18n.t('log_entry_no_empty_cells'), user)
     end
   end
 
-  def provoke_dummy_attack()
-    user = User.new(Config.get('DUMMY_LOGIN'))
-    units = Unit.get_by_user(user)
-    units.each{|unit|
-      attack_adj_cells(unit)
-    }
+  def provoke_dummy_attack_on user
+    dummy = User.new(Config[:dummy_login])
+    attack_count = 0
+    Unit.each_alive_by_user(dummy) do |id, unit|
+      if unit_is_enemy_of_user? unit, user
+        if attack_adj_cells(unit)
+          attack_count += 1
+        end
+      end
+    end
+    attack_count
+  end
+
+  def are_enemies? a, b
+    a.user && b.user && a.user_id != b.user_id
+  end
+
+  def unit_is_enemy_of_user? unit, user
+    unit.user_id && user.id != unit.user_id
   end
 
   def spawn_monolith_near(x, y)
-    user = User.new(Config.get('DUMMY_LOGIN'))
+    user = User.new(Config[:dummy_login])
     xy = empty_adj_cell_xy(x, y)
     if xy
       Monolith.new(xy[:x], xy[:y], user)
@@ -501,17 +520,17 @@ class Game
 
   #################### ATTACK ##################################################
   ##
-  # a +Unit+
+  # a +Unit+ attacker
 
-  def attack_adj_cells a
+  def attack_adj_cells attacker
     (-1..1).each do |adx|
       (-1..1).each do |ady|
         if !(adx == 0 && ady == 0)
-          adj_x = a.x + adx
-          adj_y = a.y + ady
-          d = Unit.get_by_xy(adj_x, adj_y)
-          if d
-            return attack(a, d)
+          adj_x = attacker.x + adx
+          adj_y = attacker.y + ady
+          defender = Unit.get_by_xy(adj_x, adj_y)
+          if defender && are_enemies?(attacker, defender)
+            return attack(attacker, defender)
           end
         end
       end

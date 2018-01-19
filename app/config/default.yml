@@ -12,7 +12,7 @@ BLACK_ORB_MAX_SPEED: 60
 BLACK_ORB_START_HP: 1000
 BLACK_ORB_START_ATTACK: 100
 BLACK_ORB_START_DEFENCE: 10
-START_UNIT_TYPE: :swordsman
+:start_unit_type: :swordsman
 :base_unit_limit: 1
 :unit_limit_per_town: 1
 :start_res:
@@ -31,7 +31,7 @@ START_UNIT_TYPE: :swordsman
 :spawn_elf_every: 3600
 :max_life: 15
 :elf_login: Elves
-DUMMY_LOGIN: dummy
+:dummy_login: dummy
 :unit_class:
   :swordsman: Swordsman
   :hero_swordsman: HeroSwordsman
@@ -148,8 +148,8 @@ DUMMY_LOGIN: dummy
   :required_buildings:
     - :barracs
   :ap: 20
-  :attack: 3
-  :defence: 3
+  :attack: 5
+  :defence: 5
   :initiative: 1
   :cost_res:
     :gold: 10
@@ -167,8 +167,8 @@ DUMMY_LOGIN: dummy
     :wood: 10
 :elf_swordsman:
   :ap: 0
-  :attack: 5
-  :defence: 5
+  :attack: 1
+  :defence: 1
   :initiative: 3
   :cost_res:
     :gold: 0

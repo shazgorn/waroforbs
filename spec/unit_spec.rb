@@ -7,7 +7,8 @@ RSpec.describe Unit, "testing" do
     ex.run
   end
 
-  let (:user) { User.new('unit user') }
+  let (:user) { User.new('user') }
+  let (:enemy) { User.new('enemy') }
 
   it 'it deleting units by user' do
     Swordsman.new(1, 1, user)
@@ -67,5 +68,27 @@ RSpec.describe Unit, "testing" do
     expect(Unit.all.size).to eq(1)
     ElfSwordsman.new(6, 6, user)
     expect(Unit.all.size).to eq(2)
+  end
+
+  describe 'spotting stuff' do
+    it 'spotted' do
+      unit = Swordsman.new(5, 5, user)
+      e_unit = Swordsman.new(7, 7, enemy)
+      expect(unit.spotted? e_unit).to be true
+    end
+
+    it 'dead have no eyes' do
+      unit = Swordsman.new(5, 5, user)
+      e_unit = Swordsman.new(7, 7, enemy)
+      unit.die
+      expect { unit.spotted? e_unit}.to raise_error(DeadHaveNoEyes)
+    end
+
+    it 'i do NOT see dead people' do
+      unit = Swordsman.new(5, 5, user)
+      e_unit = Swordsman.new(7, 7, enemy)
+      e_unit.die
+      expect(unit.spotted? e_unit).to be false
+    end
   end
 end

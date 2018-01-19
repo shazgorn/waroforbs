@@ -102,7 +102,7 @@ class Facade
     when :spawn_dummy_near
       Celluloid::Actor[:game].spawn_dummy_near(data['x'], data['y'])
     when :provoke_dummy_attack
-      Celluloid::Actor[:game].provoke_dummy_attack()
+      Celluloid::Actor[:game].provoke_dummy_attack_on user
     when :spawn_monolith_near
       Celluloid::Actor[:game].spawn_monolith_near(data['x'], data['y'])
     when :hire_unit

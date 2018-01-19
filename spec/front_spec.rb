@@ -56,14 +56,14 @@ RSpec.describe "Front tests", :js => true do
   it "is testing user info" do
     login = log_in
     expect(find('#user-info-nickname-value').text).to eq(login)
-    expect(find('#user-info-limit-value').text).to eq("1/#{Config[:base_limit]}")
+    expect(find('#user-info-limit-value').text).to eq("1/#{Config[:base_unit_limit]}")
   end
 
   it "is renaming" do
     log_in
     unit_name = find('#unit-info-list > .unit-info:first-of-type .unit-name-info').text
     # units are named after class name
-    expect(unit_name).to eq(I18n.t(Config[:unit_class][Config['START_UNIT_TYPE']]))
+    expect(unit_name).to eq(I18n.t(Config[:unit_class][Config[:start_unit_type]]))
     find('#unit-info-list > .unit-info:first-of-type .unit-name-info').double_click
     # selenium does not support double clicks
     if Capybara.javascript_driver == :selenium
@@ -115,8 +115,28 @@ RSpec.describe "Front tests", :js => true do
     defender_life = defender.find('.life-box').text.to_i
     expect(start_defender_life - defender_casualties).to eq(defender_life)
     sleep(3) # wait for casualties numbers to disappear
-    page.execute_script("App.provoke_dummy_attack();")
     expect(page).to have_css('.casualties-defender')
+    10.times do |i|
+      defender.click()
+      expect(page).to have_css('.casualties-defender')
+      expect(page).to have_no_css('.server-error')
+      if defender['class'].include? 'disappear-animation'
+        break
+      end
+      sleep(1)
+    end
+  end
+
+  it 'is taking damage' do
+    log_in
+    xy = find('#unit-info-list > .active-unit-info .unit-xy-info').text.split
+    6.times do |i|
+      page.execute_script("App.spawn_dummy_near(#{xy[0]},#{xy[1]});")
+    end
+    sleep(1)
+    page.execute_script("App.provoke_dummy_attack();")
+    sleep(2)
+    expect(page).to have_no_css('.server-error')
   end
 
   it "is restarting", :slow => true do

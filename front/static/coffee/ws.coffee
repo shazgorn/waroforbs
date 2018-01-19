@@ -18,7 +18,7 @@ class WS
       console.error(e)
 
     @socket.onclose = (e) =>
-      App.log({message: 'Connection to server has been closed. Please reload page.', type: 'info', time: 'interface'})
+      App.log({message: 'Connection to server has been closed. Please reload page.', type: 'server-error', time: 'Interface error'})
       console.info(e)
 
     @socket.onmessage = (e) ->

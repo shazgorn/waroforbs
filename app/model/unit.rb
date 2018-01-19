@@ -119,7 +119,11 @@ class Unit
     end
   end
 
+  ##
+  # Check if self spotted the +unit+
+
   def spotted? unit
+    raise DeadHaveNoEyes, 'Dead have no eyes' unless alive?
     (@x - @spotting_range..@x + @spotting_range).include?(unit.x) && (@y - @spotting_range..@y + @spotting_range).include?(unit.y)
   end
 
@@ -229,6 +233,7 @@ class Unit
 
     ##
     # Get units for user
+    # Should call values after...
 
     def get_by_user(user)
       @@units.values.select{|unit| unit.user_id == user.id}
@@ -302,6 +307,14 @@ class Unit
 
     def each_alive
       @@units.each{|id, unit| yield id, unit if unit.alive?}
+    end
+
+    def each_alive_by_user user
+      @@units.each{|id, unit| yield id, unit if unit.user_id == user.id && unit.alive?}
+    end
+
+    def select_alive_by_user user
+      @@units.select{|id, unit| unit.user_id == user.id && unit.alive?}
     end
 
     ##

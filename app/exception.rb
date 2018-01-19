@@ -12,3 +12,6 @@ end
 
 class MaxBuildingLevelReached < OrbError
 end
+
+class DeadHaveNoEyes < OrbError
+end

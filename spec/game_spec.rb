@@ -25,6 +25,10 @@ RSpec.describe Game, "testing" do
   let (:token) { 'test_game_token' }
   let (:map) { Celluloid::Actor[:map] }
   let (:game) { Celluloid::Actor[:game] }
+  let (:user) { User.new('test_game_token') }
+  let (:dummy) { User.new(Config[:dummy_login]) }
+  let (:x) { 5 }
+  let (:y) { 5 }
 
   it 'getting no user by token' do
     user = Celluloid::Actor[:game].get_user_by_token(token)
@@ -276,24 +280,45 @@ RSpec.describe Game, "testing" do
     expect(xy[:y]).to eq(4)
   end
 
-  it 'testing dummy' do
-    x = 3
-    y = 3
-    Celluloid::Actor[:game].spawn_dummy_near(x, y)
-    unit = Unit.get_by_user(User.new(Config['DUMMY_LOGIN'])).first
-    expect(unit.x).to eq(x - 1)
-    expect(unit.x).to eq(y - 1)
-    expect(unit.user.login).to eq(Config['DUMMY_LOGIN'])
+  context 'dummy' do
+    it 'testing dummy' do
+      Celluloid::Actor[:game].spawn_dummy_near(x, y)
+      unit = Unit.get_by_user(dummy).first
+      expect(unit.x).to eq(x - 1)
+      expect(unit.x).to eq(y - 1)
+      expect(unit.user.login).to eq(Config[:dummy_login])
+    end
+
+    it 'provoke dummy to attack' do
+      Swordsman.new(x, y, user)
+      game.spawn_dummy_near(x + 1, y + 1)
+      game.provoke_dummy_attack_on user
+      expect(LogBox.get_current_by_user(user).first.type).to eq(:defence)
+    end
+
+    it 'fail to provoke dead dummy attack' do
+      Swordsman.new(x, y, user)
+      Celluloid::Actor[:game].spawn_dummy_near(x + 1, y + 1)
+      Unit.get_by_user(dummy).each {|unit| unit.die }
+      attacks = game.provoke_dummy_attack_on user
+      expect(attacks).to eq(0)
+    end
+
+    it 'do not attack our kind' do
+      unit = Swordsman.new(x, y, user)
+      Celluloid::Actor[:game].spawn_dummy_near(x + 3, y + 2)
+      Celluloid::Actor[:game].spawn_dummy_near(x + 3, y + 3)
+      attacks = game.provoke_dummy_attack_on user
+      expect(unit.life).to eq(Config[:max_life])
+      expect(attacks).to eq(0)
+    end
   end
 
-  it 'provoke dummy to attack' do
-    user = User.new('defender')
-    x = 5
-    y = 5
-    Swordsman.new(x, y, user)
-    Celluloid::Actor[:game].spawn_dummy_near(x + 1, y + 1)
-    Celluloid::Actor[:game].provoke_dummy_attack()
-    expect(LogBox.get_current_by_user(user).first.type).to eq(:defence)
+  it 'spawn default unit type' do
+    unit = game.spawn_default_unit x, y, user
+    expect(unit.x).to eq(x)
+    expect(unit.y).to eq(y)
+    expect(unit.class).to eq(Swordsman)
   end
 
   context "inventory" do
