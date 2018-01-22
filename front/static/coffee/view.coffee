@@ -11,10 +11,13 @@ class UnitView extends View
     @unit_life = model.life
     @element = $(document.createElement('div'))
         .addClass 'unit appear-animation'
-        .addClass(model.type)
         .data('id', model.id)
         .attr('title', @unit_title)
         .attr('id', model.attr_id)
+    if model.dead
+      @element.addClass 'grave'
+    else
+      @element.addClass(model.type)
     setTimeout(() =>
       @element
         .removeClass 'appear-animation'

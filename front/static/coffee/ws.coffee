@@ -161,6 +161,44 @@ class WS
       })
     )
 
+  set_worker_to_xy: (town_id, worker_pos, x, y) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'set_worker_to_xy',
+        town_id: town_id,
+        worker_pos: worker_pos,
+        x: x,
+        y: y
+      })
+    )
+
+  restart: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'restart'
+      })
+    )
+
+  units: () ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'units'
+      })
+    )
+
+  # test, admin methods
+  kill: (id) ->
+    @socket.send(
+      JSON.stringify({
+        token: @token,
+        op: 'kill',
+        id: id
+      })
+    )
+
   spawn_dummy_near: (x, y) ->
     @socket.send(
       JSON.stringify({
@@ -189,32 +227,6 @@ class WS
       })
     )
 
-  set_worker_to_xy: (town_id, worker_pos, x, y) ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'set_worker_to_xy',
-        town_id: town_id,
-        worker_pos: worker_pos,
-        x: x,
-        y: y
-      })
-    )
 
-  restart: () ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'restart'
-      })
-    )
-
-  units: () ->
-    @socket.send(
-      JSON.stringify({
-        token: @token,
-        op: 'units'
-      })
-    )
 
 window.WS = WS

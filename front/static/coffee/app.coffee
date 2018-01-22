@@ -18,12 +18,7 @@ class Application
     # initialialized from server
     @max_cell_idx = null
 
-  update_user_info: (turn, unit_count, unit_limit, user_name = null) ->
-    $('#user-info-turn-value').html(turn)
-    if user_name && user_name != @user_name
-      $('#user-info-nickname-value').html(user_name)
-    @limit_info.update "#{unit_count}/#{unit_limit}"
-
+  # ws
   move: (params) ->
     @ws.move(@active_unit_id, params)
 
@@ -32,14 +27,6 @@ class Application
 
   take: (to, from, inventory) ->
     @ws.take(to, from, inventory)
-
-  lock_controls: () ->
-    @controls.lock_controls()
-
-  unlock_controls: () ->
-    # calc only alive units
-    if @initialized and @my_units_ids.length > 0
-      @controls.unlock_controls()
 
   fetch: () ->
     @ws.units()
@@ -62,17 +49,36 @@ class Application
   hire_unit: (unit_type) ->
     @ws.hire_unit(unit_type)
 
+  set_worker_to_xy: (town_id, worker_pos, x, y) ->
+    @ws.set_worker_to_xy(town_id, worker_pos, x, y)
+
+  # test, admin methods
   spawn_dummy_near: (x, y) ->
     @ws.spawn_dummy_near(x, y)
 
   provoke_dummy_attack: () ->
     @ws.provoke_dummy_attack()
 
-  set_worker_to_xy: (town_id, worker_pos, x, y) ->
-    @ws.set_worker_to_xy(town_id, worker_pos, x, y)
+  kill: (id) ->
+    @ws.kill(id)
 
+  ## interface
   set_active_unit_directly: (unit_id) ->
     @controls.set_active_unit(unit_id)
+
+  update_user_info: (turn, unit_count, unit_limit, user_name = null) ->
+    $('#user-info-turn-value').html(turn)
+    if user_name && user_name != @user_name
+      $('#user-info-nickname-value').html(user_name)
+    @limit_info.update "#{unit_count}/#{unit_limit}"
+
+  lock_controls: () ->
+    @controls.lock_controls()
+
+  unlock_controls: () ->
+    # calc only alive units
+    if @initialized and @my_units_ids.length > 0
+      @controls.unlock_controls()
 
   set_active_unit: (unit_id) ->
     @active_unit_id = unit_id
@@ -91,9 +97,12 @@ class Application
     # @my_units = {} # models
     # delete deleted, invisible units that present in units(new) but absent in @units(present)
     for unit_id_on_map, unit_on_map of @units
-      if !units[unit_id_on_map] && @units[unit_id_on_map]
-        @units[unit_id_on_map].remove()
-        delete @units[unit_id_on_map]
+      if !units[unit_id_on_map]
+        if @units[unit_id_on_map]
+          @units[unit_id_on_map].remove()
+          delete @units[unit_id_on_map]
+        if @my_units[unit_id_on_map]
+          delete @my_units[unit_id_on_map]
     for unit_id, unit_hash of units
       try
         unit_model = @units[unit_id]

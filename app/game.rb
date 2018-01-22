@@ -487,6 +487,15 @@ class Game
     end
   end
 
+  def kill id
+    unit = Unit.get_by_id id
+    if unit
+      info "kill unit ##{id}"
+      unit.die
+      publish 'send_units_to_user', {}
+    end
+  end
+
   def spawn_orb color
     case color
     when :black

@@ -199,4 +199,12 @@ RSpec.describe "Front tests", :js => true do
     click_button I18n.t('Give')
     expect(from).to have_no_css('.resource-ico.gold')
   end
+
+  it 'shows fog of war after units death' do
+    log_in
+    id = find('#unit-info-list .unit-info:first-of-type .unit-id-info').text
+    page.execute_script("App.kill(#{id});" % id)
+    sleep(1) # wait for animation to complete
+    expect(page).to have_no_css '.cell:not(.fog-of-war)'
+  end
 end

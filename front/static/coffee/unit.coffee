@@ -99,6 +99,6 @@ class Unit
       building_card.update(unit.buildings[key])
 
   spotted: (x, y) ->
-    @x - @spotting_range <= x <= @x + @spotting_range && @y - @spotting_range <= y <= @y + @spotting_range
+    !@dead && @x - @spotting_range <= x <= @x + @spotting_range && @y - @spotting_range <= y <= @y + @spotting_range
 
 window.Unit = Unit

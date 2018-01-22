@@ -99,12 +99,6 @@ class Facade
       Celluloid::Actor[:game].build(user, data['building'].to_sym)
     when :spawn_orb
       Celluloid::Actor[:game].spawn_orb(data['color'].to_sym)
-    when :spawn_dummy_near
-      Celluloid::Actor[:game].spawn_dummy_near(data['x'], data['y'])
-    when :provoke_dummy_attack
-      Celluloid::Actor[:game].provoke_dummy_attack_on user
-    when :spawn_monolith_near
-      Celluloid::Actor[:game].spawn_monolith_near(data['x'], data['y'])
     when :hire_unit
       Celluloid::Actor[:game].hire_unit(user, data['unit_type'].to_sym)
     when :disband
@@ -120,6 +114,14 @@ class Facade
     when :refill_squad
       # Not implemented!
       Celluloid::Actor[:game].refill_squad user, data['town_id'], data['unit_id']
+    when :spawn_dummy_near
+      Celluloid::Actor[:game].spawn_dummy_near(data['x'], data['y'])
+    when :provoke_dummy_attack
+      Celluloid::Actor[:game].provoke_dummy_attack_on user
+    when :spawn_monolith_near
+      Celluloid::Actor[:game].spawn_monolith_near(data['x'], data['y'])
+    when :kill
+      Celluloid::Actor[:game].kill(data['id'].to_i)
     else
       LogBox.error('Unknown op', user)
     end
