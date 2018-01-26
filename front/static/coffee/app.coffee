@@ -18,6 +18,9 @@ class Application
     # initialialized from server
     @max_cell_idx = null
 
+  get_cell: (x, y) ->
+    if @cells[x] && @cells[x][y] then @cells[x][y] else null
+
   # ws
   move: (params) ->
     @ws.move(@active_unit_id, params)
@@ -116,15 +119,15 @@ class Application
         else
           unit_model = new Unit(unit_hash, is_user_unit)
           unit_model.update(unit_hash)
-          if !unit_model.dead
-            unit_model.create_view()
-            unit_model.create_controls()
-            unit_model.update_controls()
-            unit_model.create_modal()
-            unit_model.update_modal()
+          # if !unit_model.dead
+          unit_model.create_view()
+          unit_model.create_controls()
+          unit_model.update_controls()
+          unit_model.create_modal()
+          unit_model.update_modal()
           @units[unit_id] = unit_model
         if unit_model.need_to_move
-          @map.append_element_to_tile(unit_model.view.element, unit_model.x, unit_model.y)
+          @map.append_element_to_tile unit_model.view.element, unit_model.x, unit_model.y
           unit_model.need_to_move = false
         if is_user_unit
           @my_units[unit_id] = unit_model
@@ -144,28 +147,26 @@ class Application
     ObserverRegistry.publish('units', @units)
     true
 
-  # bind attack handlers
   bind_action_handlers: () ->
     $('.attack-target').removeClass('attack-target').off('click')
-    cell = $('#unit-' + @active_unit_id).parent()
-    if cell.length == 1
-      xy = cell.attr('id').replace('cell_', '').split('_')
+    if @active_unit_id && @my_units[@active_unit_id]
       for dx in [-1..1]
         for dy in [-1..1]
           if dx || dy
-            x = parseInt(xy[0]) + dx
-            y = parseInt(xy[1]) + dy
-            adj_cell = $('#cell_' + x + '_' + y)
-            unit = adj_cell.children('div').get(0)
-            if unit
-              # do not attack our own
-              if $(unit).hasClass('enemy')
+            x = @my_units[@active_unit_id].x + dx
+            y = @my_units[@active_unit_id].y + dy
+            # there can be no cell across the border
+            adj_cell = @get_cell(x, y)
+            if adj_cell
+              units = $(adj_cell.el).children('.unit.enemy')
+              units.each((i, unit) ->
                 $(unit)
                   .addClass('attack-target')
                   .off('click')
                   .one('click', () ->
                     App.attack(this)
                   )
+              )
 
   attack: (unit) ->
     if !@attacking

@@ -115,16 +115,32 @@ RSpec.describe "Front tests", :js => true do
     defender_life = defender.find('.life-box').text.to_i
     expect(start_defender_life - defender_casualties).to eq(defender_life)
     sleep(3) # wait for casualties numbers to disappear
-    expect(page).to have_css('.casualties-defender')
+    expect(page).to have_no_css('.casualties-defender')
     10.times do |i|
       defender.click()
-      expect(page).to have_css('.casualties-defender')
       expect(page).to have_no_css('.server-error')
-      if defender['class'].include? 'disappear-animation'
+      if defender['class'].include? 'grave'
         break
       end
-      sleep(1)
+      sleep(0.5)
     end
+  end
+
+  it 'test grave' do
+    log_in
+    xy = find('#unit-info-list > .active-unit-info .unit-xy-info').text.split
+    page.execute_script("App.spawn_dummy_near(#{xy[0]},#{xy[1]});")
+    expect(page).to have_css('.attack-target')
+    defender = first('.attack-target')
+    10.times do |i|
+      defender.click()
+      expect(page).to have_no_css('.server-error')
+      if defender['class'].include? 'grave'
+        break
+      end
+      sleep(0.5)
+    end
+    expect(page).to have_no_css('.attack-target .life-box')
   end
 
   it 'is taking damage' do
@@ -203,8 +219,8 @@ RSpec.describe "Front tests", :js => true do
   it 'shows fog of war after units death' do
     log_in
     id = find('#unit-info-list .unit-info:first-of-type .unit-id-info').text
-    page.execute_script("App.kill(#{id});" % id)
-    sleep(1) # wait for animation to complete
+    page.execute_script("App.kill(#{id});")
+    sleep(2) # wait for animation to complete
     expect(page).to have_no_css '.cell:not(.fog-of-war)'
   end
 end

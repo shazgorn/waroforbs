@@ -21,16 +21,23 @@ RSpec.describe Unit, "testing" do
     expect(Unit.get_by_user(user).size).to eq(0)
   end
 
-  it 'is empty cell' do
-    hi = Swordsman.new(5, 5, user)
+  it 'dead unit' do
+    x = 5
+    y = 5
+    hi = Swordsman.new(x, y, user)
     hi.die
-    expect(hi.x).to be_nil
-    expect(hi.y).to be_nil
+    expect(hi.x).to eq(x)
+    expect(hi.y).to eq(y)
     expect(hi.dead?).to be true
-    town = Town.new(6, 6, user)
+  end
+
+  it 'dead town' do
+    x = 6
+    y = 6
+    town = Town.new(x, y, user)
     town.die
-    expect(town.x).to be_nil
-    expect(town.y).to be_nil
+    expect(town.x).to eq(x)
+    expect(town.y).to eq(y)
     expect(town.dead?).to be true
   end
 
@@ -84,11 +91,11 @@ RSpec.describe Unit, "testing" do
       expect { unit.spotted? e_unit}.to raise_error(DeadHaveNoEyes)
     end
 
-    it 'i do NOT see dead people' do
+    it 'I see dead people' do
       unit = Swordsman.new(5, 5, user)
       e_unit = Swordsman.new(7, 7, enemy)
       e_unit.die
-      expect(unit.spotted? e_unit).to be false
+      expect(unit.spotted? e_unit).to be true
     end
   end
 end

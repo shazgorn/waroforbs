@@ -9,6 +9,7 @@ class UnitView extends View
     super(model)
     @unit_title = model.title
     @unit_life = model.life
+    @unit_type = model.type
     @element = $(document.createElement('div'))
         .addClass 'unit appear-animation'
         .data('id', model.id)
@@ -34,7 +35,7 @@ class UnitView extends View
         .on('click', () =>
           App.set_active_unit(model.id)
         )
-    else if model.user_id
+    else if model.user_id && !model.dead
       @element.addClass('enemy')
 
   remove_element: () ->
@@ -46,12 +47,18 @@ class UnitView extends View
         @element = null
       , 1000)
 
-
   update: (model) ->
+    if model.dead
+      @element
+        .removeClass 'enemy'
+        .removeClass @unit_type
+        .addClass 'grave'
     if model.life
       if @unit_life != model.life
         @unit_life = model.life
         @life_el.html(@unit_life)
+    if model.life == 0 && @life_el
+      @life_el.remove()
     if @unit_title != model.title
       @unit_title = model.title
       @element.attr('title', @unit_title)

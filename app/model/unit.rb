@@ -137,12 +137,15 @@ class Unit
 
   def die
     @dead = true
-    place(nil, nil)
   end
 
   def place(x = nil, y = nil)
     @x = x
     @y = y
+  end
+
+  def disappear
+    place nil, nil
   end
 
   def move_to(x, y, cost)
@@ -242,8 +245,12 @@ class Unit
     ##
     # Get units for user with keys
 
-    def get_by_user_h user
+    def select_by_user user
       @@units.select{|id, unit| unit.user_id == user.id}
+    end
+
+    def select_alive_by_user user
+      @@units.select{|id, unit| unit.alive? && unit.user_id == user.id}
     end
 
     def get_by_user_id user, id
@@ -313,8 +320,8 @@ class Unit
       @@units.each{|id, unit| yield id, unit if unit.user_id == user.id && unit.alive?}
     end
 
-    def select_alive_by_user user
-      @@units.select{|id, unit| unit.user_id == user.id && unit.alive?}
+    def each
+      @@units.each{|id, unit| yield id, unit}
     end
 
     ##

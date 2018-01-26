@@ -11,7 +11,7 @@ module Expirable
     @inventory.each{|ires, iq|
       return q if iq > 0
     }
-    die
+    disappear
     # not great
     Unit.delete(@id)
     return q

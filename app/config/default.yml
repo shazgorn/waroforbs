@@ -29,6 +29,7 @@ BLACK_ORB_START_DEFENCE: 10
 :max_town_aid: 20
 :orb_tick: 3
 :spawn_elf_every: 3600
+:spawn_elves: true
 :max_life: 15
 :elf_login: Elves
 :dummy_login: dummy

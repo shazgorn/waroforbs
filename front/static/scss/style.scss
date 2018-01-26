@@ -283,6 +283,10 @@ button {
   z-index: 2;
 }
 
+.enemy {
+  z-index: 2;
+}
+
 .green-orb {
   background-color: $orb-color;
   border-color: $black;
@@ -296,7 +300,8 @@ button {
 }
 
 .grave {
-  background-image: url('/img/swordsman.png');
+  background-image: url('/img/grave.png');
+  z-index: 1;
 }
 
 .swordsman {

@@ -18,8 +18,7 @@ class Unit
     @spotting_range = unit.spotting_range
     @user_id = unit.user_id
     @user_name = unit.user_name
-    if !@dead
-      @need_to_move = true
+    @need_to_move = true
     @set_title_from(unit)
     @buildings = {}
     @buildings_cards = {}
@@ -34,14 +33,10 @@ class Unit
       @title += ' [' + unit.user_name + ']'
 
   update: (unit) ->
-    return if @dead
     if unit.dead
       @dead = unit.dead
-      @need_to_move = false
-      @view.remove_element()
       if @controls
         @controls.remove_element()
-      return
     @set_title_from unit
     @need_to_move = (@x != unit.x || @y != unit.y)
     @x = unit.x

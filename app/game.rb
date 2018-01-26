@@ -69,7 +69,7 @@ class Game
     visible = {}
     visible.merge! my
     my.each do |my_unit_id, my_unit|
-      Unit.each_alive do |id, other_unit|
+      Unit.each do |id, other_unit|
         if my_unit.spotted? other_unit
           visible[id] = other_unit
         end
@@ -163,8 +163,12 @@ class Game
     unit
   end
 
+  def spawn_unit type, x, y, user
+    Module.const_get(Config[:unit_class][type]).new x, y, user
+  end
+
   def spawn_default_unit x, y, user
-    Module.const_get(Config[:unit_class][Config[:start_unit_type]]).new x, y, user
+    spawn_unit Config[:start_unit_type], x, y, user
   end
 
   ##
@@ -191,7 +195,7 @@ class Game
       LogBox.error(I18n.t('log_entry_unit_limit_reached'), user)
       return
     end
-    cost = Config.get(unit_type)[:cost_res]
+    cost = Config[unit_type][:cost_res]
     if res = town.check_price(cost)
       LogBox.error(res, user)
       return
@@ -202,7 +206,7 @@ class Game
       return
     end
     town.pay_price(cost)
-    unit = spawn_default_unit empty_cell[:x], empty_cell[:y], user
+    unit = spawn_unit unit_type, empty_cell[:x], empty_cell[:y], user
     user.active_unit_id = unit.id
     LogBox.spawn(I18n.t("log_entry_new_unit", name: unit.name), user)
     unit
@@ -312,7 +316,7 @@ class Game
     (Actor[:map].axis_range_adj y).each do |adj_y|
       (Actor[:map].axis_range_adj x).each do |adj_x|
         adj_unit = Unit.get_by_xy adj_x, adj_y
-        if adj_unit && unit.enemy_of?(adj_unit)
+        if adj_unit && adj_unit.alive? && unit.enemy_of?(adj_unit)
           return true
         end
       end
@@ -450,7 +454,8 @@ class Game
     user = User.new(Config[:dummy_login])
     xy = empty_adj_cell_xy(x, y)
     if xy
-      spawn_default_unit xy[:x], xy[:y], user
+      unit = spawn_default_unit xy[:x], xy[:y], user
+      10.times { unit.kill }
     else
       LogBox.error(I18n.t('log_entry_no_empty_cells'), user)
     end

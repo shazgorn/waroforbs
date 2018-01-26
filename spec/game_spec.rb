@@ -26,6 +26,7 @@ RSpec.describe Game, "testing" do
   let (:map) { Celluloid::Actor[:map] }
   let (:game) { Celluloid::Actor[:game] }
   let (:user) { User.new('test_game_token') }
+  let (:enemy_user) { User.new('enemy_user') }
   let (:dummy) { User.new(Config[:dummy_login]) }
   let (:x) { 5 }
   let (:y) { 5 }
@@ -117,7 +118,6 @@ RSpec.describe Game, "testing" do
     end
 
     it 'fails to run from one enemy to another enemy' do
-      enemy_user = User.new('enemy')
       Swordsman.new(@unit.x + 1, @unit.y, enemy_user)
       expect(game.enemy_zoc2zoc? @unit, @unit.x + 1, @unit.y + 1).to be true
       expect(game.enemy_zoc2zoc? @unit, @unit.x - 1, @unit.y).to be false
@@ -131,6 +131,15 @@ RSpec.describe Game, "testing" do
       Chest.new(@unit.x + 1, @unit.y)
       game.move_user_hero_by(@user, @unit.id, @dx, @dy)
       expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: @dx, dy: @dy, new_x: @x + @dx, new_y: @y + @dy))
+    end
+
+    it 'ignore dead zoc' do
+      e = Swordsman.new(@unit.x + 1, @unit.y + 1, enemy_user)
+      e.die
+      dx = 1
+      dy = 0
+      game.move_user_hero_by(@user, @unit.id, dx, dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: dx, dy: dy, new_x: @x + dx, new_y: @y + dy))
     end
   end
 
@@ -380,20 +389,50 @@ RSpec.describe Game, "testing" do
     expect(res.expired?).to be false
   end
 
-  it 'i see dead people' do
-    user = User.new('user')
-    units = game.all_units_for_user user
-    expect(units.size).to eq 0
-    Swordsman.new(1, 1, user)
-    units = game.all_units_for_user user
-    expect(units.size).to eq 1
-    enemy_user = User.new('enemy')
-    Swordsman.new(5, 5, enemy_user)
-    units = game.all_units_for_user user
-    expect(units.size).to eq 2
-    Swordsman.new(10, 10, enemy_user)
-    units = game.all_units_for_user user
-    expect(units.size).to eq 2
+  context 'spotting' do
+    it 'i see no evil' do
+      units = game.all_units_for_user user
+      expect(units.size).to eq 0
+    end
+
+    it 'no one to see' do
+      Swordsman.new(5, 5, enemy_user)
+      units = game.all_units_for_user user
+      expect(units.size).to eq 0
+    end
+
+    it 'behold my army' do
+      Swordsman.new(1, 1, user)
+      units = game.all_units_for_user user
+      expect(units.size).to eq 1
+    end
+
+    it 'is dangerous enemy' do
+      Swordsman.new(1, 1, user)
+      Swordsman.new(5, 5, enemy_user)
+      units = game.all_units_for_user user
+      expect(units.size).to eq 2
+    end
+
+    it 'I see dead people' do
+      Swordsman.new(1, 1, user)
+      Swordsman.new(5, 5, enemy_user)
+      units = game.all_units_for_user user
+      expect(units.size).to eq 2
+    end
+
+    it 'I see no evil, yet' do
+      Swordsman.new(10, 10, enemy_user)
+      units = game.all_units_for_user user
+      expect(units.size).to eq 0
+    end
+
+    it 'dead have no eyes' do
+      unit = Swordsman.new(10, 10, user)
+      unit.die
+      units = game.all_units_for_user user
+      expect(units.size).to eq 0
+    end
   end
 
   it 'spawning elves' do
