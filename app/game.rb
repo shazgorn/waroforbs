@@ -111,6 +111,18 @@ class Game
     LogBox.spawn(I18n.t('log_entry_unit_renamed', old_name: old_name, new_name: unit_name), user)
   end
 
+  ##
+  # is it a good idea set active unit that one closed the dead one or make it an option
+
+  def reset_active_unit user
+    alive_unit_id = nil
+    Unit.each_alive_by_user(user) do |id, unit|
+      alive_unit_id = unit.id
+      break
+    end
+    user.active_unit_id = alive_unit_id
+  end
+
   ##################### CONSTRUCTORS #####################################
 
   ## init user

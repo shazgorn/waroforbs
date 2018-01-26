@@ -52,7 +52,6 @@ class SocketWriter
               :block_dim_in_px => Actor[:map].block_dim_px,
               :map_dim_in_blocks => Actor[:map].blocks_in_map_dim,
               :MAX_CELL_IDX => Actor[:map].max_cell_idx,
-              :active_unit_id => user.active_unit_id,
               :user_id => user.id,
               :user_name => user.login,
               :cells => Actor[:map].tiles,
@@ -101,6 +100,7 @@ class SocketWriter
       res.merge!(
         {
           :units => get_units_json_for_user(user),
+          :active_unit_id => user.active_unit_id,
           :logs => Actor[:game].get_current_logs_by_user(user),
           :user_unit_count => Actor[:game].unit_count(user),
           :user_unit_limit => Actor[:game].unit_limit(user),

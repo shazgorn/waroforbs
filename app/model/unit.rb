@@ -137,6 +137,9 @@ class Unit
 
   def die
     @dead = true
+    if @user
+      Celluloid::Actor[:game].reset_active_unit @user
+    end
   end
 
   def place(x = nil, y = nil)

@@ -458,4 +458,15 @@ RSpec.describe Game, "testing" do
     Town.alive user
     expect(game.unit_limit(user)).to eq Config[:base_unit_limit] + Config[:unit_limit_per_town]
   end
+
+  it 'reset active unit if active unit is dead' do
+    unit = Swordsman.new(1, 1, user)
+    user.active_unit_id = unit.id
+    unit.die
+    game.reset_active_unit(user)
+    expect(user.active_unit_id).to be_nil
+    unit = Swordsman.new(2, 2, user)
+    game.reset_active_unit(user)
+    expect(user.active_unit_id).to eq(unit.id)
+  end
 end
