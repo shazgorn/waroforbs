@@ -4,6 +4,7 @@
 class Chest < Unit
   include Expirable
   include PublicStorage
+  include Passable
 
   TYPE = :chest
 

@@ -44,6 +44,10 @@ class Unit
     @@units[@id] = self
   end
 
+  def passable?
+    false
+  end
+
   def strength
     @life
   end
@@ -325,6 +329,10 @@ class Unit
 
     def each
       @@units.each{|id, unit| yield id, unit}
+    end
+
+    def each_alive_at x, y
+      @@units.each{|id, unit| yield id, unit if unit.x == x && unit.y == y && unit.alive?}
     end
 
     ##

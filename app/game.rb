@@ -3,6 +3,7 @@ require 'log_box'
 require 'orb'
 require 'unit'
 require 'expirable'
+require 'passable'
 require 'public_storage'
 require 'chest'
 require 'resource'
@@ -304,9 +305,11 @@ class Game
     type = Actor[:map].cell_type_at(new_x, new_y)
     cost = Config[:terrain_move_cost][type].to_i
     return LogBox.error(I18n.t('log_entry_not_enough_ap'), unit.user) unless unit.can_move?(cost)
-    u = Unit.get_by_xy(new_x, new_y)
-    if u && u.alive? && u.not_enterable_for(unit)
-      return LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user)
+    Unit.each_alive_at(new_x, new_y) do |id, u|
+      if u.not_enterable_for(unit) && !u.passable?
+        LogBox.error(I18n.t('log_entry_cell_occupied'), unit.user)
+        return
+      end
     end
     if enemy_zoc2zoc? unit, new_x, new_y
       return LogBox.error(I18n.t('log_entry_enemy_zoc'), unit.user)

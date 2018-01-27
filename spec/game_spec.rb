@@ -49,7 +49,7 @@ RSpec.describe Game, "testing" do
     expect(units.first.inventory[:settlers]).to eq(1)
   end
 
-  context "is moving" do
+  context "i like to move it" do
     before(:example) do
       @user = User.new('mover')
       @x = 5
@@ -140,6 +140,12 @@ RSpec.describe Game, "testing" do
       dy = 0
       game.move_user_hero_by(@user, @unit.id, dx, dy)
       expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: dx, dy: dy, new_x: @x + dx, new_y: @y + dy))
+    end
+
+    it 'allow moving through chests(passable)' do
+      Chest.new(@x + @dx, @y + @dy)
+      game.move_user_hero_by(@user, @unit.id, @dx, @dy)
+      expect(LogBox.get_current_by_user(@user).first.message).to eq(I18n.t('log_entry_move', unit_id: @unit.id, dx: @dx, dy: @dy, new_x: @x + @dx, new_y: @y + @dy))
     end
   end
 

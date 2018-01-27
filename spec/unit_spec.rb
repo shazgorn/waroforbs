@@ -2,9 +2,13 @@ require 'game'
 
 RSpec.describe Unit, "testing" do
   around do |ex|
+    Celluloid.boot
     User.drop_all
     Unit.drop_all
+    Celluloid::Actor[:game] = Game.new
+    Celluloid::Actor[:map] = Map.new
     ex.run
+    Celluloid.shutdown
   end
 
   let (:user) { User.new('user') }
