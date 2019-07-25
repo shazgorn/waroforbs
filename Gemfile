@@ -1,7 +1,5 @@
 source "https://rubygems.org" do
   gem 'rake'
-  gem 'sinatra'
-  gem 'mini_magick'
   gem 'thin'
   gem 'sass'
   gem 'minitest'
@@ -12,6 +10,9 @@ source "https://rubygems.org" do
   gem 'rspec'
   gem 'celluloid'
   gem 'reel'
+  gem "mini_magick"
+  gem "nokogiri", ">= 1.8.5"
+  gem "sinatra", ">= 2.0.2"
   group :development, :test do
     gem 'capybara'
     # gem 'capybara-webkit', '>=1.14'
