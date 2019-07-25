@@ -30,8 +30,8 @@ class SocketReader
     end
     Actor[@facade_name].parse_user_data(data)
     async.read_message_from_socket
-  rescue IOError
-    info 'Socket closed. Terminate reader'
+  rescue IOError => e
+    info "Socket closed. Terminate reader (#{e.message})"
     terminate
   # rescue Reel::SocketError, EOFError
   #   info "WS client disconnected from reader #{@name}"

@@ -55,7 +55,6 @@ bundler install --with=test
 Copy default configs
 
 ```
-cp config/app.default.yml config/app.yml
 cp config/thin.example.yml config/thin.yml
 cp config/ws_thin.example.yml config/ws_thin.yml
 rake init

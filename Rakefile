@@ -32,15 +32,15 @@ task :map do
 end
 
 task :ws_start do
-  system('thin -R ws_config.ru start -C config/ws_thin.yml')
+  system('thin -R ws_config.ru start -C ' + __dir__ + '/config/ws_thin.yml')
 end
 
 task :ws_stop do
-  system('thin -R ws_config.ru stop -C config/ws_thin.yml')
+  system('thin -R ws_config.ru stop -C ' + __dir__ + '/config/ws_thin.yml')
 end
 
 task :ws_restart do
-  system('thin -R ws_config.ru restart -C config/ws_thin.yml')
+  system('thin -R ws_config.ru restart -C ' + __dir__ + '/config/ws_thin.yml')
 end
 
 task :css do
@@ -52,15 +52,15 @@ task :js do
 end
 
 task :front_start do
-  system('thin -R config.ru start -C config/thin.yml --require app/ --require app/model/')
+  system('thin -R config.ru start -C ' + __dir__ + '/config/thin.yml --require app/ --require app/model/')
 end
 
 task :front_stop do
-  system('thin -R config.ru stop -C config/thin.yml  --require app/ --require app/model/')
+  system('thin -R config.ru stop -C ' + __dir__ + '/config/thin.yml  --require app/ --require app/model/')
 end
 
 task :front_restart do
-  system('thin -R config.ru restart -C config/thin.yml  --require app/ --require app/model/')
+  system('thin -R config.ru restart -C ' + __dir__ + '/config/thin.yml  --require app/ --require app/model/')
 end
 
 task :bots do
